@@ -1,3 +1,3 @@
 # Hippop
 
-yarn start
+yarn start !
