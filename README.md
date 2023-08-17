@@ -1,1 +1,3 @@
 # Hippop
+
+yarn start
