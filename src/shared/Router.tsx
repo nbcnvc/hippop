@@ -7,10 +7,12 @@ import MyPage from '../pages/MyPage';
 import Search from '../pages/Search';
 import Community from '../pages/Community';
 import About from '../pages/About';
+import Header from '../pages/Header';
 
 const Router = () => {
   return (
     <BrowserRouter>
+      <Header />
       <Routes>
         <Route path="/" element={<Main />} />
         <Route path="/detail/:id" element={<Detail />} />

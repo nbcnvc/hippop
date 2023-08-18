@@ -23,6 +23,8 @@
     "@types/react-copy-to-clipboard": "^5.0.4",
     "@types/react-date-range": "^1.4.4",
     "@types/react-dom": "^18.2.7",
+    "install": "^0.13.0",
+    "npm": "^9.8.1",
     "moment": "^2.29.4",
     "@types/uuid": "^9.0.2",
     "react": "^18.2.0",
@@ -38,7 +40,7 @@
     "styled-components": "^6.0.7",
     "styled-reset": "^4.5.1",
     "supabase": "^1.86.1",
-    "typescript": "^4.9.5",
+    "typescript": "^5.1.6",
     "uuid": "^9.0.0",
     "web-vitals": "^2.1.4",
     "zustand": "^4.4.1"
