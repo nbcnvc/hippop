@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
+import { UserInfo } from '../types/types';
+
 import { useNavigate } from 'react-router-dom';
 import { handleLogOut } from './Login';
 import Search from './Search';
 import { styled } from 'styled-components';
-
-interface UserInfo {
-  avatar_url: string;
-  name: string;
-}
 
 function Header() {
   const navigate = useNavigate();
