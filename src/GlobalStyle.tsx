@@ -5,7 +5,7 @@ const GlobalStyle = createGlobalStyle`
 ${reset}
 
 body {
-    
+    margin: 0 auto;
 }
 
 `;
