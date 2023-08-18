@@ -9,6 +9,13 @@ import Button from '@mui/material/Button';
 import { makeStyles } from '@mui/styles';
 import { styled } from 'styled-components';
 
+export const handleLogOut = async () => {
+  const { error } = await supabase.auth.signOut();
+
+  alert('로그아웃 되었습니다.');
+  if (error) console.log('error=>', error);
+};
+
 const Login = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -36,6 +43,7 @@ const Login = () => {
     return emailRegex.test(email);
   };
 
+  //teat default
   const signupHandle = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -64,21 +72,74 @@ const Login = () => {
     }
   };
 
+  //google
+  const signupGoogle = async (e: React.FormEvent) => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent'
+        }
+      }
+    });
+    if (data) alert('로그인이 완료되었습니다');
+    console.log(data);
+    if (error) console.error('error =>', error);
+  };
+
+  const signupKakao = async (e: React.FormEvent) => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'kakao',
+      options: {
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent'
+        }
+      }
+    });
+    if (data) alert('로그인이 완료되었습니다');
+    console.log(data);
+    if (error) console.error('error =>', error);
+  };
+
   return (
     <LoginTag>
       <div>
         <form>
-          <h2>Welcome to HipPop</h2>
+          <h2>Find your HipPop</h2>
           <input type="text" onChange={EmailChangeHandler} placeholder="Email" />
           <input type="password" onChange={PasswordChangeHandler} placeholder="Password" />
           <input type="password" onChange={PasswordCheckChangeHandler} placeholder="Check to Password" />
-
-          <Button variant="contained" href="#contained-buttons" className={classes.customButton} onClick={signupHandle}>
-            Login
-          </Button>
+          <div className="btn-wrapper">
+            <Button
+              variant="contained"
+              href="#contained-buttons"
+              className={classes.customButton}
+              onClick={signupHandle}
+            >
+              Login
+            </Button>
+            <Button
+              variant="contained"
+              href="#contained-buttons"
+              className={classes.customButton}
+              onClick={signupGoogle}
+            >
+              Google
+            </Button>
+            <Button
+              variant="contained"
+              href="#contained-buttons"
+              className={classes.customButton}
+              onClick={signupKakao}
+            >
+              Kakao
+            </Button>
+          </div>
         </form>
       </div>
-      <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} providers={['google']} />
+      {/* <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} providers={['google']} /> */}
     </LoginTag>
   );
 };
@@ -89,7 +150,7 @@ const LoginTag = styled.div`
   margin: 0 auto;
 
   width: 40vw;
-  height: 25vh;
+  height: 250px;
   background: #f0b07b;
   padding: 1rem;
   margin-top: 20%;
@@ -111,8 +172,13 @@ const LoginTag = styled.div`
       border-radius: 4px;
     }
     a {
+      font-size: 0.7rem;
       margin: 0 auto;
+      padding: 4px 0;
     }
+  }
+  .btn-wrapper {
+    display: flex;
   }
 `;
 
@@ -122,9 +188,8 @@ const LoginTag = styled.div`
 
 const useStyles = makeStyles((theme) => ({
   customButton: {
-    width: '10vw',
+    width: '7vw',
     margin: '0 auto',
-    backgroundColor: 'purple',
     color: 'white',
     '&:hover': {
       backgroundColor: 'darkpurple'
