@@ -1,7 +1,11 @@
-import React from "react";
+import Write from '../components/community/write/Write';
 
 const Community = () => {
-  return <div>Community</div>;
+  return (
+    <>
+      <Write />
+    </>
+  );
 };
 
 export default Community;
