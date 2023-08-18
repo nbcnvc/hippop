@@ -39,7 +39,7 @@ const StoreDetail = () => {
               <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${image}`} alt={`Image ${index}`} />
             </div>
           ))}
-          <StoreMap latitude={storeData.latitude} longitude={storeData.longitude} />
+          <StoreMap storeLocation={storeData.location} />
         </>
       )}
     </div>
