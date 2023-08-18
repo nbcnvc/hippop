@@ -1,9 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { Store } from '../../types/types';
 import { fetchDetailData } from '../../api/store';
 import { styled } from 'styled-components';
+import StoreMap from './StoreMap';
 
 const StoreDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -38,6 +39,7 @@ const StoreDetail = () => {
               <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${image}`} alt={`Image ${index}`} />
             </div>
           ))}
+          <StoreMap latitude={storeData.latitude} longitude={storeData.longitude} />
         </>
       )}
     </div>

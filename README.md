@@ -1,6 +1,5 @@
 # Hippop
 
-
 yarn start
 
 - router-dom
@@ -9,3 +8,4 @@ yarn start
 - styled-components
 - styled-reset
 - @supabase/supabase-js
+- @types/navermaps
