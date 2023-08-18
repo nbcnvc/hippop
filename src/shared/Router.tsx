@@ -1,12 +1,12 @@
-import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Main from "../pages/Main";
-import Detail from "../pages/Detail";
-import Login from "../pages/Login";
-import MyPage from "../pages/MyPage";
-import Search from "../pages/Search";
-import Community from "../pages/Community";
-import About from "../pages/About";
+import React from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Main from '../pages/Main';
+import Detail from '../pages/Detail';
+import Login from '../pages/Login';
+import MyPage from '../pages/MyPage';
+import Search from '../pages/Search';
+import Community from '../pages/Community';
+import About from '../pages/About';
 
 const Router = () => {
   return (
