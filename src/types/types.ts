@@ -10,3 +10,20 @@ export interface Store {
   latitude: number;
   longitude: number;
 }
+
+export interface Post {
+  id: number;
+  created_at: string;
+  updated_at: string;
+  user_id: string;
+  store_id: number;
+  category: string;
+  title: string;
+  body: string;
+}
+
+export interface NewPost {
+  category: string;
+  title: string;
+  body: string;
+}
