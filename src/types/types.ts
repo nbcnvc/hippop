@@ -1,7 +1,8 @@
 export interface Store {
   id: number;
   location: string;
-  period: number;
+  period_start: string;
+  period_end: string;
   title: string;
   body: string;
   opening: string;
