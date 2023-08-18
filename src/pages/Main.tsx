@@ -1,14 +1,21 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../api/supabase';
+import { handleLogOut } from './Login';
 const Main = () => {
   const navigate = useNavigate();
 
-  const handleLoginClick = () => {
+  const handleLogin = () => {
     navigate('/auth/signin');
   };
+
   return (
     <div>
-      Main<button onClick={handleLoginClick}>Login</button>
+      Main
+      <div className="btns">
+        <button onClick={handleLogin}>Login</button>
+        <button onClick={handleLogOut}>LogOut</button>
+      </div>
     </div>
   );
 };
