@@ -9,3 +9,8 @@ yarn start
 - styled-reset
 - @supabase/supabase-js
 - @types/navermaps
+- @mui/types
+- @mui/styles
+- @mui/icons-material
+- @supabase/auth-ui-react
+- @supabase/auth-ui-shared
