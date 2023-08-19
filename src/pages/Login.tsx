@@ -43,34 +43,34 @@ const Login = () => {
     return emailRegex.test(email);
   };
 
-  //teat default
-  const signupHandle = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // default login
+  // const signupHandle = async (e: React.FormEvent) => {
+  //   e.preventDefault();
 
-    if (!validateEmail(email)) {
-      alert('이메일 형식이 올바르지 않습니다.');
-      return;
-    }
-    if (password.length < 6) {
-      alert('비밀번호는 6자리 이상이어야 합니다.');
-      return;
-    }
-    try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password
-      });
-      console.log(data);
-      if (error) {
-        alert('아이디와 비밀번호를 확인해주세요');
-        console.error(error);
-      } else {
-        alert('회원가입이 완료되었습니다');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //   if (!validateEmail(email)) {
+  //     alert('이메일 형식이 올바르지 않습니다.');
+  //     return;
+  //   }
+  //   if (password.length < 6) {
+  //     alert('비밀번호는 6자리 이상이어야 합니다.');
+  //     return;
+  //   }
+  //   try {
+  //     const { data, error } = await supabase.auth.signUp({
+  //       email,
+  //       password
+  //     });
+  //     console.log(data);
+  //     if (error) {
+  //       alert('아이디와 비밀번호를 확인해주세요');
+  //       console.error(error);
+  //     } else {
+  //       alert('회원가입이 완료되었습니다');
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   //google
   const signupGoogle = async (e: React.FormEvent) => {
@@ -112,14 +112,14 @@ const Login = () => {
           <input type="password" onChange={PasswordChangeHandler} placeholder="Password" />
           <input type="password" onChange={PasswordCheckChangeHandler} placeholder="Check to Password" />
           <div className="btn-wrapper">
-            <Button
+            {/* <Button
               variant="contained"
               href="#contained-buttons"
               className={classes.customButton}
               onClick={signupHandle}
             >
               Login
-            </Button>
+            </Button> */}
             <Button
               variant="contained"
               href="#contained-buttons"
@@ -149,14 +149,15 @@ export default Login;
 const LoginTag = styled.div`
   margin: 0 auto;
 
-  width: 40vw;
-  height: 250px;
+  width: 25vw;
+  height: 200px;
   background: #f0b07b;
   padding: 1rem;
-  margin-top: 20%;
+  margin-top: 10%;
   div {
     display: flex;
     justify-content: center;
+    align-items: center;
     h2 {
       text-align: center;
       font-weight: 600;
@@ -166,7 +167,7 @@ const LoginTag = styled.div`
       flex-direction: column;
     }
     input {
-      width: 20vw;
+      width: 80%;
       margin: 10px 0;
       border: none;
       border-radius: 4px;

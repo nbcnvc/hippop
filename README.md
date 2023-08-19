@@ -8,6 +8,7 @@ yarn start
 - styled-components
 - styled-reset
 - @supabase/supabase-js
+- @types/navermaps
 - @mui/types
 - @mui/styles
 - @mui/icons-material

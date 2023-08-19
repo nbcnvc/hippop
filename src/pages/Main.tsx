@@ -1,24 +1,30 @@
 import React from 'react';
-
-import { useNavigate } from 'react-router-dom';
-import { supabase } from '../api/supabase';
-import { handleLogOut } from './Login';
+import { styled } from 'styled-components';
 const Main = () => {
-  const navigate = useNavigate();
-
-  const handleLogin = () => {
-    navigate('/auth/signin');
-  };
-
   return (
-    <div>
-      Main
-      <div className="btns">
-        <button onClick={handleLogin}>Login</button>
-        <button onClick={handleLogOut}>LogOut</button>
+    <MainTag>
+      <div>
+        <h2>Main</h2>
+        <img src="/asset/test-mainImg.png" alt="test-image" />
       </div>
-    </div>
+    </MainTag>
   );
 };
 
 export default Main;
+
+const MainTag = styled.div`
+  width: 80%;
+  margin: 0 auto;
+  border: 1px dotted gray;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  h2 {
+    text-align: center;
+  }
+  img {
+    width: 80vw;
+  }
+`;

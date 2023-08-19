@@ -28,3 +28,8 @@ export interface NewPost {
   title: string;
   body: string;
 }
+
+export interface UserInfo {
+  avatar_url: string;
+  name: string;
+}
