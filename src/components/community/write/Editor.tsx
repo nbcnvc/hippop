@@ -37,6 +37,7 @@ const Editor = ({ setBody }: EditorProps) => {
             const editor = quillRef.current?.getEditor();
             if (editor) {
               const range = editor.getSelection();
+              // 받아온 이미지 URL 에디터에 넣어줌
               editor.insertEmbed(
                 range?.index || 0,
                 'image',
@@ -95,9 +96,9 @@ const Editor = ({ setBody }: EditorProps) => {
   ];
 
   return (
-    <div>
+    <>
       <ReactQuill
-        style={{ width: '630px' }}
+        style={{ width: '650px', height: '650px' }}
         ref={quillRef}
         theme="snow"
         modules={modules}
@@ -105,7 +106,7 @@ const Editor = ({ setBody }: EditorProps) => {
         placeholder="내용을 입력하세요."
         onChange={setBody}
       />
-    </div>
+    </>
   );
 };
 

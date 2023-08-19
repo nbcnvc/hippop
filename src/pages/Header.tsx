@@ -58,7 +58,7 @@ function Header() {
 export default Header;
 
 const HeaderTag = styled.header`
-  width: 80%;
+  width: 100%;
   height: 10vh;
   border: 1px dotted gray;
   margin: 0 auto;
