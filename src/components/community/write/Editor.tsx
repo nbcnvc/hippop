@@ -37,12 +37,14 @@ const Editor = ({ setBody }: EditorProps) => {
             const editor = quillRef.current?.getEditor();
             if (editor) {
               const range = editor.getSelection();
+
               // 받아온 이미지 URL 에디터에 넣어줌
               editor.insertEmbed(
                 range?.index || 0,
                 'image',
                 `${process.env.REACT_APP_SUPABASE_STORAGE_URL}${imageUrl}`
               );
+
               // 업로드된 이미지 바로 다음으로 커서를 위치
               editor.setSelection((range?.index || 0) + 1, 0);
             }

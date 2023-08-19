@@ -1,7 +1,11 @@
-import React from 'react';
+import Posts from './Posts';
 
 const CommMain = () => {
-  return <div>CommMain</div>;
+  return (
+    <>
+      <Posts />
+    </>
+  );
 };
 
 export default CommMain;

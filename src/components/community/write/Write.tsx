@@ -98,7 +98,6 @@ const Write = ({ writeModal, setWriteModal }: WriteProps) => {
             <div style={{ position: 'absolute', bottom: '3%' }}>
               <button onClick={createButton}>등록</button>
             </div>
-            {/* <div dangerouslySetInnerHTML={{ __html: body }} /> */}
           </ModalBox>
         </ModalContainer>
       )}
