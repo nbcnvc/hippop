@@ -25,6 +25,8 @@ const StoreMap = ({ storeLocation }: StoreDetailProps) => {
       // Geocoding 데이터 객체
       const items = response.v2.addresses[0];
 
+      console.log(items);
+
       const latitude = Number(items.y);
       const longitude = Number(items.x);
 

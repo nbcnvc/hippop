@@ -3,8 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { Store } from '../../types/types';
 import { fetchDetailData } from '../../api/store';
-import { styled } from 'styled-components';
 import StoreMap from './StoreMap';
+import { styled } from 'styled-components';
 
 const StoreDetail = () => {
   const { id } = useParams<{ id: string }>();
