@@ -32,7 +32,9 @@ function Header() {
   return (
     <HeaderTag>
       <div className="logo-wrapper">
-        <img src="/asset/test-logo.png" className="test-logo" alt='test-img' />
+        <Link to ='/'>
+          <img src="/asset/test-logo.png" className="test-logo" alt='test-img' />
+          </Link>
         Header tap
       </div>
       <div><Link to='/about'>About</Link></div>
