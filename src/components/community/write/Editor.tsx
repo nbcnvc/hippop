@@ -98,7 +98,7 @@ const Editor = ({ setBody }: EditorProps) => {
   return (
     <>
       <ReactQuill
-        style={{ width: '630px' }}
+        style={{ width: '650px', height: '650px' }}
         ref={quillRef}
         theme="snow"
         modules={modules}
