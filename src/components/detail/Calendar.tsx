@@ -4,6 +4,7 @@ import 'react-calendar/dist/Calendar.css';
 import { Store } from '../../types/types';
 import { styled } from 'styled-components';
 import moment from 'moment';
+
 interface CalendarProps {
   storeData: Store;
 }
