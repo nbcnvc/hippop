@@ -1,10 +1,11 @@
-import { useQuery } from '@tanstack/react-query';
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 // 타입
 import { Store } from '../../types/types';
 // api
 import { fetchDetailData } from '../../api/store';
+import StoreMap from './StoreMap';
 import { styled } from 'styled-components';
 import Share from './Share';
 import Calendar from './Calendar';
@@ -62,6 +63,7 @@ const StoreDetail = () => {
             ))}
           </ImgBox>
           <Calendar storeData={storeData} />
+          <StoreMap storeLocation={storeData.location} />
         </>
       )}
     </div>

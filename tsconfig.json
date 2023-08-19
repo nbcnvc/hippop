@@ -16,5 +16,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "mypage", "mypage"]
+  "include": ["src", "mypage", "./src/supabase.d.ts"]
 }
