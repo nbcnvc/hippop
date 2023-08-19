@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
-import { UserInfo } from '../types/types';
+import { UserInfo } from '../../types/types';
 
-import { useNavigate } from 'react-router-dom';
-import { handleLogOut } from './Login';
-import Search from './Search';
+import { Link, useNavigate } from 'react-router-dom';
+import { handleLogOut } from '../../pages/Login';
 import { styled } from 'styled-components';
 
 function Header() {
@@ -29,17 +28,17 @@ function Header() {
     }
   };
 
+
   return (
     <HeaderTag>
       <div className="logo-wrapper">
-        <img src="/asset/test-logo.png" className="test-logo" />
+        <img src="/asset/test-logo.png" className="test-logo" alt='test-img' />
         Header tap
       </div>
-      <Search />
-      <div>About</div>
-      <div>Detail</div>
-      <div>Community</div>
-      <div>Contract</div>
+      <div><Link to='/about'>About</Link></div>
+      <div><Link to='/community'>Community</Link></div>
+      <div><Link to='/'>Contact</Link></div>
+      <div><Link to='/search'>Search</Link></div>
       <div>
         <div className="user-info">
           {user && (
@@ -58,7 +57,7 @@ function Header() {
 export default Header;
 
 const HeaderTag = styled.header`
-  width: 80%;
+  width: 100%;
   height: 10vh;
   border: 1px dotted gray;
   margin: 0 auto;
