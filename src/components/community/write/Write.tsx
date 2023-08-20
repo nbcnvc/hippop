@@ -42,7 +42,7 @@ const Write = ({ writeModal, setWriteModal }: WriteProps) => {
     if (!title) {
       return alert('제목을 입력해주세요.');
     }
-    if (title.length > 25) {
+    if (title.length > 35) {
       return alert('제목은 25글자 이하로 입력해주세요.');
     }
     if (!body) {
