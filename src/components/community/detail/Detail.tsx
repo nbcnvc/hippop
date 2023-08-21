@@ -16,7 +16,7 @@ const Detail = ({ post, setPost }: DetailProps) => {
   const queryClient = useQueryClient();
   const deleteMutation = useMutation(deletePost, {
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['posts'] });
+      queryClient.invalidateQueries({ queryKey: ['reviews'] });
     }
   });
   const deleteButton = (id: number) => {

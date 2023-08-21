@@ -1,11 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
+import { useLocation } from 'react-router-dom';
 
-import { fetchPosts } from '../../../api/post';
 import { Post } from '../../../types/types';
 import { PostsProps } from '../../../types/props';
+import { fetchData } from '../../../api/post';
 
 const Posts = ({ setPost }: PostsProps) => {
-  const { isLoading, isError, data: posts } = useQuery<Post[]>(['posts'], fetchPosts);
+  const { pathname } = useLocation();
+  const queryKey = pathname === '/review' ? 'reviews' : 'mates';
+  const { isLoading, isError, data: posts } = useQuery<Post[]>([`${queryKey}`, pathname], () => fetchData(pathname));
 
   // 상세페이지 모달 열기
   const openDetail = (post: Post) => {

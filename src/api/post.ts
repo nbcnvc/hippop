@@ -9,8 +9,17 @@ export const uploadImages = async (uploadImage: File) => {
 };
 
 // Post 전체 조회 (isDeleted가 false인 것만, 추후에 무한스크롤 기능 추가)
-export const fetchPosts = async (): Promise<Post[]> => {
-  const { data } = await supabase.from('post').select().eq('isDeleted', false);
+export const fetchData = async (param?: string): Promise<Post[]> => {
+  let data: Post[] | null = [];
+
+  if (param === '/review') {
+    const response = await supabase.from('post').select().eq('ctg_index', 1).eq('isDeleted', false);
+    data = response.data;
+  } else if (param === '/mate') {
+    const response = await supabase.from('post').select().eq('ctg_index', 2).eq('isDeleted', false);
+    data = response.data;
+  }
+
   return data as Post[];
 };
 

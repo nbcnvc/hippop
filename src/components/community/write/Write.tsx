@@ -1,6 +1,7 @@
 import Editor from './Editor';
 
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { NewPost } from '../../../types/types';
@@ -10,13 +11,11 @@ import { WriteProps } from '../../../types/props';
 import { styled } from 'styled-components';
 
 const Write = ({ writeModal, setWriteModal, setSearchModal }: WriteProps) => {
+  const { pathname } = useLocation();
   const [category, setCategory] = useState<number>(0);
   const [title, setTitle] = useState<string>('');
   const [body, setBody] = useState<string>('');
 
-  const onChangeCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCategory(Number(e.target.value));
-  };
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
@@ -30,21 +29,19 @@ const Write = ({ writeModal, setWriteModal, setSearchModal }: WriteProps) => {
   // 이전: 글 작성 모달창 닫기
   const closeWrite = () => {
     setWriteModal(false);
+    setSearchModal(true);
   };
 
   // Post 추가
   const queryClient = useQueryClient();
   const createMutation = useMutation(createPost, {
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['post'] });
+      queryClient.invalidateQueries({ queryKey: ['reviews'] });
     }
   });
 
   const createButton = () => {
     // 유효성 검사
-    if (category === 0) {
-      return alert('카테고리를 선택해주세요.');
-    }
     if (!title) {
       return alert('제목을 입력해주세요.');
     }
@@ -55,12 +52,20 @@ const Write = ({ writeModal, setWriteModal, setSearchModal }: WriteProps) => {
       return alert('내용을 입력해주세요.');
     }
 
+    // 카테고리 설정
+    if (pathname === 'review') {
+      setCategory(1);
+    }
+    if (pathname === 'mate') {
+      setCategory(2);
+    }
+
     // newPost 선언
     const newPost: NewPost = {
       // user_id: '짱구',
-      // store_id: 1,
-      ctg_index: category,
+      // store_id: 1,\
       title,
+      ctg_index: category,
       body
     };
 
@@ -68,7 +73,6 @@ const Write = ({ writeModal, setWriteModal, setSearchModal }: WriteProps) => {
     createMutation.mutate(newPost);
 
     // 입력값 초기화
-    setCategory(0);
     setTitle('');
     setBody('');
 
@@ -84,11 +88,6 @@ const Write = ({ writeModal, setWriteModal, setSearchModal }: WriteProps) => {
             <button onClick={closeButton}>닫기</button>
             <button onClick={closeWrite}>이전</button>
             <div>
-              <select onChange={onChangeCategory}>
-                <option value={0}>카테고리를 선택해주세요</option>
-                <option value={1}>팝업후기</option>
-                <option value={2}>팝업메이트</option>
-              </select>
               <div>
                 <span>제목 : </span>
                 <input
