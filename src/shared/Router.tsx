@@ -7,7 +7,7 @@ import Search from '../pages/Search';
 import Review from '../pages/Review';
 import Mate from '../pages/Mate';
 import About from '../pages/About';
-import Header from '../pages/Header';
+import Header from '../components/common/Header';
 
 const Router = () => {
   return (
@@ -15,9 +15,10 @@ const Router = () => {
       <Header />
       <Routes>
         <Route path="/" element={<Main />} />
-        <Route path="/detail/:id" element={<Detail />} />
         <Route path="/auth/signin" element={<Login />} />
         <Route path="/mypage/:id" element={<MyPage />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/detail/:id" element={<Detail />} />
         <Route path="/search" element={<Search />} />
         <Route path="/review" element={<Review />} />
         <Route path="/mate" element={<Mate />} />
