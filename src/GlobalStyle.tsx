@@ -5,6 +5,7 @@ const GlobalStyle = createGlobalStyle`
 ${reset}
 
 body {
+    max-width: 80%;
     margin: 0 auto;
 }
 

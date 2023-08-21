@@ -12,6 +12,11 @@ export interface Store {
   longitude: number;
 }
 
+export interface Bookmark {
+  user_id: string;
+  store_id: number;
+}
+
 export interface Post {
   id: number;
   created_at: string;
