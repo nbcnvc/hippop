@@ -10,9 +10,9 @@ import { WriteProps } from '../../../types/props';
 
 import { styled } from 'styled-components';
 
-const Write = ({ writeModal, setWriteModal, setSearchModal }: WriteProps) => {
+const Write = ({ writeModal, setWriteModal, setSearchModal, setPost }: WriteProps) => {
   const { pathname } = useLocation();
-  const [category, setCategory] = useState<number>(0);
+  const queryKey = pathname === '/review' ? 'reviews' : 'mates';
   const [title, setTitle] = useState<string>('');
   const [body, setBody] = useState<string>('');
 
@@ -36,7 +36,7 @@ const Write = ({ writeModal, setWriteModal, setSearchModal }: WriteProps) => {
   const queryClient = useQueryClient();
   const createMutation = useMutation(createPost, {
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['reviews'] });
+      queryClient.invalidateQueries({ queryKey: [`${queryKey}`, pathname] });
     }
   });
 
@@ -53,21 +53,24 @@ const Write = ({ writeModal, setWriteModal, setSearchModal }: WriteProps) => {
     }
 
     // 카테고리 설정
-    if (pathname === 'review') {
-      setCategory(1);
+    let ctg_index = 0;
+    if (pathname === '/review') {
+      ctg_index = 1;
     }
-    if (pathname === 'mate') {
-      setCategory(2);
+    if (pathname === '/mate') {
+      ctg_index = 2;
     }
 
     // newPost 선언
     const newPost: NewPost = {
       // user_id: '짱구',
       // store_id: 1,
+      ctg_index,
       title,
-      ctg_index: category,
       body
     };
+
+    console.log(newPost);
 
     // DB 추가
     createMutation.mutate(newPost);
@@ -78,6 +81,8 @@ const Write = ({ writeModal, setWriteModal, setSearchModal }: WriteProps) => {
 
     // 글 작성 모달 닫기
     setWriteModal(false);
+    // 상세 게시글(작성한 게시글) 모달 열기
+    // setPost(newPost);
   };
 
   return (

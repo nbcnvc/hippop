@@ -62,7 +62,7 @@ const Editor = ({ body, setBody }: EditorProps) => {
       // 툴바 설정
       toolbar: {
         container: [
-          [{ header: [1, 2, 3, 4, 5, 6, false] }], // header 설정
+          [{ header: [1, 2, false] }], // header 설정
           ['bold', 'italic', 'underline', 'strike', 'blockquote'], // 굵기, 기울기, 밑줄 등 부가 tool 설정
           [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }], // 리스트, 인덴트 설정
           ['link', 'image'], // 링크, 이미지, 비디오 업로드 설정
@@ -106,7 +106,7 @@ const Editor = ({ body, setBody }: EditorProps) => {
         modules={modules}
         formats={formats}
         placeholder="내용을 입력하세요."
-        defaultValue={body}
+        value={body}
         onChange={setBody}
       />
     </>
