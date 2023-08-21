@@ -1,8 +1,10 @@
 import React from 'react';
-import { styled } from 'styled-components';
-// 소셜 라이브러리
+
+// 라이브러리
 import { FacebookShareButton, FacebookIcon, TwitterShareButton, TwitterIcon } from 'react-share';
 import CopyToClipboard from 'react-copy-to-clipboard';
+// 스타일
+import { styled } from 'styled-components';
 // 소셜 링크 이미지
 import LinkIcon from '../../images/LinkIcon.png';
 import KakaoIcon from '../../images/kakaoIcon.png';

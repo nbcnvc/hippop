@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import { handleLogOut } from '../../pages/Login';
 import styled, { css } from 'styled-components';
 import Login from '../../pages/Login';
-import { Button, ButtonGroup } from '@nextui-org/button';
 
 function Header() {
   const [user, setUser] = useState<UserInfo | null>(null);
@@ -68,10 +67,10 @@ function Header() {
         <Link to="/about">About</Link>
       </div>
       <div>
-        <Link to="/community">Community</Link>
+        <Link to="/review">Review</Link>
       </div>
       <div>
-        <Link to="/contact">Contact</Link>
+        <Link to="/mate">Mate</Link>
       </div>
       <div>
         <Link to="/search">Search</Link>
