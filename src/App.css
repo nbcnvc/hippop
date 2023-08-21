@@ -1,5 +1,9 @@
-.App-header {
-  background-color: #f0b07b;
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@500&display=swap');
+* {
+  font-family: 'Fira Sans', sans-serif;
+}
+/* .App-header {
+  background-color: rgba(183, 79, 231, 0.76);
 
   color: white;
-}
+} */

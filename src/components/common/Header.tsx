@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 import { UserInfo } from '../../types/types';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { handleLogOut } from '../../pages/Login';
-import { styled } from 'styled-components';
+import styled, { css } from 'styled-components';
+import Login from '../../pages/Login';
+import { Button, ButtonGroup } from '@nextui-org/button';
 
 function Header() {
-  const navigate = useNavigate();
   const [user, setUser] = useState<UserInfo | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('sb-jlmwyvwmjcanbthgkpmh-auth-token');
@@ -19,39 +23,87 @@ function Header() {
     }
   }, []);
 
+  useEffect(() => {
+    function handleOutsideClick(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    }
+
+    window.addEventListener('mousedown', handleOutsideClick);
+  }, []);
+
   const handleToggle = () => {
     if (user) {
       handleLogOut();
       setUser(null);
     } else {
-      navigate('/auth/signin');
+      setIsModalOpen(true);
     }
   };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleModalOutsideClick = (event: React.MouseEvent) => {
+    if (event.target === event.currentTarget) {
+      closeModal();
+    }
+  };
+
+  const handleMenuToggle = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
     <HeaderTag>
       <div className="logo-wrapper">
-        <Link to ='/'>
-          <img src="/asset/test-logo.png" className="test-logo" alt='test-img' />
-          </Link>
+        <Link to="/">
+          <img src="/asset/test-logo.png" className="test-logo" alt="test-img" />
+        </Link>
         Header tap
       </div>
-      <div><Link to='/about'>About</Link></div>
-      <div><Link to='/community'>Community</Link></div>
-      <div><Link to='/'>Contact</Link></div>
-      <div><Link to='/search'>Search</Link></div>
+      <div>
+        <Link to="/about">About</Link>
+      </div>
+      <div>
+        <Link to="/community">Community</Link>
+      </div>
+      <div>
+        <Link to="/contact">Contact</Link>
+      </div>
+      <div>
+        <Link to="/search">Search</Link>
+      </div>
       <div>
         <div className="user-info">
-          {user && (
+          {user ? (
             <>
-              <p>{user.name}</p>
-              <img src={user.avatar_url} alt="User Avatar" />
+              <div className="user-dropdown" onClick={handleMenuToggle} ref={menuRef}>
+                <div className="info-mate">
+                  <div className="welcome-mate">
+                    <p>반갑습니다!</p>
+                    <p>{user.name} 님</p>
+                  </div>
+                  <img src={user.avatar_url} alt="User Avatar" />
+                </div>
+                <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
+                  <Link to="/mypage">My Page</Link>
+                  <div onClick={handleToggle}>Logout</div>
+                </div>
+              </div>
             </>
+          ) : (
+            <button onClick={handleToggle}>Login</button>
           )}
-          <button onClick={handleToggle}>{user ? 'Logout' : 'Login'}</button>
         </div>
       </div>
+      {isModalOpen && (
+        <ModalWrapper isopen={isModalOpen} onClick={handleModalOutsideClick}>
+          <Login closeModal={closeModal} />
+        </ModalWrapper>
+      )}
     </HeaderTag>
   );
 }
@@ -82,5 +134,63 @@ const HeaderTag = styled.header`
       width: 60px;
       border-radius: 50%;
     }
+    .user-dropdown {
+      position: relative;
+      cursor: pointer;
+      .info-mate {
+        display: flex;
+        align-items: center;
+        text-align: right;
+        .welcome-mate {
+          margin-right: 8px;
+          p {
+            margin: 4px 0;
+          }
+        }
+      }
+      .dropdown-content {
+        position: absolute;
+        bottom: -70px; /* 하단에서 조정 */
+        right: 0;
+        width: 120px;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        display: none;
+        z-index: 1;
+
+        a,
+        div {
+          display: block;
+          padding: 8px 10px;
+          text-align: center;
+          text-decoration: none;
+          color: #333;
+
+          &:hover {
+            background-color: #f1f1f1;
+          }
+        }
+      }
+    }
   }
+`;
+
+const ModalWrapper = styled.div.attrs<{ isopen: boolean }>((props) => ({
+  style: {
+    transform: props.isopen ? 'translateY(0)' : 'translateY(100%)'
+  }
+}))<{ isopen: boolean }>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  transition: transform 0.6s ease-in-out;
 `;

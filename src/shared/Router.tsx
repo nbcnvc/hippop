@@ -8,6 +8,7 @@ import Search from '../pages/Search';
 import Community from '../pages/Community';
 import About from '../pages/About';
 import Header from '../components/common/Header';
+import Contact from '../pages/Contact';
 
 const Router = () => {
   return (
@@ -15,12 +16,14 @@ const Router = () => {
       <Header />
       <Routes>
         <Route path="/" element={<Main />} />
-        <Route path="/auth/signin" element={<Login />} />
-        <Route path="/mypage/:id" element={<MyPage />} />
+        {/* <Route path="/auth/signin" element={<Login />} /> */}
+        {/* <Route path="/mypage/:id" element={<MyPage />} /> */}
+        <Route path="/mypage" element={<MyPage />} />
         <Route path="/about" element={<About />} />
         <Route path="/detail/:id" element={<Detail />} />
-        <Route path="/search" element={<Search />} />
         <Route path="/community" element={<Community />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/search" element={<Search />} />
       </Routes>
     </BrowserRouter>
   );
