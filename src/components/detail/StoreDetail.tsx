@@ -1,16 +1,18 @@
 import React from 'react';
+// 라이브러리
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 // 타입
 import { Store } from '../../types/types';
 // api
 import { fetchDetailData } from '../../api/store';
+// 스타일
 import { styled } from 'styled-components';
-
-// components
+// 컴포넌트
+import StoreMap from './StoreMap';
 import Share from './Share';
 import Calendar from './Calendar';
-import StoreMap from './StoreMap';
+import BookMark from './BookMark';
 
 const StoreDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -56,6 +58,9 @@ const StoreDetail = () => {
           </div>
           <div>
             <Share />
+          </div>
+          <div>
+            <BookMark storeData={storeData} />
           </div>
           <ImgBox>
             {storeData.images.map((image, index) => (

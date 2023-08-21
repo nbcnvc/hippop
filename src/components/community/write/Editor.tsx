@@ -7,7 +7,7 @@ import { EditorProps } from '../../../types/props';
 import { randomFileName } from '../../../hooks/useHandleImageName';
 import { supabase } from '../../../api/supabase';
 
-const Editor = ({ setBody }: EditorProps) => {
+const Editor = ({ body, setBody }: EditorProps) => {
   // 에디터 접근을 위한 ref return
   const quillRef = useRef<ReactQuill | null>(null);
 
@@ -37,11 +37,14 @@ const Editor = ({ setBody }: EditorProps) => {
             const editor = quillRef.current?.getEditor();
             if (editor) {
               const range = editor.getSelection();
+
+              // 받아온 이미지 URL 에디터에 넣어줌
               editor.insertEmbed(
                 range?.index || 0,
                 'image',
                 `${process.env.REACT_APP_SUPABASE_STORAGE_URL}${imageUrl}`
               );
+
               // 업로드된 이미지 바로 다음으로 커서를 위치
               editor.setSelection((range?.index || 0) + 1, 0);
             }
@@ -95,17 +98,18 @@ const Editor = ({ setBody }: EditorProps) => {
   ];
 
   return (
-    <div>
+    <>
       <ReactQuill
-        style={{ width: '630px' }}
+        style={{ width: '650px', height: '650px' }}
         ref={quillRef}
         theme="snow"
         modules={modules}
         formats={formats}
         placeholder="내용을 입력하세요."
+        defaultValue={body}
         onChange={setBody}
       />
-    </div>
+    </>
   );
 };
 
