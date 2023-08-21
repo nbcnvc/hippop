@@ -63,7 +63,7 @@ const Write = ({ writeModal, setWriteModal, setSearchModal }: WriteProps) => {
     // newPost 선언
     const newPost: NewPost = {
       // user_id: '짱구',
-      // store_id: 1,\
+      // store_id: 1,
       title,
       ctg_index: category,
       body
@@ -98,7 +98,7 @@ const Write = ({ writeModal, setWriteModal, setSearchModal }: WriteProps) => {
                 />
               </div>
               <div>
-                <Editor setBody={setBody} />
+                <Editor body={body} setBody={setBody} />
               </div>
             </div>
             <div style={{ position: 'absolute', bottom: '3%' }}>

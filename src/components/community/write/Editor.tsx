@@ -7,7 +7,7 @@ import { EditorProps } from '../../../types/props';
 import { randomFileName } from '../../../hooks/useHandleImageName';
 import { supabase } from '../../../api/supabase';
 
-const Editor = ({ setBody }: EditorProps) => {
+const Editor = ({ body, setBody }: EditorProps) => {
   // 에디터 접근을 위한 ref return
   const quillRef = useRef<ReactQuill | null>(null);
 
@@ -106,6 +106,7 @@ const Editor = ({ setBody }: EditorProps) => {
         modules={modules}
         formats={formats}
         placeholder="내용을 입력하세요."
+        defaultValue={body}
         onChange={setBody}
       />
     </>
