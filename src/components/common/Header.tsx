@@ -4,7 +4,7 @@ import { UserInfo } from '../../types/types';
 
 import { Link } from 'react-router-dom';
 import { handleLogOut } from '../../pages/Login';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import Login from '../../pages/Login';
 
 function Header() {
@@ -13,13 +13,17 @@ function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
+  const fetchUserInfo = async () => {
     const storedUser = localStorage.getItem('sb-jlmwyvwmjcanbthgkpmh-auth-token');
     if (storedUser) {
       const userData = JSON.parse(storedUser);
       const { avatar_url, name } = userData.user.user_metadata;
       setUser({ avatar_url, name });
     }
+  };
+
+  useEffect(() => {
+    fetchUserInfo();
   }, []);
 
   useEffect(() => {
@@ -28,7 +32,6 @@ function Header() {
         setIsMenuOpen(false);
       }
     }
-
     window.addEventListener('mousedown', handleOutsideClick);
   }, []);
 
@@ -40,7 +43,6 @@ function Header() {
       setIsModalOpen(true);
     }
   };
-
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -99,7 +101,7 @@ function Header() {
         </div>
       </div>
       {isModalOpen && (
-        <ModalWrapper isopen={isModalOpen} onClick={handleModalOutsideClick}>
+        <ModalWrapper $isopen={isModalOpen} onClick={handleModalOutsideClick}>
           <Login closeModal={closeModal} />
         </ModalWrapper>
       )}
@@ -176,11 +178,11 @@ const HeaderTag = styled.header`
   }
 `;
 
-const ModalWrapper = styled.div.attrs<{ isopen: boolean }>((props) => ({
+const ModalWrapper = styled.div.attrs<{ $isopen: boolean }>((props) => ({
   style: {
-    transform: props.isopen ? 'translateY(0)' : 'translateY(100%)'
+    transform: props.$isopen ? 'translateY(0)' : 'translateY(100%)'
   }
-}))<{ isopen: boolean }>`
+}))<{ $isopen: boolean }>`
   position: fixed;
   top: 0;
   left: 0;

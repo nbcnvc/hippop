@@ -100,6 +100,29 @@ const Login = ({ closeModal }: { closeModal: () => void }) => {
     console.log(data);
     if (error) console.error('error =>', error);
   };
+  const signInWithFacebook = async (e: React.FormEvent) => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'facebook',
+      options: {
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent'
+        }
+      }
+    });
+    if (data) alert('로그인이 완료되었습니다');
+    console.log(data);
+    if (error) console.error('error =>', error);
+  };
+
+  // async function signInWithFacebook() {
+  //   const { data, error } = await supabase.auth.signInWithOAuth({
+  //     provider: 'facebook'
+  //   });
+  //   if (data) alert('로그인이 완료되었습니다');
+  //   console.log(data);
+  //   if (error) console.error('error =>', error);
+  // }
 
   return (
     <LoginTag>
@@ -118,8 +141,8 @@ const Login = ({ closeModal }: { closeModal: () => void }) => {
               <li onClick={signupKakao}>
                 <img src="/asset/kakao.png" alt="kakao" />
               </li>
-              <li>
-                <img src="/asset/naver.png" alt="naver" />
+              <li onClick={signInWithFacebook}>
+                <img src="/asset/facebook.png" alt="naver" />
               </li>
             </ul>
           </div>

@@ -5,7 +5,7 @@ const Main = () => {
     <MainTag>
       <div>
         <h2>Main</h2>
-        <img src="/asset/test-mainImg.png" alt="test-image" />
+        <img src="/asset/test-mainImg1.png" alt="test-image" />
       </div>
     </MainTag>
   );
