@@ -5,6 +5,7 @@ import { Store } from './types';
 import { Post } from './types';
 
 export interface EditorProps {
+  body: string;
   setBody: React.Dispatch<SetStateAction<string>>;
 }
 
@@ -22,6 +23,7 @@ export interface WriteProps {
   writeModal: boolean;
   setWriteModal: React.Dispatch<SetStateAction<boolean>>;
   setSearchModal: React.Dispatch<SetStateAction<boolean>>;
+  setPost: React.Dispatch<SetStateAction<Post | null>>;
 }
 
 export interface PostsProps {
@@ -31,6 +33,13 @@ export interface PostsProps {
 export interface DetailProps {
   post: Post;
   setPost: React.Dispatch<SetStateAction<Post | null>>;
+}
+
+export interface EditProps {
+  post: Post;
+  setPost: React.Dispatch<SetStateAction<Post | null>>;
+  isEdit: boolean;
+  setIsEdit: React.Dispatch<SetStateAction<boolean>>;
 }
 
 export interface LoginProps {
