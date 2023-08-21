@@ -1,4 +1,5 @@
 import { SetStateAction } from 'react';
+import { UserInfo } from './types';
 import { Store } from './types';
 
 import { Post } from './types';
@@ -30,4 +31,11 @@ export interface PostsProps {
 export interface DetailProps {
   post: Post;
   setPost: React.Dispatch<SetStateAction<Post | null>>;
+}
+
+export interface LoginProps {
+  onClose: () => void;
+  userInfo: UserInfo;
+  setUser: React.Dispatch<React.SetStateAction<UserInfo | null>>;
+  closeModal: () => void;
 }
