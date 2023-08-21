@@ -20,7 +20,7 @@ export interface Post {
   store_id: number;
   title: string;
   body: string;
-  ctg_index: string;
+  ctg_index: number;
   isDeleted: boolean;
 }
 

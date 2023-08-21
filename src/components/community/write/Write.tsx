@@ -9,7 +9,7 @@ import { WriteProps } from '../../../types/props';
 
 import { styled } from 'styled-components';
 
-const Write = ({ writeModal, setWriteModal }: WriteProps) => {
+const Write = ({ writeModal, setWriteModal, setSearchModal }: WriteProps) => {
   const [category, setCategory] = useState<number>(0);
   const [title, setTitle] = useState<string>('');
   const [body, setBody] = useState<string>('');
@@ -21,8 +21,14 @@ const Write = ({ writeModal, setWriteModal }: WriteProps) => {
     setTitle(e.target.value);
   };
 
-  // 글 작성 모달창 닫기
+  // 닫기: 글 작성 모달창 && 검색 모달창 닫기
   const closeButton = () => {
+    setSearchModal(false);
+    setWriteModal(false);
+  };
+
+  // 이전: 글 작성 모달창 닫기
+  const closeWrite = () => {
     setWriteModal(false);
   };
 
@@ -42,7 +48,7 @@ const Write = ({ writeModal, setWriteModal }: WriteProps) => {
     if (!title) {
       return alert('제목을 입력해주세요.');
     }
-    if (title.length > 25) {
+    if (title.length > 35) {
       return alert('제목은 25글자 이하로 입력해주세요.');
     }
     if (!body) {
@@ -76,6 +82,7 @@ const Write = ({ writeModal, setWriteModal }: WriteProps) => {
         <ModalContainer>
           <ModalBox>
             <button onClick={closeButton}>닫기</button>
+            <button onClick={closeWrite}>이전</button>
             <div>
               <select onChange={onChangeCategory}>
                 <option value={0}>카테고리를 선택해주세요</option>
@@ -98,7 +105,6 @@ const Write = ({ writeModal, setWriteModal }: WriteProps) => {
             <div style={{ position: 'absolute', bottom: '3%' }}>
               <button onClick={createButton}>등록</button>
             </div>
-            {/* <div dangerouslySetInnerHTML={{ __html: body }} /> */}
           </ModalBox>
         </ModalContainer>
       )}
