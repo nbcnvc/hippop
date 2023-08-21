@@ -10,6 +10,7 @@ const SearchModal = ({ setWriteModal, searchModal, setSearchModal }: SearchModal
 
   // 글작성 모달창 열기
   const openWrite = () => {
+    setSearchModal(false);
     setWriteModal(true);
   };
 

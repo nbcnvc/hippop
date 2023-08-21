@@ -1,4 +1,4 @@
-import ReviewMain from '../components/community/review/ReviewMain';
+import Main from '../components/community/main/Main';
 import SearchModal from '../components/community/write/SearchModal';
 import Write from '../components/community/write/Write';
 
@@ -19,7 +19,7 @@ const Review = () => {
       <button onClick={searcButton}>글 작성</button>
       <SearchModal setWriteModal={setWriteModal} searchModal={searchModal} setSearchModal={setSearchModal} />
       <Write writeModal={writeModal} setWriteModal={setWriteModal} setSearchModal={setSearchModal} />
-      <ReviewMain />
+      <Main />
     </>
   );
 };
