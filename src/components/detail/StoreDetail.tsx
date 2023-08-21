@@ -5,10 +5,12 @@ import { useParams } from 'react-router-dom';
 import { Store } from '../../types/types';
 // api
 import { fetchDetailData } from '../../api/store';
-import StoreMap from './StoreMap';
 import { styled } from 'styled-components';
+
+// components
 import Share from './Share';
 import Calendar from './Calendar';
+import StoreMap from './StoreMap';
 
 const StoreDetail = () => {
   const { id } = useParams<{ id: string }>();

@@ -1,12 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
-interface StoreDetailProps {
-  storeLocation: string;
-}
+import { StoreMapProps } from '../../types/props';
 
-const StoreMap = ({ storeLocation }: StoreDetailProps) => {
+import HotPlace from './HotPlace';
+
+const StoreMap = ({ storeLocation }: StoreMapProps) => {
   //  ref는 맵이 렌더링될 DOM 요소를 참조
   const mapElement = useRef(null);
+
+  // const [guName, setGuName] = useState<string>('');
+  const [roadName, setRoadName] = useState<string>('');
 
   useEffect(() => {
     // 이 코드는 window 전역 객체에서 naver 객체를 구조 분해
@@ -24,8 +27,10 @@ const StoreMap = ({ storeLocation }: StoreDetailProps) => {
 
       // Geocoding 데이터 객체
       const items = response.v2.addresses[0];
+      // console.log(items);
 
-      console.log(items);
+      // setGuName(items.addressElements[1].longName);
+      setRoadName(items.addressElements[4].longName);
 
       const latitude = Number(items.y);
       const longitude = Number(items.x);
@@ -49,15 +54,40 @@ const StoreMap = ({ storeLocation }: StoreDetailProps) => {
       const map = new naver.maps.Map(mapElement.current, mapOptions);
 
       //지도상에 핀 표시 할 부분
-      new naver.maps.Marker({
+      const marker = new naver.maps.Marker({
         position: location,
         map
+      });
+
+      // 정보창 띄우고 닫기
+      const infowindow = new naver.maps.InfoWindow({
+        content: `<div style="width: 50px;height: 20px;text-align: center">hi!</div>`
+      });
+
+      infowindow.open(map, marker);
+      infowindow.close();
+
+      // 마커를 누를때마다 infowindow 여닫기
+      naver.maps.Event.addListener(marker, 'click', function () {
+        console.log(infowindow.getMap()); // 정보창이 열려있을 때는 연결된 지도를 반환하고 닫혀있을 때는 null을 반환
+
+        if (infowindow.getMap()) {
+          infowindow.close();
+        } else {
+          infowindow.open(map, marker);
+        }
       });
     });
   }, [storeLocation]);
 
   // 지도 DOM 요소 지정하기
-  return <div ref={mapElement} style={{ width: '800px', height: '400px' }} />;
+  return (
+    <div>
+      <div ref={mapElement} style={{ width: '800px', height: '400px' }} />
+      <div style={{ fontSize: '20px', fontWeight: '600' }}>이 주변 핫플레이스를 추천해드립니다 !</div>
+      <HotPlace roadName={roadName} />
+    </div>
+  );
 };
 
 export default StoreMap;

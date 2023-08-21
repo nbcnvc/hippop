@@ -14,3 +14,4 @@ yarn start
 - @mui/icons-material
 - @supabase/auth-ui-react
 - @supabase/auth-ui-shared
+- axios
