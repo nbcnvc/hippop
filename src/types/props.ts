@@ -1,4 +1,5 @@
 import { SetStateAction } from 'react';
+import { Store } from './types';
 
 import { Post } from './types';
 
@@ -6,6 +7,10 @@ export interface EditorProps {
   setBody: React.Dispatch<SetStateAction<string>>;
 }
 
+// 캘린더 props
+export interface CalendarProps {
+  storeData: Store;
+}
 export interface SearchModalProps {
   searchModal: boolean;
   setWriteModal: React.Dispatch<SetStateAction<boolean>>;
