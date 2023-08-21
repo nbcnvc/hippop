@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 
 import { supabase } from '../api/supabase';
 
-import { Auth } from '@supabase/auth-ui-react';
-import { ThemeSupa } from '@supabase/auth-ui-shared';
-
-import Button from '@mui/material/Button';
+import { Button } from '@nextui-org/react';
 import { makeStyles } from '@mui/styles';
 import { styled } from 'styled-components';
+import { Link } from 'react-router-dom';
 
 export const handleLogOut = async () => {
   const { error } = await supabase.auth.signOut();
@@ -16,7 +14,7 @@ export const handleLogOut = async () => {
   if (error) console.log('error=>', error);
 };
 
-const Login = () => {
+const Login = ({ closeModal }: { closeModal: () => void }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [passwordCheck, setPasswordCheck] = useState<string>('');
@@ -106,37 +104,30 @@ const Login = () => {
   return (
     <LoginTag>
       <div>
-        <form>
+        <div className="login-content">
+          <Link to="/">
+            <img src="/asset/test-logo.png" alt="logo" width={80} />
+          </Link>
           <h2>Find your HipPop</h2>
-          <input type="text" onChange={EmailChangeHandler} placeholder="Email" />
-          <input type="password" onChange={PasswordChangeHandler} placeholder="Password" />
-          <input type="password" onChange={PasswordCheckChangeHandler} placeholder="Check to Password" />
+          <span>힙-팝에 오신걸 환영해요 :)</span>
           <div className="btn-wrapper">
-            {/* <Button
-              variant="contained"
-              href="#contained-buttons"
-              className={classes.customButton}
-              onClick={signupHandle}
-            >
-              Login
-            </Button> */}
-            <Button
-              variant="contained"
-              href="#contained-buttons"
-              className={classes.customButton}
-              onClick={signupGoogle}
-            >
-              Google
-            </Button>
-            <Button
-              variant="contained"
-              href="#contained-buttons"
-              className={classes.customButton}
-              onClick={signupKakao}
-            >
-              Kakao
-            </Button>
+            <ul>
+              <li onClick={signupGoogle}>
+                <img src="/asset/google.png" alt="google" />
+              </li>
+              <li onClick={signupKakao}>
+                <img src="/asset/kakao.png" alt="kakao" />
+              </li>
+              <li>
+                <img src="/asset/naver.png" alt="naver" />
+              </li>
+            </ul>
           </div>
+        </div>
+        <form>
+          {/* <input type="text" onChange={EmailChangeHandler} placeholder="Email" /> */}
+          {/* <input type="password" onChange={PasswordChangeHandler} placeholder="Password" /> */}
+          {/* <input type="password" onChange={PasswordCheckChangeHandler} placeholder="Check to Password" /> */}
         </form>
       </div>
       {/* <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} providers={['google']} /> */}
@@ -148,39 +139,51 @@ export default Login;
 
 const LoginTag = styled.div`
   margin: 0 auto;
+  margin-bottom: 10%;
 
-  width: 25vw;
-  height: 200px;
-  background: #f0b07b;
+  width: 280px;
+  height: 220px;
+  background: rgba(183, 79, 231, 0.76);
+  border-radius:10px;
   padding: 1rem;
-  margin-top: 10%;
-  div {
+
+  .login-content {
+    gap:10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    h2{
+      margin-top:10px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 18px;
+      color:white;
+    }
+    span{
+      font-size: 12px;
+    }
+  }
+  .btn-wrapper > ul{
     display: flex;
     justify-content: center;
     align-items: center;
-    h2 {
-      text-align: center;
-      font-weight: 600;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-    }
-    input {
-      width: 80%;
-      margin: 10px 0;
-      border: none;
-      border-radius: 4px;
-    }
-    a {
-      font-size: 0.7rem;
-      margin: 0 auto;
-      padding: 4px 0;
-    }
   }
-  .btn-wrapper {
-    display: flex;
+  ul > li {
+    margin: 1rem;
+    cursor:pointer;
+    transition: transform 0.5s, filter 0.5s;
   }
+  ul > li:hover {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+  }
+  ul > li > img{
+    width: 45px;
+  }
+  }
+
 `;
 
 // const Button = styled.button`

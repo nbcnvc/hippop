@@ -1,4 +1,6 @@
 import { SetStateAction } from 'react';
+import { UserInfo } from './types';
+import { Store } from './types';
 
 import { Post } from './types';
 
@@ -7,6 +9,10 @@ export interface EditorProps {
   setBody: React.Dispatch<SetStateAction<string>>;
 }
 
+// 캘린더 props
+export interface CalendarProps {
+  storeData: Store;
+}
 export interface SearchModalProps {
   searchModal: boolean;
   setWriteModal: React.Dispatch<SetStateAction<boolean>>;
@@ -33,4 +39,11 @@ export interface EditProps {
   setPost: React.Dispatch<SetStateAction<Post | null>>;
   isEdit: boolean;
   setIsEdit: React.Dispatch<SetStateAction<boolean>>;
+}
+
+export interface LoginProps {
+  onClose: () => void;
+  userInfo: UserInfo;
+  setUser: React.Dispatch<React.SetStateAction<UserInfo | null>>;
+  closeModal: () => void;
 }
