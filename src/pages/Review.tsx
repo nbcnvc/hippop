@@ -15,6 +15,7 @@ const Review = () => {
 
   return (
     <>
+      <h1>후기 작성 게시판</h1>
       <button onClick={searcButton}>글 작성</button>
       <SearchModal setWriteModal={setWriteModal} searchModal={searchModal} setSearchModal={setSearchModal} />
       <Write writeModal={writeModal} setWriteModal={setWriteModal} setSearchModal={setSearchModal} />
