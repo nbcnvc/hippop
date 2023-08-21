@@ -32,3 +32,8 @@ export const createPost = async (newPost: NewPost): Promise<void> => {
 export const deletePost = async (id: number): Promise<void> => {
   await supabase.from('post').update({ isDeleted: true }).eq('id', id).select();
 };
+
+// Post 수정
+export const updatePost = async (editPost: Post): Promise<void> => {
+  await supabase.from('post').update(editPost).eq('id', editPost.id).select();
+};

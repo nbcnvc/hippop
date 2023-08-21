@@ -3,6 +3,7 @@ import { SetStateAction } from 'react';
 import { Post } from './types';
 
 export interface EditorProps {
+  body: string;
   setBody: React.Dispatch<SetStateAction<string>>;
 }
 
@@ -25,4 +26,11 @@ export interface PostsProps {
 export interface DetailProps {
   post: Post;
   setPost: React.Dispatch<SetStateAction<Post | null>>;
+}
+
+export interface EditProps {
+  post: Post;
+  setPost: React.Dispatch<SetStateAction<Post | null>>;
+  isEdit: boolean;
+  setIsEdit: React.Dispatch<SetStateAction<boolean>>;
 }

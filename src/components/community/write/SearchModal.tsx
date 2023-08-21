@@ -3,12 +3,12 @@ import { styled } from 'styled-components';
 import { SearchModalProps } from '../../../types/props';
 
 const SearchModal = ({ setWriteModal, searchModal, setSearchModal }: SearchModalProps) => {
-  // 검색 모달창 닫기
+  // 닫기: 검색 모달창 닫기
   const closeSearch = () => {
     setSearchModal(false);
   };
 
-  // 글작성 모달창 열기
+  // 다음: 글작성 모달창 열기
   const openWrite = () => {
     setSearchModal(false);
     setWriteModal(true);
