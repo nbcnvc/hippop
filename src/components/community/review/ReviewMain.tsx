@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 import { Post } from '../../../types/types';
 
-const CommMain = () => {
+const ReviewMain = () => {
   const [detailPost, setDetailPost] = useState<Post | null>(null);
 
   return (
@@ -16,4 +16,4 @@ const CommMain = () => {
   );
 };
 
-export default CommMain;
+export default ReviewMain;

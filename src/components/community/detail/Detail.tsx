@@ -32,8 +32,6 @@ const Detail = ({ post, setPost }: DetailProps) => {
     }
   };
 
-  console.log(post);
-
   return (
     <ModalContainer>
       <ModalBox>
