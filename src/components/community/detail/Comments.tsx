@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import React, { useMemo, useState } from 'react';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { CommentProps } from '../../../types/props';
 import { createComment, deleteComment, getComments, updateComment } from '../../../api/comment';
-import { Comment } from '../../../types/types';
+import { Comment, FetchComment } from '../../../types/types';
 
 const Comments = ({ post }: CommentProps) => {
   // post_id 가져오기
@@ -20,7 +20,37 @@ const Comments = ({ post }: CommentProps) => {
   };
 
   // Comment 조회
-  const { data: comments, isLoading, isError } = useQuery<Comment[] | null>(['comment', id], () => getComments(id));
+  const {
+    data: comments,
+    isLoading,
+    isError,
+    hasNextPage,
+    fetchNextPage
+  } = useInfiniteQuery<FetchComment>({
+    queryKey: ['comment', id],
+    queryFn: ({ pageParam }) => getComments(pageParam, id),
+    getNextPageParam: (lastPage) => {
+      // 전체 페이지 개수보다 작을 때
+      if (lastPage.page < lastPage.totalPages) {
+        // 다음 페이지로 pageParam를 저장
+        return lastPage.page + 1;
+      }
+    }
+  });
+
+  const selectComments = useMemo(() => {
+    return comments?.pages
+      .map((data) => {
+        return data.comments;
+      })
+      .flat();
+  }, [comments]);
+
+  // 더보기 버튼
+  const fetchMore = () => {
+    if (!hasNextPage) return;
+    fetchNextPage();
+  };
 
   // Comment 추가
   const createMutation = useMutation(createComment, {
@@ -109,7 +139,7 @@ const Comments = ({ post }: CommentProps) => {
         <button onClick={createButton}>등록</button>
       </div>
       {/* 댓글 목록 */}
-      {comments?.map((comment) => {
+      {selectComments?.map((comment) => {
         return (
           <div key={comment.id} style={{ width: '92.5%', border: '1px solid black', padding: '10px', margin: '10px' }}>
             <div>작성자</div>
@@ -124,6 +154,8 @@ const Comments = ({ post }: CommentProps) => {
           </div>
         );
       })}
+      {/* 더보기 버튼 */}
+      <button onClick={fetchMore}>더보기</button>
     </>
   );
 };

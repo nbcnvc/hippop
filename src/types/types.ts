@@ -56,7 +56,7 @@ export interface Comment {
   isDeleted: boolean;
 }
 
-export interface NewCommnet {
+export interface NewComment {
   // user_id: string;
   post_id: number;
   body: string;
@@ -72,8 +72,15 @@ export interface User extends SupabaseUser {
   name: string;
 }
 
-export interface FetchData {
+export interface FetchPost {
   posts: Post[];
+  page: number;
+  totalPages: number;
+  count: number | null;
+}
+
+export interface FetchComment {
+  comments: Comment[];
   page: number;
   totalPages: number;
   count: number | null;
