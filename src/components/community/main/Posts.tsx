@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { InView, useInView } from 'react-intersection-observer';
+import { useInView } from 'react-intersection-observer';
 import { useLocation } from 'react-router-dom';
 
 import { FetchData, Post } from '../../../types/types';

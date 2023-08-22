@@ -30,6 +30,10 @@ export interface PostsProps {
   setPost: React.Dispatch<SetStateAction<Post | null>>;
 }
 
+export interface CommentProps {
+  post: Post;
+}
+
 export interface DetailProps {
   post: Post;
   setPost: React.Dispatch<SetStateAction<Post | null>>;

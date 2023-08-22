@@ -37,6 +37,22 @@ export interface NewPost {
   body: string;
 }
 
+export interface Commnet {
+  id: number;
+  created_at: string;
+  updated_at: string;
+  user_id: string;
+  post_id: number;
+  body: string;
+  isDeleted: boolean;
+}
+
+export interface NewCommnet {
+  // user_id: string;
+  post_id: number;
+  body: string;
+}
+
 export interface UserInfo {
   avatar_url: string;
   name: string;
