@@ -70,8 +70,6 @@ const Write = ({ writeModal, setWriteModal, setSearchModal, setPost }: WriteProp
       body
     };
 
-    console.log(newPost);
-
     // DB 추가
     createMutation.mutate(newPost);
 

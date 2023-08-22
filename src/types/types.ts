@@ -41,3 +41,10 @@ export interface UserInfo {
   avatar_url: string;
   name: string;
 }
+
+export interface FetchData {
+  posts: Post[];
+  page: number;
+  totalPages: number;
+  count: number | null;
+}
