@@ -21,7 +21,6 @@ const Posts = ({ setPost }: PostsProps) => {
     queryKey: [`${queryKey}`, pathname],
     queryFn: ({ pageParam }) => getPosts(pageParam, pathname),
     getNextPageParam: (lastPage) => {
-      console.log('lastPage', lastPage);
       // 전체 페이지 개수보다 작을 때
       if (lastPage.page < lastPage.totalPages) {
         // 다음 페이지로 pageParam를 저장
@@ -29,8 +28,6 @@ const Posts = ({ setPost }: PostsProps) => {
       }
     }
   });
-
-  console.log('posts', posts);
 
   // select
   const selectPosts = useMemo(() => {
@@ -41,13 +38,10 @@ const Posts = ({ setPost }: PostsProps) => {
       .flat();
   }, [posts]);
 
-  console.log('selectPosts', selectPosts);
-
   // 언제 다음 페이지를 가져올 것
   const { ref } = useInView({
     threshold: 1, // 맨 아래에 교차될 때
     onChange: (inView) => {
-      console.log(hasNextPage); // True
       if (!inView || !hasNextPage || isFetchingNextPage) return;
       fetchNextPage();
     }
