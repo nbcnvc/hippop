@@ -47,4 +47,6 @@ export interface LoginProps {
   userInfo: UserInfo;
   setUser: React.Dispatch<SetStateAction<UserInfo | null>>;
   closeModal: () => void;
+  fetchUserInfo: () => Promise<void>;
+  isopen: boolean;
 }

@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 
 import { supabase } from '../api/supabase';
 
-import { Button } from '@nextui-org/react';
-import { makeStyles } from '@mui/styles';
 import { styled } from 'styled-components';
 import { Link } from 'react-router-dom';
 
@@ -14,12 +12,10 @@ export const handleLogOut = async () => {
   if (error) console.log('error=>', error);
 };
 
-const Login = ({ closeModal }: { closeModal: () => void }) => {
+const Login = ({ closeModal, fetchUserInfo }: { closeModal: () => void; fetchUserInfo: () => Promise<void> }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [passwordCheck, setPasswordCheck] = useState<string>('');
-
-  const classes = useStyles();
 
   useEffect(() => {
     console.log(email);
@@ -208,18 +204,3 @@ const LoginTag = styled.div`
   }
 
 `;
-
-// const Button = styled.button`
-
-// `;
-
-const useStyles = makeStyles((theme) => ({
-  customButton: {
-    width: '7vw',
-    margin: '0 auto',
-    color: 'white',
-    '&:hover': {
-      backgroundColor: 'darkpurple'
-    }
-  }
-}));
