@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 // 타입
+import { Geocoder, HotPlaceData } from '../../types/types';
 import { StoreMapProps } from '../../types/props';
 // 컴포넌트
 import HotPlace from './HotPlace';
@@ -10,39 +11,9 @@ declare global {
   }
 }
 
-interface Geocoder {
-  address: AddressInfo;
-  address_name: string;
-  address_type: string;
-  road_address: RoadAddress;
-  x: string;
-  y: string;
-}
-
-interface AddressInfo {
-  address_name: string;
-  b_code: string;
-  h_code: string;
-  main_address_no: string;
-  mountain_yn: string;
-}
-
-interface RoadAddress {
-  address_name: string;
-  building_name: string;
-  main_building_no: string;
-  region_1depth_name: string;
-  region_2depth_name: string;
-  region_3depth_name: string;
-  road_name: string;
-  x: string;
-  y: string;
-  zone_no: string;
-}
-
 const StoreMap = ({ storeLocation }: StoreMapProps) => {
   const [category, setCategory] = useState<string>('맛집');
-  const [hotPlaceData, setHotPlaceData] = useState<any>(null);
+  const [hotPlaceData, setHotPlaceData] = useState<HotPlaceData[]>();
   const [isShow, setIsShow] = useState<boolean>(false);
 
   //  ref는 맵이 렌더링될 DOM 요소를 참조
@@ -74,7 +45,7 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
         const ps = new kakao.maps.services.Places();
 
         // 장소검색이 완료됐을 때 호출되는 콜백함수
-        const placesSearchCB = (data: any, status: string) => {
+        const placesSearchCB = (data: HotPlaceData[], status: string) => {
           if (status === kakao.maps.services.Status.OK) {
             // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
             // LatLngBounds 객체에 좌표를 추가합니다
@@ -103,7 +74,7 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
         // 키워드로 장소를 검색합니다
         ps.keywordSearch(`${result[0].road_address.road_name} ${category}`, placesSearchCB);
 
-        const displayMarker = (place: any) => {
+        const displayMarker = (place: HotPlaceData) => {
           const marker = new kakao.maps.Marker({
             map: map,
             position: new kakao.maps.LatLng(place.y, place.x)
@@ -149,7 +120,7 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
         }}
       />
       <HotPlace setCategory={setCategory} setIsShow={setIsShow} />
-      {hotPlaceData?.map((data: any) => {
+      {hotPlaceData?.map((data: HotPlaceData) => {
         return <div key={data.id}>{data.place_name}</div>;
       })}
     </div>
