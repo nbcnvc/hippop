@@ -5,6 +5,7 @@ import { UserInfo } from '../../types/types';
 import { Link, useNavigate } from 'react-router-dom';
 import { handleLogOut } from '../../pages/Login';
 import { styled } from 'styled-components';
+import SearchHeader from '../search/SearchHeader';
 
 function Header() {
   const navigate = useNavigate();
@@ -28,31 +29,39 @@ function Header() {
     }
   };
 
-
   return (
-    <HeaderTag>
-      <div className="logo-wrapper">
-        <Link to ='/'>
-          <img src="/asset/test-logo.png" className="test-logo" alt='test-img' />
+    <>
+      <HeaderTag>
+        <div className="logo-wrapper">
+          <Link to="/">
+            <img src="/asset/test-logo.png" className="test-logo" alt="test-img" />
           </Link>
-        Header tap
-      </div>
-      <div><Link to='/about'>About</Link></div>
-      <div><Link to='/community'>Community</Link></div>
-      <div><Link to='/'>Contact</Link></div>
-      <div><Link to='/search'>Search</Link></div>
-      <div>
-        <div className="user-info">
-          {user && (
-            <>
-              <p>{user.name}</p>
-              <img src={user.avatar_url} alt="User Avatar" />
-            </>
-          )}
-          <button onClick={handleToggle}>{user ? 'Logout' : 'Login'}</button>
+          Header tap
         </div>
-      </div>
-    </HeaderTag>
+        <SearchHeader />
+        <div>
+          <Link to="/about">About</Link>
+        </div>
+        <div>
+          <Link to="/community">Community</Link>
+        </div>
+        <div>
+          <Link to="/">Contact</Link>
+        </div>
+        <div>
+          <div className="user-info">
+            {user && (
+              <>
+                <p>{user.name}</p>
+                <img src={user.avatar_url} alt="User Avatar" />
+              </>
+            )}
+            <button onClick={handleToggle}>{user ? 'Logout' : 'Login'}</button>
+          </div>
+        </div>
+      </HeaderTag>
+      <Line></Line>
+    </>
   );
 }
 
@@ -61,7 +70,7 @@ export default Header;
 const HeaderTag = styled.header`
   width: 100%;
   height: 10vh;
-  border: 1px dotted gray;
+  border-bottom: 1px dotted gray;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -83,4 +92,11 @@ const HeaderTag = styled.header`
       border-radius: 50%;
     }
   }
+`;
+
+const Line = styled.div`
+  border-bottom: 2px dotted gray;
+  width: 100%;
+
+  margin-bottom: 50px;
 `;

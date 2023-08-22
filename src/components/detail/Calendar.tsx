@@ -11,8 +11,6 @@ import { styled } from 'styled-components';
 const Calendar = ({ storeData }: CalendarProps) => {
   const [period, setPeriod] = useState([storeData.period_start, storeData.period_end]);
 
-  console.log('storeData', storeData.period_start);
-
   const onChangeCalendar = (date: any) => {
     setPeriod([date, date]);
   };

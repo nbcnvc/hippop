@@ -12,6 +12,13 @@ export interface Store {
   longitude: number;
 }
 
+// Kakao 타입 선언
+declare global {
+  interface Window {
+    Kakao: any;
+  }
+}
+
 export interface Bookmark {
   user_id: string;
   store_id: number;
