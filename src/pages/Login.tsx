@@ -125,7 +125,7 @@ const LoginTag = styled.div`
   }
   ul > li:hover {
     transform: scale(1.05);
-    filter: brightness(1.21);
+    filter: brightness(1.2);
   }
   ul > li > img {
     width: 45px;
