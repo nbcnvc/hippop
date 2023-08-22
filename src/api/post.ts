@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 
-import { FetchData, NewPost, Post } from '../types/types';
+import { FetchPost, NewPost, Post } from '../types/types';
 
 // Post 이미지 파일 업로드
 export const uploadImages = async (uploadImage: File) => {
@@ -9,7 +9,7 @@ export const uploadImages = async (uploadImage: File) => {
 };
 
 // Post 전체 조회 (isDeleted가 false인 것만)
-export const getPosts = async (pageParam: number = 1, param?: string): Promise<FetchData> => {
+export const getPosts = async (pageParam: number = 1, param?: string): Promise<FetchPost> => {
   let data: Post[] | null = [];
   let count: number | null = null;
 
