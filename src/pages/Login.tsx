@@ -109,10 +109,15 @@ const LoginTag = styled.div`
       font-size: 12px;
     }
   }
+  .btn-wrapper{
+    width: 100%;
+  }
   .btn-wrapper > ul{
+
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 0 !important;
   }
   ul > li {
     margin: 1rem;
