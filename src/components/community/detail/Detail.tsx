@@ -1,5 +1,5 @@
 import Edit from '../write/Edit';
-import Comment from './Comment';
+import Comments from './Comments';
 
 import { useState } from 'react';
 import { styled } from 'styled-components';
@@ -31,6 +31,7 @@ const Detail = ({ post, setPost }: DetailProps) => {
     }
   };
 
+  // Post 수정
   const editButton = () => {
     setIsEdit(!isEdit);
   };
@@ -49,12 +50,13 @@ const Detail = ({ post, setPost }: DetailProps) => {
               <div>카테고리 : {(post.ctg_index === 1 && '팝업후기') || (post.ctg_index === 2 && '팝업메이트')}</div>
               <div>팝업스토어 이름</div>
               <div>작성자</div>
+              <div>작성일자 : {post.created_at}</div>
               <div>제목 : {post.title}</div>
               <div dangerouslySetInnerHTML={{ __html: post.body }} />
             </div>
           )}
         </div>
-        {isEdit ? <></> : <Comment post={post} />}
+        {isEdit ? <></> : <Comments post={post} />}
       </ModalBox>
     </ModalContainer>
   );

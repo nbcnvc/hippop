@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 
-import { NewCommnet } from '../types/types';
+import { Comment, NewCommnet } from '../types/types';
 
 // Comment 상세 조회 (isDeleted가 false 것만, 추후에 더보기 기능 추가)
 export const getComments = async (postId: number) => {
@@ -14,11 +14,16 @@ export const getComments = async (postId: number) => {
 };
 
 // Comment 추가
-export const createComment = async (newComment: NewCommnet) => {
+export const createComment = async (newComment: NewCommnet): Promise<void> => {
   await supabase.from('comment').insert(newComment);
 };
 
 // Commnet 삭제 (isDeleted true로 수정)
 export const deleteComment = async (id: number): Promise<void> => {
   await supabase.from('comment').update({ isDeleted: true }).eq('id', id).select();
+};
+
+// Commnet 수정
+export const updateComment = async (editComment: Comment): Promise<void> => {
+  await supabase.from('comment').update(editComment).eq('id', editComment.id).select();
 };

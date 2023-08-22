@@ -17,11 +17,13 @@ const Edit = ({ post, setPost, isEdit, setIsEdit }: EditProps) => {
   // Post 수정
   const updateMutation = useMutation(updatePost);
   const saveButton = (post: Post) => {
+    // 수정된 Post 선언
     const editPost: Post = {
       ...post,
       title,
       body
     };
+    // DB 수정
     updateMutation.mutate(editPost);
     // 수정한 게시글 바로 보여주기
     setPost(editPost);
