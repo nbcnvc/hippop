@@ -2,6 +2,17 @@ import { supabase } from './supabase';
 
 import { NewCommnet } from '../types/types';
 
+// Comment 상세 조회 (isDeleted가 false 것만, 추후에 더보기 기능 추가)
+export const getComments = async (postId: number) => {
+  const { data } = await supabase
+    .from('comment')
+    .select()
+    .eq('post_id', postId)
+    .eq('isDeleted', false)
+    .order('created_at', { ascending: false });
+  return data;
+};
+
 // Comment 추가
 export const createComment = async (newComment: NewCommnet) => {
   await supabase.from('comment').insert(newComment);
