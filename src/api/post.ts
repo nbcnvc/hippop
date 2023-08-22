@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 
-import { NewPost, Post } from '../types/types';
+import { FetchData, NewPost, Post } from '../types/types';
 
 // Post 이미지 파일 업로드
 export const uploadImages = async (uploadImage: File) => {
@@ -8,19 +8,53 @@ export const uploadImages = async (uploadImage: File) => {
   return data;
 };
 
-// Post 전체 조회 (isDeleted가 false인 것만, 추후에 무한스크롤 기능 추가)
-export const fetchData = async (param?: string): Promise<Post[]> => {
+// Post 전체 조회 (isDeleted가 false인 것만)
+export const getPosts = async (pageParam: number = 1, param?: string): Promise<FetchData> => {
   let data: Post[] | null = [];
+  let count: number | null = null;
 
   if (param === '/review') {
-    const response = await supabase.from('post').select().eq('ctg_index', 1).eq('isDeleted', false);
-    data = response.data;
+    const { data: reviews } = await supabase
+      .from('post')
+      .select()
+      .eq('ctg_index', 1)
+      .eq('isDeleted', false)
+      .order('created_at', { ascending: false }) // 내림차순
+      .range(pageParam * 10 - 10, pageParam * 10 - 1); // 범위 지정
+
+    data = reviews;
+
+    const { count: reviewCount } = await supabase
+      .from('post')
+      .select('count', { count: 'exact' })
+      .eq('ctg_index', 1)
+      .eq('isDeleted', false);
+
+    count = reviewCount;
   } else if (param === '/mate') {
-    const response = await supabase.from('post').select().eq('ctg_index', 2).eq('isDeleted', false);
-    data = response.data;
+    const { data: mates } = await supabase
+      .from('post')
+      .select()
+      .eq('ctg_index', 2)
+      .eq('isDeleted', false)
+      .order('created_at', { ascending: false })
+      .range(pageParam * 10 - 10, pageParam * 10 - 1);
+
+    data = mates;
+
+    const { count: mateCount } = await supabase
+      .from('post')
+      .select('count', { count: 'exact' })
+      .eq('ctg_index', 2)
+      .eq('isDeleted', false);
+
+    count = mateCount;
   }
 
-  return data as Post[];
+  // 총 페이지
+  const totalPages = count ? Math.floor(count / 10) + (count % 10 === 0 ? 0 : 1) : 1;
+
+  return { posts: data as Post[], page: pageParam, totalPages, count };
 };
 
 // Post 추가

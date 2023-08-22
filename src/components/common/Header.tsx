@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
 
-import { Link } from 'react-router-dom';
-
-import styled from 'styled-components';
+import { Link, useNavigate } from 'react-router-dom';
+import { styled } from 'styled-components';
+import SearchIcon from '@mui/icons-material/Search';
 import Login from '../../pages/Login';
 import { UserInfo } from '../../types/types';
 import { handleLogOut } from '../../pages/Login';
 import { supabase } from '../../api/supabase';
 
 function Header() {
+  const navigate = useNavigate();
   const [user, setUser] = useState<UserInfo | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -67,6 +68,11 @@ function Header() {
     setIsModalOpen(false);
   };
 
+  // search page로 이동
+  const navSearch = () => {
+    navigate(`/search`);
+  };
+
   const handleModalOutsideClick = (event: React.MouseEvent) => {
     if (event.target === event.currentTarget) {
       closeModal();
@@ -85,6 +91,7 @@ function Header() {
         </Link>
         Header tap
       </div>
+
       <div>
         <Link to="/about">About</Link>
       </div>
@@ -94,8 +101,13 @@ function Header() {
       <div>
         <Link to="/mate">Mate</Link>
       </div>
-      <div>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
         <Link to="/search">Search</Link>
+        {/* <SearchIcon
+          onClick={() => {
+            navSearch();
+          }}
+        /> */}
       </div>
       <div>
         <div className="user-info">
@@ -121,7 +133,7 @@ function Header() {
         </div>
       </div>
       {isModalOpen && (
-        <ModalWrapper onClick={handleModalOutsideClick}>
+        <ModalWrapper isopen={isModalOpen} onClick={handleModalOutsideClick}>
           <Login closeModal={closeModal} />
         </ModalWrapper>
       )}
@@ -134,7 +146,7 @@ export default Header;
 const HeaderTag = styled.header`
   width: 100%;
   height: 10vh;
-  border: 1px dotted gray;
+  border-bottom: 1px dotted gray;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -198,7 +210,27 @@ const HeaderTag = styled.header`
   }
 `;
 
-const ModalWrapper = styled.div`
+// const ModalWrapper = styled.div`
+// =======
+// // const Line = styled.div`
+//   border-bottom: 2px dotted gray;
+//   width: 100%;
+
+//   margin-bottom: 50px;
+// `;
+
+// const Line = styled.div`
+//   border-bottom: 2px dotted gray;
+//   width: 100%;
+
+//   margin-bottom: 50px;
+// `;
+
+const ModalWrapper = styled.div.attrs<{ isopen: boolean }>((props) => ({
+  style: {
+    transform: props.isopen ? 'translateY(0)' : 'translateY(100%)'
+  }
+}))<{ isopen: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -208,4 +240,5 @@ const ModalWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 9;
 `;

@@ -13,6 +13,12 @@ export interface EditorProps {
 export interface CalendarProps {
   storeData: Store;
 }
+
+export interface SearchCalendarProps {
+  storeData: Store[] | any;
+  onDateRangeChange: (dates: [Date, Date]) => void;
+}
+
 export interface SearchModalProps {
   searchModal: boolean;
   setWriteModal: React.Dispatch<SetStateAction<boolean>>;
@@ -28,6 +34,10 @@ export interface WriteProps {
 
 export interface PostsProps {
   setPost: React.Dispatch<SetStateAction<Post | null>>;
+}
+
+export interface CommentProps {
+  post: Post;
 }
 
 export interface DetailProps {
