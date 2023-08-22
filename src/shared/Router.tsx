@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Main from '../pages/Main';
 import Detail from '../pages/Detail';
-import Login from '../pages/Login';
+// import Login from '../pages/Login';
 import MyPage from '../pages/MyPage';
 import Search from '../pages/Search';
 import Review from '../pages/Review';
@@ -15,8 +15,9 @@ const Router = () => {
       <Header />
       <Routes>
         <Route path="/" element={<Main />} />
-        <Route path="/auth/signin" element={<Login />} />
-        <Route path="/mypage/:id" element={<MyPage />} />
+        {/* <Route path="/auth/signin" element={<Login />} /> */}
+        {/* <Route path="/mypage/:id" element={<MyPage />} /> */}
+        <Route path="/mypage" element={<MyPage />} />
         <Route path="/about" element={<About />} />
         <Route path="/detail/:id" element={<Detail />} />
         <Route path="/search" element={<Search />} />

@@ -17,6 +17,7 @@ function SearchHeader() {
   // 네비게이트
   const navigate = useNavigate();
   const [isSearchModal, setIsSearchModal] = useState<Boolean | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   // 북마크 전체 조회
   const { data: bookMark } = useQuery(['bookMark'], () => fetchAllBookMark());
@@ -72,6 +73,13 @@ function SearchHeader() {
     setIsSearchModal(false);
   };
 
+  const performSearch = () => {
+    // 검색어를 파라미터로하여 검색 페이지로 이동
+    navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+    setIsSearchModal(false);
+    setSearchQuery('');
+  };
+
   if (isError) {
     alert('error');
   }
@@ -84,7 +92,8 @@ function SearchHeader() {
 
   return (
     <SearchModal>
-      {isSearchModal ? <div></div> : <Input onClick={openSearchModal} placeholder="Search" />}
+      <SearchIcon onClick={openSearchModal} />
+      {/* {isSearchModal ? <div></div> : <Input placeholder="Search" />} */}
       {isSearchModal && (
         <SearchContainer>
           <SearchWrapper>
@@ -93,8 +102,17 @@ function SearchHeader() {
                 <CloseTwoToneIcon />
               </CloseButton>
               <ModalInputBox>
-                <Search />
-                <ModalInput placeholder="팝업스토어를 검색해보세요!" />
+                <Search onClick={performSearch} />
+                <ModalInput
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      performSearch();
+                    }
+                  }}
+                  placeholder="팝업스토어를 검색해보세요!"
+                />
               </ModalInputBox>
 
               <TagBox>
@@ -161,7 +179,7 @@ const SearchBox = styled.div`
 const CloseButton = styled.button`
   position: absolute;
   top: 0;
-  right: 16%;
+  right: 2%;
 
   border: none;
   background: none;

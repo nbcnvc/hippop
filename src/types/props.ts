@@ -1,9 +1,11 @@
 import { SetStateAction } from 'react';
+import { UserInfo } from './types';
 import { Store } from './types';
 
 import { Post } from './types';
 
 export interface EditorProps {
+  body: string;
   setBody: React.Dispatch<SetStateAction<string>>;
 }
 
@@ -11,6 +13,12 @@ export interface EditorProps {
 export interface CalendarProps {
   storeData: Store;
 }
+
+export interface SearchCalendarProps {
+  storeData: Store[] | any;
+  onDateRangeChange: (dates: [Date, Date]) => void;
+}
+
 export interface SearchModalProps {
   searchModal: boolean;
   setWriteModal: React.Dispatch<SetStateAction<boolean>>;
@@ -21,6 +29,7 @@ export interface WriteProps {
   writeModal: boolean;
   setWriteModal: React.Dispatch<SetStateAction<boolean>>;
   setSearchModal: React.Dispatch<SetStateAction<boolean>>;
+  setPost: React.Dispatch<SetStateAction<Post | null>>;
 }
 
 export interface PostsProps {
@@ -30,4 +39,18 @@ export interface PostsProps {
 export interface DetailProps {
   post: Post;
   setPost: React.Dispatch<SetStateAction<Post | null>>;
+}
+
+export interface EditProps {
+  post: Post;
+  setPost: React.Dispatch<SetStateAction<Post | null>>;
+  isEdit: boolean;
+  setIsEdit: React.Dispatch<SetStateAction<boolean>>;
+}
+
+export interface LoginProps {
+  onClose: () => void;
+  userInfo: UserInfo;
+  setUser: React.Dispatch<React.SetStateAction<UserInfo | null>>;
+  closeModal: () => void;
 }

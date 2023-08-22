@@ -1,12 +1,8 @@
 import React from 'react';
+import SearchList from '../components/search/SearchList';
 
 const Search = () => {
-  return (
-    <>
-    검색 페이지
-      <input type="text" placeholder="search Component" style={{ width: '140px' }} />
-    </>
-  );
+  return <SearchList />;
 };
 
 export default Search;
