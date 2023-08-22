@@ -8,22 +8,6 @@ export const fetchDetailData = async (id: string): Promise<Store | null> => {
   return data;
 };
 
-// hotplace 음식관광 정보 api 호출
-export const fetchHotPlaceInfo = async (): Promise<any> => {
-  // const { data } = await axios.get(
-  //   `  https://seoul.openapi.redtable.global/api/rstr?serviceKey=${process.env.REACT_APP_OPEN_API_SERVICE_KEY}`
-  // );
-  // return data.body;
-};
-
-// hotplace 음식관광 이미지 api 호출
-export const fetchHotPlaceImg = async (): Promise<any> => {
-  const { data } = await axios.get(
-    `https://seoul.openapi.redtable.global/api/food/img?serviceKey=${process.env.REACT_APP_OPEN_API_SERVICE_KEY}`
-  );
-  return data.body;
-};
-
 // kakao 공통 요청 경로 지정
 const kakao = axios.create({
   baseURL: 'https://dapi.kakao.com', // 공통 요청 경로를 지정해준다.

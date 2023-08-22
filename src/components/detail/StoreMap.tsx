@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
-import { Map, MapMarker, MapTypeControl, ZoomControl } from 'react-kakao-maps-sdk';
+// 타입
 import { StoreMapProps } from '../../types/props';
+// 컴포넌트
+import HotPlace from './HotPlace';
 
 declare global {
   interface Window {
@@ -12,16 +14,16 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
   //  ref는 맵이 렌더링될 DOM 요소를 참조
   const mapElement = useRef(null);
 
+  const { kakao } = window;
+
   useEffect(() => {
     // 주소를 좌표로 변환하는 geocoder 객체를 생성
     const geocoder = new kakao.maps.services.Geocoder();
 
-    geocoder.addressSearch(storeLocation, function (result, status) {
+    geocoder.addressSearch(storeLocation, function (result: any, status: string) {
       // 정상적으로 검색이 완료됐으면
       if (status === kakao.maps.services.Status.OK) {
         const coords = new kakao.maps.LatLng(Number(result[0].y), Number(result[0].x));
-
-        // console.log('coords', coords.La);
 
         // 지도 옵션
         const mapOption = {
@@ -31,6 +33,38 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
 
         // 지도 생성
         const map = new window.kakao.maps.Map(mapElement.current, mapOption);
+
+        // 장소 검색 객체를 생성합니다
+        const ps = new kakao.maps.services.Places();
+
+        // 장소검색이 완료됐을 때 호출되는 콜백함수
+        const placesSearchCB = (data: any, status: string, pagination: any) => {
+          if (status === kakao.maps.services.Status.OK) {
+            // 정상적으로 검색이 완료됐으면
+            // 검색 목록과 마커를 표출
+            // displayPlaces(data);
+            // 페이지 번호를 표출
+            // displayPagination(pagination);
+
+            console.log('data', data);
+          } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+            alert('검색 결과가 존재하지 않습니다.');
+            return;
+          } else if (status === kakao.maps.services.Status.ERROR) {
+            alert('검색 결과 중 오류가 발생했습니다.');
+            return;
+          }
+        };
+
+        // 키워드로 장소를 검색합니다
+        ps.keywordSearch(`${storeLocation.split(' ')[2]} 맛집`, placesSearchCB);
+
+        // const displayMarker = (place) => {
+        //   const marker = new kakao.maps.Marker({
+        //         map: map,
+        //         position: new kakao.maps.LatLng(place.y, place.x)
+        //     });
+        // }
 
         // 마커로 표시
         const marker = new kakao.maps.Marker({
@@ -60,6 +94,7 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
           margin: '70px 0'
         }}
       />
+      <HotPlace />
     </div>
   );
 };

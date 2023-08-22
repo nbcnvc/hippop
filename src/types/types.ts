@@ -41,7 +41,3 @@ export interface UserInfo {
   avatar_url: string;
   name: string;
 }
-
-// export interface HotPlace {
-
-// }
