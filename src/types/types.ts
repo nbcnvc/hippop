@@ -1,3 +1,5 @@
+import { User as SupabaseUser } from '@supabase/supabase-js';
+
 export interface Store {
   id: number;
   location: string;
@@ -54,7 +56,7 @@ export interface Comment {
   isDeleted: boolean;
 }
 
-export interface NewCommnet {
+export interface NewComment {
   // user_id: string;
   post_id: number;
   body: string;
@@ -65,8 +67,20 @@ export interface UserInfo {
   name: string;
 }
 
-export interface FetchData {
+export interface User extends SupabaseUser {
+  avatar_url: string;
+  name: string;
+}
+
+export interface FetchPost {
   posts: Post[];
+  page: number;
+  totalPages: number;
+  count: number | null;
+}
+
+export interface FetchComment {
+  comments: Comment[];
   page: number;
   totalPages: number;
   count: number | null;

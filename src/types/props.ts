@@ -65,6 +65,6 @@ export interface EditProps {
 export interface LoginProps {
   onClose: () => void;
   userInfo: UserInfo;
-  setUser: React.Dispatch<React.SetStateAction<UserInfo | null>>;
+  setUser: React.Dispatch<SetStateAction<UserInfo | null>>;
   closeModal: () => void;
 }

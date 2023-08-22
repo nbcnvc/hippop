@@ -3,7 +3,7 @@ import Main from '../components/community/main/Main';
 const Review = () => {
   return (
     <>
-      <h1>후기 작성 게시판</h1>
+      <div style={{ fontSize: '30px', fontWeight: 'bold', textAlign: 'center', padding: '20px' }}>Review</div>
       <Main />
     </>
   );

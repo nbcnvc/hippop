@@ -48,7 +48,7 @@ const Detail = ({ post, setPost }: DetailProps) => {
           ) : (
             <div
               className="ql-snow"
-              style={{ width: '90%', border: '1px solid black', padding: '20px', margin: '10px' }}
+              style={{ width: '95%', border: '1px solid black', padding: '20px', margin: '10px' }}
             >
               <div>카테고리 : {(post.ctg_index === 1 && '팝업후기') || (post.ctg_index === 2 && '팝업메이트')}</div>
               <div>팝업스토어 이름</div>
@@ -84,8 +84,8 @@ const ModalContainer = styled.div`
 const ModalBox = styled.div`
   background-color: #fff;
   padding: 20px;
-  width: 800px;
-  height: 800px;
+  width: 1000px;
+  height: 700px;
   border-radius: 10px;
   position: relative;
   overflow: auto;
