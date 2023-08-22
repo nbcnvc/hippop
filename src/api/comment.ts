@@ -17,3 +17,8 @@ export const getComments = async (postId: number) => {
 export const createComment = async (newComment: NewCommnet) => {
   await supabase.from('comment').insert(newComment);
 };
+
+// Commnet 삭제 (isDeleted true로 수정)
+export const deleteComment = async (id: number): Promise<void> => {
+  await supabase.from('comment').update({ isDeleted: true }).eq('id', id).select();
+};

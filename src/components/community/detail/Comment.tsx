@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { CommentProps } from '../../../types/props';
-import { createComment, getComments } from '../../../api/comment';
+import { createComment, deleteComment, getComments } from '../../../api/comment';
 import { Commnet } from '../../../types/types';
 
 const Comment = ({ post }: CommentProps) => {
@@ -38,6 +38,23 @@ const Comment = ({ post }: CommentProps) => {
     setBody('');
   };
 
+  // Commnet 삭제
+  const deleteMutation = useMutation(deleteComment, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['comment', id]);
+    }
+  });
+  const deleteButton = (id: number) => {
+    // 삭제 확인
+    const confirm = window.confirm('댓글을 삭제하시겠습니까?');
+    if (confirm) {
+      // DB 수정
+      deleteMutation.mutate(id);
+    }
+    // 삭제 완료
+    alert('삭제되었습니다!');
+  };
+
   if (isLoading) {
     return <div>로딩중입니다.</div>;
   }
@@ -46,17 +63,20 @@ const Comment = ({ post }: CommentProps) => {
   }
   return (
     <>
+      {/* 댓글 입력창 */}
       <div style={{ width: '90%', border: '1px solid black', padding: '20px', margin: '10px' }}>
         댓글 : <input value={body} onChange={onChangeBody} />
         <button onClick={createButton}>등록</button>
       </div>
-      {/* 작성된 댓글 목록 */}
+      {/* 댓글 목록 */}
       {comments?.map((comment) => {
         return (
           <div key={comment.id} style={{ width: '90%', border: '1px solid black', padding: '20px', margin: '10px' }}>
             <div>작성자</div>
             <div>작성일자: {comment.created_at}</div>
             <div>{comment.body}</div>
+            <button onClick={() => deleteButton(comment.id)}>삭제</button>
+            <button>수정</button>
           </div>
         );
       })}
