@@ -9,6 +9,16 @@ export interface EditorProps {
   setBody: React.Dispatch<SetStateAction<string>>;
 }
 
+// 스토어 지도 props
+export interface StoreMapProps {
+  storeLocation: string;
+}
+
+// 핫플레이스 props
+export interface HotPlaceProps {
+  guName: string;
+}
+
 // 캘린더 props
 export interface CalendarProps {
   storeData: Store;

@@ -88,32 +88,31 @@ const LoginTag = styled.div`
   width: 280px;
   height: 220px;
   background: rgba(183, 79, 231, 0.76);
-  border-radius:10px;
+  border-radius: 10px;
   padding: 1rem;
 
   .login-content {
-    gap:10px;
+    gap: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 
-    h2{
-      margin-top:10px;
+    h2 {
+      margin-top: 10px;
       text-align: center;
       font-weight: 600;
       font-size: 18px;
-      color:white;
+      color: white;
     }
-    span{
+    span {
       font-size: 12px;
     }
   }
-  .btn-wrapper{
+  .btn-wrapper {
     width: 100%;
   }
-  .btn-wrapper > ul{
-
+  .btn-wrapper > ul {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -121,16 +120,14 @@ const LoginTag = styled.div`
   }
   ul > li {
     margin: 1rem;
-    cursor:pointer;
+    cursor: pointer;
     transition: transform 0.5s, filter 0.5s;
   }
   ul > li:hover {
     transform: scale(1.05);
     filter: brightness(1.2);
   }
-  ul > li > img{
+  ul > li > img {
     width: 45px;
   }
-  }
-
 `;
