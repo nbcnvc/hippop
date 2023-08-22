@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 
-import { UserInfo } from '../../types/types';
-
 import { Link, useNavigate } from 'react-router-dom';
-import { handleLogOut } from '../../pages/Login';
+
 import { styled } from 'styled-components';
 import SearchIcon from '@mui/icons-material/Search';
 import Login from '../../pages/Login';
+import { UserInfo } from '../../types/types';
+import { handleLogOut } from '../../pages/Login';
+import { supabase } from '../../api/supabase';
 
 function Header() {
   const navigate = useNavigate();
@@ -16,12 +17,29 @@ function Header() {
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('sb-jlmwyvwmjcanbthgkpmh-auth-token');
+    const storedUser = sessionStorage.getItem('user');
     if (storedUser) {
-      const userData = JSON.parse(storedUser);
-      const { avatar_url, name } = userData.user.user_metadata;
-      setUser({ avatar_url, name });
+      setUser(JSON.parse(storedUser));
     }
+  }, []);
+  useEffect(() => {
+    const authSubscription = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        const storeUser: UserInfo = {
+          avatar_url: session.user.user_metadata.avatar_url,
+          name: session.user.user_metadata.name // 세션 정보에서 사용자 이름 가져오기
+        };
+        setUser(storeUser);
+        sessionStorage.setItem('user', JSON.stringify(storeUser));
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        sessionStorage.removeItem('user');
+      }
+    });
+
+    return () => {
+      authSubscription.data.subscription.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
@@ -32,6 +50,10 @@ function Header() {
     }
 
     window.addEventListener('mousedown', handleOutsideClick);
+
+    return () => {
+      window.removeEventListener('mousedown', handleOutsideClick);
+    };
   }, []);
 
   const handleToggle = () => {
@@ -70,24 +92,25 @@ function Header() {
         </Link>
         Header tap
       </div>
-
-      <div>
-        <Link to="/about">About</Link>
-      </div>
-      <div>
-        <Link to="/review">Review</Link>
-      </div>
-      <div>
-        <Link to="/mate">Mate</Link>
-      </div>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <Link to="/search">Search</Link>
-        {/* <SearchIcon
+      <ul>
+        <li>
+          <Link to="/about">About</Link>
+        </li>
+        <li>
+          <Link to="/review">Review</Link>
+        </li>
+        <li>
+          <Link to="/mate">Mate</Link>
+        </li>
+        <li>
+          <Link to="/search">Search</Link>
+          {/* <SearchIcon
           onClick={() => {
             navSearch();
           }}
         /> */}
-      </div>
+        </li>
+      </ul>
       <div>
         <div className="user-info">
           {user ? (
@@ -130,12 +153,45 @@ const HeaderTag = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  ul {
+    margin: 0 auto;
+    width: 70%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 10vw;
+  }
+  li{
+    a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transition: filter 0.3s, transform 0.3s !important;
+
+    &:hover {
+      filter: brightness(120%) !important;
+      color: gray !important;
+    }
+
+    &:active {
+      transform: scale(0.85) !important;
+    }
+  }
+}
+  }
   .logo-wrapper {
     display: flex;
     align-items: center;
 
     .test-logo {
       width: 80px;
+      
+        transition: filter 0.3s, transform 0.3s;
+        &:hover {
+          filter: brightness(120%);
+          transform: scale(0.92);
+        
+      }
     }
   }
   .user-info {
@@ -153,8 +209,17 @@ const HeaderTag = styled.header`
         display: flex;
         align-items: center;
         text-align: right;
+
+        img{
+          transition: filter 0.3s, transform 0.3s;
+          &:hover {
+            transform: scale(0.92);
+          }
+          
+        }
         .welcome-mate {
           margin-right: 8px;
+          width: 85px;
           p {
             margin: 4px 0;
           }
@@ -162,7 +227,7 @@ const HeaderTag = styled.header`
       }
       .dropdown-content {
         position: absolute;
-        bottom: -70px; /* 하단에서 조정 */
+        bottom: -70px; 
         right: 0;
         width: 120px;
         background-color: white;
@@ -189,6 +254,15 @@ const HeaderTag = styled.header`
   }
 `;
 
+// const ModalWrapper = styled.div`
+// =======
+// // const Line = styled.div`
+//   border-bottom: 2px dotted gray;
+//   width: 100%;
+
+//   margin-bottom: 50px;
+// `;
+
 // const Line = styled.div`
 //   border-bottom: 2px dotted gray;
 //   width: 100%;
@@ -210,6 +284,5 @@ const ModalWrapper = styled.div.attrs<{ isopen: boolean }>((props) => ({
   display: flex;
   justify-content: center;
   align-items: center;
-
-  transition: transform 0.6s ease-in-out;
+  z-index: 9;
 `;
