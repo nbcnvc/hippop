@@ -10,7 +10,7 @@ export const fetchAllBookMark = async () => {
   return data;
 };
 
-// 북마크 토글 기능
+// 북마크 토글
 export const toggleBookMark = async (bookmark: Bookmark): Promise<void> => {
   const { data: isBookMark }: any = await supabase
     .from('bookmark')
@@ -25,13 +25,9 @@ export const toggleBookMark = async (bookmark: Bookmark): Promise<void> => {
   }
 };
 
-// // 북마크 추가
-// export const createBookMark = async (toggleBookMark: Bookmark): Promise<void> => {
-//   await supabase.from('bookmark').insert(toggleBookMark);
-// };
+// 북마크 카운트
+export const fetchCount = async () => {
+  const { count } = await supabase.from('bookmark').select('store_id', { count: 'exact', head: true });
 
-// // 북마크 삭제
-// export const deleteBookMark = async (bookmarkId: number): Promise<void> => {
-//   // bookmark 테이블에서 id가 bookmarkId인 행을 삭제
-//   await supabase.from('bookmark').delete().eq('id', bookmarkId);
-// };
+  return count;
+};

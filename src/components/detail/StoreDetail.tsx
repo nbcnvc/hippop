@@ -16,6 +16,8 @@ import StoreMap from './StoreMap';
 
 const StoreDetail = () => {
   const { id } = useParams<{ id: string }>();
+
+  // store 상세 데이터 가져오기
   const {
     data: storeData,
     isLoading,

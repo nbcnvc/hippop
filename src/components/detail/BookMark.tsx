@@ -1,8 +1,8 @@
 import React from 'react';
-// api
-import { fetchAllBookMark, toggleBookMark } from '../../api/bookmark';
 // 라이브러리
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+// api
+import { fetchAllBookMark, toggleBookMark } from '../../api/bookmark';
 // 타입
 import { Bookmark } from '../../types/types';
 // props타입
@@ -62,7 +62,7 @@ const BookMark = ({ storeData }: CalendarProps) => {
     <>
       {CountMyBookMark !== undefined && (
         <>
-          {CountTotalBookMark} / {CountMyBookMark} /
+          {CountTotalBookMark} /
           {CountMyBookMark > 0 ? (
             <BookMarkBtn onClick={onClickToggle}>
               <Img src={oBookMark} alt="o" />

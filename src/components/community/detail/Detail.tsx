@@ -1,9 +1,9 @@
 import Edit from '../write/Edit';
-import Comment from './Comment';
+import Comments from './Comments';
 
 import { useState } from 'react';
 import { styled } from 'styled-components';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { DetailProps } from '../../../types/props';
 import { deletePost } from '../../../api/post';
@@ -31,6 +31,7 @@ const Detail = ({ post, setPost }: DetailProps) => {
     }
   };
 
+  // Post 수정
   const editButton = () => {
     setIsEdit(!isEdit);
   };
@@ -38,20 +39,27 @@ const Detail = ({ post, setPost }: DetailProps) => {
   return (
     <ModalContainer>
       <ModalBox>
-        <button onClick={closeDetail}>창 닫기</button>
-        <button onClick={() => deleteButton(post.id)}>삭제</button>
-        {isEdit ? (
-          <Edit post={post} setPost={setPost} isEdit={isEdit} setIsEdit={setIsEdit} />
-        ) : (
-          <>
-            <button onClick={editButton}>수정</button>
-            <div>카테고리 : {(post.ctg_index === 1 && '팝업후기') || (post.ctg_index === 2 && '팝업메이트')}</div>
-            <div>팝업스토어 이름</div>
-            <div>제목 : {post.title}</div>
-            <div dangerouslySetInnerHTML={{ __html: post.body }} />
-          </>
-        )}
-        {isEdit ? <></> : <Comment />}
+        <div>
+          <button onClick={closeDetail}>창 닫기</button>
+          <button onClick={() => deleteButton(post.id)}>삭제</button>
+          <button onClick={editButton}>수정</button>
+          {isEdit ? (
+            <Edit post={post} setPost={setPost} isEdit={isEdit} setIsEdit={setIsEdit} />
+          ) : (
+            <div
+              className="ql-snow"
+              style={{ width: '90%', border: '1px solid black', padding: '20px', margin: '10px' }}
+            >
+              <div>카테고리 : {(post.ctg_index === 1 && '팝업후기') || (post.ctg_index === 2 && '팝업메이트')}</div>
+              <div>팝업스토어 이름</div>
+              <div>작성자</div>
+              <div>작성일자 : {post.created_at}</div>
+              <div>제목 : {post.title}</div>
+              <div className="ql-editor" dangerouslySetInnerHTML={{ __html: post.body }} />
+            </div>
+          )}
+        </div>
+        {isEdit ? <></> : <Comments post={post} />}
       </ModalBox>
     </ModalContainer>
   );
