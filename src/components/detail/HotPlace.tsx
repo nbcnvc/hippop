@@ -2,13 +2,15 @@ import React, { ReactEventHandler, SetStateAction } from 'react';
 // 타입
 import { HotPlaceProps } from '../../types/props';
 
-const HotPlace = ({ setCategory }: HotPlaceProps) => {
+const HotPlace = ({ setCategory, setIsShow }: HotPlaceProps) => {
   const handleHotPlaceCategory = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = (e.target as HTMLButtonElement).name;
     setCategory(name);
   };
 
-  const handleShowMarker = () => {};
+  const handleShowMarker = () => {
+    setIsShow((prev) => !prev);
+  };
 
   return (
     <div>

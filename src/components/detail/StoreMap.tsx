@@ -43,6 +43,7 @@ interface RoadAddress {
 const StoreMap = ({ storeLocation }: StoreMapProps) => {
   const [category, setCategory] = useState<string>('맛집');
   const [hotPlaceData, setHotPlaceData] = useState<any>(null);
+  const [isShow, setIsShow] = useState<boolean>(false);
 
   //  ref는 맵이 렌더링될 DOM 요소를 참조
   const mapElement = useRef(null);
@@ -79,11 +80,12 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
             // LatLngBounds 객체에 좌표를 추가합니다
             const bounds = new kakao.maps.LatLngBounds();
 
-            for (let i = 0; i < data.length; i++) {
-              displayMarker(data[i]);
-              bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+            if (isShow) {
+              for (let i = 0; i < data.length; i++) {
+                displayMarker(data[i]);
+                bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+              }
             }
-
             // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
             // map.setBounds(bounds);
 
@@ -134,7 +136,7 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
         map.setCenter(coords);
       }
     });
-  }, [category]);
+  }, [category, isShow]);
 
   return (
     <div>
@@ -146,7 +148,7 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
           marginTop: '70px'
         }}
       />
-      <HotPlace setCategory={setCategory} />
+      <HotPlace setCategory={setCategory} setIsShow={setIsShow} />
       {hotPlaceData?.map((data: any) => {
         return <div key={data.id}>{data.place_name}</div>;
       })}
