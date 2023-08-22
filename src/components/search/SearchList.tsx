@@ -195,11 +195,11 @@ const Tag = styled.div`
   margin-right: 5px;
 `;
 
-const ImgContainer = styled.div`
-  display: flex;
+// const ImgContainer = styled.div`
+//   display: flex;
 
-  margin-top: 40px;
-`;
+//   margin-top: 40px;
+// `;
 
 const ImgWrapper = styled.div`
   margin-right: 30px;

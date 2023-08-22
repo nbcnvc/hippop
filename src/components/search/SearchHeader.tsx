@@ -115,16 +115,6 @@ function SearchHeader() {
                 />
               </ModalInputBox>
 
-              <TagBox>
-                <TagTitle>인기 검색어</TagTitle>
-                <Tag>#김우리 </Tag>
-                <Tag>#나윤빈</Tag>
-                <Tag>#양윤아</Tag>
-                <Tag>#장혜진</Tag>
-                <Tag>#조성록</Tag>
-                <Tag>#조진명</Tag>
-              </TagBox>
-              <Title>추천 팝업스토어!</Title>
               <ImgContainer>
                 {topStores?.map((store) => (
                   <ImgWrapper key={store.id} onClick={() => navDetail(store.id)}>
@@ -220,28 +210,6 @@ const ModalInput = styled.input`
   outline: none;
 
   padding-left: 35px;
-`;
-
-const TagTitle = styled.div`
-  margin-right: 20px;
-  font-weight: bold;
-`;
-
-const TagBox = styled.div`
-  display: flex;
-
-  margin-top: 20px;
-`;
-
-const Tag = styled.div`
-  margin-right: 5px;
-`;
-
-const Title = styled.div`
-  font-weight: bold;
-  font-size: 25px;
-
-  margin-top: 100px;
 `;
 
 const ImgContainer = styled.div`
