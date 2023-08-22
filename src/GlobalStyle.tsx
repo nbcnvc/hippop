@@ -4,6 +4,19 @@ import reset from 'styled-reset';
 const GlobalStyle = createGlobalStyle`
 ${reset}
 
+.ql-editor {
+    strong {
+        font-weight:bold;
+    }
+
+    em {
+        font-style: italic;
+    }
+    
+}
+
+
+
 @font-face {
     font-family: 'Fira Sans', sans-serif;
     src: url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@500&display=swap');
