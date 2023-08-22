@@ -17,7 +17,7 @@ const MainTag = styled.div`
   width: 80%;
   margin: 0 auto;
   border: 1px dotted gray;
-  margin-top: 2rem;
+  margin-top: 5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,6 +25,6 @@ const MainTag = styled.div`
     text-align: center;
   }
   img {
-    width: 80vw;
+    width: 63vw;
   }
 `;

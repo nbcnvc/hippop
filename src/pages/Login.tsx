@@ -12,113 +12,43 @@ export const handleLogOut = async () => {
   if (error) console.log('error=>', error);
 };
 
-const Login = ({ closeModal, fetchUserInfo }: { closeModal: () => void; fetchUserInfo: () => Promise<void> }) => {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [passwordCheck, setPasswordCheck] = useState<string>('');
+const Login = ({ closeModal }: { closeModal: () => void }) => {
+  // const [email, setEmail] = useState<string>('');
+  // const [password, setPassword] = useState<string>('');
+  // const [passwordCheck, setPasswordCheck] = useState<string>('');
 
-  useEffect(() => {
-    console.log(email);
-    console.log(password);
-  }, [email, password]);
-
-  const EmailChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-  const PasswordChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-  const PasswordCheckChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPasswordCheck(e.target.value);
-  };
-
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-    return emailRegex.test(email);
-  };
-
-  // default login
-  // const signupHandle = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-
-  //   if (!validateEmail(email)) {
-  //     alert('이메일 형식이 올바르지 않습니다.');
-  //     return;
-  //   }
-  //   if (password.length < 6) {
-  //     alert('비밀번호는 6자리 이상이어야 합니다.');
-  //     return;
-  //   }
-  //   try {
-  //     const { data, error } = await supabase.auth.signUp({
-  //       email,
-  //       password
-  //     });
-  //     console.log(data);
-  //     if (error) {
-  //       alert('아이디와 비밀번호를 확인해주세요');
-  //       console.error(error);
-  //     } else {
-  //       alert('회원가입이 완료되었습니다');
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+  // useEffect(() => {
+  //   console.log(email);
+  //   console.log(password);
+  // }, [email, password]);
 
   //google
   const signupGoogle = async (e: React.FormEvent) => {
     const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        queryParams: {
-          access_type: 'offline',
-          prompt: 'consent'
-        }
-      }
+      provider: 'google'
     });
     if (data) alert('로그인이 완료되었습니다');
     console.log(data);
     if (error) console.error('error =>', error);
   };
 
-  const signupKakao = async (e: React.FormEvent) => {
+  const signupKakao = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'kakao',
-      options: {
-        queryParams: {
-          access_type: 'offline',
-          prompt: 'consent'
-        }
-      }
+      provider: 'kakao'
     });
     if (data) alert('로그인이 완료되었습니다');
     console.log(data);
     if (error) console.error('error =>', error);
   };
+
   const signInWithFacebook = async (e: React.FormEvent) => {
     const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'facebook',
-      options: {
-        queryParams: {
-          access_type: 'offline',
-          prompt: 'consent'
-        }
-      }
+      provider: 'facebook'
     });
     if (data) alert('로그인이 완료되었습니다');
     console.log(data);
     if (error) console.error('error =>', error);
   };
-
-  // async function signInWithFacebook() {
-  //   const { data, error } = await supabase.auth.signInWithOAuth({
-  //     provider: 'facebook'
-  //   });
-  //   if (data) alert('로그인이 완료되었습니다');
-  //   console.log(data);
-  //   if (error) console.error('error =>', error);
-  // }
 
   return (
     <LoginTag>
@@ -143,13 +73,8 @@ const Login = ({ closeModal, fetchUserInfo }: { closeModal: () => void; fetchUse
             </ul>
           </div>
         </div>
-        <form>
-          {/* <input type="text" onChange={EmailChangeHandler} placeholder="Email" /> */}
-          {/* <input type="password" onChange={PasswordChangeHandler} placeholder="Password" /> */}
-          {/* <input type="password" onChange={PasswordCheckChangeHandler} placeholder="Check to Password" /> */}
-        </form>
+        <form></form>
       </div>
-      {/* <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} providers={['google']} /> */}
     </LoginTag>
   );
 };
