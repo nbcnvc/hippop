@@ -1,5 +1,4 @@
 import React from 'react';
-
 // 라이브러리
 import { FacebookShareButton, FacebookIcon, TwitterShareButton, TwitterIcon } from 'react-share';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -9,17 +8,11 @@ import { styled } from 'styled-components';
 import LinkIcon from '../../images/LinkIcon.png';
 import KakaoIcon from '../../images/kakaoIcon.png';
 
-const { Kakao } = window;
-
-// Kakao 타입 선언
-declare global {
-  interface Window {
-    Kakao: any;
-  }
-}
-
 const Share = () => {
+  // 현재 주소 가져오기
   const currentUrl = window.location.href;
+
+  const { Kakao } = window;
 
   // 카카오톡 init
   Kakao.cleanup();

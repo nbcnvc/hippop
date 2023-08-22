@@ -2,12 +2,14 @@ import React, { useEffect, useState, useRef } from 'react';
 
 import { UserInfo } from '../../types/types';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { handleLogOut } from '../../pages/Login';
-import styled, { css } from 'styled-components';
+import { styled } from 'styled-components';
+import SearchIcon from '@mui/icons-material/Search';
 import Login from '../../pages/Login';
 
 function Header() {
+  const navigate = useNavigate();
   const [user, setUser] = useState<UserInfo | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -45,6 +47,11 @@ function Header() {
     setIsModalOpen(false);
   };
 
+  // search page로 이동
+  const navSearch = () => {
+    navigate(`/search`);
+  };
+
   const handleModalOutsideClick = (event: React.MouseEvent) => {
     if (event.target === event.currentTarget) {
       closeModal();
@@ -63,6 +70,7 @@ function Header() {
         </Link>
         Header tap
       </div>
+
       <div>
         <Link to="/about">About</Link>
       </div>
@@ -72,8 +80,13 @@ function Header() {
       <div>
         <Link to="/mate">Mate</Link>
       </div>
-      <div>
+      <div style={{ display: 'flex', alignItems: 'center' }}>
         <Link to="/search">Search</Link>
+        {/* <SearchIcon
+          onClick={() => {
+            navSearch();
+          }}
+        /> */}
       </div>
       <div>
         <div className="user-info">
@@ -112,7 +125,7 @@ export default Header;
 const HeaderTag = styled.header`
   width: 100%;
   height: 10vh;
-  border: 1px dotted gray;
+  border-bottom: 1px dotted gray;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -175,6 +188,13 @@ const HeaderTag = styled.header`
     }
   }
 `;
+
+// const Line = styled.div`
+//   border-bottom: 2px dotted gray;
+//   width: 100%;
+
+//   margin-bottom: 50px;
+// `;
 
 const ModalWrapper = styled.div.attrs<{ isopen: boolean }>((props) => ({
   style: {

@@ -13,6 +13,12 @@ export interface EditorProps {
 export interface CalendarProps {
   storeData: Store;
 }
+
+export interface SearchCalendarProps {
+  storeData: Store[] | any;
+  onDateRangeChange: (dates: [Date, Date]) => void;
+}
+
 export interface SearchModalProps {
   searchModal: boolean;
   setWriteModal: React.Dispatch<SetStateAction<boolean>>;
