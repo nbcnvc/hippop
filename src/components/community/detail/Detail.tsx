@@ -3,7 +3,7 @@ import Comment from './Comment';
 
 import { useState } from 'react';
 import { styled } from 'styled-components';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { DetailProps } from '../../../types/props';
 import { deletePost } from '../../../api/post';
