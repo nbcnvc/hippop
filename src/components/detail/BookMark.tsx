@@ -16,7 +16,7 @@ import xBookMark from '../../images/xbookmark.png';
 const BookMark = ({ storeData }: CalendarProps) => {
   // 북마크 전체 조회
   const { data: bookMark, isLoading, isError } = useQuery(['bookMark'], () => fetchAllBookMark());
-  console.log('bookMark', bookMark);
+  // console.log('bookMark', bookMark);
 
   //토큰 키
   const tokenKey = localStorage.getItem('sb-jlmwyvwmjcanbthgkpmh-auth-token');
