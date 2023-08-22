@@ -37,6 +37,7 @@
     "react-date-range": "^1.4.0",
     "react-dom": "^18.2.0",
     "react-kakao-link": "^0.1.2",
+    "react-kakao-maps-sdk": "^1.1.11",
     "react-quill": "^2.0.0",
     "react-router-dom": "^6.15.0",
     "react-scripts": "5.0.1",
@@ -73,5 +74,8 @@
       "last 1 safari version"
     ]
   },
-  "packageManager": "yarn@1.22.19"
+  "packageManager": "yarn@1.22.19",
+  "devDependencies": {
+    "kakao.maps.d.ts": "^0.1.38"
+  }
 }

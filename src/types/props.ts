@@ -14,7 +14,7 @@ export interface StoreMapProps {
 }
 
 export interface HotPlaceProps {
-  roadName: string;
+  guName: string;
 }
 
 // 캘린더 props

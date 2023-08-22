@@ -9,10 +9,11 @@ import { fetchDetailData } from '../../api/store';
 // 스타일
 import { styled } from 'styled-components';
 // 컴포넌트
-import StoreMap from './StoreMap';
+import StoreMapNaver from './StoreMapNaver';
 import Share from './Share';
 import Calendar from './Calendar';
 import BookMark from './BookMark';
+import StoreMap from './StoreMap';
 
 const StoreDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -71,6 +72,7 @@ const StoreDetail = () => {
           </ImgBox>
           <Calendar storeData={storeData} />
           <StoreMap storeLocation={storeData.location} />
+          {/* <StoreMap storeLocation={storeData.location} /> */}
         </>
       )}
     </div>
