@@ -1,3 +1,5 @@
+import { User as SupabaseUser } from '@supabase/supabase-js';
+
 export interface Store {
   id: number;
   location: string;
@@ -61,6 +63,11 @@ export interface NewComment {
 }
 
 export interface UserInfo {
+  avatar_url: string;
+  name: string;
+}
+
+export interface User extends SupabaseUser {
   avatar_url: string;
   name: string;
 }
