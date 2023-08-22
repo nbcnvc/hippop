@@ -16,7 +16,7 @@ export interface StoreMapProps {
 
 // 핫플레이스 props
 export interface HotPlaceProps {
-  guName: string;
+  setCategory: React.Dispatch<SetStateAction<string>>;
 }
 
 // 캘린더 props
