@@ -4,15 +4,19 @@ import Calendar1 from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import moment from 'moment';
 // props타입
-import { CalendarProps } from '../../types/props';
+import { SearchCalendarProps } from '../../types/props';
 //스타일
 import { styled } from 'styled-components';
 
-const Calendar = ({ storeData }: CalendarProps) => {
-  const [period, setPeriod] = useState([storeData.period_start, storeData.period_end]);
-
+const SearchCalendar = ({ storeData, onDateRangeChange }: SearchCalendarProps) => {
+  const [period, setPeriod] = useState([storeData[0].period_start, storeData[0].period_end]);
   const onChangeCalendar = (date: any) => {
     setPeriod([date, date]);
+  };
+
+  const onChangePeriod = (date: Date) => {
+    // 여기서 선택한 날짜를 시작과 끝으로 설정하여 배열로 만들어 전달합니다.
+    onDateRangeChange([date, date]);
   };
 
   return (
@@ -21,6 +25,7 @@ const Calendar = ({ storeData }: CalendarProps) => {
         calendarType="US"
         locale="ko-KO"
         onChange={onChangeCalendar}
+        onClickDay={onChangePeriod}
         selectRange={true}
         value={[period[0], period[1]]}
         formatDay={(locale, date) => moment(date).format('D')}
@@ -29,7 +34,7 @@ const Calendar = ({ storeData }: CalendarProps) => {
   );
 };
 
-export default Calendar;
+export default SearchCalendar;
 
 const StyleCalendar = styled(Calendar1)`
   react-calendar {
