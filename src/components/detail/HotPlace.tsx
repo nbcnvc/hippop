@@ -8,10 +8,12 @@ const HotPlace = ({ setCategory }: HotPlaceProps) => {
     setCategory(name);
   };
 
+  const handleShowMarker = () => {};
+
   return (
     <div>
-      <div style={{ fontSize: '20px', fontWeight: '600' }}>팝업 스토어 주변 핫플레이스 추천 !</div>
-      <div>
+      <div style={{ fontSize: '20px', fontWeight: '600', marginTop: '50px' }}>팝업 스토어 주변 핫플레이스 추천 !</div>
+      <div style={{ marginTop: '20px' }}>
         <button name="맛집" onClick={handleHotPlaceCategory}>
           맛집
         </button>
@@ -22,6 +24,7 @@ const HotPlace = ({ setCategory }: HotPlaceProps) => {
           술집
         </button>
       </div>
+      <button onClick={handleShowMarker}>지도로 위치 확인해보기</button>
     </div>
   );
 };

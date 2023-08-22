@@ -23,7 +23,7 @@ const kakao = axios.create({
 });
 
 // hotplace kakao 검색 api 호출
-export const fetchHotPlaceData = async (): Promise<any> => {
-  const { data } = await kakao.get(`v2/search/blog?target=title&query=영등포 맛집&page=1`);
-  return data.documents;
-};
+// export const fetchHotPlaceData = async (): Promise<any> => {
+//   const { data } = await kakao.get(`v2/search/blog?target=title&query=영등포 맛집&page=1`);
+//   return data.documents;
+// };
