@@ -29,7 +29,7 @@ const SearchList = ({ storeData }: SearchListProps) => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
-  //filter된 storeList state
+  // filter된 storeList state
   const [filteredStoreList, setFilteredStoreList] = useState<Store[] | null>(null);
 
   // 인피니티 스크롤을 위한 데이터 조회
