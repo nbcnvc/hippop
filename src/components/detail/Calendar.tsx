@@ -18,7 +18,7 @@ const Calendar = ({ storeData }: CalendarProps) => {
   return (
     <div>
       <StyleCalendar
-        calendarType="US"
+        calendarType="gregory"
         locale="ko-KO"
         onChange={onChangeCalendar}
         selectRange={true}

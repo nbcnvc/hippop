@@ -26,6 +26,10 @@ export interface Bookmark {
   store_id: number;
 }
 
+export interface SearchListProps {
+  storeData: Store[];
+}
+
 export interface Post {
   id: number;
   created_at: string;
@@ -87,4 +91,73 @@ export interface FetchComment {
   page: number;
   totalPages: number;
   count: number | null;
+}
+
+// 지오코딩 타입 선언
+export interface Geocoder {
+  address: AddressInfo;
+  address_name: string;
+  address_type: string;
+  road_address: RoadAddress;
+  x: string;
+  y: string;
+}
+
+// 번지수 주소 타입 선언
+export interface AddressInfo {
+  address_name: string;
+  b_code: string;
+  h_code: string;
+  main_address_no: string;
+  mountain_yn: string;
+}
+
+// 도로명 주소 타입 선언
+export interface RoadAddress {
+  address_name: string;
+  building_name: string;
+  main_building_no: string;
+  region_1depth_name: string;
+  region_2depth_name: string;
+  region_3depth_name: string;
+  road_name: string;
+  x: string;
+  y: string;
+  zone_no: string;
+}
+
+// 핫플레이스 타입 선언
+export interface HotPlaceInfo {
+  address_name: string;
+  category_group_code: string;
+  category_group_name: string;
+  category_name: string;
+  distance: string;
+  id: string;
+  phone: string;
+  place_name: string;
+  place_url: string;
+  road_address_name: string;
+  x: string;
+  y: string;
+}
+
+export interface HotPlaceImage {
+  collection: string;
+  datetime: string;
+  display_sitename: string;
+  doc_url: string;
+  image_url: string;
+  thumbnail_url: string;
+  width: number;
+  height: number;
+  thumbnail: string;
+}
+
+export interface HotPlaceData {
+  id: string;
+  category_code: string;
+  category_name: string;
+  place_name: string;
+  images: string;
 }

@@ -90,10 +90,10 @@ function Header() {
     setIsModalOpen(false);
   };
 
-  // search page로 이동
-  const navSearch = () => {
-    navigate(`/search`);
-  };
+  // // search page로 이동
+  // const navSearch = () => {
+  //   navigate(`/search`);
+  // };
 
   const handleModalOutsideClick = (event: React.MouseEvent) => {
     if (event.target === event.currentTarget) {

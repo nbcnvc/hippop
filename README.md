@@ -15,4 +15,5 @@ yarn start
 - @supabase/auth-ui-react
 - @supabase/auth-ui-shared
 - axios
+- @types/axios
 - react-kakao-maps-sdk

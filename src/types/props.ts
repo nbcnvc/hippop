@@ -1,8 +1,5 @@
 import { SetStateAction } from 'react';
-import { UserInfo } from './types';
-import { Store } from './types';
-
-import { Post } from './types';
+import { UserInfo, Store, Post, HotPlaceData } from './types';
 
 export interface EditorProps {
   body: string;
@@ -17,6 +14,8 @@ export interface StoreMapProps {
 // 핫플레이스 props
 export interface HotPlaceProps {
   setCategory: React.Dispatch<SetStateAction<string>>;
+  setIsShow: React.Dispatch<SetStateAction<boolean>>;
+  hotPlaceData: HotPlaceData[];
 }
 
 // 캘린더 props
@@ -25,8 +24,8 @@ export interface CalendarProps {
 }
 
 export interface SearchCalendarProps {
-  storeData: Store[] | any;
-  onDateRangeChange: (dates: [Date, Date]) => void;
+  storeData: Store[] | null;
+  onSearch: (startDate: Date, endDate: Date) => void;
 }
 
 export interface SearchModalProps {
