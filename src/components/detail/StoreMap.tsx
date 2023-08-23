@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 // 타입
 import { StoreMapProps } from '../../types/props';
 // 컴포넌트
@@ -11,6 +11,9 @@ declare global {
 }
 
 const StoreMap = ({ storeLocation }: StoreMapProps) => {
+  const [category, setCategory] = useState<string>('맛집');
+  const [hotPlaceData, setHotPlaceData] = useState<any>(null);
+
   //  ref는 맵이 렌더링될 DOM 요소를 참조
   const mapElement = useRef(null);
 
@@ -38,15 +41,13 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
         const ps = new kakao.maps.services.Places();
 
         // 장소검색이 완료됐을 때 호출되는 콜백함수
-        const placesSearchCB = (data: any, status: string, pagination: any) => {
+        const placesSearchCB = (data: any, status: string) => {
           if (status === kakao.maps.services.Status.OK) {
-            // 정상적으로 검색이 완료됐으면
-            // 검색 목록과 마커를 표출
+            // 정상적으로 검색이 완료됐으면 검색 목록과 마커를 표출
             // displayPlaces(data);
-            // 페이지 번호를 표출
-            // displayPagination(pagination);
 
             console.log('data', data);
+            setHotPlaceData(data);
           } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
             alert('검색 결과가 존재하지 않습니다.');
             return;
@@ -57,7 +58,7 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
         };
 
         // 키워드로 장소를 검색합니다
-        ps.keywordSearch(`${storeLocation.split(' ')[2]} 맛집`, placesSearchCB);
+        ps.keywordSearch(`${storeLocation.split(' ')[2]} ${category}`, placesSearchCB);
 
         // const displayMarker = (place) => {
         //   const marker = new kakao.maps.Marker({
@@ -82,7 +83,7 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
         map.setCenter(coords);
       }
     });
-  }, []);
+  }, [category]);
 
   return (
     <div>
@@ -94,7 +95,10 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
           margin: '70px 0'
         }}
       />
-      <HotPlace />
+      <HotPlace setCategory={setCategory} />
+      {hotPlaceData?.map((data: any) => {
+        return <div key={data.id}>{data.place_name}</div>;
+      })}
     </div>
   );
 };

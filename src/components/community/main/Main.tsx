@@ -18,7 +18,11 @@ const Main = () => {
   };
   return (
     <>
-      <button onClick={searcButton}>글 작성</button>
+      <div style={{ padding: '0 20px 30px 0' }}>
+        <button onClick={searcButton} style={{ float: 'right' }}>
+          글 작성
+        </button>
+      </div>
       <SearchModal setWriteModal={setWriteModal} searchModal={searchModal} setSearchModal={setSearchModal} />
       <Write
         writeModal={writeModal}

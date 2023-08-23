@@ -3,7 +3,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation } from 'react-router-dom';
 
-import { FetchData, Post } from '../../../types/types';
+import { FetchPost, Post } from '../../../types/types';
 import { PostsProps } from '../../../types/props';
 import { getPosts } from '../../../api/post';
 
@@ -17,7 +17,7 @@ const Posts = ({ setPost }: PostsProps) => {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage
-  } = useInfiniteQuery<FetchData>({
+  } = useInfiniteQuery<FetchPost>({
     queryKey: [`${queryKey}`, pathname],
     queryFn: ({ pageParam }) => getPosts(pageParam, pathname),
     getNextPageParam: (lastPage) => {
@@ -29,7 +29,6 @@ const Posts = ({ setPost }: PostsProps) => {
     }
   });
 
-  // select
   const selectPosts = useMemo(() => {
     return posts?.pages
       .map((data) => {
@@ -60,13 +59,12 @@ const Posts = ({ setPost }: PostsProps) => {
   }
   return (
     <div>
-      <h1>글 목록</h1>
       {selectPosts?.map((post) => {
         return (
           <div
             key={post.id}
             onClick={() => openDetail(post)}
-            style={{ width: '100%', border: '1px solid black', padding: '20px', margin: '10px' }}
+            style={{ width: '95%', border: '1px solid black', padding: '20px', margin: '10px' }}
           >
             <div>카테고리 : {(post.ctg_index === 1 && '팝업후기') || (post.ctg_index === 2 && '팝업메이트')}</div>
             <div>제목 : {post.title}</div>

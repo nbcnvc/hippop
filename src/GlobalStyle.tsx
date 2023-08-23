@@ -4,18 +4,15 @@ import reset from 'styled-reset';
 const GlobalStyle = createGlobalStyle`
 ${reset}
 
+// 에디터 설정
 .ql-editor {
     strong {
         font-weight:bold;
     }
-
     em {
         font-style: italic;
     }
-    
 }
-
-
 
 @font-face {
     font-family: 'Fira Sans', sans-serif;

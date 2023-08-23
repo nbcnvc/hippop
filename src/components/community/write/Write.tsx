@@ -3,12 +3,11 @@ import Editor from './Editor';
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { styled } from 'styled-components';
 
 import { NewPost } from '../../../types/types';
 import { createPost } from '../../../api/post';
 import { WriteProps } from '../../../types/props';
-
-import { styled } from 'styled-components';
 
 const Write = ({ writeModal, setWriteModal, setSearchModal, setPost }: WriteProps) => {
   const { pathname } = useLocation();
