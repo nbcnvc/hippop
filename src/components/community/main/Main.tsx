@@ -6,6 +6,7 @@ import SearchModal from '../write/SearchModal';
 import { useState } from 'react';
 
 import { Post, Store } from '../../../types/types';
+import { useCurrentUser } from '../../../store/userStore';
 
 const Main = () => {
   const [detailPost, setDetailPost] = useState<Post | null>(null);
@@ -14,9 +15,13 @@ const Main = () => {
   const [storeId, setStoreId] = useState<number>(0);
   const [storeTitle, setStoreTitle] = useState<string>('');
   const [result, setResult] = useState<Store[] | null>(null);
+  const currentUser = useCurrentUser();
 
   // 검색 모달 열기
   const searcButton = () => {
+    if (!currentUser) {
+      return alert('로그인 해주세요.');
+    }
     setSearchModal(true);
   };
   return (

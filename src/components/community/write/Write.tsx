@@ -8,8 +8,10 @@ import { styled } from 'styled-components';
 import { NewPost } from '../../../types/types';
 import { createPost } from '../../../api/post';
 import { WriteProps } from '../../../types/props';
+import { useCurrentUser } from '../../../store/userStore';
 
 const Write = ({ writeModal, setWriteModal, setSearchModal, setPost, storeId, storeTitle, setResult }: WriteProps) => {
+  const currentUser = useCurrentUser();
   const { pathname } = useLocation();
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
   const [title, setTitle] = useState<string>('');
@@ -63,7 +65,7 @@ const Write = ({ writeModal, setWriteModal, setSearchModal, setPost, storeId, st
 
     // newPost 선언
     const newPost: NewPost = {
-      // user_id: '짱구',
+      user_id: currentUser?.id,
       store_id: storeId,
       ctg_index,
       title,

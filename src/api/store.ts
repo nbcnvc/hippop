@@ -10,7 +10,7 @@ export const fetchStoreData = async () => {
 };
 
 // store 상세 정보 조회
-export const fetchDetailData = async (id: string): Promise<Store | null> => {
+export const fetchDetailData = async (id: number): Promise<Store | null> => {
   const { data } = await supabase.from('store').select('*').eq('id', id).single();
   return data;
 };
