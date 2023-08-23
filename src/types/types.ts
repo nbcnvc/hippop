@@ -79,6 +79,13 @@ export interface User extends SupabaseUser {
   name: string;
 }
 
+export interface FetchsStore {
+  stores: Store[];
+  page: number;
+  totalPages: number;
+  count: number | null;
+}
+
 export interface FetchPost {
   posts: Post[];
   page: number;
