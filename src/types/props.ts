@@ -25,8 +25,8 @@ export interface CalendarProps {
 }
 
 export interface SearchCalendarProps {
-  storeData: Store[] | any;
-  onDateRangeChange: (dates: [Date, Date]) => void;
+  storeData: Store[] | null;
+  onSearch: (startDate: Date, endDate: Date) => void;
 }
 
 export interface SearchModalProps {
