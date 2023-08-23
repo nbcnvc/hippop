@@ -56,6 +56,10 @@ export interface CommentProps {
   post: Post;
 }
 
+export interface WriterProps {
+  userId: string;
+}
+
 export interface DetailProps {
   post: Post;
   setPost: React.Dispatch<SetStateAction<Post | null>>;

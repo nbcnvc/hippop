@@ -43,8 +43,8 @@ export interface Post {
 }
 
 export interface NewPost {
-  // user_id: string;
-  store_id: number | null;
+  user_id: string | undefined;
+  store_id: number;
   ctg_index: number;
   title: string;
   body: string;
@@ -61,7 +61,7 @@ export interface Comment {
 }
 
 export interface NewComment {
-  // user_id: string;
+  user_id: string | undefined;
   post_id: number;
   body: string;
 }
