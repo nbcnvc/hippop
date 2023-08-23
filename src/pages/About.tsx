@@ -60,7 +60,7 @@ const AboutTag = styled.div`
 
   h2 {
     margin-top: 1rem;
-    font-size: 20px;
+    font-size: 2rem;
     text-align: center;
   }
   .about-wrapper {
