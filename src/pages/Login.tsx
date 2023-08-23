@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import { supabase } from '../api/supabase';
 
@@ -13,15 +13,6 @@ export const handleLogOut = async () => {
 };
 
 const Login = ({ closeModal }: { closeModal: () => void }) => {
-  // const [email, setEmail] = useState<string>('');
-  // const [password, setPassword] = useState<string>('');
-  // const [passwordCheck, setPasswordCheck] = useState<string>('');
-
-  // useEffect(() => {
-  //   console.log(email);
-  //   console.log(password);
-  // }, [email, password]);
-
   //google
   const signupGoogle = async (e: React.FormEvent) => {
     const { data, error } = await supabase.auth.signInWithOAuth({
@@ -55,7 +46,7 @@ const Login = ({ closeModal }: { closeModal: () => void }) => {
       <div>
         <div className="login-content">
           <Link to="/">
-            <img src="/asset/test-logo.png" alt="logo" width={80} />
+            <img src="/asset/test-logo1.png" alt="logo" width={80} />
           </Link>
           <h2>Find your HipPop</h2>
           <span>힙-팝에 오신걸 환영해요 :)</span>

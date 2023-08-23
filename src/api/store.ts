@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { supabase } from './supabase';
 // 타입
-import { Store } from '../types/types';
+import { FetchsStore, Store } from '../types/types';
 
 // store 전체 조회
 export const fetchStoreData = async () => {
@@ -23,10 +23,24 @@ export const Kakao = axios.create({
   }
 });
 
-// export default Kakao;
+// 검색페이지 인피니티 스크롤(3개씩) store 조회
+export const getInfinityStore = async (pageParam: number = 1): Promise<FetchsStore> => {
+  let data: Store[] | null = [];
+  let count: number | null = null;
 
-// hotplace kakao 검색 api 호출
-// export const fetchHotPlaceData = async (query: string): Promise<any> => {
-//   const { data } = await kakao.get(`v2/search/image?target=title&query=${query}&page=1`);
-//   return data.documents;
-// };
+  const { data: stores } = await supabase
+    .from('store')
+    .select()
+    .order('created_at', { ascending: false })
+    .range(pageParam * 3 - 3, pageParam * 3 - 1);
+  data = stores;
+
+  const { count: storeCount } = await supabase.from('store').select('count', { count: 'exact' });
+
+  count = storeCount;
+
+  // 총 페이지
+  const totalPages = count ? Math.floor(count / 3) + (count % 3 === 0 ? 0 : 1) : 1;
+
+  return { stores: data as Store[], page: pageParam, totalPages, count };
+};

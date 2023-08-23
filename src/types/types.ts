@@ -67,13 +67,23 @@ export interface NewComment {
 }
 
 export interface UserInfo {
-  avatar_url: string;
+  id: string;
+  created_at: string;
+  email: string;
   name: string;
+  avatar_url: string;
 }
 
 export interface User extends SupabaseUser {
   avatar_url: string;
   name: string;
+}
+
+export interface FetchsStore {
+  stores: Store[];
+  page: number;
+  totalPages: number;
+  count: number | null;
 }
 
 export interface FetchPost {
