@@ -63,8 +63,11 @@ export interface NewComment {
 }
 
 export interface UserInfo {
-  avatar_url: string;
+  id: string;
+  created_at: string;
+  email: string;
   name: string;
+  avatar_url: string;
 }
 
 export interface User extends SupabaseUser {
