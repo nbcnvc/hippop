@@ -11,7 +11,7 @@ const Writer = ({ userId }: WriterProps) => {
 
   return (
     <>
-      <div style={{ width: '95%', border: '1px solid black', padding: '20px', margin: '10px' }}>
+      <div style={{ width: '90%', border: '1px solid black', padding: '20px', margin: '10px' }}>
         <div>작성자</div>
         <Img src={user?.avatar_url} alt="User Avatar" />
         <div>{user?.name}</div>

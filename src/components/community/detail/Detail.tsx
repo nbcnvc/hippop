@@ -76,7 +76,7 @@ const Detail = ({ post, setPost }: DetailProps) => {
           )}
         </div>
         {/* 작성자 */}
-        <Writer userId={post.user_id} />
+        {isEdit ? <></> : <Writer userId={post.user_id} />}
         {/* 댓글 */}
         {isEdit ? <></> : <Comments post={post} />}
       </ModalBox>

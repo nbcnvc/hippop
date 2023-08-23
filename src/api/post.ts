@@ -57,6 +57,12 @@ export const getPosts = async (pageParam: number = 1, param?: string): Promise<F
   return { posts: data as Post[], page: pageParam, totalPages, count };
 };
 
+// Post 상세 조회
+export const getPost = async (id: number): Promise<Post | null> => {
+  const { data } = await supabase.from('post').select('*').eq('id', id).single();
+  return data;
+};
+
 // Post 추가
 export const createPost = async (newPost: NewPost): Promise<void> => {
   await supabase.from('post').insert(newPost);

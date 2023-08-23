@@ -42,13 +42,14 @@ const Comments = ({ post }: CommentProps) => {
     }
   });
 
-  const selectComments = useMemo(() => {
-    return comments?.pages
-      .map((data) => {
-        return data.comments;
-      })
-      .flat();
-  }, [comments]);
+  const selectComments =
+    useMemo(() => {
+      return comments?.pages
+        .map((data) => {
+          return data.comments;
+        })
+        .flat();
+    }, [comments]) || [];
 
   // 더보기 버튼
   const fetchMore = () => {
@@ -147,7 +148,7 @@ const Comments = ({ post }: CommentProps) => {
       {selectComments?.map((comment) => {
         return (
           <div key={comment.id} style={{ width: '92.5%', border: '1px solid black', padding: '10px', margin: '10px' }}>
-            <div>작성자</div>
+            <div>작성자 : {currentUser?.name}</div>
             <div>작성일자: {moment(comment.created_at).format('YYYY.MM.DD HH:mm')}</div>
             {isEditId === comment.id ? (
               <input value={edit} onChange={onChangeEdit} style={{ width: '50%' }} />
@@ -164,6 +165,7 @@ const Comments = ({ post }: CommentProps) => {
         );
       })}
       {/* 더보기 버튼 */}
+      {/* {selectComments?.length > 5 && <button onClick={fetchMore}>더보기</button>} */}
       <button onClick={fetchMore}>더보기</button>
     </>
   );
