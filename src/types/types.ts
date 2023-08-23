@@ -44,7 +44,7 @@ export interface Post {
 
 export interface NewPost {
   // user_id: string;
-  // store_id: number;
+  store_id: number | null;
   ctg_index: number;
   title: string;
   body: string;

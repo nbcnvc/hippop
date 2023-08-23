@@ -32,6 +32,10 @@ export interface SearchModalProps {
   searchModal: boolean;
   setWriteModal: React.Dispatch<SetStateAction<boolean>>;
   setSearchModal: React.Dispatch<SetStateAction<boolean>>;
+  setId: React.Dispatch<SetStateAction<number>>;
+  setTitle: React.Dispatch<SetStateAction<string>>;
+  result: Store[] | null;
+  setResult: React.Dispatch<SetStateAction<Store[] | null>>;
 }
 
 export interface WriteProps {
@@ -39,6 +43,9 @@ export interface WriteProps {
   setWriteModal: React.Dispatch<SetStateAction<boolean>>;
   setSearchModal: React.Dispatch<SetStateAction<boolean>>;
   setPost: React.Dispatch<SetStateAction<Post | null>>;
+  storeId: number;
+  storeTitle: string;
+  setResult: React.Dispatch<SetStateAction<Store[] | null>>;
 }
 
 export interface PostsProps {

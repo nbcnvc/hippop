@@ -4,9 +4,9 @@ import { supabase } from './supabase';
 import { Store } from '../types/types';
 
 // store 전체 조회
-export const fetchStoreData = async (): Promise<Store[] | null> => {
+export const fetchStoreData = async () => {
   const { data } = await supabase.from('store').select('*');
-  return data;
+  return data as Store[];
 };
 
 // store 상세 정보 조회
