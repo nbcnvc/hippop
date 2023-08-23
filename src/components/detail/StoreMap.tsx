@@ -15,9 +15,11 @@ declare global {
 }
 
 const StoreMap = ({ storeLocation }: StoreMapProps) => {
+  const [guName, setGuName] = useState<string>('');
   const [category, setCategory] = useState<string>('맛집');
   const [hotPlaceData, setHotPlaceData] = useState<HotPlaceData[]>();
-  const [isShow, setIsShow] = useState<boolean>(false);
+  const [isShowSMarker, setIsShowSMarker] = useState<boolean>(false);
+  const [isShowPMarker, setIsShowPMarker] = useState<boolean>(false);
 
   //  ref는 맵이 렌더링될 DOM 요소를 참조
   const mapElement = useRef(null);
@@ -33,7 +35,8 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
       if (status === kakao.maps.services.Status.OK) {
         const coords = new kakao.maps.LatLng(Number(result[0].y), Number(result[0].x));
 
-        // console.log(result[0].road_address.road_name);
+        const dongName = result[0].address.region_3depth_h_name;
+        setGuName(result[0].address.region_2depth_name);
 
         // 지도 옵션
         const mapOption = {
@@ -54,12 +57,15 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
             // LatLngBounds 객체에 좌표를 추가합니다
             const bounds = new kakao.maps.LatLngBounds();
 
-            if (isShow) {
+            if (isShowPMarker) {
               for (let i = 0; i < data.length; i++) {
                 displayMarker(data[i]);
                 bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
               }
             }
+
+            console.log(data);
+
             // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
             // map.setBounds(bounds);
 
@@ -78,7 +84,7 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
               const response = await Kakao.get(
                 // `v2/search/image?sort=accuracy&target=title&query=${hotPlace.place_name}&page=1&size=20`
                 // `v2/search/blog?sort=accuracy&page=1&size=5&query=${hotPlace.place_name}`
-                `v2/search/image?sort=accuracy&page=1&size=10&query=${hotPlace.place_name}`
+                `v2/search/image?sort=accuracy&page=1&size=10&query=${hotPlace.place_name} ${category}`
               );
               return {
                 id: hotPlace.id,
@@ -103,7 +109,7 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
         };
 
         // 키워드로 장소를 검색합니다
-        ps.keywordSearch(`${result[0].road_address.road_name} ${category}`, placesSearchCB);
+        ps.keywordSearch(`${dongName} ${category}`, placesSearchCB);
 
         const displayMarker = (place: HotPlaceInfo) => {
           const marker = new kakao.maps.Marker({
@@ -148,7 +154,7 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
         map.setCenter(coords);
       }
     });
-  }, [storeLocation, category, isShow]);
+  }, [storeLocation, category, isShowPMarker]);
 
   return (
     <div>
@@ -160,8 +166,10 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
           marginTop: '70px'
         }}
       />
-      <NearbyStore />
-      {hotPlaceData && <HotPlace setCategory={setCategory} setIsShow={setIsShow} hotPlaceData={hotPlaceData} />}
+      <NearbyStore guName={guName} setIsShowSMarker={setIsShowSMarker} />
+      {hotPlaceData && (
+        <HotPlace setCategory={setCategory} setIsShowPMarker={setIsShowPMarker} hotPlaceData={hotPlaceData} />
+      )}
     </div>
   );
 };
