@@ -22,7 +22,8 @@ const MypageTag = styled.div`
     margin: 1rem 0;
   }
   img {
+    margin: 0 auto;
+    display: flex;
     max-width: 100%;
-    width: ;
   }
 `;

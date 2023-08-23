@@ -15,8 +15,8 @@ function Header() {
     const storedUser = localStorage.getItem('sb-jlmwyvwmjcanbthgkpmh-auth-token');
     if (storedUser) {
       const userData = JSON.parse(storedUser);
-      const { avatar_url, name } = userData.user.user_metadata;
-      setUser({ avatar_url, name });
+      const { id, created_at, email, name, avatar_url } = userData.user.user_metadata;
+      setUser({ id, created_at, email, name, avatar_url });
     }
   }, []);
 
