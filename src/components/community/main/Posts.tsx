@@ -71,7 +71,6 @@ const Posts = ({ setPost }: PostsProps) => {
           </div>
         );
       })}
-
       <div
         style={{
           backgroundColor: 'yellow',

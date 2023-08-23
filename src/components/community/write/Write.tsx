@@ -9,7 +9,7 @@ import { NewPost } from '../../../types/types';
 import { createPost } from '../../../api/post';
 import { WriteProps } from '../../../types/props';
 
-const Write = ({ writeModal, setWriteModal, setSearchModal, setPost }: WriteProps) => {
+const Write = ({ writeModal, setWriteModal, setSearchModal, setPost, storeId, storeTitle, setResult }: WriteProps) => {
   const { pathname } = useLocation();
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
   const [title, setTitle] = useState<string>('');
@@ -29,6 +29,7 @@ const Write = ({ writeModal, setWriteModal, setSearchModal, setPost }: WriteProp
   const closeWrite = () => {
     setWriteModal(false);
     setSearchModal(true);
+    setResult(null);
   };
 
   // Post 추가
@@ -63,7 +64,7 @@ const Write = ({ writeModal, setWriteModal, setSearchModal, setPost }: WriteProp
     // newPost 선언
     const newPost: NewPost = {
       // user_id: '짱구',
-      // store_id: 1,
+      store_id: storeId,
       ctg_index,
       title,
       body
@@ -91,6 +92,7 @@ const Write = ({ writeModal, setWriteModal, setSearchModal, setPost }: WriteProp
             <button onClick={closeWrite}>이전</button>
             <div>
               <div>
+                <div>어떤 팝업 ? {storeTitle}</div>
                 <span>제목 : </span>
                 <input
                   value={title}
