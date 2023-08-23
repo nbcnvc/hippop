@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 // 타입
-import { Geocoder, HotPlaceInfo, HotPlaceImage } from '../../types/types';
+import { Geocoder, HotPlaceInfo, HotPlaceImage, HotPlaceData } from '../../types/types';
 import { StoreMapProps } from '../../types/props';
 // 컴포넌트
 import HotPlace from './HotPlace';
@@ -15,7 +15,7 @@ declare global {
 
 const StoreMap = ({ storeLocation }: StoreMapProps) => {
   const [category, setCategory] = useState<string>('맛집');
-  const [hotPlaceData, setHotPlaceData] = useState<HotPlaceInfo[]>();
+  const [hotPlaceData, setHotPlaceData] = useState<HotPlaceData[]>();
   const [isShow, setIsShow] = useState<boolean>(false);
 
   //  ref는 맵이 렌더링될 DOM 요소를 참조
@@ -75,22 +75,23 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
 
             const hotPlaceDataArr = data.map(async (hotPlace) => {
               const response = await Kakao.get(
-                `v2/search/image?target=title&query=${hotPlace.place_name}&page=1&size=20`
+                // `v2/search/image?sort=accuracy&target=title&query=${hotPlace.place_name}&page=1&size=20`
+                // `v2/search/blog?sort=accuracy&page=1&size=5&query=${hotPlace.place_name}`
+                `v2/search/image?sort=accuracy&page=1&size=10&query=${hotPlace.place_name}`
               );
               return {
                 id: hotPlace.id,
                 category_code: hotPlace.category_group_code,
                 category_name: hotPlace.category_group_name,
                 place_name: hotPlace.place_name,
-                images: response.data.documents.map((document: HotPlaceImage) => document.image_url)
+                images: response.data.documents.map((document: HotPlaceImage) => document.thumbnail_url)
               };
             });
 
             const response = await Promise.all(hotPlaceDataArr);
-
             console.log(response);
 
-            setHotPlaceData(data);
+            setHotPlaceData(response);
           } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
             alert('검색 결과가 존재하지 않습니다.');
             return;

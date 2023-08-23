@@ -1,10 +1,8 @@
-import React, { ReactEventHandler, SetStateAction } from 'react';
+import React from 'react';
 // 타입
 import { HotPlaceProps } from '../../types/props';
-import { HotPlaceInfo } from '../../types/types';
-import { useQuery } from '@tanstack/react-query';
+import { HotPlaceData } from '../../types/types';
 // api
-// import { fetchHotPlaceData } from '../../api/store';
 
 const HotPlace = ({ setCategory, setIsShow, hotPlaceData }: HotPlaceProps) => {
   // const { data: hotPlaceImgData, isLoading, isError } = useQuery(['hotPlaceImg'], () => {hotPlaceData?.map((data) => )});
@@ -50,18 +48,15 @@ const HotPlace = ({ setCategory, setIsShow, hotPlaceData }: HotPlaceProps) => {
       </div>
       <button onClick={handleShowMarker}>지도로 위치 확인해보기</button>
       <div>
-        {hotPlaceData?.map((data: HotPlaceInfo) => {
-          return <div key={data.id}>{data.place_name}</div>;
+        {hotPlaceData?.map((hotPlace: HotPlaceData) => {
+          return (
+            <div style={{ display: 'inline-block', margin: '10px', flexDirection: 'column' }} key={hotPlace.id}>
+              <img style={{ width: '180px' }} src={hotPlace.images[5]} alt={`${hotPlace.place_name} 이미지`} />
+              <div>{hotPlace.place_name}</div>
+            </div>
+          );
         })}
       </div>
-      {/* {hotPlaceImgData.map((data: any) => {
-        return (
-          <div>
-            <img src={data.image_url} />
-          </div>
-        );
-      })} */}
-      {/* <img src={hotPlaceImgData[1].thumbnail_url} /> */}
     </div>
   );
 };

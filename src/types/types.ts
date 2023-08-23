@@ -144,4 +144,13 @@ export interface HotPlaceImage {
   thumbnail_url: string;
   width: number;
   height: number;
+  thumbnail: string;
+}
+
+export interface HotPlaceData {
+  id: string;
+  category_code: string;
+  category_name: string;
+  place_name: string;
+  images: string;
 }
