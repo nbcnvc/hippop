@@ -1,32 +1,74 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 // 라이브러리
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInView } from 'react-intersection-observer';
+// import DatePicker1 from './DatePicker';
+// 컴포넌트
+import SearchCalendar from './SearchCalendar';
 // api
 import { fetchAllBookMark } from '../../api/bookmark';
+import { getInfinityStore } from '../../api/store';
 // 타입
-import { SearchListProps, Store } from '../../types/types';
+import { FetchsStore, SearchListProps, Store } from '../../types/types';
 //스타일
 import { styled } from 'styled-components';
 // mui
 import SearchIcon from '@mui/icons-material/Search';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import SearchCalendar from './SearchCalendar';
 import moment from 'moment';
-
-// import DatePicker1 from './DatePicker';
 
 const SearchList = ({ storeData }: SearchListProps) => {
   const navigate = useNavigate();
 
+  // 검색 inputValue state
   const [inputValue, setInputValue] = useState<string>('');
+
+  // 기간별 filter state
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+
+  //filter된 storeList state
   const [filteredStoreList, setFilteredStoreList] = useState<Store[] | null>(null);
 
-  // 기간별 필터 state
-  const [startDate, setStartDate] = useState<Date | null>(null);
+  // 인피니티 스크롤을 위한 데이터 조회
+  const {
+    data: stores,
+    isLoading,
+    isError,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage
+  } = useInfiniteQuery<FetchsStore>({
+    queryKey: [`/search`],
+    queryFn: ({ pageParam }) => getInfinityStore(pageParam),
+    getNextPageParam: (lastPage) => {
+      // 전체 페이지 개수보다 작을 때
+      if (lastPage.page < lastPage.totalPages) {
+        // 다음 페이지로 pageParam를 저장
+        return lastPage.page + 1;
+      }
+    }
+  });
 
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  // 인피니티 스크롤로 필터된 store
+  const selectStores = useMemo(() => {
+    return stores?.pages
+      .map((data) => {
+        return data.stores;
+      })
+      .flat();
+  }, [stores]);
+
+  // 언제 다음 페이지를 가져올 것
+  const { ref } = useInView({
+    threshold: 1, // 맨 아래에 교차될 때
+    onChange: (inView: any) => {
+      if (!inView || !hasNextPage || isFetchingNextPage) return;
+      fetchNextPage();
+    }
+  });
 
   // 북마크 전체 조회
   const { data: bookMark } = useQuery(['bookMark'], () => fetchAllBookMark());
@@ -68,18 +110,11 @@ const SearchList = ({ storeData }: SearchListProps) => {
     return indexD.localeCompare(indexC); // Compare as strings
   });
 
-  // 검색 초기화 handler
-  const handleReset = () => {
-    setInputValue('');
-
-    setFilteredStoreList(null);
-  };
-
   // 데이터 필터링
   useEffect(() => {
     // storeData가 존재하면 필터링을 진행합니다.
     if (filteredStoreList || inputValue || startDate || endDate) {
-      const filteredStores = storeData?.filter((store) => {
+      const filteredStores = selectStores?.filter((store) => {
         const lowercaseInputValue = inputValue.toLowerCase();
         const storeStartDate = moment(store.period_start);
         const storeEndDate = moment(store.period_end);
@@ -100,10 +135,11 @@ const SearchList = ({ storeData }: SearchListProps) => {
       console.log('필터링 결과:', filteredStores);
 
       // 검색 결과를 상태로 설정
-      setFilteredStoreList(filteredStores);
+      setFilteredStoreList(filteredStores || null);
     }
-  }, [storeData, inputValue, startDate, endDate]);
+  }, [selectStores, inputValue, startDate, endDate]);
 
+  // onChange 핸들러
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     console.log('새로운 입력 값:', newValue);
@@ -130,6 +166,13 @@ const SearchList = ({ storeData }: SearchListProps) => {
     }
   };
 
+  // 검색 초기화 handler
+  const handleReset = () => {
+    setInputValue('');
+
+    setFilteredStoreList(null);
+  };
+
   // detail page 이동
   const navDetail = (id: number) => {
     navigate(`/detail/${id}`);
@@ -141,6 +184,12 @@ const SearchList = ({ storeData }: SearchListProps) => {
   // 최신 팝업스토어 자르기
   const latStores = latestStores?.slice(0, 3);
 
+  if (isLoading) {
+    return <div>로딩중입니다.</div>;
+  }
+  if (isError) {
+    return <div>오류가 발생했습니다.</div>;
+  }
   return (
     <Container>
       <SearchBox>
@@ -188,9 +237,9 @@ const SearchList = ({ storeData }: SearchListProps) => {
           </div>
         ) : (
           <>
-            <h1>인기 팝업스토어</h1>
+            <Title>인기 팝업스토어</Title>
             <GridContainer>
-              {popStores?.map((store: any) => (
+              {popStores?.map((store: Store) => (
                 <ImgWrapper key={store.id} onClick={() => navDetail(store.id)}>
                   <PImg src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
                   <PopupTitle>{store.title}</PopupTitle>
@@ -201,9 +250,9 @@ const SearchList = ({ storeData }: SearchListProps) => {
               ))}
             </GridContainer>
 
-            <h1>최신 팝업스토어</h1>
+            <Title>최신 팝업스토어</Title>
             <GridContainer>
-              {latStores?.map((store: any) => (
+              {latStores?.map((store: Store) => (
                 <ImgWrapper key={store.id} onClick={() => navDetail(store.id)}>
                   <PImg src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
                   <PopupTitle>{store.title}</PopupTitle>
@@ -216,6 +265,18 @@ const SearchList = ({ storeData }: SearchListProps) => {
           </>
         )}
       </>
+      <div
+        style={{
+          backgroundColor: 'yellow',
+          width: '100%',
+          border: '1px solid black',
+          padding: '20px',
+          margin: '10px'
+        }}
+        ref={ref}
+      >
+        Trigger to Fetch Here
+      </div>
     </Container>
   );
 };
@@ -227,7 +288,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-top: 100px;
+  margin-top: 70px;
 `;
 
 const SearchBox = styled.div`
@@ -321,4 +382,13 @@ const Img = styled.img`
   width: 290px;
   height: 330px;
   object-fit: cover;
+`;
+
+const Title = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+
+  padding: 20px;
+
+  margin-top: 50px;
 `;
