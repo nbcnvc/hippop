@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 // 타입
-import { Geocoder, HotPlaceData } from '../../types/types';
+import { Geocoder, HotPlaceInfo, HotPlaceImage } from '../../types/types';
 import { StoreMapProps } from '../../types/props';
 // 컴포넌트
 import HotPlace from './HotPlace';
+// api
+import { Kakao } from '../../api/store';
 
 declare global {
   interface Window {
@@ -13,7 +15,7 @@ declare global {
 
 const StoreMap = ({ storeLocation }: StoreMapProps) => {
   const [category, setCategory] = useState<string>('맛집');
-  const [hotPlaceData, setHotPlaceData] = useState<HotPlaceData[]>();
+  const [hotPlaceData, setHotPlaceData] = useState<HotPlaceInfo[]>();
   const [isShow, setIsShow] = useState<boolean>(false);
 
   //  ref는 맵이 렌더링될 DOM 요소를 참조
@@ -45,7 +47,7 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
         const ps = new kakao.maps.services.Places();
 
         // 장소검색이 완료됐을 때 호출되는 콜백함수
-        const placesSearchCB = (data: HotPlaceData[], status: string) => {
+        const placesSearchCB = async (data: HotPlaceInfo[], status: string) => {
           if (status === kakao.maps.services.Status.OK) {
             // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
             // LatLngBounds 객체에 좌표를 추가합니다
@@ -60,7 +62,34 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
             // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
             // map.setBounds(bounds);
 
-            console.log('data', data);
+            // // data -> 15개
+            // const promiseArr = [];
+            // data.forEach((place) => {
+            //   promiseArr.push(
+            //     kakao.get(`v2/search/image?target=title&query=${place.place_name}&page=1`)
+            //     // await kakao.get(`v2/search/image?target=title&query=${place.place_name}&page=1`)
+            //   )
+            // })
+
+            // const response = await Promise.all(promiseArr);
+
+            const hotPlaceDataArr = data.map(async (hotPlace) => {
+              const response = await Kakao.get(
+                `v2/search/image?target=title&query=${hotPlace.place_name}&page=1&size=20`
+              );
+              return {
+                id: hotPlace.id,
+                category_code: hotPlace.category_group_code,
+                category_name: hotPlace.category_group_name,
+                place_name: hotPlace.place_name,
+                images: response.data.documents.map((document: HotPlaceImage) => document.image_url)
+              };
+            });
+
+            const response = await Promise.all(hotPlaceDataArr);
+
+            console.log(response);
+
             setHotPlaceData(data);
           } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
             alert('검색 결과가 존재하지 않습니다.');
@@ -74,7 +103,7 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
         // 키워드로 장소를 검색합니다
         ps.keywordSearch(`${result[0].road_address.road_name} ${category}`, placesSearchCB);
 
-        const displayMarker = (place: HotPlaceData) => {
+        const displayMarker = (place: HotPlaceInfo) => {
           const marker = new kakao.maps.Marker({
             map: map,
             position: new kakao.maps.LatLng(place.y, place.x)
@@ -119,10 +148,7 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
           marginTop: '70px'
         }}
       />
-      <HotPlace setCategory={setCategory} setIsShow={setIsShow} />
-      {hotPlaceData?.map((data: HotPlaceData) => {
-        return <div key={data.id}>{data.place_name}</div>;
-      })}
+      {hotPlaceData && <HotPlace setCategory={setCategory} setIsShow={setIsShow} hotPlaceData={hotPlaceData} />}
     </div>
   );
 };

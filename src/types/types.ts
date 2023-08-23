@@ -120,7 +120,7 @@ export interface RoadAddress {
 }
 
 // 핫플레이스 타입 선언
-export interface HotPlaceData {
+export interface HotPlaceInfo {
   address_name: string;
   category_group_code: string;
   category_group_name: string;
@@ -133,4 +133,15 @@ export interface HotPlaceData {
   road_address_name: string;
   x: string;
   y: string;
+}
+
+export interface HotPlaceImage {
+  collection: string;
+  datetime: string;
+  display_sitename: string;
+  doc_url: string;
+  image_url: string;
+  thumbnail_url: string;
+  width: number;
+  height: number;
 }
