@@ -26,6 +26,10 @@ export interface Bookmark {
   store_id: number;
 }
 
+export interface SearchListProps {
+  storeData: Store[];
+}
+
 export interface Post {
   id: number;
   created_at: string;
