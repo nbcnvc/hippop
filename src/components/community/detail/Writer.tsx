@@ -1,3 +1,5 @@
+import Subscribe from './Subscribe';
+
 import { styled } from 'styled-components';
 import { useQuery } from '@tanstack/react-query';
 
@@ -6,7 +8,7 @@ import { UserInfo } from '../../../types/types';
 import { WriterProps } from '../../../types/props';
 
 const Writer = ({ userId }: WriterProps) => {
-  // User 정보 가져오기
+  // 작성자 정보 가져오기 (To)
   const { data: user } = useQuery<UserInfo | null>({ queryKey: ['user', userId], queryFn: () => getUser(userId) });
 
   return (
@@ -15,7 +17,7 @@ const Writer = ({ userId }: WriterProps) => {
         <div>작성자</div>
         <Img src={user?.avatar_url} alt="User Avatar" />
         <div>{user?.name}</div>
-        <button>구독</button>
+        <Subscribe userId={userId} />
       </div>
     </>
   );
