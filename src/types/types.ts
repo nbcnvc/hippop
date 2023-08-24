@@ -98,6 +98,11 @@ export interface FetchComment {
   count: number | null;
 }
 
+export interface SubscribeType {
+  subscribe_from: string | undefined;
+  subscribe_to: string | undefined;
+}
+
 // 지오코딩 타입 선언
 export interface Geocoder {
   address: AddressInfo;

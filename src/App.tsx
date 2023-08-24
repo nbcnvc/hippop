@@ -1,12 +1,9 @@
 import './App.css';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Router from './shared/Router';
 import GlobalStyle from './GlobalStyle';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
-import { setUserStore } from './store/userStore';
-import { supabase } from './api/supabase';
-import { UserInfo } from './types/types';
-
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 function App() {
   const queryClient = new QueryClient();
   return (
@@ -14,6 +11,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <GlobalStyle />
         <Router />
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </>
   );

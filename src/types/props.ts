@@ -54,6 +54,7 @@ export interface WriteProps {
 
 export interface PostsProps {
   setPost: React.Dispatch<SetStateAction<Post | null>>;
+  // setOpenDetail: React.Dispatch<SetStateAction<boolean>>;
 }
 
 export interface CommentProps {
@@ -62,11 +63,22 @@ export interface CommentProps {
 
 export interface WriterProps {
   userId: string;
+
+  setOpenDetail: React.Dispatch<SetStateAction<boolean>>;
+}
+
+export interface SubscribeProps {
+  userId: string;
 }
 
 export interface DetailProps {
-  post: Post;
+  // userId: string;
+  post: Post | null;
   setPost: React.Dispatch<SetStateAction<Post | null>>;
+  setOpenDetail: React.Dispatch<SetStateAction<boolean>>;
+  msgModal: boolean;
+  setMsgModal: React.Dispatch<SetStateAction<boolean>>;
+  openDetail: boolean;
 }
 
 export interface EditProps {
@@ -81,4 +93,12 @@ export interface LoginProps {
   userInfo: UserInfo;
   setUser: React.Dispatch<SetStateAction<UserInfo | null>>;
   closeModal: () => void;
+}
+
+export interface MessageProps {
+  // setPost: React.Dispatch<SetStateAction<Post | null>>;
+  msgModal: boolean;
+  setMsgModal: React.Dispatch<SetStateAction<boolean>>;
+  // detailPost: Post;
+  userId: string;
 }

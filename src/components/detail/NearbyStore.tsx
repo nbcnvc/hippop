@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
+// 라이브러리
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 // 타입
 import { NearbyStoreProps } from '../../types/props';
 // api
 import { fetchStoreData } from '../../api/store';
-// 라이브러리
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+// 스타일
 import { styled } from 'styled-components';
 
 interface SliderButton {

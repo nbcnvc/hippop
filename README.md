@@ -21,3 +21,4 @@ yarn start
 - @types/react-slick
 - slick-carousel
 - react-iframe
+- @tanstack/react-query-devtools

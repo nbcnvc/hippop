@@ -5,8 +5,6 @@ import { StoreMapProps } from '../../types/props';
 // 컴포넌트
 import HotPlace from './HotPlace';
 import NearbyStore from './NearbyStore';
-// 라이브러리
-import Iframe from 'react-iframe';
 // 스타일
 import { styled } from 'styled-components';
 
