@@ -12,8 +12,7 @@ const Search = () => {
     isError
   } = useQuery<Store[] | null>({
     queryKey: ['storeData'],
-    queryFn: () => fetchStoreData(),
-    staleTime: 86400000
+    queryFn: () => fetchStoreData()
   });
 
   if (isLoading) {

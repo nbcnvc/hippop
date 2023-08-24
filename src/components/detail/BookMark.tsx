@@ -51,7 +51,6 @@ const BookMark = ({ storeData }: CalendarProps) => {
   const CountTotalBookMark = bookMark?.filter((item) => item.store_id === storeId).length;
 
   // 스토어, 유저 필터링 북마크 카운트
-
   const CountMyBookMark = bookMark?.filter(
     (item) => currentUser && item.user_id === currentUser.id && item.store_id === storeId
   ).length;
