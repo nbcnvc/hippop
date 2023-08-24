@@ -149,22 +149,23 @@ export interface HotPlaceInfo {
   y: string;
 }
 
-export interface HotPlaceImage {
-  collection: string;
-  datetime: string;
-  display_sitename: string;
-  doc_url: string;
-  image_url: string;
-  thumbnail_url: string;
-  width: number;
-  height: number;
-  thumbnail: string;
-}
+// export interface HotPlaceImage {
+//   collection: string;
+//   datetime: string;
+//   display_sitename: string;
+//   doc_url: string;
+//   image_url: string;
+//   thumbnail_url: string;
+//   width: number;
+//   height: number;
+//   thumbnail: string;
+// }
 
-export interface HotPlaceData {
-  id: string;
-  category_code: string;
-  category_name: string;
-  place_name: string;
-  images: string;
-}
+// export interface HotPlaceData {
+//   id: string;
+//   category_code: string;
+//   category_name: string;
+//   place_name: string;
+//   place_url: string;
+//   images: string;
+// }
