@@ -12,18 +12,18 @@ import { styled } from 'styled-components';
 // 이미지
 import oBookMark from '../../images/obookmark.png';
 import xBookMark from '../../images/xbookmark.png';
+import { useCurrentUser } from '../../store/userStore';
 
 const BookMark = ({ storeData }: CalendarProps) => {
   // 북마크 전체 조회
   const { data: bookMark, isLoading, isError } = useQuery(['bookMark'], () => fetchAllBookMark());
-  // console.log('bookMark', bookMark);
 
-  //토큰 키
-  const tokenKey = localStorage.getItem('sb-jlmwyvwmjcanbthgkpmh-auth-token');
-  const parsedToken = tokenKey ? JSON.parse(tokenKey) : null;
-
-  const userId = parsedToken?.user.id;
+  // store의 id 가져오기
   const storeId = storeData.id;
+
+  // 로그인한
+  const currentUser = useCurrentUser();
+  console.log('북마크 currentUser', typeof currentUser);
 
   // Query
   const queryClient = useQueryClient();
@@ -37,18 +37,23 @@ const BookMark = ({ storeData }: CalendarProps) => {
 
   // 토글 핸들러
   const onClickToggle = () => {
-    const toogleBookMark: Bookmark = {
-      user_id: userId,
-      store_id: storeId
-    };
-    toggleMutation.mutate(toogleBookMark);
+    if (currentUser) {
+      // Check if currentUser is not null
+      const toogleBookMark: Bookmark = {
+        user_id: currentUser.id,
+        store_id: storeId
+      };
+      toggleMutation.mutate(toogleBookMark);
+    }
   };
 
   // 스토어 필터링 북마크 카운트
   const CountTotalBookMark = bookMark?.filter((item) => item.store_id === storeId).length;
 
   // 스토어, 유저 필터링 북마크 카운트
-  const CountMyBookMark = bookMark?.filter((item) => item.user_id === userId && item.store_id === storeId).length;
+  const CountMyBookMark = bookMark?.filter(
+    (item) => currentUser && item.user_id === currentUser.id && item.store_id === storeId
+  ).length;
 
   if (isError) {
     return <div>데이터를 가져오는 도중 오류가 발생했습니다.</div>;

@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+
 import { UserInfo } from '../types/types';
 
 interface UserState {
@@ -6,9 +7,12 @@ interface UserState {
   setCurrentUser: (user: UserInfo | null) => void;
 }
 
+const tokenKey = localStorage.getItem('user');
+const parsedToken = tokenKey ? JSON.parse(tokenKey) : null;
+
 // 현재 유저 set 해주기
 export const setUserStore = create<UserState>((set) => ({
-  currentUser: null,
+  currentUser: parsedToken,
   setCurrentUser: (user) => set({ currentUser: user })
 }));
 
