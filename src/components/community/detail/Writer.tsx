@@ -7,10 +7,6 @@ import { useQuery } from '@tanstack/react-query';
 import { getUser } from '../../../api/user';
 import { UserInfo } from '../../../types/types';
 import { WriterProps } from '../../../types/props';
-// import Message from '../../message/Message';
-// import { useLocation } from 'react-router-dom';
-// import { useState } from 'react';
-// import Message from '../../message/Message';
 
 const Writer = ({ userId }: WriterProps) => {
   const { pathname } = useLocation();
@@ -18,7 +14,6 @@ const Writer = ({ userId }: WriterProps) => {
   // 작성자 정보 가져오기 (To)
   const { data: user } = useQuery<UserInfo | null>({ queryKey: ['user', userId], queryFn: () => getUser(userId) });
 
-  console.log('user', user);
   return (
     <>
       <div
