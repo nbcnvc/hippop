@@ -14,13 +14,13 @@ export interface StoreMapProps {
 // 핫플레이스 props
 export interface HotPlaceProps {
   setCategory: React.Dispatch<SetStateAction<string>>;
-  isShowPMarker: boolean;
-  setIsShowPMarker: React.Dispatch<SetStateAction<boolean>>;
+  setIsSelected: React.Dispatch<SetStateAction<HotPlaceInfo | undefined>>;
 }
 
 // 주변 지역 팝업스토어 props
 export interface NearbyStoreProps {
   guName: string;
+  setNearbyStoreMarker: React.Dispatch<SetStateAction<Store[] | undefined>>;
 }
 
 // 캘린더 props

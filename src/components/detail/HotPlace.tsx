@@ -2,14 +2,16 @@ import React from 'react';
 // 타입
 import { HotPlaceProps } from '../../types/props';
 
-const HotPlace = ({ setCategory, isShowPMarker, setIsShowPMarker }: HotPlaceProps) => {
+const HotPlace = ({ setCategory, setIsSelected }: HotPlaceProps) => {
   const handleHotPlaceCategory = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = (e.target as HTMLButtonElement).name;
     setCategory(name);
+    setIsSelected(undefined);
   };
 
   const handleShowMarker = () => {
-    setIsShowPMarker((prev) => !prev);
+    setCategory('');
+    setIsSelected(undefined);
   };
 
   return (
@@ -24,7 +26,8 @@ const HotPlace = ({ setCategory, isShowPMarker, setIsShowPMarker }: HotPlaceProp
         }}
       >
         <div style={{ fontSize: '20px', fontWeight: '600' }}>함께 갈만한 핫플레이스 추천!</div>
-        <div style={{ margin: '20px 0' }}>
+        <div style={{ marginTop: '10px', fontSize: '16px' }}> (카테고리 클릭 후) 마커핀을 클릭해 보세요!</div>
+        <div style={{ margin: '25px 0' }}>
           <button name="맛집" onClick={handleHotPlaceCategory}>
             맛집
           </button>
@@ -35,7 +38,6 @@ const HotPlace = ({ setCategory, isShowPMarker, setIsShowPMarker }: HotPlaceProp
             술집
           </button>
         </div>
-        <div style={{ fontSize: '16px' }}> (카테고리 클릭 후) 마커핀을 클릭해 보세요!</div>
       </div>
       <div
         style={{
@@ -43,7 +45,7 @@ const HotPlace = ({ setCategory, isShowPMarker, setIsShowPMarker }: HotPlaceProp
           justifyContent: 'flex-end'
         }}
       >
-        <button onClick={handleShowMarker}>{isShowPMarker ? '마커핀 끄기' : '핫플레이스 위치 확인해보기'}</button>
+        <button onClick={handleShowMarker}>핫플레이스 마커핀 끄기</button>
       </div>
     </div>
   );

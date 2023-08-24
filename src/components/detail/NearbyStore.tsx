@@ -16,19 +16,20 @@ interface SliderButton {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-const NearbyStore = ({ guName }: NearbyStoreProps) => {
+const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
   const { id } = useParams<{ id: string }>();
 
   const { data: storeData, isLoading, isError } = useQuery({ queryKey: ['nearbyStoreData'], queryFn: fetchStoreData });
 
-  if (isLoading) {
-    return <div>로딩중입니다...</div>;
-  }
-  if (isError) {
-    return <div>오류가 발생했습니다...</div>;
-  }
-
   const filteredStore = storeData?.filter((data) => data.location.includes(guName) && data.id !== Number(id));
+
+  useEffect(() => {
+    if (storeData) {
+      setNearbyStoreMarker(filteredStore);
+    }
+  }, [storeData]);
+
+  // console.log(filteredStore);
 
   const PrevArrow = ({ onClick }: SliderButton) => {
     return (
@@ -51,7 +52,7 @@ const NearbyStore = ({ guName }: NearbyStoreProps) => {
     nextArrow: <NextArrow />, // 화살표 버튼을 커스텀해서 사용
     prevArrow: <PrevArrow />,
     dots: false, // 슬라이더 아래에 슬라이드 개수를 점 형태로 표시
-    infinite: filteredStore.length > 3, // 슬라이드가 맨 끝에 도달했을 때 처음 슬라이드를 보여줄지 여부
+    infinite: filteredStore && filteredStore.length > 3, // 슬라이드가 맨 끝에 도달했을 때 처음 슬라이드를 보여줄지 여부
     slidesToShow: 3,
     slidesToScroll: 1, // 옆으로 스크롤할 때 보여줄 슬라이드 수 설정
     speed: 500, // 슬라이드 넘길 때 속도
@@ -59,6 +60,12 @@ const NearbyStore = ({ guName }: NearbyStoreProps) => {
     autoplaySpeed: 3000, // 자동으로 넘길 시 시간 간격
     pauseOnHover: true
   };
+  if (isLoading) {
+    return <div>로딩중입니다...</div>;
+  }
+  if (isError) {
+    return <div>오류가 발생했습니다...</div>;
+  }
 
   return (
     <div>
@@ -82,9 +89,9 @@ const NearbyStore = ({ guName }: NearbyStoreProps) => {
           alignItems: 'center'
         }}
       >
-        {filteredStore.length > 3 ? (
+        {filteredStore && filteredStore.length > 3 ? (
           <StyledSlider {...settings}>
-            {filteredStore.map((data) => {
+            {filteredStore?.map((data) => {
               return (
                 <div key={data.id}>
                   <Link to={`/detail/${data.id}`}>
@@ -113,7 +120,7 @@ const NearbyStore = ({ guName }: NearbyStoreProps) => {
               margin: '70px 0'
             }}
           >
-            {filteredStore.map((data) => {
+            {filteredStore?.map((data) => {
               return (
                 <div key={data.id}>
                   <Link to={`/detail/${data.id}`}>
