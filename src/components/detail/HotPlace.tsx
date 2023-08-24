@@ -1,13 +1,13 @@
 import React from 'react';
 // 타입
 import { HotPlaceProps } from '../../types/props';
-import { HotPlaceData } from '../../types/types';
+// import { HotPlaceData } from '../../types/types';
 // 라이브러리
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+// import Slider from 'react-slick';
+// import 'slick-carousel/slick/slick.css';
+// import 'slick-carousel/slick/slick-theme.css';
 
-const HotPlace = ({ setCategory, setIsShowPMarker, hotPlaceData }: HotPlaceProps) => {
+const HotPlace = ({ setCategory, setIsShowPMarker }: HotPlaceProps) => {
   const handleHotPlaceCategory = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = (e.target as HTMLButtonElement).name;
     setCategory(name);
@@ -47,7 +47,7 @@ const HotPlace = ({ setCategory, setIsShowPMarker, hotPlaceData }: HotPlaceProps
         </button>
       </div>
       <button onClick={handleShowMarker}>지도로 위치 확인해보기</button>
-      <Slider {...settings}>
+      {/* <Slider {...settings}>
         {hotPlaceData?.map((hotPlace: HotPlaceData) => {
           return (
             <div key={hotPlace.id}>
@@ -56,7 +56,7 @@ const HotPlace = ({ setCategory, setIsShowPMarker, hotPlaceData }: HotPlaceProps
             </div>
           );
         })}
-      </Slider>
+      </Slider> */}
     </div>
   );
 };

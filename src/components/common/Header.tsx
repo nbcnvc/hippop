@@ -1,39 +1,59 @@
 import React, { useEffect, useState, useRef } from 'react';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { styled } from 'styled-components';
-import SearchIcon from '@mui/icons-material/Search';
+
 import Login from '../../pages/Login';
 import { UserInfo } from '../../types/types';
 import { handleLogOut } from '../../pages/Login';
 import { supabase } from '../../api/supabase';
+import { setUserStore } from '../../store/userStore';
+import { useCurrentUser } from '../../store/userStore';
 
 function Header() {
-  const navigate = useNavigate();
   const [user, setUser] = useState<UserInfo | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const storedUser = sessionStorage.getItem('user');
+    const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
   }, []);
+
+  // 셋 해주는 함수 가져오기
+  const setCurrentUser = setUserStore((state) => state.setCurrentUser);
+  // 현재유저 정보 가져오기
+  const currentUser = useCurrentUser();
+
   useEffect(() => {
-    const authSubscription = supabase.auth.onAuthStateChange((event, session) => {
+    const authSubscription = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session) {
-        const storeUser: UserInfo = {
-          avatar_url: session.user.user_metadata.avatar_url,
-          name: session.user.user_metadata.name // 세션 정보에서 사용자 이름 가져오기
-        };
-        setUser(storeUser);
-        sessionStorage.setItem('user', JSON.stringify(storeUser));
+        const response = await supabase.from('user').select().eq('id', session?.user.id).single();
+        if (response.data) {
+          setCurrentUser(response.data);
+          setUser(response.data);
+          localStorage.setItem('user', JSON.stringify(response.data));
+        } else {
+          const userInfo: UserInfo = {
+            id: session.user.id,
+            created_at: session.user.created_at,
+            email: session.user.user_metadata.email,
+            avatar_url: session.user.user_metadata.avatar_url,
+            name: session.user.user_metadata.name
+          };
+          await supabase.from('user').insert(userInfo);
+          setCurrentUser(userInfo);
+          setUser(userInfo);
+          localStorage.setItem('user', JSON.stringify(userInfo));
+        }
       } else if (event === 'SIGNED_OUT') {
+        setCurrentUser(null);
         setUser(null);
-        sessionStorage.removeItem('user');
+        localStorage.removeItem('user');
       }
     });
 
@@ -69,11 +89,6 @@ function Header() {
     setIsModalOpen(false);
   };
 
-  // // search page로 이동
-  // const navSearch = () => {
-  //   navigate(`/search`);
-  // };
-
   const handleModalOutsideClick = (event: React.MouseEvent) => {
     if (event.target === event.currentTarget) {
       closeModal();
@@ -88,9 +103,9 @@ function Header() {
     <HeaderTag>
       <div className="logo-wrapper">
         <Link to="/">
-          <img src="/asset/test-logo.png" className="test-logo" alt="test-img" />
+          <img src="/asset/test-logo1.png" className="test-logo" alt="test-img" />
         </Link>
-        Header tap
+        Find your Hippop
       </div>
       <ul>
         <li>
@@ -104,11 +119,6 @@ function Header() {
         </li>
         <li>
           <Link to="/search">Search</Link>
-          {/* <SearchIcon
-          onClick={() => {
-            navSearch();
-          }}
-        /> */}
         </li>
       </ul>
       <div>
@@ -119,9 +129,9 @@ function Header() {
                 <div className="info-mate">
                   <div className="welcome-mate">
                     <p>반갑습니다!</p>
-                    <p>{user.name} 님</p>
+                    <p>{user?.name}님</p>
                   </div>
-                  <img src={user.avatar_url} alt="User Avatar" />
+                  <img src={user?.avatar_url} alt="User Avatar" />
                 </div>
                 <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
                   <Link to="/mypage">My Page</Link>
@@ -200,6 +210,8 @@ const HeaderTag = styled.header`
     align-items: center;
     img {
       width: 60px;
+      height: 60px;
+      object-fit: cover;
       border-radius: 50%;
     }
     .user-dropdown {

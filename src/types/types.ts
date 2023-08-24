@@ -43,8 +43,8 @@ export interface Post {
 }
 
 export interface NewPost {
-  // user_id: string;
-  // store_id: number;
+  user_id: string | undefined;
+  store_id: number;
   ctg_index: number;
   title: string;
   body: string;
@@ -61,19 +61,29 @@ export interface Comment {
 }
 
 export interface NewComment {
-  // user_id: string;
+  user_id: string | undefined;
   post_id: number;
   body: string;
 }
 
 export interface UserInfo {
-  avatar_url: string;
+  id: string;
+  created_at: string;
+  email: string;
   name: string;
+  avatar_url: string;
 }
 
 export interface User extends SupabaseUser {
   avatar_url: string;
   name: string;
+}
+
+export interface FetchsStore {
+  stores: Store[];
+  page: number;
+  totalPages: number;
+  count: number | null;
 }
 
 export interface FetchPost {
@@ -143,22 +153,23 @@ export interface HotPlaceInfo {
   y: string;
 }
 
-export interface HotPlaceImage {
-  collection: string;
-  datetime: string;
-  display_sitename: string;
-  doc_url: string;
-  image_url: string;
-  thumbnail_url: string;
-  width: number;
-  height: number;
-  thumbnail: string;
-}
+// export interface HotPlaceImage {
+//   collection: string;
+//   datetime: string;
+//   display_sitename: string;
+//   doc_url: string;
+//   image_url: string;
+//   thumbnail_url: string;
+//   width: number;
+//   height: number;
+//   thumbnail: string;
+// }
 
-export interface HotPlaceData {
-  id: string;
-  category_code: string;
-  category_name: string;
-  place_name: string;
-  images: string;
-}
+// export interface HotPlaceData {
+//   id: string;
+//   category_code: string;
+//   category_name: string;
+//   place_name: string;
+//   place_url: string;
+//   images: string;
+// }

@@ -20,3 +20,4 @@ yarn start
 - react-slick
 - @types/react-slick
 - slick-carousel
+- react-iframe
