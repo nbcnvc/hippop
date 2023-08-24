@@ -64,8 +64,6 @@ export interface CommentProps {
 
 export interface WriterProps {
   userId: string;
-
-  setOpenDetail: React.Dispatch<SetStateAction<boolean>>;
 }
 
 export interface SubscribeProps {
@@ -73,7 +71,6 @@ export interface SubscribeProps {
 }
 
 export interface DetailProps {
-  // userId: string;
   post: Post | null;
   setPost: React.Dispatch<SetStateAction<Post | null>>;
   setOpenDetail: React.Dispatch<SetStateAction<boolean>>;
