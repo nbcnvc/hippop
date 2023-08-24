@@ -1,4 +1,7 @@
+import Subscribe from './Subscribe';
+
 import { styled } from 'styled-components';
+import { useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 
 import { getUser } from '../../../api/user';
@@ -9,8 +12,10 @@ import { WriterProps } from '../../../types/props';
 // import { useState } from 'react';
 // import Message from '../../message/Message';
 
-const Writer = ({ userId, setOpenDetail }: WriterProps) => {
-  // User 정보 가져오기
+const Writer = ({ userId }: WriterProps) => {
+  const { pathname } = useLocation();
+
+  // 작성자 정보 가져오기 (To)
   const { data: user } = useQuery<UserInfo | null>({ queryKey: ['user', userId], queryFn: () => getUser(userId) });
 
   console.log('user', user);
@@ -31,6 +36,7 @@ const Writer = ({ userId, setOpenDetail }: WriterProps) => {
           <Img src={user?.avatar_url} alt="User Avatar" />
           <div>{user?.name}</div>
         </div>
+        {pathname === '/review' && <Subscribe userId={userId} />}
       </div>
     </>
   );

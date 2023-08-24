@@ -68,6 +68,10 @@ export interface WriterProps {
   setOpenDetail: React.Dispatch<SetStateAction<boolean>>;
 }
 
+export interface SubscribeProps {
+  userId: string;
+}
+
 export interface DetailProps {
   // userId: string;
   post: Post | null;
