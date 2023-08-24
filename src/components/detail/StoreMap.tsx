@@ -6,7 +6,6 @@ import { StoreMapProps } from '../../types/props';
 import HotPlace from './HotPlace';
 import NearbyStore from './NearbyStore';
 // 라이브러리
-import Iframe from 'react-iframe';
 // 스타일
 import { styled } from 'styled-components';
 
@@ -138,18 +137,7 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
   return (
     <div>
       <div style={{ display: 'flex', marginTop: '50px' }}>
-        {isSelected && (
-          <iframe
-            style={{
-              width: '30%',
-              height: '500px',
-              marginRight: '20px',
-              borderRadius: '10px',
-              border: '1px solid #c9c9c9ff'
-            }}
-            src={`https://place.map.kakao.com/m/${isSelected.id}`}
-          />
-        )}
+        {isSelected && <IframeStyle src={`https://place.map.kakao.com/m/${isSelected.id}`} />}
         <div
           ref={mapElement}
           style={{
@@ -177,10 +165,10 @@ export default StoreMap;
 // 닫기가 가능한 커스텀 오버레이
 // 키워드로 장소검색하기
 
-// const IframeStyle = styled.iframe`
-//   width: '30%';
-//   height: '500px';
-//   margin-right: '20px';
-//   border-radius: '10px';
-//   border: 1px solid #c9c9c9ff;
-// `;
+const IframeStyle = styled.iframe`
+  width: 30%;
+  height: 500px;
+  margin-right: 20px;
+  border-radius: 10px;
+  border: 1px solid #c9c9c9ff;
+`;
