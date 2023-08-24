@@ -55,7 +55,6 @@ const Detail = ({ post, setPost }: DetailProps) => {
         <ButtonBox>
           <button onClick={closeDetail}>창 닫기</button>
         </ButtonBox>
-
         <ModalBox>
           {/* 작성자 */}
           {isEdit ? <></> : <Writer userId={post.user_id} />}

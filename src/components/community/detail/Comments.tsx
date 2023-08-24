@@ -16,6 +16,7 @@ const Comments = ({ post }: CommentProps) => {
   const [body, setBody] = useState<string>('');
   const [edit, setEdit] = useState<string>('');
   const [isEditId, setIsEditId] = useState<number | null>(null);
+  const [showButton, setShowButton] = useState<boolean>(true);
   const onChangeBody = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBody(e.target.value);
   };
@@ -42,17 +43,21 @@ const Comments = ({ post }: CommentProps) => {
     }
   });
 
-  const selectComments = useMemo(() => {
-    return comments?.pages
-      .map((data) => {
-        return data.comments;
-      })
-      .flat();
-  }, [comments]);
+  const selectComments =
+    useMemo(() => {
+      return comments?.pages
+        .map((data) => {
+          return data.comments;
+        })
+        .flat();
+    }, [comments]) || [];
 
   // 더보기 버튼
   const fetchMore = () => {
-    if (!hasNextPage) return;
+    if (!hasNextPage) {
+      setShowButton(false);
+      return;
+    }
     fetchNextPage();
   };
 
@@ -147,7 +152,7 @@ const Comments = ({ post }: CommentProps) => {
       {selectComments?.map((comment) => {
         return (
           <div key={comment.id} style={{ width: '92.5%', border: '1px solid black', padding: '10px', margin: '10px' }}>
-            <div>작성자</div>
+            <div>작성자 : {currentUser?.name}</div>
             <div>작성일자: {moment(comment.created_at).format('YYYY.MM.DD HH:mm')}</div>
             {isEditId === comment.id ? (
               <input value={edit} onChange={onChangeEdit} style={{ width: '50%' }} />
@@ -164,7 +169,7 @@ const Comments = ({ post }: CommentProps) => {
         );
       })}
       {/* 더보기 버튼 */}
-      <button onClick={fetchMore}>더보기</button>
+      {showButton && hasNextPage && <button onClick={fetchMore}>더보기</button>}
     </>
   );
 };

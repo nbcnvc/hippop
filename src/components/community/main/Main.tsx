@@ -44,7 +44,6 @@ const Main = () => {
         writeModal={writeModal}
         setWriteModal={setWriteModal}
         setSearchModal={setSearchModal}
-        setPost={setDetailPost}
         storeId={storeId}
         storeTitle={storeTitle}
         setResult={setResult}

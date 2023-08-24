@@ -122,6 +122,10 @@ export interface AddressInfo {
   h_code: string;
   main_address_no: string;
   mountain_yn: string;
+  region_1depth_name: string;
+  region_2depth_name: string;
+  region_3depth_h_name: string;
+  region_3depth_name: string;
 }
 
 // 도로명 주소 타입 선언
@@ -154,22 +158,23 @@ export interface HotPlaceInfo {
   y: string;
 }
 
-export interface HotPlaceImage {
-  collection: string;
-  datetime: string;
-  display_sitename: string;
-  doc_url: string;
-  image_url: string;
-  thumbnail_url: string;
-  width: number;
-  height: number;
-  thumbnail: string;
-}
+// export interface HotPlaceImage {
+//   collection: string;
+//   datetime: string;
+//   display_sitename: string;
+//   doc_url: string;
+//   image_url: string;
+//   thumbnail_url: string;
+//   width: number;
+//   height: number;
+//   thumbnail: string;
+// }
 
-export interface HotPlaceData {
-  id: string;
-  category_code: string;
-  category_name: string;
-  place_name: string;
-  images: string;
-}
+// export interface HotPlaceData {
+//   id: string;
+//   category_code: string;
+//   category_name: string;
+//   place_name: string;
+//   place_url: string;
+//   images: string;
+// }

@@ -27,8 +27,10 @@ const Writer = ({ userId }: WriterProps) => {
           alignItems: 'center'
         }}
       >
-        <Img src={user?.avatar_url} alt="User Avatar" />
-        <div>{user?.name}</div>
+        <div>
+          <Img src={user?.avatar_url} alt="User Avatar" />
+          <div>{user?.name}</div>
+        </div>
         {pathname === '/review' && <Subscribe userId={userId} />}
       </div>
     </>

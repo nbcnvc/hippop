@@ -26,7 +26,7 @@ export const getComments = async (pageParam: number = 1, postId: number): Promis
   count = commentCount;
 
   // 총 페이지
-  const totalPages = count ? Math.floor(count / 10) + (count % 10 === 0 ? 0 : 1) : 1;
+  const totalPages = count ? Math.floor(count / 5) + (count % 5 === 0 ? 0 : 1) : 1;
 
   return { comments: data as Comment[], page: pageParam, totalPages, count };
 };
