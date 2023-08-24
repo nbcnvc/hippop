@@ -6,6 +6,7 @@ import reportWebVitals from './reportWebVitals';
 
 import { DatePickerProvider } from '@bcad1591/react-date-picker';
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+document.cookie = 'crossCookie=bar; SameSite=None; Secure';
 root.render(
   // <React.StrictMode>
   <DatePickerProvider>

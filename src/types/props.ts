@@ -9,19 +9,19 @@ export interface EditorProps {
 // 스토어 지도 props
 export interface StoreMapProps {
   storeLocation: string;
-}
-
-// 주변 지역 팝업스토어 props
-export interface NearbyStoreProps {
-  guName: string;
-  setIsShowSMarker: React.Dispatch<SetStateAction<boolean>>;
+  title: string;
 }
 
 // 핫플레이스 props
 export interface HotPlaceProps {
   setCategory: React.Dispatch<SetStateAction<string>>;
-  setIsShowPMarker: React.Dispatch<SetStateAction<boolean>>;
-  searchData: HotPlaceInfo[];
+  setIsSelected: React.Dispatch<SetStateAction<HotPlaceInfo | undefined>>;
+}
+
+// 주변 지역 팝업스토어 props
+export interface NearbyStoreProps {
+  guName: string;
+  setNearbyStoreMarker: React.Dispatch<SetStateAction<Store[] | undefined>>;
 }
 
 // 캘린더 props

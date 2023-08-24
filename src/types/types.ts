@@ -10,8 +10,6 @@ export interface Store {
   opening: string;
   images: string[];
   link: string;
-  latitude: number;
-  longitude: number;
 }
 
 // Kakao 타입 선언
