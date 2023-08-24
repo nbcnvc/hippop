@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { isSubscribe, toggleSubscribe } from '../../../api/subscribe';
@@ -7,8 +6,6 @@ import { SubscribeProps } from '../../../types/props';
 import { SubscribeType } from '../../../types/types';
 
 const Subscribe = ({ userId }: SubscribeProps) => {
-  // 구독 여부
-  const [sub, setSub] = useState<boolean>(false);
   // 로그인한 유저 정보 가져오기 (From)
   const currentUser = useCurrentUser();
 
