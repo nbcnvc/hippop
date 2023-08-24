@@ -1,5 +1,5 @@
 import { SetStateAction } from 'react';
-import { UserInfo, Store, Post, HotPlaceData } from './types';
+import { UserInfo, Store, Post, HotPlaceInfo } from './types';
 
 export interface EditorProps {
   body: string;
@@ -15,7 +15,7 @@ export interface StoreMapProps {
 export interface HotPlaceProps {
   setCategory: React.Dispatch<SetStateAction<string>>;
   setIsShow: React.Dispatch<SetStateAction<boolean>>;
-  hotPlaceData: HotPlaceData[];
+  searchData: HotPlaceInfo[];
 }
 
 // 캘린더 props

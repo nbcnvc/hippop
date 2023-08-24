@@ -1,9 +1,8 @@
 import React from 'react';
 // 타입
 import { HotPlaceProps } from '../../types/props';
-import { HotPlaceData } from '../../types/types';
 
-const HotPlace = ({ setCategory, setIsShow, hotPlaceData }: HotPlaceProps) => {
+const HotPlace = ({ setCategory, setIsShow, searchData }: HotPlaceProps) => {
   const handleHotPlaceCategory = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = (e.target as HTMLButtonElement).name;
     setCategory(name);
@@ -28,7 +27,7 @@ const HotPlace = ({ setCategory, setIsShow, hotPlaceData }: HotPlaceProps) => {
         </button>
       </div>
       <button onClick={handleShowMarker}>지도로 위치 확인해보기</button>
-      <div>
+      {/* <div>
         {hotPlaceData?.map((hotPlace: HotPlaceData) => {
           return (
             <div style={{ display: 'inline-block', margin: '10px', flexDirection: 'column' }} key={hotPlace.id}>
@@ -37,7 +36,7 @@ const HotPlace = ({ setCategory, setIsShow, hotPlaceData }: HotPlaceProps) => {
             </div>
           );
         })}
-      </div>
+      </div> */}
     </div>
   );
 };
