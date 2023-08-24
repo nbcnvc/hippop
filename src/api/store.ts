@@ -4,13 +4,13 @@ import { supabase } from './supabase';
 import { FetchsStore, Store } from '../types/types';
 
 // store 전체 조회
-export const fetchStoreData = async (): Promise<Store[] | null> => {
+export const fetchStoreData = async () => {
   const { data } = await supabase.from('store').select('*');
-  return data;
+  return data as Store[];
 };
 
 // store 상세 정보 조회
-export const fetchDetailData = async (id: string): Promise<Store | null> => {
+export const fetchDetailData = async (id: number): Promise<Store | null> => {
   const { data } = await supabase.from('store').select('*').eq('id', id).single();
   return data;
 };
