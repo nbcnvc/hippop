@@ -72,7 +72,7 @@ const StoreDetail = () => {
             ))}
           </ImgBox>
           <Calendar storeData={storeData} />
-          <StoreMap storeLocation={storeData.location} />
+          <StoreMap storeLocation={storeData.location} title={storeData.title} />
         </>
       )}
     </div>

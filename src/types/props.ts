@@ -9,6 +9,7 @@ export interface EditorProps {
 // 스토어 지도 props
 export interface StoreMapProps {
   storeLocation: string;
+  title: string;
 }
 
 // 핫플레이스 props

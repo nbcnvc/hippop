@@ -14,13 +14,14 @@ declare global {
   }
 }
 
-const StoreMap = ({ storeLocation }: StoreMapProps) => {
+const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
   const [guName, setGuName] = useState<string>('');
   const [category, setCategory] = useState<string>('');
   const [searchData, setSearchData] = useState<HotPlaceInfo[]>();
   const [isSelected, setIsSelected] = useState<HotPlaceInfo | undefined>();
   const [nearbyStoreMarker, setNearbyStoreMarker] = useState<Store[] | undefined>();
   // const [isShowSMarker, setIsShowSMarker] = useState<boolean>(true);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   //  ref는 맵이 렌더링될 DOM 요소를 참조
   const mapElement = useRef(null);
@@ -128,7 +129,7 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
 
         // 인포윈도우로 장소에 대한 설명 표시
         const infowindow = new kakao.maps.InfoWindow({
-          content: '<div style="width:150px;text-align:center;padding:6px 0;z-index:1;">현재 팝업스토어 위치</div>'
+          content: `<div style="width:150px;text-align:center;padding:6px 0;z-index:1;">${title}의 위치</div>`
         });
         infowindow.open(map, marker);
 
@@ -168,6 +169,25 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
                   clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
                 });
                 // };
+
+                // 마커에 커서가 오버됐을 때 마커 위에 표시할 인포윈도우를 생성합니다
+                const nearbyStore = `<div style="padding:5px;">${data.title}</div>`; // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+
+                const infowindow = new kakao.maps.InfoWindow({
+                  content: nearbyStore
+                });
+
+                // 마커에 마우스오버 이벤트를 등록합니다
+                kakao.maps.event.addListener(marker, 'mouseover', function () {
+                  // 마커에 마우스오버 이벤트가 발생하면 인포윈도우를 마커위에 표시합니다
+                  infowindow.open(map, marker);
+                });
+
+                // 마커에 마우스아웃 이벤트를 등록합니다
+                kakao.maps.event.addListener(marker, 'mouseout', function () {
+                  // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
+                  infowindow.close();
+                });
 
                 // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
                 // LatLngBounds 객체에 좌표를 추가합니다
