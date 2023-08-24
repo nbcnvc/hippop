@@ -4,6 +4,7 @@ import { supabase } from '../api/supabase';
 
 import { styled } from 'styled-components';
 import { Link } from 'react-router-dom';
+import { randomFileName } from '../hooks/useHandleImageName';
 
 export const handleLogOut = async () => {
   const { error } = await supabase.auth.signOut();
@@ -36,6 +37,12 @@ const Login = ({ closeModal }: { closeModal: () => void }) => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'facebook'
     });
+
+    // const newFileName = randomFileName(selectedImage.name);
+    // const renamedFile = new File([selectedImage], newFileName);
+
+    // const { data } = await supabase.storage.from('images').upload(`profile/${renamedFile.name}`, renamedFile);
+
     if (data) alert('로그인이 완료되었습니다');
     console.log(data);
     if (error) console.error('error =>', error);
