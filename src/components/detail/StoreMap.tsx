@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 // 타입
-import { Geocoder, HotPlaceInfo } from '../../types/types';
+import { Geocoder, HotPlaceInfo, Store } from '../../types/types';
 import { StoreMapProps } from '../../types/props';
 // 컴포넌트
 import HotPlace from './HotPlace';
@@ -21,11 +21,9 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
   const [category, setCategory] = useState<string>('맛집');
   const [searchData, setSearchData] = useState<HotPlaceInfo[]>();
   const [isSelected, setIsSelected] = useState<HotPlaceInfo>();
-  const [isShowPMarker, setIsShowPMarker] = useState<boolean>(true);
+  const [nearbyStoreMarker, setNearbyStoreMarker] = useState<Store[]>();
+  const [isShowPMarker, setIsShowPMarker] = useState<boolean>(false);
   const [isShowSMarker, setIsShowSMarker] = useState<boolean>(true);
-  const [isShow, setIsShow] = useState<boolean>(true);
-
-  // const [isOpen, setIsOpen] = useState<boolean>(true);
 
   //  ref는 맵이 렌더링될 DOM 요소를 참조
   const mapElement = useRef(null);
@@ -47,8 +45,12 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
         // 지도 옵션
         const mapOption = {
           center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-          level: 3 // 지도의 확대 레벨
+          level: 4 // 지도의 확대 레벨
         };
+
+        if (!mapElement.current || !kakao) {
+          return false;
+        }
 
         // 지도 생성
         const map = new window.kakao.maps.Map(mapElement.current, mapOption);
@@ -80,7 +82,9 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
         };
 
         // 키워드로 장소를 검색합니다
-        ps.keywordSearch(`${dongName} ${category}`, placesSearchCB);
+        for (let i = 1; i < 4; i++) {
+          ps.keywordSearch(`${dongName} ${category}`, placesSearchCB, { size: 15, page: i });
+        }
 
         const displayMarker = (place: HotPlaceInfo) => {
           const marker = new kakao.maps.Marker({
@@ -131,56 +135,66 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
 
         // 지도의 중심을 결과값으로 받은 위치로 이동
         map.setCenter(coords);
+
+        // nearbyStore marker
+        if (isShowSMarker && nearbyStoreMarker) {
+          const geocoder = new kakao.maps.services.Geocoder();
+
+          nearbyStoreMarker?.forEach((data) => {
+            geocoder.addressSearch(data.location, function (result: Geocoder[], status: string) {
+              // 정상적으로 검색이 완료됐으면
+              if (status === kakao.maps.services.Status.OK) {
+                const coords = new kakao.maps.LatLng(Number(result[0].y), Number(result[0].x));
+
+                const marker = new kakao.maps.Marker({
+                  map: map,
+                  position: coords,
+                  clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
+                });
+
+                // const bounds = new kakao.maps.LatLngBounds();
+
+                // if (isShowSMarker) {
+                //   for (let i = 0; i < result.length; i++) {
+                //     bounds.extend(new kakao.maps.LatLng(result[i].y, result[i].x));
+                //   }
+                // }
+              }
+            });
+          });
+        }
       }
     });
   }, [storeLocation, category, isShowPMarker]);
 
   return (
     <div>
-      <div style={{ display: 'flex', marginTop: '50px' }}>
-        {isSelected && (
-          <iframe
-            style={{
-              width: '30%',
-              height: '500px',
-              marginRight: '20px',
-              borderRadius: '10px',
-              border: '1px solid #c9c9c9ff'
-            }}
-            src={`https://place.map.kakao.com/m/${isSelected.id}`}
-          />
-        )}
+      {searchData && (
+        <HotPlace setCategory={setCategory} isShowPMarker={isShowPMarker} setIsShowPMarker={setIsShowPMarker} />
+      )}
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '30px' }}>
+        {isSelected && isShowPMarker && <IframeStyle src={`https://place.map.kakao.com/m/${isSelected.id}`} />}
         <div
           ref={mapElement}
           style={{
-            width: '55%',
-            height: '500px',
+            width: `${isSelected && isShowPMarker ? '55%' : '90%'}`,
+            height: '550px',
             borderRadius: '10px',
             border: '1px solid #c9c9c9ff'
           }}
         />
       </div>
-      {searchData && <HotPlace setCategory={setCategory} setIsShowPMarker={setIsShowPMarker} searchData={searchData} />}
-      <NearbyStore guName={guName} setIsShowSMarker={setIsShowSMarker} />
+      <NearbyStore guName={guName} />
     </div>
   );
 };
 
 export default StoreMap;
 
-// 고려해볼 기능
-// 지도 정보 얻어오기
-// geolocation으로 마커 표시하기
-// 여러개 마커 표시하기
-// 여러개 마커 제어하기
-// 다양한 이미지 마커 표시하기
-// 닫기가 가능한 커스텀 오버레이
-// 키워드로 장소검색하기
-
-// const IframeStyle = styled.iframe`
-//   width: '30%';
-//   height: '500px';
-//   margin-right: '20px';
-//   border-radius: '10px';
-//   border: 1px solid #c9c9c9ff;
-// `;
+const IframeStyle = styled.iframe`
+  width: 33%;
+  height: 550px;
+  margin-right: 20px;
+  border-radius: 10px;
+  border: 1px solid #c9c9c9ff;
+`;
