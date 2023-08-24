@@ -22,7 +22,7 @@ const StoreDetail = () => {
     data: storeData,
     isLoading,
     isError
-  } = useQuery<Store | null>({ queryKey: ['detailData', id], queryFn: () => fetchDetailData(id ?? '') });
+  } = useQuery<Store | null>({ queryKey: ['detailData', Number(id)], queryFn: () => fetchDetailData(Number(id)) });
 
   // 팝업스토어 링크 오픈 핸들러
   const handleopenlink = () => {
@@ -72,7 +72,7 @@ const StoreDetail = () => {
             ))}
           </ImgBox>
           <Calendar storeData={storeData} />
-          <StoreMap storeLocation={storeData.location} />
+          <StoreMap storeLocation={storeData.location} title={storeData.title} />
         </>
       )}
     </div>

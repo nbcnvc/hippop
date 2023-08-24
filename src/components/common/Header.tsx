@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { styled } from 'styled-components';
-import SearchIcon from '@mui/icons-material/Search';
+
 import Login from '../../pages/Login';
 import { UserInfo } from '../../types/types';
 import { handleLogOut } from '../../pages/Login';
@@ -12,7 +12,6 @@ import { setUserStore } from '../../store/userStore';
 import { useCurrentUser } from '../../store/userStore';
 
 function Header() {
-  const navigate = useNavigate();
   const [user, setUser] = useState<UserInfo | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -91,11 +90,6 @@ function Header() {
     setIsModalOpen(false);
   };
 
-  // // search page로 이동
-  // const navSearch = () => {
-  //   navigate(`/search`);
-  // };
-
   const handleModalOutsideClick = (event: React.MouseEvent) => {
     if (event.target === event.currentTarget) {
       closeModal();
@@ -127,11 +121,6 @@ function Header() {
         </li>
         <li>
           <Link to="/search">Search</Link>
-          {/* <SearchIcon
-          onClick={() => {
-            navSearch();
-          }}
-        /> */}
         </li>
       </ul>
       <div>

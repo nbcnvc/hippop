@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 // 타입
-import { Geocoder, HotPlaceInfo, HotPlaceImage, HotPlaceData } from '../../types/types';
+import { Geocoder, HotPlaceInfo, Store } from '../../types/types';
 import { StoreMapProps } from '../../types/props';
-// api
-import { Kakao } from '../../api/store';
 // 컴포넌트
 import HotPlace from './HotPlace';
 import NearbyStore from './NearbyStore';
+// 스타일
+import { styled } from 'styled-components';
 
 declare global {
   interface Window {
@@ -14,10 +14,14 @@ declare global {
   }
 }
 
-const StoreMap = ({ storeLocation }: StoreMapProps) => {
-  const [category, setCategory] = useState<string>('맛집');
-  const [hotPlaceData, setHotPlaceData] = useState<HotPlaceData[]>();
-  const [isShow, setIsShow] = useState<boolean>(false);
+const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
+  const [guName, setGuName] = useState<string>('');
+  const [category, setCategory] = useState<string>('');
+  const [searchData, setSearchData] = useState<HotPlaceInfo[]>();
+  const [isSelected, setIsSelected] = useState<HotPlaceInfo | undefined>();
+  const [nearbyStoreMarker, setNearbyStoreMarker] = useState<Store[] | undefined>();
+  // const [isShowSMarker, setIsShowSMarker] = useState<boolean>(true);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   //  ref는 맵이 렌더링될 DOM 요소를 참조
   const mapElement = useRef(null);
@@ -33,7 +37,8 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
       if (status === kakao.maps.services.Status.OK) {
         const coords = new kakao.maps.LatLng(Number(result[0].y), Number(result[0].x));
 
-        // console.log(result[0].road_address.road_name);
+        const dongName = result[0].address.region_3depth_h_name;
+        setGuName(result[0].address.region_2depth_name);
 
         // 지도 옵션
         const mapOption = {
@@ -41,11 +46,18 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
           level: 3 // 지도의 확대 레벨
         };
 
+        if (!mapElement.current || !kakao) {
+          return false;
+        }
+
         // 지도 생성
         const map = new window.kakao.maps.Map(mapElement.current, mapOption);
 
         // 장소 검색 객체를 생성합니다
         const ps = new kakao.maps.services.Places();
+
+        // 지도의 중심을 결과값으로 받은 위치로 이동
+        map.setCenter(coords);
 
         // 장소검색이 완료됐을 때 호출되는 콜백함수
         const placesSearchCB = async (data: HotPlaceInfo[], status: string) => {
@@ -54,45 +66,15 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
             // LatLngBounds 객체에 좌표를 추가합니다
             const bounds = new kakao.maps.LatLngBounds();
 
-            if (isShow) {
+            if (category) {
               for (let i = 0; i < data.length; i++) {
                 displayMarker(data[i]);
                 bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
               }
+
+              map.setBounds(bounds);
             }
-            // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
-            // map.setBounds(bounds);
-
-            // // data -> 15개
-            // const promiseArr = [];
-            // data.forEach((place) => {
-            //   promiseArr.push(
-            //     kakao.get(`v2/search/image?target=title&query=${place.place_name}&page=1`)
-            //     // await kakao.get(`v2/search/image?target=title&query=${place.place_name}&page=1`)
-            //   )
-            // })
-
-            // const response = await Promise.all(promiseArr);
-
-            const hotPlaceDataArr = data.map(async (hotPlace) => {
-              const response = await Kakao.get(
-                // `v2/search/image?sort=accuracy&target=title&query=${hotPlace.place_name}&page=1&size=20`
-                // `v2/search/blog?sort=accuracy&page=1&size=5&query=${hotPlace.place_name}`
-                `v2/search/image?sort=accuracy&page=1&size=10&query=${hotPlace.place_name}`
-              );
-              return {
-                id: hotPlace.id,
-                category_code: hotPlace.category_group_code,
-                category_name: hotPlace.category_group_name,
-                place_name: hotPlace.place_name,
-                images: response.data.documents.map((document: HotPlaceImage) => document.thumbnail_url)
-              };
-            });
-
-            const response = await Promise.all(hotPlaceDataArr);
-            console.log(response);
-
-            setHotPlaceData(response);
+            setSearchData(data);
           } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
             alert('검색 결과가 존재하지 않습니다.');
             return;
@@ -103,34 +85,51 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
         };
 
         // 키워드로 장소를 검색합니다
-        ps.keywordSearch(`${result[0].road_address.road_name} ${category}`, placesSearchCB);
+        for (let i = 1; i < 3; i++) {
+          ps.keywordSearch(`${dongName} ${category}`, placesSearchCB, { size: 15, page: i });
+        }
 
         const displayMarker = (place: HotPlaceInfo) => {
+          // 메인 마커이미지의 주소
+          const imageSrc = '/asset/hotPlaceMarker.png';
+          // 마커이미지의 크기
+          const imageSize = new kakao.maps.Size(45, 50);
+          const hpMarkerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
           const marker = new kakao.maps.Marker({
             map: map,
-            position: new kakao.maps.LatLng(place.y, place.x)
+            position: new kakao.maps.LatLng(place.y, place.x),
+            image: hpMarkerImage,
+            clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
+          });
+
+          // 마커에 클릭이벤트를 등록합니다
+          kakao.maps.event.addListener(marker, 'click', function () {
+            // 마커 위에 인포윈도우를 표시합니다
+            setIsSelected(place);
           });
         };
 
-        // 마커이미지의 주소입니다
-        const imageSrc = 'https://i.postimg.cc/pX2LSM9r/1.png';
-        // 마커이미지의 크기입니다
-        const imageSize = new kakao.maps.Size(70, 75);
-        // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
-        const imageOption = { offset: new kakao.maps.Point(30, 60) };
+        // 메인 마커이미지의 주소
+        const imageSrc = '/asset/mainMarker.png';
+        // 마커이미지의 크기
+        const imageSize = new kakao.maps.Size(100, 105);
+        // 마커이미지의 옵션 // 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+        // const imageOption = { offset: new kakao.maps.Point(40, 70) };
         // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-        const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+        const mainMarkerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
         // 마커로 표시
         const marker = new kakao.maps.Marker({
           map: map,
           position: coords,
-          image: markerImage
+          image: mainMarkerImage,
+          clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
         });
 
         // 인포윈도우로 장소에 대한 설명 표시
         const infowindow = new kakao.maps.InfoWindow({
-          content: '<div style="width:150px;text-align:center;padding:6px 0;">현재 팝업스토어 위치</div>'
+          content: `<div style="width:150px;text-align:center;padding:6px 0;z-index:1;">${title}의 위치</div>`
         });
         infowindow.open(map, marker);
 
@@ -144,35 +143,98 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
         // 지도 줌 컨트롤 위치
         map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
-        // 지도의 중심을 결과값으로 받은 위치로 이동
-        map.setCenter(coords);
+        // nearbyStore marker
+        if (nearbyStoreMarker) {
+          const geocoder = new kakao.maps.services.Geocoder();
+
+          nearbyStoreMarker.forEach((data) => {
+            geocoder.addressSearch(data.location, function (result: Geocoder[], status: string) {
+              // 정상적으로 검색이 완료됐으면
+              if (status === kakao.maps.services.Status.OK) {
+                const coords = new kakao.maps.LatLng(Number(result[0].y), Number(result[0].x));
+
+                // console.log('result', result);
+
+                // const displayMarker = (place: Geocoder) => {
+                // 메인 마커이미지의 주소
+                const imageSrc = '/asset/nearbyMarker.png';
+                // // 마커이미지의 크기
+                const imageSize = new kakao.maps.Size(50, 55);
+                const nearbyMarkerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+                const marker = new kakao.maps.Marker({
+                  map: map,
+                  position: coords,
+                  image: nearbyMarkerImage,
+                  clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
+                });
+                // };
+
+                // 마커에 커서가 오버됐을 때 마커 위에 표시할 인포윈도우를 생성합니다
+                const nearbyStore = `<div style="padding:5px;">${data.title}</div>`; // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+
+                const infowindow = new kakao.maps.InfoWindow({
+                  content: nearbyStore
+                });
+
+                // 마커에 마우스오버 이벤트를 등록합니다
+                kakao.maps.event.addListener(marker, 'mouseover', function () {
+                  // 마커에 마우스오버 이벤트가 발생하면 인포윈도우를 마커위에 표시합니다
+                  infowindow.open(map, marker);
+                });
+
+                // 마커에 마우스아웃 이벤트를 등록합니다
+                kakao.maps.event.addListener(marker, 'mouseout', function () {
+                  // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
+                  infowindow.close();
+                });
+
+                // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+                // LatLngBounds 객체에 좌표를 추가합니다
+                // const bounds = new kakao.maps.LatLngBounds();
+
+                // for (let i = 0; i < result.length; i++) {
+                //   displayMarker(result[i]);
+                //   bounds.extend(new kakao.maps.LatLng(result[i].y, result[i].x));
+                // }
+
+                // map.setBounds(bounds);
+              }
+            });
+          });
+        }
       }
     });
-  }, [storeLocation, category, isShow]);
+  }, [storeLocation, category, nearbyStoreMarker]);
+
+  console.log(nearbyStoreMarker);
 
   return (
     <div>
-      <div
-        ref={mapElement}
-        style={{
-          width: '80%',
-          height: '450px',
-          marginTop: '70px'
-        }}
-      />
-      <NearbyStore />
-      {hotPlaceData && <HotPlace setCategory={setCategory} setIsShow={setIsShow} hotPlaceData={hotPlaceData} />}
+      {searchData && <HotPlace setCategory={setCategory} setIsSelected={setIsSelected} />}
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '30px' }}>
+        {isSelected && category && <IframeStyle src={`https://place.map.kakao.com/m/${isSelected.id}`} />}
+        <div
+          ref={mapElement}
+          style={{
+            width: `${isSelected && category ? '55%' : '90%'}`,
+            height: '550px',
+            borderRadius: '10px',
+            border: '1px solid #c9c9c9ff'
+          }}
+        />
+      </div>
+      <NearbyStore guName={guName} setNearbyStoreMarker={setNearbyStoreMarker} />
     </div>
   );
 };
 
 export default StoreMap;
 
-// 고려해볼 기능
-// 지도 정보 얻어오기
-// geolocation으로 마커 표시하기
-// 여러개 마커 표시하기
-// 여러개 마커 제어하기
-// 다양한 이미지 마커 표시하기
-// 닫기가 가능한 커스텀 오버레이
-// 키워드로 장소검색하기
+const IframeStyle = styled.iframe`
+  width: 33%;
+  height: 550px;
+  margin-right: 20px;
+  border-radius: 10px;
+  border: 1px solid #c9c9c9ff;
+`;

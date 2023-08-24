@@ -1,64 +1,110 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 // 라이브러리
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInView } from 'react-intersection-observer';
+// import DatePicker1 from './DatePicker';
+// 컴포넌트
+import SearchCalendar from './SearchCalendar';
 // api
-import { fetchAllBookMark } from '../../api/bookmark';
+import { fetchStoreIdCount } from '../../api/bookmark';
+import { getInfinityStore } from '../../api/store';
 // 타입
-import { SearchListProps, Store } from '../../types/types';
+import { FetchsStore, SearchListProps, Store } from '../../types/types';
 //스타일
 import { styled } from 'styled-components';
 // mui
 import SearchIcon from '@mui/icons-material/Search';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import SearchCalendar from './SearchCalendar';
 import moment from 'moment';
-
-// import DatePicker1 from './DatePicker';
 
 const SearchList = ({ storeData }: SearchListProps) => {
   const navigate = useNavigate();
 
+  // 검색 inputValue state
   const [inputValue, setInputValue] = useState<string>('');
-  const [filteredStoreList, setFilteredStoreList] = useState<Store[] | null>(null);
 
-  // 기간별 필터 state
+  // 기간별 filter state
   const [startDate, setStartDate] = useState<Date | null>(null);
-
   const [endDate, setEndDate] = useState<Date | null>(null);
 
-  // 북마크 전체 조회
-  const { data: bookMark } = useQuery(['bookMark'], () => fetchAllBookMark());
+  // filter된 storeList state
+  const [filteredStoreList, setFilteredStoreList] = useState<Store[] | null>(null);
 
-  // store_id 발생 횟수를 저장할 객체 생성
-  const storeIdCounts: Record<string, number> = {};
-
-  // 각 store_id의 발생 횟수를 세기
-  bookMark?.forEach((bookmark) => {
-    const { store_id } = bookmark;
-    if (!storeIdCounts[store_id]) {
-      storeIdCounts[store_id] = 1;
-    } else {
-      storeIdCounts[store_id]++;
+  // 인피니티 스크롤을 위한 데이터 조회
+  const {
+    data: stores,
+    isLoading,
+    isError,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage
+  } = useInfiniteQuery<FetchsStore>({
+    queryKey: [`/search`],
+    queryFn: ({ pageParam }) => getInfinityStore(pageParam),
+    getNextPageParam: (lastPage) => {
+      // 전체 페이지 개수보다 작을 때
+      if (lastPage.page < lastPage.totalPages) {
+        // 다음 페이지로 pageParam를 저장
+        return lastPage.page + 1;
+      }
     }
   });
 
-  // storeIdCounts 객체를 배열로 변환하여 정렬
-  const sortedCounts = Object.entries(storeIdCounts)
-    .sort((a, b) => b[1] - a[1])
-    .map(([store_id, count]) => ({ store_id, count }));
+  // 인피니티 스크롤로 필터된 store
+  const selectStores = useMemo(() => {
+    return stores?.pages
+      .map((data) => {
+        return data.stores;
+      })
+      .flat();
+  }, [stores]);
+
+  // 언제 다음 페이지를 가져올 것
+  const { ref } = useInView({
+    threshold: 1, // 맨 아래에 교차될 때
+    onChange: (inView: any) => {
+      if (!inView || !hasNextPage || isFetchingNextPage) return;
+      fetchNextPage();
+    }
+  });
+
+  // 북마크 카운트를 가져오는 함수
+  const fetchBookmarkCounts = async () => {
+    const storeIds = storeData.map((store) => store.id);
+    // storeIds 배열에 있는 각 스토어 id를 순회하면서 fetchCount를 실행하고
+    // 각 스토어의 북마크 카운트를 가져와서 객체 형태로 배열에 저장
+    const countsPromises = storeIds.map(async (store_id) => {
+      const count = await fetchStoreIdCount(store_id);
+      return { store_id, count };
+    });
+    // Promise.all
+    // 배열에 담긴 모든 비동기 작업이 완료 될떄까지 대기하고, 완료되면 모든 결과를 배열로 반환
+    const bookmarkCounts = await Promise.all(countsPromises);
+    return bookmarkCounts;
+  };
+
+  // 컴포넌트가 마운트되거나 storeData가 변경될 때 북마크 카운트를 가져옴
+  const { data: bookMarkCounts } = useQuery(['bookMarkCounts', storeData], fetchBookmarkCounts);
+
+  // 북마크 카운트가 많은 순으로 store_id를 정렬
+  const sortedCounts = bookMarkCounts
+    ? (bookMarkCounts as { store_id: number; count: number }[]).sort((a, b) => b.count - a.count)
+    : [];
 
   // 정렬된 store id의 배열
   const sortedStoreIds = sortedCounts.map((item) => item.store_id);
 
-  // 북마크 순 정렬된 storeData
-  const sortedStores: any = storeData?.sort((a, b) => {
-    const indexA = sortedStoreIds.indexOf(a.id.toString());
-    const indexB = sortedStoreIds.indexOf(b.id.toString());
+  // 인기순(북마크 많은 순) 정렬된 storeData
+  const sortedStores = storeData
+    ? [...storeData].sort((a, b) => {
+        const indexA = sortedStoreIds.indexOf(a.id);
+        const indexB = sortedStoreIds.indexOf(b.id);
 
-    return indexA - indexB;
-  });
+        return indexA - indexB;
+      })
+    : [];
 
   // 최신순 정렬된 storeData
   const latestStores = [...storeData]?.sort((a, b) => {
@@ -68,18 +114,11 @@ const SearchList = ({ storeData }: SearchListProps) => {
     return indexD.localeCompare(indexC); // Compare as strings
   });
 
-  // 검색 초기화 handler
-  const handleReset = () => {
-    setInputValue('');
-
-    setFilteredStoreList(null);
-  };
-
   // 데이터 필터링
   useEffect(() => {
     // storeData가 존재하면 필터링을 진행합니다.
     if (filteredStoreList || inputValue || startDate || endDate) {
-      const filteredStores = storeData?.filter((store) => {
+      const filteredStores = selectStores?.filter((store) => {
         const lowercaseInputValue = inputValue.toLowerCase();
         const storeStartDate = moment(store.period_start);
         const storeEndDate = moment(store.period_end);
@@ -100,10 +139,11 @@ const SearchList = ({ storeData }: SearchListProps) => {
       console.log('필터링 결과:', filteredStores);
 
       // 검색 결과를 상태로 설정
-      setFilteredStoreList(filteredStores);
+      setFilteredStoreList(filteredStores || null);
     }
-  }, [storeData, inputValue, startDate, endDate]);
+  }, [selectStores, inputValue, startDate, endDate]);
 
+  // onChange 핸들러
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     console.log('새로운 입력 값:', newValue);
@@ -130,17 +170,30 @@ const SearchList = ({ storeData }: SearchListProps) => {
     }
   };
 
+  // 검색 초기화 handler
+  const handleReset = () => {
+    setInputValue('');
+
+    setFilteredStoreList(null);
+  };
+
   // detail page 이동
   const navDetail = (id: number) => {
     navigate(`/detail/${id}`);
   };
 
   // 인기 팝업스토어 자르기
-  const popStores = sortedStores?.slice(0, 3);
+  const popStores = sortedStores?.slice(0, 20);
 
   // 최신 팝업스토어 자르기
   const latStores = latestStores?.slice(0, 3);
 
+  if (isLoading) {
+    return <div>로딩중입니다.</div>;
+  }
+  if (isError) {
+    return <div>오류가 발생했습니다.</div>;
+  }
   return (
     <Container>
       <SearchBox>
@@ -188,9 +241,9 @@ const SearchList = ({ storeData }: SearchListProps) => {
           </div>
         ) : (
           <>
-            <h1>인기 팝업스토어</h1>
+            <Title>인기 팝업스토어</Title>
             <GridContainer>
-              {popStores?.map((store: any) => (
+              {popStores?.map((store: Store) => (
                 <ImgWrapper key={store.id} onClick={() => navDetail(store.id)}>
                   <PImg src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
                   <PopupTitle>{store.title}</PopupTitle>
@@ -201,9 +254,9 @@ const SearchList = ({ storeData }: SearchListProps) => {
               ))}
             </GridContainer>
 
-            <h1>최신 팝업스토어</h1>
+            <Title>최신 팝업스토어</Title>
             <GridContainer>
-              {latStores?.map((store: any) => (
+              {latStores?.map((store: Store) => (
                 <ImgWrapper key={store.id} onClick={() => navDetail(store.id)}>
                   <PImg src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
                   <PopupTitle>{store.title}</PopupTitle>
@@ -216,6 +269,18 @@ const SearchList = ({ storeData }: SearchListProps) => {
           </>
         )}
       </>
+      <div
+        style={{
+          backgroundColor: 'yellow',
+          width: '100%',
+          border: '1px solid black',
+          padding: '20px',
+          margin: '10px'
+        }}
+        ref={ref}
+      >
+        Trigger to Fetch Here
+      </div>
     </Container>
   );
 };
@@ -227,7 +292,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-top: 100px;
+  margin-top: 70px;
 `;
 
 const SearchBox = styled.div`
@@ -321,4 +386,13 @@ const Img = styled.img`
   width: 290px;
   height: 330px;
   object-fit: cover;
+`;
+
+const Title = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+
+  padding: 20px;
+
+  margin-top: 50px;
 `;
