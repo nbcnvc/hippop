@@ -1,25 +1,7 @@
 import { supabase } from './supabase';
 
 import { SubscribeType } from '../types/types';
-
-// 구독 및 구독취소
-export const toggleSubscribe = async (subscribe: SubscribeType): Promise<void> => {
-  const { data: isSubscribe }: any = await supabase
-    .from('subscribe')
-    .select('*')
-    .eq('subscribe_from', subscribe.subscribe_from)
-    .eq('subscribe_to', subscribe.subscribe_to);
-
-  if (isSubscribe.length > 0) {
-    await supabase
-      .from('subscribe')
-      .delete()
-      .eq('subscribe_from', subscribe.subscribe_from)
-      .eq('subscribe_to', subscribe.subscribe_to);
-  } else {
-    await supabase.from('subscribe').insert(subscribe);
-  }
-};
+import { useCurrentUser } from '../store/userStore';
 
 // 구독 확인
 export const isSubscribe = async (subscribe: SubscribeType) => {
@@ -30,4 +12,18 @@ export const isSubscribe = async (subscribe: SubscribeType) => {
     .eq('subscribe_to', subscribe.subscribe_to);
 
   return data;
+};
+
+// 구독 하기
+export const createSubscribe = async (subscribe: SubscribeType): Promise<void> => {
+  await supabase.from('subscribe').insert(subscribe);
+};
+
+// 구독 취소
+export const deleteSubscribe = async (subscribe: SubscribeType): Promise<void> => {
+  await supabase
+    .from('subscribe')
+    .delete()
+    .eq('subscribe_from', subscribe.subscribe_from)
+    .eq('subscribe_to', subscribe.subscribe_to);
 };
