@@ -17,10 +17,7 @@ const Main = () => {
   const [storeTitle, setStoreTitle] = useState<string>('');
   const [result, setResult] = useState<Store[] | null>(null);
   const [msgModal, setMsgModal] = useState<boolean>(false);
-
   const [openDetail, setOpenDetail] = useState<boolean>(false);
-  console.log('opendetail1', openDetail);
-  console.log('detailPost', detailPost);
   const currentUser = useCurrentUser();
 
   const openPost = () => {
