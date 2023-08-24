@@ -16,6 +16,7 @@ const Comments = ({ post }: CommentProps) => {
   const [body, setBody] = useState<string>('');
   const [edit, setEdit] = useState<string>('');
   const [isEditId, setIsEditId] = useState<number | null>(null);
+  const [showButton, setShowButton] = useState<boolean>(true);
   const onChangeBody = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBody(e.target.value);
   };
@@ -53,7 +54,10 @@ const Comments = ({ post }: CommentProps) => {
 
   // 더보기 버튼
   const fetchMore = () => {
-    if (!hasNextPage) return;
+    if (!hasNextPage) {
+      setShowButton(false);
+      return;
+    }
     fetchNextPage();
   };
 
@@ -165,8 +169,7 @@ const Comments = ({ post }: CommentProps) => {
         );
       })}
       {/* 더보기 버튼 */}
-      {/* {selectComments?.length > 5 && <button onClick={fetchMore}>더보기</button>} */}
-      <button onClick={fetchMore}>더보기</button>
+      {showButton && hasNextPage && <button onClick={fetchMore}>더보기</button>}
     </>
   );
 };
