@@ -2,22 +2,26 @@ import Editor from './Editor';
 
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { styled } from 'styled-components';
 
-import { NewPost } from '../../../types/types';
+import { NewPost, Post } from '../../../types/types';
 import { createPost } from '../../../api/post';
 import { WriteProps } from '../../../types/props';
+import { useCurrentUser } from '../../../store/userStore';
 
-const Write = ({ writeModal, setWriteModal, setSearchModal, setPost, storeId, storeTitle, setResult }: WriteProps) => {
+const Write = ({ writeModal, setWriteModal, setSearchModal, storeId, storeTitle, setResult }: WriteProps) => {
+  const currentUser = useCurrentUser();
   const { pathname } = useLocation();
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
   const [title, setTitle] = useState<string>('');
   const [body, setBody] = useState<string>('');
-
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
+
+  // Post 상세 조회
+  // const { data: Post } = useQuery<Post | null>({ queryKey: ['post', id], queryFn: () => fetchDetailData(id) });
 
   // 닫기: 글 작성 모달창 && 검색 모달창 닫기
   const closeButton = () => {
@@ -63,7 +67,7 @@ const Write = ({ writeModal, setWriteModal, setSearchModal, setPost, storeId, st
 
     // newPost 선언
     const newPost: NewPost = {
-      // user_id: '짱구',
+      user_id: currentUser?.id,
       store_id: storeId,
       ctg_index,
       title,
@@ -79,8 +83,6 @@ const Write = ({ writeModal, setWriteModal, setSearchModal, setPost, storeId, st
 
     // 글 작성 모달 닫기
     setWriteModal(false);
-    // 상세 게시글(작성한 게시글) 모달 열기
-    // setPost(newPost);
   };
 
   return (

@@ -1,15 +1,28 @@
 import Edit from '../write/Edit';
+import Writer from './Writer';
 import Comments from './Comments';
 
+import moment from 'moment';
 import { useState } from 'react';
 import { styled } from 'styled-components';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { DetailProps } from '../../../types/props';
 import { deletePost } from '../../../api/post';
+import { useCurrentUser } from '../../../store/userStore';
+import { Store } from '../../../types/types';
+import { fetchDetailData } from '../../../api/store';
 
 const Detail = ({ post, setPost }: DetailProps) => {
+  const currentUser = useCurrentUser();
+  const id = post.store_id;
   const [isEdit, setIsEdit] = useState<boolean>(false);
+
+  // 날짜 포맷
+  const formatDate = moment(post.created_at).format('YYYY.MM.DD HH:mm');
+
+  // Store 상세 조회
+  const { data: store } = useQuery<Store | null>({ queryKey: ['detailData', id], queryFn: () => fetchDetailData(id) });
 
   // 창 닫기 버튼
   const closeDetail = () => {
@@ -41,8 +54,12 @@ const Detail = ({ post, setPost }: DetailProps) => {
       <ModalBox>
         <div>
           <button onClick={closeDetail}>창 닫기</button>
-          <button onClick={() => deleteButton(post.id)}>삭제</button>
-          <button onClick={editButton}>수정</button>
+          {currentUser?.id === post.user_id && (
+            <>
+              <button onClick={() => deleteButton(post.id)}>삭제</button>
+              <button onClick={editButton}>수정</button>
+            </>
+          )}
           {isEdit ? (
             <Edit post={post} setPost={setPost} isEdit={isEdit} setIsEdit={setIsEdit} />
           ) : (
@@ -51,14 +68,16 @@ const Detail = ({ post, setPost }: DetailProps) => {
               style={{ width: '95%', border: '1px solid black', padding: '20px', margin: '10px' }}
             >
               <div>카테고리 : {(post.ctg_index === 1 && '팝업후기') || (post.ctg_index === 2 && '팝업메이트')}</div>
-              <div>팝업스토어 이름</div>
-              <div>작성자</div>
-              <div>작성일자 : {post.created_at}</div>
+              <div>어떤 팝업? {store?.title}</div>
+              <div>작성일자 : {formatDate}</div>
               <div>제목 : {post.title}</div>
               <div className="ql-editor" dangerouslySetInnerHTML={{ __html: post.body }} />
             </div>
           )}
         </div>
+        {/* 작성자 */}
+        {isEdit ? <></> : <Writer userId={post.user_id} />}
+        {/* 댓글 */}
         {isEdit ? <></> : <Comments post={post} />}
       </ModalBox>
     </ModalContainer>

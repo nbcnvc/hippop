@@ -42,7 +42,6 @@ export interface WriteProps {
   writeModal: boolean;
   setWriteModal: React.Dispatch<SetStateAction<boolean>>;
   setSearchModal: React.Dispatch<SetStateAction<boolean>>;
-  setPost: React.Dispatch<SetStateAction<Post | null>>;
   storeId: number;
   storeTitle: string;
   setResult: React.Dispatch<SetStateAction<Store[] | null>>;
@@ -54,6 +53,10 @@ export interface PostsProps {
 
 export interface CommentProps {
   post: Post;
+}
+
+export interface WriterProps {
+  userId: string;
 }
 
 export interface DetailProps {
