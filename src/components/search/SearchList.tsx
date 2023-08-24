@@ -7,7 +7,7 @@ import { useInView } from 'react-intersection-observer';
 // 컴포넌트
 import SearchCalendar from './SearchCalendar';
 // api
-import { fetchCount } from '../../api/bookmark';
+import { fetchStoreIdCount } from '../../api/bookmark';
 import { getInfinityStore } from '../../api/store';
 // 타입
 import { FetchsStore, SearchListProps, Store } from '../../types/types';
@@ -76,7 +76,7 @@ const SearchList = ({ storeData }: SearchListProps) => {
     // storeIds 배열에 있는 각 스토어 id를 순회하면서 fetchCount를 실행하고
     // 각 스토어의 북마크 카운트를 가져와서 객체 형태로 배열에 저장
     const countsPromises = storeIds.map(async (store_id) => {
-      const count = await fetchCount(store_id);
+      const count = await fetchStoreIdCount(store_id);
       return { store_id, count };
     });
     // Promise.all

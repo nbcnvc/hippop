@@ -25,8 +25,14 @@ export const toggleBookMark = async (bookmark: Bookmark): Promise<void> => {
   }
 };
 
+// 전체 북마크 count
+export const fetchCount = async () => {
+  const { count } = await supabase.from('bookmark').select('count', { count: 'exact', head: true });
+  return count;
+};
+
 // 북마크를 store_id별로 count
-export const fetchCount = async (store_id: number) => {
+export const fetchStoreIdCount = async (store_id: number) => {
   const { count } = await supabase
     .from('bookmark')
     .select('count', { count: 'exact', head: true })
