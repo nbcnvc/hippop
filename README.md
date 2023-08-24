@@ -17,4 +17,7 @@ yarn start
 - axios
 - @types/axios
 - react-kakao-maps-sdk
+- react-slick
+- @types/react-slick
+- slick-carousel
 - react-iframe

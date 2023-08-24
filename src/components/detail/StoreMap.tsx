@@ -17,9 +17,12 @@ declare global {
 }
 
 const StoreMap = ({ storeLocation }: StoreMapProps) => {
+  const [guName, setGuName] = useState<string>('');
   const [category, setCategory] = useState<string>('맛집');
   const [searchData, setSearchData] = useState<HotPlaceInfo[]>();
   const [isSelected, setIsSelected] = useState<HotPlaceInfo>();
+  const [isShowPMarker, setIsShowPMarker] = useState<boolean>(true);
+  const [isShowSMarker, setIsShowSMarker] = useState<boolean>(true);
   const [isShow, setIsShow] = useState<boolean>(true);
 
   // const [isOpen, setIsOpen] = useState<boolean>(true);
@@ -37,6 +40,9 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
       // 정상적으로 검색이 완료됐으면
       if (status === kakao.maps.services.Status.OK) {
         const coords = new kakao.maps.LatLng(Number(result[0].y), Number(result[0].x));
+
+        const dongName = result[0].address.region_3depth_h_name;
+        setGuName(result[0].address.region_2depth_name);
 
         // 지도 옵션
         const mapOption = {
@@ -57,7 +63,7 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
             // LatLngBounds 객체에 좌표를 추가합니다
             const bounds = new kakao.maps.LatLngBounds();
 
-            if (isShow) {
+            if (isShowPMarker) {
               for (let i = 0; i < data.length; i++) {
                 displayMarker(data[i]);
                 bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
@@ -74,7 +80,7 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
         };
 
         // 키워드로 장소를 검색합니다
-        ps.keywordSearch(`${result[0].road_address.road_name} ${category}`, placesSearchCB);
+        ps.keywordSearch(`${dongName} ${category}`, placesSearchCB);
 
         const displayMarker = (place: HotPlaceInfo) => {
           const marker = new kakao.maps.Marker({
@@ -127,7 +133,7 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
         map.setCenter(coords);
       }
     });
-  }, [storeLocation, category]);
+  }, [storeLocation, category, isShowPMarker]);
 
   return (
     <div>
@@ -154,8 +160,8 @@ const StoreMap = ({ storeLocation }: StoreMapProps) => {
           }}
         />
       </div>
-      {searchData && <HotPlace setCategory={setCategory} setIsShow={setIsShow} searchData={searchData} />}
-      <NearbyStore />
+      {searchData && <HotPlace setCategory={setCategory} setIsShowPMarker={setIsShowPMarker} searchData={searchData} />}
+      <NearbyStore guName={guName} setIsShowSMarker={setIsShowSMarker} />
     </div>
   );
 };

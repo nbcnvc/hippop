@@ -11,10 +11,16 @@ export interface StoreMapProps {
   storeLocation: string;
 }
 
+// 주변 지역 팝업스토어 props
+export interface NearbyStoreProps {
+  guName: string;
+  setIsShowSMarker: React.Dispatch<SetStateAction<boolean>>;
+}
+
 // 핫플레이스 props
 export interface HotPlaceProps {
   setCategory: React.Dispatch<SetStateAction<string>>;
-  setIsShow: React.Dispatch<SetStateAction<boolean>>;
+  setIsShowPMarker: React.Dispatch<SetStateAction<boolean>>;
   searchData: HotPlaceInfo[];
 }
 
