@@ -30,6 +30,7 @@ function Header() {
   // 현재유저 정보 가져오기
   const currentUser = useCurrentUser();
 
+  console.log('currentUser22', currentUser);
   useEffect(() => {
     const authSubscription = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session) {
@@ -107,6 +108,7 @@ function Header() {
 
   return (
     <HeaderTag>
+      {/* <header> */}
       <div className="logo-wrapper">
         <Link to="/">
           <img src="/asset/test-logo1.png" className="test-logo" alt="test-img" />
@@ -134,15 +136,23 @@ function Header() {
       </ul>
       <div>
         <div className="user-info">
-          {user ? (
+          {currentUser ? (
             <>
               <div className="user-dropdown" onClick={handleMenuToggle} ref={menuRef}>
                 <div className="info-mate">
                   <div className="welcome-mate">
                     <p>반갑습니다!</p>
-                    <p>{user?.name}님</p>
+                    <p>{currentUser.name}님</p>
                   </div>
-                  <img src={user?.avatar_url} alt="User Avatar" />
+
+                  {currentUser.avatar_url.startsWith('profile/') ? (
+                    <img
+                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser.avatar_url}`}
+                      alt="User Avatar"
+                    />
+                  ) : (
+                    <img src={currentUser.avatar_url} alt="User Avatar" />
+                  )}
                 </div>
                 <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
                   <Link to="/mypage">My Page</Link>
@@ -160,6 +170,7 @@ function Header() {
           <Login closeModal={closeModal} />
         </ModalWrapper>
       )}
+      {/* </header> */}
     </HeaderTag>
   );
 }
@@ -167,6 +178,7 @@ function Header() {
 export default Header;
 
 const HeaderTag = styled.header`
+background-color: #f24d0d;
   width: 100%;
   height: 10vh;
   border-bottom: 1px dotted gray;
@@ -174,6 +186,7 @@ const HeaderTag = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  // header{}
   ul {
     margin: 0 auto;
     width: 70%;
