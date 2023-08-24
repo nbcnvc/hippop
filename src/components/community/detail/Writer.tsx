@@ -15,6 +15,7 @@ const Writer = ({ userId }: WriterProps) => {
         <div>작성자</div>
         <Img src={user?.avatar_url} alt="User Avatar" />
         <div>{user?.name}</div>
+        <button>구독</button>
       </div>
     </>
   );
