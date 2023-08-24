@@ -51,35 +51,40 @@ const Detail = ({ post, setPost }: DetailProps) => {
 
   return (
     <ModalContainer>
-      <ModalBox>
-        <div>
+      <ModalWrapper>
+        <ButtonBox>
           <button onClick={closeDetail}>창 닫기</button>
-          {currentUser?.id === post.user_id && (
-            <>
-              <button onClick={() => deleteButton(post.id)}>삭제</button>
-              <button onClick={editButton}>수정</button>
-            </>
-          )}
-          {isEdit ? (
-            <Edit post={post} setPost={setPost} isEdit={isEdit} setIsEdit={setIsEdit} />
-          ) : (
-            <div
-              className="ql-snow"
-              style={{ width: '95%', border: '1px solid black', padding: '20px', margin: '10px' }}
-            >
-              <div>카테고리 : {(post.ctg_index === 1 && '팝업후기') || (post.ctg_index === 2 && '팝업메이트')}</div>
-              <div>어떤 팝업? {store?.title}</div>
-              <div>작성일자 : {formatDate}</div>
-              <div>제목 : {post.title}</div>
-              <div className="ql-editor" dangerouslySetInnerHTML={{ __html: post.body }} />
-            </div>
-          )}
-        </div>
-        {/* 작성자 */}
-        {isEdit ? <></> : <Writer userId={post.user_id} />}
-        {/* 댓글 */}
-        {isEdit ? <></> : <Comments post={post} />}
-      </ModalBox>
+        </ButtonBox>
+        <ModalBox>
+          {/* 작성자 */}
+          {isEdit ? <></> : <Writer userId={post.user_id} />}
+          <div>
+            {currentUser?.id === post.user_id && (
+              <>
+                <button onClick={() => deleteButton(post.id)}>삭제</button>
+                <button onClick={editButton}>수정</button>
+              </>
+            )}
+            {isEdit ? (
+              <Edit post={post} setPost={setPost} isEdit={isEdit} setIsEdit={setIsEdit} />
+            ) : (
+              <div
+                className="ql-snow"
+                style={{ width: '95%', border: '1px solid black', padding: '20px', margin: '10px' }}
+              >
+                <div>카테고리 : {(post.ctg_index === 1 && '팝업후기') || (post.ctg_index === 2 && '팝업메이트')}</div>
+                <div>어떤 팝업? {store?.title}</div>
+                <div>작성일자 : {formatDate}</div>
+                <div>제목 : {post.title}</div>
+                <div className="ql-editor" dangerouslySetInnerHTML={{ __html: post.body }} />
+              </div>
+            )}
+          </div>
+
+          {/* 댓글 */}
+          {isEdit ? <></> : <Comments post={post} />}
+        </ModalBox>
+      </ModalWrapper>
     </ModalContainer>
   );
 };
@@ -100,6 +105,10 @@ const ModalContainer = styled.div`
   backdrop-filter: blur(8px);
 `;
 
+const ModalWrapper = styled.div`
+  position: relative;
+`;
+
 const ModalBox = styled.div`
   background-color: #fff;
   padding: 20px;
@@ -108,4 +117,13 @@ const ModalBox = styled.div`
   border-radius: 10px;
   position: relative;
   overflow: auto;
+`;
+
+const ButtonBox = styled.div`
+  position: absolute;
+
+  top: 1%;
+  right: 1%;
+
+  z-index: 999;
 `;
