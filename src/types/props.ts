@@ -44,6 +44,13 @@ export interface SearchModalProps {
   setResult: React.Dispatch<SetStateAction<Store[] | null>>;
 }
 
+export interface SearchDefaultProps {
+  setWriteModal: React.Dispatch<SetStateAction<boolean>>;
+  setSearchModal: React.Dispatch<SetStateAction<boolean>>;
+  setId: React.Dispatch<SetStateAction<number>>;
+  setTitle: React.Dispatch<SetStateAction<string>>;
+}
+
 export interface WriteProps {
   writeModal: boolean;
   setWriteModal: React.Dispatch<SetStateAction<boolean>>;
@@ -55,7 +62,6 @@ export interface WriteProps {
 
 export interface PostsProps {
   setPost: React.Dispatch<SetStateAction<Post | null>>;
-  // setOpenDetail: React.Dispatch<SetStateAction<boolean>>;
 }
 
 export interface CommentProps {
@@ -94,9 +100,7 @@ export interface LoginProps {
 }
 
 export interface MessageProps {
-  // setPost: React.Dispatch<SetStateAction<Post | null>>;
   msgModal: boolean;
   setMsgModal: React.Dispatch<SetStateAction<boolean>>;
-  // detailPost: Post;
   userId: string;
 }
