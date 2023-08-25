@@ -166,7 +166,7 @@ function Header() {
 export default Header;
 
 const HeaderTag = styled.header`
-background-color: #f24d0d;
+  background-color: #f24d0d;
   width: 100%;
   height: 10vh;
   border-bottom: 1px dotted gray;
@@ -183,36 +183,35 @@ background-color: #f24d0d;
     justify-content: center;
     gap: 10vw;
   }
-  li{
+  li {
     a {
-    display: block;
-    width: 100%;
-    height: 100%;
-    transition: filter 0.3s, transform 0.3s !important;
+      display: block;
+      width: 100%;
+      height: 100%;
+      transition: filter 0.3s, transform 0.3s !important;
 
-    &:hover {
-      filter: brightness(120%) !important;
-      color: gray !important;
-    }
+      &:hover {
+        filter: brightness(120%) !important;
+        color: gray !important;
+      }
 
-    &:active {
-      transform: scale(0.85) !important;
+      &:active {
+        transform: scale(0.85) !important;
+      }
     }
   }
-}
-  }
+
   .logo-wrapper {
     display: flex;
     align-items: center;
 
     .test-logo {
       width: 80px;
-      
-        transition: filter 0.3s, transform 0.3s;
-        &:hover {
-          filter: brightness(120%);
-          transform: scale(0.92);
-        
+
+      transition: filter 0.3s, transform 0.3s;
+      &:hover {
+        filter: brightness(120%);
+        transform: scale(0.92);
       }
     }
   }
@@ -234,12 +233,11 @@ background-color: #f24d0d;
         align-items: center;
         text-align: right;
 
-        img{
+        img {
           transition: filter 0.3s, transform 0.3s;
           &:hover {
             transform: scale(0.92);
           }
-          
         }
         .welcome-mate {
           margin-right: 8px;
@@ -251,7 +249,7 @@ background-color: #f24d0d;
       }
       .dropdown-content {
         position: absolute;
-        bottom: -70px; 
+        bottom: -70px;
         right: 0;
         width: 120px;
         background-color: white;
