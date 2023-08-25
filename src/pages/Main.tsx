@@ -1,30 +1,29 @@
-import React from 'react';
-import { styled } from 'styled-components';
+import { useEffect, useState } from 'react';
+import { Masonry } from '@mui/lab';
+
+import { supabase } from '../api/supabase';
+import { Store } from '../types/types';
+import Card from '../components/list/Card';
+
 const Main = () => {
+  const [stores, setStores] = useState<Store[]>([]);
+
+  useEffect(() => {
+    const fetchStores = async () => {
+      const { data } = await supabase.from('store').select();
+      setStores(data as Store[]);
+    };
+
+    fetchStores();
+  }, []);
+
   return (
-    <MainTag>
-      <div>
-        <h2>Main</h2>
-        <img src="/asset/test-mainImg1.png" alt="test-image" />
-      </div>
-    </MainTag>
+    <Masonry columns={3} spacing={2}>
+      {stores.map((store) => (
+        <Card store={store} key={store.id} />
+      ))}
+    </Masonry>
   );
 };
 
 export default Main;
-
-const MainTag = styled.div`
-  width: 80%;
-  margin: 0 auto;
-  border: 1px dotted gray;
-  margin-top: 5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  h2 {
-    text-align: center;
-  }
-  img {
-    width: 63vw;
-  }
-`;

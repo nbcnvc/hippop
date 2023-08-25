@@ -77,3 +77,7 @@ export interface LoginProps {
   setUser: React.Dispatch<SetStateAction<UserInfo | null>>;
   closeModal: () => void;
 }
+
+export interface CardProps {
+  store: Store;
+}
