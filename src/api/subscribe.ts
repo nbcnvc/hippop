@@ -1,16 +1,14 @@
 import { supabase } from './supabase';
 
 import { SubscribeType } from '../types/types';
-import { useCurrentUser } from '../store/userStore';
 
 // 구독 확인
 export const isSubscribe = async (subscribe: SubscribeType) => {
-  const { data } = await supabase
+  const { data, status } = await supabase
     .from('subscribe')
     .select('')
     .eq('subscribe_from', subscribe.subscribe_from)
     .eq('subscribe_to', subscribe.subscribe_to);
-
   return data;
 };
 

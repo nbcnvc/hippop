@@ -29,7 +29,6 @@ function Header() {
   // 현재유저 정보 가져오기
   const currentUser = useCurrentUser();
 
-  console.log('currentUser22', currentUser);
   useEffect(() => {
     const authSubscription = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session) {
