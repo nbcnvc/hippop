@@ -16,7 +16,12 @@ const Subscribe = ({ userId }: SubscribeProps) => {
   };
 
   // 구독 확인하기
-  const { data: subscribed } = useQuery(['subscribe'], () => isSubscribe(subscribe));
+  const { data: subscribed } = useQuery(['subscribe'], async () => {
+    if (currentUser) {
+      return await isSubscribe(subscribe);
+    }
+    return null;
+  });
 
   // 구독 하기
   const queryClient = useQueryClient();

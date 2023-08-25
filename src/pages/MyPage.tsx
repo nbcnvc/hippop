@@ -27,8 +27,8 @@ const MyPage = () => {
 
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
   // 현재유저 정보 가져오기
-
   const currentUser = useCurrentUser();
+  // console.log('currentUser11', currentUser);
 
   const handleNameEdit = () => {
     setEditingName(true);
@@ -36,17 +36,25 @@ const MyPage = () => {
   };
 
   const handleNameSave = async () => {
-    // 여기서 서버 요청 등으로 새로운 이름을 저장하는 로직을 구현
-
-    // let { data: user, error } = await supabase.from('user').select('name');
-    // console.log(user);
+    if (newName.length >= 5) {
+      alert('닉네임은 다섯 글자 미만이어야 합니다.');
+      return;
+    }
 
     const { error } = await supabase.from('user').update({ name: newName }).eq('id', currentUser?.id);
-    if (currentUser) {
+    if (currentUser && !error) {
       const userData = await getUser(currentUser?.id);
       setCurrentUser(userData);
+      setEditingName(false); // 수정 모드 해제
+      alert('닉네임이 변경 됐습니다 :)');
+    } else {
+      console.log(error);
     }
-    console.log(error);
+  };
+
+  const handleNameCancel = () => {
+    setEditingName(false); // 수정 모드 해제
+    alert('닉네임 변경을 취소하셨어요 :)');
   };
 
   const handleImageUpload = () => {
@@ -64,7 +72,7 @@ const MyPage = () => {
       setImageUploadVisible(false);
     }
   };
-  const { data }: any = useQuery(['profileImg', currentUser?.id], () => getProfileImg(currentUser?.id));
+  // const { data }: any = useQuery(['profileImg', currentUser?.id], () => getProfileImg(currentUser?.id));
 
   const handleImageConfirm = async () => {
     if (selectedImage) {
@@ -83,10 +91,11 @@ const MyPage = () => {
           if (currentUser) {
             const userData = await getUser(currentUser?.id);
             setCurrentUser(userData);
-            console.log('userData', userData);
+            // console.log('userData', userData);
           }
 
           alert('프로필 변경이 완료됐습니다 :)');
+          setImageUploadVisible(false);
         }
       } catch (error) {
         console.error(error);
@@ -139,7 +148,7 @@ const MyPage = () => {
               {editingName ? (
                 <>
                   <button onClick={handleNameSave}>저장</button>
-                  <button onClick={() => setEditingName(false)}>취소</button>
+                  <button onClick={handleNameCancel}>취소</button>
                 </>
               ) : (
                 <button onClick={handleNameEdit}>수정</button>

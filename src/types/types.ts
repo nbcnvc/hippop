@@ -54,6 +54,7 @@ export interface Comment {
   updated_at: string;
   user_id: string;
   post_id: number;
+  user_name: string;
   body: string;
   isDeleted: boolean;
 }
@@ -61,6 +62,7 @@ export interface Comment {
 export interface NewComment {
   user_id: string | undefined;
   post_id: number;
+  user_name: string | undefined;
   body: string;
 }
 
