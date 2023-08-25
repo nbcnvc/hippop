@@ -34,9 +34,9 @@ export interface Post {
   updated_at: string;
   user_id: string;
   store_id: number;
+  ctg_index: number;
   title: string;
   body: string;
-  ctg_index: number;
   isDeleted: boolean;
 }
 
