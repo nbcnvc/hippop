@@ -14,7 +14,7 @@ import { Store } from '../../../types/types';
 import { fetchDetailData } from '../../../api/store';
 import { useLocation } from 'react-router-dom';
 
-const Detail = ({ post, setPost, setOpenDetail, msgModal, setMsgModal }: DetailProps) => {
+const Detail = ({ post, setPost, setOpenDetail, setMsgModal }: DetailProps) => {
   const currentUser = useCurrentUser();
   const id = post?.store_id;
   const [isEdit, setIsEdit] = useState<boolean>(false);
