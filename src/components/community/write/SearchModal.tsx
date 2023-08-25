@@ -125,7 +125,12 @@ const SearchModal = ({
                 )}
               </div>
             ) : (
-              <SearchDefault />
+              <SearchDefault
+                setId={setId}
+                setTitle={setTitle}
+                setSearchModal={setSearchModal}
+                setWriteModal={setWriteModal}
+              />
             )}
           </ModalBox>
         </ModalContainer>

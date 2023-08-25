@@ -7,7 +7,7 @@ import { useInView } from 'react-intersection-observer';
 // 컴포넌트
 import SearchCalendar from './SearchCalendar';
 // api
-import { fetchAllBookMark } from '../../api/bookmark';
+import { fetchStoreIdCount } from '../../api/bookmark';
 import { getInfinityStore } from '../../api/store';
 // 타입
 import { FetchsStore, SearchListProps, Store } from '../../types/types';
@@ -70,37 +70,41 @@ const SearchList = ({ storeData }: SearchListProps) => {
     }
   });
 
-  // 북마크 전체 조회
-  const { data: bookMark } = useQuery(['bookMark'], () => fetchAllBookMark());
+  // 북마크 카운트를 가져오는 함수
+  const fetchBookmarkCounts = async () => {
+    const storeIds = storeData.map((store) => store.id);
+    // storeIds 배열에 있는 각 스토어 id를 순회하면서 fetchCount를 실행하고
+    // 각 스토어의 북마크 카운트를 가져와서 객체 형태로 배열에 저장
+    const countsPromises = storeIds.map(async (store_id) => {
+      const count = await fetchStoreIdCount(store_id);
+      return { store_id, count };
+    });
+    // Promise.all
+    // 배열에 담긴 모든 비동기 작업이 완료 될떄까지 대기하고, 완료되면 모든 결과를 배열로 반환
+    const bookmarkCounts = await Promise.all(countsPromises);
+    return bookmarkCounts;
+  };
 
-  // store_id 발생 횟수를 저장할 객체 생성
-  const storeIdCounts: Record<string, number> = {};
+  // 컴포넌트가 마운트되거나 storeData가 변경될 때 북마크 카운트를 가져옴
+  const { data: bookMarkCounts } = useQuery(['bookMarkCounts', storeData], fetchBookmarkCounts);
 
-  // 각 store_id의 발생 횟수를 세기
-  bookMark?.forEach((bookmark) => {
-    const { store_id } = bookmark;
-    if (!storeIdCounts[store_id]) {
-      storeIdCounts[store_id] = 1;
-    } else {
-      storeIdCounts[store_id]++;
-    }
-  });
-
-  // storeIdCounts 객체를 배열로 변환하여 정렬
-  const sortedCounts = Object.entries(storeIdCounts)
-    .sort((a, b) => b[1] - a[1])
-    .map(([store_id, count]) => ({ store_id, count }));
+  // 북마크 카운트가 많은 순으로 store_id를 정렬
+  const sortedCounts = bookMarkCounts
+    ? (bookMarkCounts as { store_id: number; count: number }[]).sort((a, b) => b.count - a.count)
+    : [];
 
   // 정렬된 store id의 배열
   const sortedStoreIds = sortedCounts.map((item) => item.store_id);
 
-  // 북마크 순 정렬된 storeData
-  const sortedStores: any = storeData?.sort((a, b) => {
-    const indexA = sortedStoreIds.indexOf(a.id.toString());
-    const indexB = sortedStoreIds.indexOf(b.id.toString());
+  // 인기순(북마크 많은 순) 정렬된 storeData
+  const sortedStores = storeData
+    ? [...storeData].sort((a, b) => {
+        const indexA = sortedStoreIds.indexOf(a.id);
+        const indexB = sortedStoreIds.indexOf(b.id);
 
-    return indexA - indexB;
-  });
+        return indexA - indexB;
+      })
+    : [];
 
   // 최신순 정렬된 storeData
   const latestStores = [...storeData]?.sort((a, b) => {
@@ -179,7 +183,7 @@ const SearchList = ({ storeData }: SearchListProps) => {
   };
 
   // 인기 팝업스토어 자르기
-  const popStores = sortedStores?.slice(0, 3);
+  const popStores = sortedStores?.slice(0, 20);
 
   // 최신 팝업스토어 자르기
   const latStores = latestStores?.slice(0, 3);

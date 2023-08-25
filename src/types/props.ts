@@ -9,13 +9,19 @@ export interface EditorProps {
 // 스토어 지도 props
 export interface StoreMapProps {
   storeLocation: string;
+  title: string;
 }
 
 // 핫플레이스 props
 export interface HotPlaceProps {
   setCategory: React.Dispatch<SetStateAction<string>>;
-  setIsShow: React.Dispatch<SetStateAction<boolean>>;
-  searchData: HotPlaceInfo[];
+  setIsSelected: React.Dispatch<SetStateAction<HotPlaceInfo | undefined>>;
+}
+
+// 주변 지역 팝업스토어 props
+export interface NearbyStoreProps {
+  guName: string;
+  setNearbyStoreMarker: React.Dispatch<SetStateAction<Store[] | undefined>>;
 }
 
 // 캘린더 props
@@ -36,6 +42,13 @@ export interface SearchModalProps {
   setTitle: React.Dispatch<SetStateAction<string>>;
   result: Store[] | null;
   setResult: React.Dispatch<SetStateAction<Store[] | null>>;
+}
+
+export interface SearchDefaultProps {
+  setWriteModal: React.Dispatch<SetStateAction<boolean>>;
+  setSearchModal: React.Dispatch<SetStateAction<boolean>>;
+  setId: React.Dispatch<SetStateAction<number>>;
+  setTitle: React.Dispatch<SetStateAction<string>>;
 }
 
 export interface WriteProps {
@@ -59,9 +72,17 @@ export interface WriterProps {
   userId: string;
 }
 
+export interface SubscribeProps {
+  userId: string;
+}
+
 export interface DetailProps {
-  post: Post;
+  post: Post | null;
   setPost: React.Dispatch<SetStateAction<Post | null>>;
+  setOpenDetail: React.Dispatch<SetStateAction<boolean>>;
+  msgModal: boolean;
+  setMsgModal: React.Dispatch<SetStateAction<boolean>>;
+  openDetail: boolean;
 }
 
 export interface EditProps {
@@ -80,4 +101,10 @@ export interface LoginProps {
 
 export interface CardProps {
   store: Store;
+}
+
+export interface MessageProps {
+  msgModal: boolean;
+  setMsgModal: React.Dispatch<SetStateAction<boolean>>;
+  userId: string;
 }

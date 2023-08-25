@@ -10,8 +10,6 @@ export interface Store {
   opening: string;
   images: string[];
   link: string;
-  latitude: number;
-  longitude: number;
 }
 
 // Kakao 타입 선언
@@ -100,6 +98,11 @@ export interface FetchComment {
   count: number | null;
 }
 
+export interface SubscribeType {
+  subscribe_from: string | undefined;
+  subscribe_to: string | undefined;
+}
+
 // 지오코딩 타입 선언
 export interface Geocoder {
   address: AddressInfo;
@@ -117,6 +120,10 @@ export interface AddressInfo {
   h_code: string;
   main_address_no: string;
   mountain_yn: string;
+  region_1depth_name: string;
+  region_2depth_name: string;
+  region_3depth_h_name: string;
+  region_3depth_name: string;
 }
 
 // 도로명 주소 타입 선언

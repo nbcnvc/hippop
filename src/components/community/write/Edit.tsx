@@ -14,6 +14,11 @@ const Edit = ({ post, setPost, isEdit, setIsEdit }: EditProps) => {
     setTitle(e.target.value);
   };
 
+  // 취소 버튼
+  const cancelButton = () => {
+    setIsEdit(!isEdit);
+  };
+
   // Post 수정
   const updateMutation = useMutation(updatePost);
   const saveButton = (post: Post) => {
@@ -33,6 +38,7 @@ const Edit = ({ post, setPost, isEdit, setIsEdit }: EditProps) => {
 
   return (
     <>
+      <button onClick={cancelButton}>취소</button>
       <button onClick={() => saveButton(post)}>저장</button>
       <div>카테고리 : {(post.ctg_index === 1 && '팝업후기') || (post.ctg_index === 2 && '팝업메이트')}</div>
       <div>팝업스토어 이름</div>
