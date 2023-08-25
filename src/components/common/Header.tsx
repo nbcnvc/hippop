@@ -10,6 +10,7 @@ import { handleLogOut } from '../../pages/Login';
 import { supabase } from '../../api/supabase';
 import { setUserStore } from '../../store/userStore';
 import { useCurrentUser } from '../../store/userStore';
+import Alarm from './Alarm';
 
 function Header() {
   const [user, setUser] = useState<UserInfo | null>(null);
@@ -101,6 +102,7 @@ function Header() {
 
   return (
     <HeaderTag>
+      <Alarm />
       {/* <header> */}
       <div className="logo-wrapper">
         <Link to="/">

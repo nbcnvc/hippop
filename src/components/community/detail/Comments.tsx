@@ -84,8 +84,6 @@ const Comments = ({ post }: CommentProps) => {
     setBody('');
   };
 
-  console.log(selectComments);
-
   // Commnet 삭제
   const deleteMutation = useMutation(deleteComment, {
     onSuccess: () => {
