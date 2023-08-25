@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 
 import { styled } from 'styled-components';
 import { setUserStore, useCurrentUser } from '../store/userStore';
@@ -7,22 +7,28 @@ import PartyModeIcon from '@mui/icons-material/PartyMode';
 import { randomFileName } from '../hooks/useHandleImageName';
 import { getProfileImg, getUser } from '../api/user';
 import { useQuery } from '@tanstack/react-query';
-import { UserInfo } from '../types/types';
+
+import SendBox from '../components/message/SendBox';
+import MessageReply from '../components/message/MessageReply';
+import { MessageType } from '../types/types';
+import RecieveBox from '../components/message/RecieveBox';
 
 const MyPage = () => {
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState('');
   const [imageUploadVisible, setImageUploadVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  // 쪽지 답장 모달
+  const [replyModal, setReplyModal] = useState<boolean | null>(null);
+  const [sendMsgUser, setSendMsgUser] = useState<MessageType | null>(null);
 
+  const [toggleMsgBox, setToggleMsgBox] = useState<string>('받은 쪽지함');
   const imageInputRef = useRef(null);
 
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
   // 현재유저 정보 가져오기
 
   const currentUser = useCurrentUser();
-
-  console.log('currentUser11', currentUser);
 
   const handleNameEdit = () => {
     setEditingName(true);
@@ -59,9 +65,6 @@ const MyPage = () => {
     }
   };
   const { data }: any = useQuery(['profileImg', currentUser?.id], () => getProfileImg(currentUser?.id));
-  console.log(data);
-
-  const imgUrl = data?.avatar_url;
 
   const handleImageConfirm = async () => {
     if (selectedImage) {
@@ -89,6 +92,11 @@ const MyPage = () => {
         console.error(error);
       }
     }
+  };
+
+  const ClickToggleBox = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const name = (e.target as HTMLButtonElement).name;
+    setToggleMsgBox(name);
   };
 
   return (
@@ -140,15 +148,23 @@ const MyPage = () => {
           </span>
         </div>
       </div>
-      <div className="alram-wrapper">
-        <ul>
-          <li>Alram #1</li>
-          <li>Alram #2</li>
-          <li>Alram #3</li>
-          <li>Alram #4</li>
-        </ul>
+      <div>
+        <button name="받은 쪽지함" onClick={ClickToggleBox}>
+          받은 쪽지함
+        </button>
+        <button name="보낸 쪽지함" onClick={ClickToggleBox}>
+          보낸 쪽지함
+        </button>
+        <div className="alram-wrapper">
+          {toggleMsgBox === '받은 쪽지함' ? (
+            <RecieveBox setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
+          ) : (
+            <SendBox setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
+          )}
+        </div>
+        {/* <img src="/asset/myPage.png" alt="test image" /> */}
+        {replyModal && <MessageReply sendMsgUser={sendMsgUser} setOpenReply={setReplyModal} />}
       </div>
-      {/* <img src="/asset/myPage.png" alt="test image" /> */}
     </MypageTag>
   );
 };
@@ -219,18 +235,10 @@ const MypageTag = styled.div`
   }
 
   .alram-wrapper {
-    width: 50%;
+    width: 520px;
+    height: 400px;
     border: 1px dotted gray;
     display: flex;
-    justify-content: flex-end;
-
-    li {
-      text-align: center;
-      padding: 2px 20px;
-      margin: 4px 0;
-      background-color: gray;
-      border-radius: 4px;
-    }
   }
 
   // img {
