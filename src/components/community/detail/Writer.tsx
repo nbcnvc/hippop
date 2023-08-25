@@ -28,7 +28,11 @@ const Writer = ({ userId }: WriterProps) => {
         }}
       >
         <div>
-          <Img src={user?.avatar_url} alt="User Avatar" />
+          {user?.avatar_url.startsWith('profile/') ? (
+            <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${user?.avatar_url}`} alt="User Avatar" />
+          ) : (
+            <Img src={user?.avatar_url} alt="User Avatar" />
+          )}
           <div>{user?.name}</div>
         </div>
         {pathname === '/review' && <Subscribe userId={userId} />}
