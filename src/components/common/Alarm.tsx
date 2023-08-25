@@ -61,7 +61,7 @@ const Alarm = () => {
           }
           setTimeout(() => {
             setAlarm([]);
-          }, 10000);
+          }, 5000);
         }
       };
 
