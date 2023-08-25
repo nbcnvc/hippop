@@ -1,30 +1,47 @@
-import React from 'react';
-import { MessageType, sendMessage } from '../../api/message';
+import React, { useState } from 'react';
+//api
+import { sendMessage } from '../../api/message';
+// zustand 상태관리 hook
 import { useCurrentUser } from '../../store/userStore';
-import { styled } from 'styled-components';
+// 타입
 import { MessageProps } from '../../types/props';
+import { MessageType } from '../../types/types';
+// 스타일
+import { styled } from 'styled-components';
 
-const Message = ({ userId, setMsgModal, msgModal }: MessageProps) => {
-  const currentUser = useCurrentUser() ?? { id: '' };
+const Message = ({ setMsgModal, msgModal, writerInfo }: MessageProps) => {
+  const [body, setBody] = useState<string>('');
+  const currentUser = useCurrentUser() ?? { id: '', name: '', avatar_url: '' };
 
+  // 쪽지 보내기 요청
   const sendMessageHandler = async () => {
-    const message: MessageType = {
-      sender: currentUser.id,
-      reciever: userId,
-      body: '이번주 전시 ㄱㄱ?',
-      isRead: false
-    };
+    if (writerInfo) {
+      const message: MessageType = {
+        sender: currentUser.id,
+        reciever: writerInfo.id,
+        body,
+        isRead: false
+      };
 
-    await sendMessage(message);
-    console.log('메세지 전송 성공!');
+      await sendMessage(message);
+      console.log('메세지 전송 성공!');
+    }
   };
 
+  // 쪽지 내용 onChange
+  const handleBodyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBody(e.target.value);
+  };
+
+  // 모달 닫기
   const closeMsgModal = () => {
     setMsgModal(false);
   };
 
+  // 쪽지 보내기 handler
   const handleSendMessage = () => {
     sendMessageHandler();
+    alert('쪽지가 성공적으로 전송되었습니다!');
   };
 
   return (
@@ -32,8 +49,19 @@ const Message = ({ userId, setMsgModal, msgModal }: MessageProps) => {
       {msgModal ? (
         <Container>
           <Wrapper>
-            <button onClick={closeMsgModal}>닫기</button>
-            <button onClick={handleSendMessage}>쪽지 보내기</button>
+            <CloseBtn onClick={closeMsgModal}>닫기</CloseBtn>
+            <UserInfoBox>
+              {writerInfo?.avatar_url.startsWith('profile/') ? (
+                <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${writerInfo?.avatar_url}`} alt="User Avatar" />
+              ) : (
+                <Img src={writerInfo?.avatar_url} alt="User Avatar" />
+              )}{' '}
+              <div>{writerInfo?.name}</div>
+            </UserInfoBox>
+            <form onSubmit={() => handleSendMessage()}>
+              <input value={body} onChange={handleBodyChange} placeholder="전달할 내용을 입력해주세요" />
+              <button>쪽지 보내기</button>
+            </form>
           </Wrapper>
         </Container>
       ) : (
@@ -46,7 +74,7 @@ const Message = ({ userId, setMsgModal, msgModal }: MessageProps) => {
 export default Message;
 
 const Container = styled.div`
-  position: fixed;
+  position: absolute;
   z-index: 0;
   top: 0;
   left: 0;
@@ -62,4 +90,31 @@ const Container = styled.div`
 const Wrapper = styled.div`
   position: relative;
   background-color: white;
+  width: 1000px;
+  height: 700px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  flex-direction: column;
+`;
+
+const CloseBtn = styled.button`
+  position: absolute;
+  top: 0;
+  right: 0;
+`;
+
+const UserInfoBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+const Img = styled.img`
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
 `;

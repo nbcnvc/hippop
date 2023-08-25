@@ -178,3 +178,15 @@ export interface HotPlaceInfo {
 //   place_url: string;
 //   images: string;
 // }
+
+export interface MessageType {
+  sender: string;
+  reciever: string;
+  body: string;
+  isRead: boolean;
+
+  id?: number;
+  created_at?: string;
+  avatar_url?: string;
+  name?: string;
+}

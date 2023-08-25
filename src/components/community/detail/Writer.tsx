@@ -8,11 +8,15 @@ import { getUser } from '../../../api/user';
 import { UserInfo } from '../../../types/types';
 import { WriterProps } from '../../../types/props';
 
-const Writer = ({ userId }: WriterProps) => {
+const Writer = ({ userId, setWriterInfo }: WriterProps) => {
   const { pathname } = useLocation();
 
   // 작성자 정보 가져오기 (To)
   const { data: user } = useQuery<UserInfo | null>({ queryKey: ['user', userId], queryFn: () => getUser(userId) });
+
+  if (user) {
+    setWriterInfo(user);
+  }
 
   return (
     <>
@@ -35,6 +39,7 @@ const Writer = ({ userId }: WriterProps) => {
           )}
           <div>{user?.name}</div>
         </div>
+
         {pathname === '/review' && <Subscribe userId={userId} />}
       </div>
     </>

@@ -2,24 +2,23 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../api/supabase';
 import { getSubList } from '../../api/subscribe';
 import { useCurrentUser } from '../../store/userStore';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const Alarm = () => {
   const currentUser = useCurrentUser();
-  const userId = currentUser?.id;
-  // 현재 유저가 구독한 사람 목록 가져오기
-  const { data } = useQuery(['sublist'], () => getSubList(userId ?? ''));
+  const currentUserId = currentUser?.id;
+  const { data } = useQuery(['sublist'], () => getSubList(currentUserId ?? ''));
 
-  // 배열로 만들기
   let subList: any[] = [];
   if (data) {
     subList = data.map((item) => item.subscribe_to);
   }
 
-  // payload 담아주기
-  const [payloadData, setPayloadData] = useState<any[]>([]);
-  useEffect(() => {
-    const channel = supabase
+  const [payloadData, setPayloadData] = useState<any>();
+  const [alarm, setAlarm] = useState<any[]>([]);
+
+  const setIsAlarm = async () => {
+    await supabase
       .channel('table-filter-changes')
       .on(
         'postgres_changes',
@@ -30,22 +29,51 @@ const Alarm = () => {
           filter: `user_id=in.(${subList})`
         },
         (payload) => {
-          setPayloadData((prevData) => [...prevData, payload]); // 새로운 payload를 상태에 추가
+          setPayloadData(payload);
         }
       )
       .subscribe();
+  };
 
-    return () => {
-      // 구독 해제
-      channel.unsubscribe();
-    };
-  }, [subList]);
+  setIsAlarm();
 
-  // alarm 테이블에 메시지 넣어주기
+  useEffect(() => {
+    if (payloadData) {
+      const writerId = payloadData.new.user_id;
 
-  // alarm 테이블에서 현재 유저에게 온 알람 가져와서 띄워주기
+      const fetchAlarm = async () => {
+        const { data: user } = await supabase.from('user').select('*').eq('id', writerId).single();
 
-  return <></>;
+        if (user) {
+          const writerName = user.name;
+
+          const newAlarm = {
+            created_at: payloadData.commit_timestamp,
+            targetUserId: currentUserId,
+            content: `${writerName}님의 새 게시글: ${payloadData.new.title}`
+          };
+
+          await supabase.from('alarm').insert(newAlarm);
+
+          const { data: alarms } = await supabase.from('alarm').select('*').eq('targetUserId', currentUserId);
+          if (alarms) {
+            setAlarm(alarms);
+          }
+          setTimeout(() => {
+            setAlarm([]);
+          }, 10000);
+        }
+      };
+
+      fetchAlarm();
+    }
+  }, [payloadData, currentUserId]);
+
+  return (
+    <div>
+      <div style={{ backgroundColor: 'yellow' }}>{alarm[alarm.length - 1]?.content}</div>
+    </div>
+  );
 };
 
 export default Alarm;
