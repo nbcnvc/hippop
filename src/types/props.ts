@@ -101,6 +101,10 @@ export interface LoginProps {
   closeModal: () => void;
 }
 
+export interface CardProps {
+  store: Store;
+}
+
 export interface RecieveBoxProps {
   setReplyModal: React.Dispatch<SetStateAction<boolean | null>>;
   setSendMsgUser: React.Dispatch<SetStateAction<MessageType | null>>;
