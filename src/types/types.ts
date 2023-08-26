@@ -34,9 +34,9 @@ export interface Post {
   updated_at: string;
   user_id: string;
   store_id: number;
+  ctg_index: number;
   title: string;
   body: string;
-  ctg_index: number;
   isDeleted: boolean;
 }
 
@@ -178,3 +178,15 @@ export interface HotPlaceInfo {
 //   place_url: string;
 //   images: string;
 // }
+
+export interface MessageType {
+  sender: string;
+  reciever: string;
+  body: string;
+  isRead: boolean;
+
+  id?: number;
+  created_at?: string;
+  avatar_url?: string;
+  name?: string;
+}

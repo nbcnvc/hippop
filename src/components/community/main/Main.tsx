@@ -5,7 +5,7 @@ import SearchModal from '../write/SearchModal';
 
 import { useState } from 'react';
 
-import { Post, Store } from '../../../types/types';
+import { Post, Store, UserInfo } from '../../../types/types';
 import { useCurrentUser } from '../../../store/userStore';
 import Message from '../../message/Message';
 
@@ -18,6 +18,8 @@ const Main = () => {
   const [result, setResult] = useState<Store[] | null>(null);
   const [msgModal, setMsgModal] = useState<boolean>(false);
   const [openDetail, setOpenDetail] = useState<boolean>(false);
+  const [writerInfo, setWriterInfo] = useState<UserInfo | null>(null);
+
   const currentUser = useCurrentUser();
 
   const openPost = () => {
@@ -31,11 +33,6 @@ const Main = () => {
     }
     setSearchModal(true);
   };
-
-  let userId = '';
-  if (detailPost) {
-    userId = detailPost.user_id;
-  }
 
   return (
     <>
@@ -74,10 +71,11 @@ const Main = () => {
             setOpenDetail={setOpenDetail}
             msgModal={msgModal}
             setMsgModal={setMsgModal}
+            setWriterInfo={setWriterInfo}
           />
         </>
       )}
-      {msgModal && <Message userId={userId} msgModal={msgModal} setMsgModal={setMsgModal} />}
+      {msgModal && <Message writerInfo={writerInfo} msgModal={msgModal} setMsgModal={setMsgModal} />}
     </>
   );
 };
