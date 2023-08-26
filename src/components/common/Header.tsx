@@ -102,64 +102,64 @@ function Header() {
 
   return (
     <HeaderTag>
-      {/* <header> */}
-      <div className="logo-wrapper">
-        <Link to="/">
-          <img src="/asset/test-logo1.png" className="test-logo" alt="test-img" />
-        </Link>
-        Find your Hippop
-      </div>
-      <ul>
-        <li>
-          <Link to="/about">About</Link>
-        </li>
-        <li>
-          <Link to="/review">Review</Link>
-        </li>
-        <li>
-          <Link to="/mate">Mate</Link>
-        </li>
-        <li>
-          <Link to="/search">Search</Link>
-        </li>
-      </ul>
-      <div>
-        <div className="user-info">
-          {currentUser ? (
-            <>
-              <div className="user-dropdown" onClick={handleMenuToggle} ref={menuRef}>
-                <div className="info-mate">
-                  <div className="welcome-mate">
-                    <p>반갑습니다!</p>
-                    <p>{currentUser.name}님</p>
-                  </div>
-
-                  {currentUser.avatar_url.startsWith('profile/') ? (
-                    <img
-                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser.avatar_url}`}
-                      alt="User Avatar"
-                    />
-                  ) : (
-                    <img src={currentUser.avatar_url} alt="User Avatar" />
-                  )}
-                </div>
-                <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
-                  <Link to="/mypage">My Page</Link>
-                  <div onClick={handleToggle}>Logout</div>
-                </div>
-              </div>
-            </>
-          ) : (
-            <button onClick={handleToggle}>Login</button>
-          )}
+      <div className="header-wrapper">
+        <div className="logo-wrapper">
+          <Link to="/">
+            <img src="/asset/test-logo1.png" className="test-logo" alt="test-img" />
+          </Link>
+          Find your Hippop
         </div>
+        <ul>
+          <li>
+            <Link to="/about">About</Link>
+          </li>
+          <li>
+            <Link to="/review">Review</Link>
+          </li>
+          <li>
+            <Link to="/mate">Mate</Link>
+          </li>
+          <li>
+            <Link to="/search">Search</Link>
+          </li>
+        </ul>
+        <div>
+          <div className="user-info">
+            {currentUser ? (
+              <>
+                <div className="user-dropdown" onClick={handleMenuToggle} ref={menuRef}>
+                  <div className="info-mate">
+                    <div className="welcome-mate">
+                      <p>반갑습니다!</p>
+                      <p>{currentUser.name}님</p>
+                    </div>
+
+                    {currentUser.avatar_url.startsWith('profile/') ? (
+                      <img
+                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser.avatar_url}`}
+                        alt="User Avatar"
+                      />
+                    ) : (
+                      <img src={currentUser.avatar_url} alt="User Avatar" />
+                    )}
+                  </div>
+                  <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
+                    <Link to="/mypage">My Page</Link>
+                    <div onClick={handleToggle}>Logout</div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <button onClick={handleToggle}>Login</button>
+            )}
+          </div>
+        </div>
+        {isModalOpen && (
+          <ModalWrapper isopen={isModalOpen} onClick={handleModalOutsideClick}>
+            <Login closeModal={closeModal} />
+          </ModalWrapper>
+        )}
       </div>
-      {isModalOpen && (
-        <ModalWrapper isopen={isModalOpen} onClick={handleModalOutsideClick}>
-          <Login closeModal={closeModal} />
-        </ModalWrapper>
-      )}
-      {/* </header> */}
     </HeaderTag>
   );
 }
@@ -167,15 +167,18 @@ function Header() {
 export default Header;
 
 const HeaderTag = styled.header`
-background-color: #f24d0d;
+  background-color: #f24d0d;
+  color: white;
   width: 100%;
-  height: 10vh;
-  border-bottom: 1px dotted gray;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  // header{}
+  height: 5vh;
+
+  .header-wrapper {
+    height: 5vh;
+    margin: 0 auto;
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   ul {
     margin: 0 auto;
     width: 70%;
@@ -186,6 +189,7 @@ background-color: #f24d0d;
   }
   li{
     a {
+      color: white;
     display: block;
     width: 100%;
     height: 100%;
@@ -193,11 +197,11 @@ background-color: #f24d0d;
 
     &:hover {
       filter: brightness(120%) !important;
-      color: gray !important;
+      color: #f8aa7d !important;
     }
 
     &:active {
-      transform: scale(0.85) !important;
+      transform: scale(0.92) !important;
     }
   }
 }
@@ -207,8 +211,7 @@ background-color: #f24d0d;
     align-items: center;
 
     .test-logo {
-      width: 80px;
-      
+      width: 65px;
         transition: filter 0.3s, transform 0.3s;
         &:hover {
           filter: brightness(120%);
@@ -246,6 +249,7 @@ background-color: #f24d0d;
           margin-right: 8px;
           width: 85px;
           p {
+            font-size: 14px;
             margin: 4px 0;
           }
         }
@@ -276,6 +280,7 @@ background-color: #f24d0d;
         }
       }
     }
+  }
   }
 `;
 

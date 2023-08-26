@@ -183,7 +183,7 @@ const SearchList = ({ storeData }: SearchListProps) => {
   };
 
   // 인기 팝업스토어 자르기
-  const popStores = sortedStores?.slice(0, 20);
+  const popStores = sortedStores?.slice(0, 3);
 
   // 최신 팝업스토어 자르기
   const latStores = latestStores?.slice(0, 3);
