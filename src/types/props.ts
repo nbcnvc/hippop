@@ -1,5 +1,5 @@
 import { SetStateAction } from 'react';
-import { UserInfo, Store, Post, HotPlaceInfo } from './types';
+import { UserInfo, Store, Post, HotPlaceInfo, MessageType } from './types';
 
 export interface EditorProps {
   body: string;
@@ -70,6 +70,7 @@ export interface CommentProps {
 
 export interface WriterProps {
   userId: string;
+  setWriterInfo: React.Dispatch<SetStateAction<UserInfo | null>>;
 }
 
 export interface SubscribeProps {
@@ -83,6 +84,7 @@ export interface DetailProps {
   msgModal: boolean;
   setMsgModal: React.Dispatch<SetStateAction<boolean>>;
   openDetail: boolean;
+  setWriterInfo: React.Dispatch<SetStateAction<UserInfo | null>>;
 }
 
 export interface EditProps {
@@ -103,8 +105,29 @@ export interface CardProps {
   store: Store;
 }
 
+export interface RecieveBoxProps {
+  setReplyModal: React.Dispatch<SetStateAction<boolean | null>>;
+  setSendMsgUser: React.Dispatch<SetStateAction<MessageType | null>>;
+}
+
+export interface SendBoxProps {
+  setReplyModal: React.Dispatch<SetStateAction<boolean | null>>;
+  setSendMsgUser: React.Dispatch<SetStateAction<MessageType | null>>;
+}
+
 export interface MessageProps {
   msgModal: boolean;
   setMsgModal: React.Dispatch<SetStateAction<boolean>>;
-  userId: string;
+  writerInfo: UserInfo | null;
+}
+
+export interface MsgDetailType {
+  selectedMessage: MessageType | null;
+  setIsClicked: React.Dispatch<SetStateAction<boolean>>;
+  setReplyModal: React.Dispatch<SetStateAction<boolean | null>>;
+}
+
+export interface MessageReplyProps {
+  sendMsgUser: MessageType | null;
+  setOpenReply: React.Dispatch<SetStateAction<boolean | null>>;
 }
