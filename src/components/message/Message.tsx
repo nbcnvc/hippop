@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 //api
-import { sendMessage } from '../../api/message';
+import { receiveMessage, sendMessage } from '../../api/message';
 // zustand 상태관리 hook
 import { useCurrentUser } from '../../store/userStore';
 // 타입
@@ -9,25 +9,25 @@ import { MessageType } from '../../types/types';
 // 스타일
 import { styled } from 'styled-components';
 
-const Message = ({ setMsgModal, msgModal, writerInfo }: MessageProps) => {
+const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
   const [body, setBody] = useState<string>('');
   const currentUser = useCurrentUser() ?? { id: '', avatar_url: '', name: '' };
 
   console.log('currentUser', currentUser);
 
-  console.log('writerInfo', writerInfo);
+  console.log('writerInfo', writer);
 
   // 쪽지 보내기 요청
   const messageHandler = async () => {
-    if (writerInfo) {
+    if (writer) {
       const message: MessageType = {
         sender: currentUser.id,
         sender_avatar_url: currentUser.avatar_url,
         sender_name: currentUser.name,
 
-        receiver: writerInfo.id,
-        receiver_avatar_url: writerInfo.avatar_url,
-        receiver_name: writerInfo.name,
+        receiver: writer.id,
+        receiver_avatar_url: writer.avatar_url,
+        receiver_name: writer.name,
         body,
 
         isRead: false
@@ -62,12 +62,12 @@ const Message = ({ setMsgModal, msgModal, writerInfo }: MessageProps) => {
           <Wrapper>
             <CloseBtn onClick={closeMsgModal}>닫기</CloseBtn>
             <UserInfoBox>
-              {writerInfo?.avatar_url.startsWith('profile/') ? (
-                <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${writerInfo?.avatar_url}`} alt="User Avatar" />
+              {writer?.avatar_url.startsWith('profile/') ? (
+                <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${writer?.avatar_url}`} alt="User Avatar" />
               ) : (
-                <Img src={writerInfo?.avatar_url} alt="User Avatar" />
+                <Img src={writer?.avatar_url} alt="User Avatar" />
               )}{' '}
-              <div>{writerInfo?.name}</div>
+              <div>{writer?.name}</div>
             </UserInfoBox>
             <form onSubmit={() => handleSendMessage()}>
               <input value={body} onChange={handleBodyChange} placeholder="전달할 내용을 입력해주세요" />

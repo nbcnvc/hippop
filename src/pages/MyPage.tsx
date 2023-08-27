@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 //타입
-import { Bookmark, FetchsStore, Post, Store } from '../types/types';
+import { Bookmark, FetchsStore, PostType, Store } from '../types/types';
 //api
 import { getProfileImg, getUser } from '../api/user';
 import { getInfinityStore } from '../api/store';
@@ -30,7 +30,7 @@ const MyPage = () => {
   const [replyModal, setReplyModal] = useState<boolean | null>(null);
   const [sendMsgUser, setSendMsgUser] = useState<MessageType | null>(null);
 
-  const [fetchUserPost, setFetchUserPost] = useState<Post[]>([]);
+  const [fetchUserPost, setFetchUserPost] = useState<PostType[]>([]);
   const [fetchSubs, setFetchSubs] = useState<Bookmark[]>([]);
   const [extractedData, setExtractedData] = useState<Store[]>([]);
   // 게시글 & 북마크 토글
