@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../../api/supabase';
 import { getSubList } from '../../api/subscribe';
 import { useCurrentUser } from '../../store/userStore';
-import { useState, useEffect } from 'react'; // useEffect를 추가합니다.
+import { useState, useEffect } from 'react';
 
 const Alarm = () => {
   const currentUser = useCurrentUser();
@@ -15,7 +15,7 @@ const Alarm = () => {
   }
 
   const [payloadData, setPayloadData] = useState<any>();
-  const [alarm, setAlarm] = useState<any[]>([]); // 초기값으로 빈 배열을 설정합니다.
+  const [alarm, setAlarm] = useState<any[]>([]);
 
   const setIsAlarm = async () => {
     await supabase
@@ -62,8 +62,8 @@ const Alarm = () => {
             setAlarm(alarms);
           }
           setTimeout(() => {
-            setAlarm([]); // 10초 후에 알림을 비웁니다.
-          }, 10000); // 10초
+            setAlarm([]);
+          }, 5000);
         }
       };
 

@@ -2,8 +2,17 @@ import { MessageType } from '../types/types';
 import { supabase } from './supabase';
 
 // 메세지 보내기
-export const sendMessage = async (message: MessageType) => {
+export const receiveMessage = async (message: MessageType) => {
   const { error } = await supabase.from('message').insert(message);
+
+  if (error) {
+    console.log('Error sending message:', error.message);
+  }
+};
+
+// 메세지 보내기
+export const sendMessage = async (message: MessageType) => {
+  const { error } = await supabase.from('send_message').insert(message);
 
   if (error) {
     console.log('Error sending message:', error.message);
@@ -33,8 +42,8 @@ export const sendMessage = async (message: MessageType) => {
 // };
 
 // 수신메세지 받기
-export const recieveMessage = async (reciever: string): Promise<MessageType[] | null> => {
-  const { data, error } = await supabase.from('message').select(`*, user(name, avatar_url)`).eq('reciever', reciever);
+export const recieveMessages = async (): Promise<MessageType[] | null> => {
+  const { data, error } = await supabase.from('message').select(`*`);
 
   console.log('data', data);
   if (error) {

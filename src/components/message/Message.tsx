@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 //api
-import { sendMessage } from '../../api/message';
+import { receiveMessage, sendMessage } from '../../api/message';
 // zustand 상태관리 hook
 import { useCurrentUser } from '../../store/userStore';
 // 타입
@@ -13,6 +13,10 @@ const Message = ({ setMsgModal, msgModal, writerInfo }: MessageProps) => {
   const [body, setBody] = useState<string>('');
   const currentUser = useCurrentUser() ?? { id: '', name: '', avatar_url: '' };
 
+  console.log('sender', currentUser.id);
+  // console.log('reciever', writerInfo?.id);
+  // console.log('body', body);
+
   // 쪽지 보내기 요청
   const sendMessageHandler = async () => {
     if (writerInfo) {
@@ -23,7 +27,8 @@ const Message = ({ setMsgModal, msgModal, writerInfo }: MessageProps) => {
         isRead: false
       };
 
-      await sendMessage(message);
+      await Promise.all([receiveMessage(message), sendMessage(message)]);
+
       console.log('메세지 전송 성공!');
     }
   };

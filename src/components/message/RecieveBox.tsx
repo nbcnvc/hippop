@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import moment from 'moment';
 // api
-import { readMessage, recieveMessage } from '../../api/message';
+import { readMessage, receiveMessage, recieveMessages } from '../../api/message';
 // zustand 상태관리 hook
 import { useCurrentUser } from '../../store/userStore';
 // 타입
@@ -32,9 +32,10 @@ const RecieveBox = ({ setSendMsgUser, setReplyModal }: SendBoxProps) => {
     isLoading,
     isError
   } = useQuery<MessageType[] | null>({
-    queryKey: ['message', userId],
-    queryFn: () => recieveMessage(userId),
-    enabled: !!currentUser
+    queryKey: ['message'],
+    // queryFn: () => recieveMessage(userId)
+    queryFn: recieveMessages
+    // enabled: !!currentUser
   });
 
   console.log('ReciveMessages', messages);
