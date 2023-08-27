@@ -32,6 +32,14 @@ const MyPage = () => {
   // 현재유저 정보 가져오기
   const currentUser: any | null = useCurrentUser();
   // console.log('test ====> ', currentUser);
+  const currentUserId = currentUser?.id;
+  const { data: sublistData } = useQuery(['sublist'], () => getSubList(currentUserId ?? ''));
+  console.log('test ====> ', sublistData);
+
+  const getSubList = async (userId: string) => {
+    const { data } = await supabase.from('subscribe').select('subscribe_to').eq('subscribe_from', userId);
+    return data;
+  };
 
   // 인피니티 스크롤을 위한 데이터 조회
   const {
@@ -226,7 +234,7 @@ const MyPage = () => {
     }
   };
 
-  const sliceStore = fetchUserPost?.slice(0, 3);
+  const sliceStore = fetchUserPost?.slice(0, 4);
   return (
     <MypageTag>
       <header>
@@ -292,26 +300,26 @@ const MyPage = () => {
         </div>
       </header>
       <div>
-        <h3>My posts</h3>
+        <h3>My Review</h3>
         <div className="post-wrapper">
           {sliceStore.map((post) => {
             const imageTags = extractImageTags(post.body);
             return (
               <div key={post.id}>
-                <h2>{post.title}</h2>
-                <p>{formatDate(post.created_at)}</p>
                 {/* <div dangerouslySetInnerHTML={{ __html: post.body }} /> */}
                 {imageTags.length > 0 ? (
                   <div>
                     {imageTags.map((src, index) => (
                       <img key={index} src={src} alt={`Image ${index}`} width={250} />
-                    ))}
+                      ))}
                   </div>
                 ) : (
                   <div>
                     <img src="/asset/kakao.png" alt="Default Image" width={250} />
                   </div>
                 )}
+                <h2>{post.title}</h2>
+                <p>{formatDate(post.created_at)}</p>
               </div>
             );
           })}
@@ -328,7 +336,7 @@ const MyPage = () => {
         >
           Trigger to Fetch Here
         </div>
-        <h2>My Subscribes</h2>
+        <h2>My Boomark</h2>
         <div className="subs-wrapper">
           {extractedData.map((store) => (
             <div key={store.id} className="user-subs">
