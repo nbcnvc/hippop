@@ -15,11 +15,12 @@ import { randomFileName } from '../hooks/useHandleImageName';
 //스타일
 import { styled } from 'styled-components';
 import PartyModeIcon from '@mui/icons-material/PartyMode';
-
+//메세지
 import SendBox from '../components/message/SendBox';
 import MessageReply from '../components/message/MessageReply';
 import { MessageType } from '../types/types';
 import RecieveBox from '../components/message/RecieveBox';
+import { Link } from 'react-router-dom';
 
 const MyPage = () => {
   const [editingName, setEditingName] = useState(false);
@@ -29,6 +30,10 @@ const MyPage = () => {
   // 쪽지 답장 모달
   const [replyModal, setReplyModal] = useState<boolean | null>(null);
   const [sendMsgUser, setSendMsgUser] = useState<MessageType | null>(null);
+//구독 목록 메뉴 상태
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  const [subscribers, setSubscribers] = useState<string[]>([]);
 
   const [fetchUserPost, setFetchUserPost] = useState<PostType[]>([]);
   const [fetchSubs, setFetchSubs] = useState<Bookmark[]>([]);
@@ -45,12 +50,54 @@ const MyPage = () => {
   // console.log('test ====> ', currentUser);
   const currentUserId = currentUser?.id;
   const { data: sublistData } = useQuery(['sublist'], () => getSubList(currentUserId ?? ''));
-  console.log('test ====> ', sublistData);
+  // console.log('test ====> ', sublistData);
 
   const getSubList = async (userId: string) => {
     const { data } = await supabase.from('subscribe').select('subscribe_to').eq('subscribe_from', userId);
     return data;
   };
+//
+useEffect(()=>{
+const loadSubscribers = async () => {
+  if (sublistData) {
+    const subscribeToValues = sublistData.map((item) => item.subscribe_to);
+    const subscribeUserPromises = subscribeToValues.map(async (subscribe_to) => {
+      const { data: subscribeUser } = await supabase
+        .from('user')
+        .select('*')
+        .eq('id', subscribe_to);
+      return subscribeUser;
+    });
+    const allSubscribeUsers = await Promise.all(subscribeUserPromises);
+
+    const filteredSubscribers = allSubscribeUsers
+      .filter((subscribeUserArray) => subscribeUserArray && subscribeUserArray.length > 0)
+      .map((subscribeUserArray) => subscribeUserArray && subscribeUserArray[0].name);
+
+    setSubscribers(filteredSubscribers as string[]);
+  }
+};
+if (sublistData) {
+  loadSubscribers();
+}
+}, [sublistData]);
+
+
+
+// 구독목록 visible
+useEffect(() => {
+  function handleOutsideClick(event: MouseEvent) {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setIsMenuOpen(false);
+    }
+  }
+  window.addEventListener('mousedown', handleOutsideClick);
+
+  return () => {
+    window.removeEventListener('mousedown', handleOutsideClick);
+  };
+}, []);
+
 
   // 인피니티 스크롤을 위한 데이터 조회
   const {
@@ -129,7 +176,7 @@ const MyPage = () => {
                 link: store.link
               }));
               // console.log('4----', extractedData);
-              setExtractedData(extractedData); // extractedData 설정
+              setExtractedData(extractedData);
             }
           }
         }
@@ -140,7 +187,7 @@ const MyPage = () => {
   }, [currentUser]);
 
   // 작성 날짜 잘라내기
-  function formatDate(dateTimeString: any) {
+  function formatDate(dateTimeString: string) {
     const options: Intl.DateTimeFormatOptions = {
       year: 'numeric',
       month: '2-digit',
@@ -153,7 +200,7 @@ const MyPage = () => {
     // return new Date(dateTimeString).toLocaleString('en-US', options); // 기본 년월일
   }
 
-  function extractImageTags(html: any) {
+  function extractImageTags(html: string) {
     const imageTags = [];
     const pattern = /<img.*?src=["'](.*?)["'].*?>/g;
     let match;
@@ -241,13 +288,13 @@ const MyPage = () => {
       }
     }
   };
-
-  const sliceStore = fetchUserPost?.slice(0, 4);
+/////////////// 무한스크롤 슬라이스
+  const sliceStore = fetchUserPost?.slice(0, 10);
   const ClickToggleBox = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = (e.target as HTMLButtonElement).name;
     setToggleMsgBox(name);
   };
-
+////////////
   const handleSectionChange = (e: React.MouseEvent<HTMLButtonElement>) => {
     const button = e.target as HTMLButtonElement;
     const section = button.getAttribute('data-section');
@@ -255,6 +302,10 @@ const MyPage = () => {
     if (section !== null) {
       setActiveSection(section);
     }
+  };
+  
+  const handleMenuToggle = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   if (isLoading) {
@@ -270,27 +321,38 @@ const MyPage = () => {
         <div className="info-wrapper">
           {currentUser?.avatar_url && (
             <div className="avatar-container">
-              {currentUser.avatar_url.startsWith('profile/') ? (
-                <img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser.avatar_url}`} alt="User Avatar" />
-              ) : (
-                <img src={currentUser.avatar_url} alt="User Avatar" />
-              )}
-              <div className="circle-bg">
-                <PartyModeIcon className="party-icon" onClick={handleImageUpload} />
-              </div>
-              {imageUploadVisible && (
-                <div className="img-uploader">
-                  <input type="file" ref={imageInputRef} onChange={handleImageInputChange} />
-                  <button className="confirm" onClick={handleImageConfirm}>
-                    저장
-                  </button>
-                </div>
-              )}
+              {selectedImage ? (
+          <img
+            src={URL.createObjectURL(selectedImage)} // 선택한 이미지 파일을 미리보기로 보여줌
+            alt="Selected Image"
+            width={120}
+            height={120}
+          />
+        ) : (
+          <div className="avatar">
+            {currentUser.avatar_url.startsWith('profile/') ? (
+              <img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser.avatar_url}`} alt="User Avatar" />
+            ) : (
+              <img src={currentUser.avatar_url} alt="User Avatar" />
+            )}
+          </div>
+        )}
+          <div className="circle-bg">
+            <PartyModeIcon className="party-icon" onClick={handleImageUpload} />
+          </div>
+          {imageUploadVisible && (
+            <div className="img-uploader">
+              <input type="file" ref={imageInputRef} onChange={handleImageInputChange} />
+              <button className="confirm" onClick={handleImageConfirm}>
+                저장
+              </button>
             </div>
           )}
+        </div>
+      )}
           <div className="info-inner">
             <p>
-              Welcome,
+              Welcome,&nbsp;&nbsp;
               {editingName ? (
                 <input
                   type="text"
@@ -304,21 +366,37 @@ const MyPage = () => {
               님의 My Page
             </p>
             <span>
-              <div className="user-sub-info">
-                {currentUser?.email}
-                {sublistData && <div>구독한 사람: {sublistData.length}</div>}
-              </div>
-              <div>
-                {editingName ? (
-                  <>
-                    <button onClick={handleNameSave}>저장</button>
-                    <button onClick={handleNameCancel}>취소</button>
-                  </>
-                ) : (
-                  <button onClick={handleNameEdit}>수정</button>
-                )}
-              </div>
-            </span>
+  <div className='user-sub-info'>
+    {currentUser?.email}
+    {sublistData && (
+      <h5 onClick={handleMenuToggle} ref={menuRef}>
+        &nbsp;구독한 사람: {subscribers.length}
+      </h5>
+    )}
+    <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
+      {/* <Link to="/mypage">My Page</Link> */}
+      <ul>
+        {subscribers
+          .slice() // 복사본 생성
+          .sort() // 알파벳 순으로 정렬
+          .map((subscriber, index) => (
+            <li key={index}>{subscriber}</li>
+          ))}
+      </ul>
+    </div>
+  </div>
+  <div>
+    {editingName ? (
+      <>
+        <button onClick={handleNameSave}>저장</button>
+        <button onClick={handleNameCancel}>취소</button>
+      </>
+    ) : (
+      <button onClick={handleNameEdit}>수정</button>
+    )}
+  </div>
+</span>
+
           </div>
         </div>
         <div>
@@ -447,11 +525,33 @@ const MypageTag = styled.div`
         position: absolute;
         display: flex;
 
-        input {
-          width: 50px;
-        }
-        .confirm {
-          width: 60px;
+        .user-sub-info{
+          display: flex;
+          justify-content: space-between;
+          align-items:center;
+          h5{
+            margin-top: 6px;
+            font-size: 10px;
+          }
+          .dropdown-content{
+            position: relative;
+            ul{
+            position: absolute;
+            width: 100px;
+            background: white;
+            left: -64px;
+            top: 14px;
+            border-radius: 8px;
+          }
+          li{
+              padding: 5px 10px;
+              &:hover {
+              border-radius: 8px;
+              background-color: #f1f1f1;
+              }
+            }
+            
+          }
         }
       }
     }
