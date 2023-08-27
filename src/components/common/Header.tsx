@@ -102,8 +102,8 @@ function Header() {
 
   return (
     <HeaderTag>
+      <div className="header-wrapper">
       <Alarm />
-      {/* <header> */}
       <div className="logo-wrapper">
         <Link to="/">
           <img src="/asset/test-logo1.png" className="test-logo" alt="test-img" />
@@ -154,13 +154,15 @@ function Header() {
             <button onClick={handleToggle}>Login</button>
           )}
         </div>
+        <div>
+        </div>
+        {isModalOpen && (
+          <ModalWrapper isopen={isModalOpen} onClick={handleModalOutsideClick}>
+            <Login closeModal={closeModal} />
+          </ModalWrapper>
+        )}
       </div>
-      {isModalOpen && (
-        <ModalWrapper isopen={isModalOpen} onClick={handleModalOutsideClick}>
-          <Login closeModal={closeModal} />
-        </ModalWrapper>
-      )}
-      {/* </header> */}
+      </div>
     </HeaderTag>
   );
 }
@@ -168,15 +170,18 @@ function Header() {
 export default Header;
 
 const HeaderTag = styled.header`
-background-color: #f24d0d;
+  background-color: #f24d0d;
+  color: white;
   width: 100%;
-  height: 10vh;
-  border-bottom: 1px dotted gray;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  // header{}
+  height: 5vh;
+
+  .header-wrapper {
+    height: 5vh;
+    margin: 0 auto;
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   ul {
     margin: 0 auto;
     width: 70%;
@@ -187,6 +192,7 @@ background-color: #f24d0d;
   }
   li{
     a {
+      color: white;
     display: block;
     width: 100%;
     height: 100%;
@@ -194,11 +200,11 @@ background-color: #f24d0d;
 
     &:hover {
       filter: brightness(120%) !important;
-      color: gray !important;
+      color: #f8aa7d !important;
     }
 
     &:active {
-      transform: scale(0.85) !important;
+      transform: scale(0.92) !important;
     }
   }
 }
@@ -208,8 +214,7 @@ background-color: #f24d0d;
     align-items: center;
 
     .test-logo {
-      width: 80px;
-      
+      width: 65px;
         transition: filter 0.3s, transform 0.3s;
         &:hover {
           filter: brightness(120%);
@@ -247,6 +252,7 @@ background-color: #f24d0d;
           margin-right: 8px;
           width: 85px;
           p {
+            font-size: 14px;
             margin: 4px 0;
           }
         }
@@ -277,6 +283,7 @@ background-color: #f24d0d;
         }
       }
     }
+  }
   }
 `;
 
