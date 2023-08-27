@@ -102,65 +102,66 @@ function Header() {
 
   return (
     <HeaderTag>
-      <Alarm />
-      {/* <header> */}
-      <div className="logo-wrapper">
-        <Link to="/">
-          <img src="/asset/test-logo1.png" className="test-logo" alt="test-img" />
-        </Link>
-        Find your Hippop
-      </div>
-      <ul>
-        <li>
-          <Link to="/about">About</Link>
-        </li>
-        <li>
-          <Link to="/review">Review</Link>
-        </li>
-        <li>
-          <Link to="/mate">Mate</Link>
-        </li>
-        <li>
-          <Link to="/search">Search</Link>
-        </li>
-      </ul>
-      <div>
-        <div className="user-info">
-          {currentUser ? (
-            <>
-              <div className="user-dropdown" onClick={handleMenuToggle} ref={menuRef}>
-                <div className="info-mate">
-                  <div className="welcome-mate">
-                    <p>반갑습니다!</p>
-                    <p>{currentUser.name}님</p>
-                  </div>
+      <div className="header-wrapper">
+        <Alarm />
+        <div className="logo-wrapper">
+          <Link to="/">
+            <img src="/asset/test-logo1.png" className="test-logo" alt="test-img" />
+          </Link>
+          Find your Hippop
+        </div>
+        <ul>
+          <li>
+            <Link to="/about">About</Link>
+          </li>
+          <li>
+            <Link to="/review">Review</Link>
+          </li>
+          <li>
+            <Link to="/mate">Mate</Link>
+          </li>
+          <li>
+            <Link to="/search">Search</Link>
+          </li>
+        </ul>
+        <div>
+          <div className="user-info">
+            {currentUser ? (
+              <>
+                <div className="user-dropdown" onClick={handleMenuToggle} ref={menuRef}>
+                  <div className="info-mate">
+                    <div className="welcome-mate">
+                      <p>반갑습니다!</p>
+                      <p>{currentUser.name}님</p>
+                    </div>
 
-                  {currentUser.avatar_url.startsWith('profile/') ? (
-                    <img
-                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser.avatar_url}`}
-                      alt="User Avatar"
-                    />
-                  ) : (
-                    <img src={currentUser.avatar_url} alt="User Avatar" />
-                  )}
+                    {currentUser.avatar_url.startsWith('profile/') ? (
+                      <img
+                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser.avatar_url}`}
+                        alt="User Avatar"
+                      />
+                    ) : (
+                      <img src={currentUser.avatar_url} alt="User Avatar" />
+                    )}
+                  </div>
+                  <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
+                    <Link to="/mypage">My Page</Link>
+                    <div onClick={handleToggle}>Logout</div>
+                  </div>
                 </div>
-                <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
-                  <Link to="/mypage">My Page</Link>
-                  <div onClick={handleToggle}>Logout</div>
-                </div>
-              </div>
-            </>
-          ) : (
-            <button onClick={handleToggle}>Login</button>
+              </>
+            ) : (
+              <button onClick={handleToggle}>Login</button>
+            )}
+          </div>
+          <div></div>
+          {isModalOpen && (
+            <ModalWrapper isopen={isModalOpen} onClick={handleModalOutsideClick}>
+              <Login closeModal={closeModal} />
+            </ModalWrapper>
           )}
         </div>
       </div>
-      {isModalOpen && (
-        <ModalWrapper isopen={isModalOpen} onClick={handleModalOutsideClick}>
-          <Login closeModal={closeModal} />
-        </ModalWrapper>
-      )}
-      {/* </header> */}
     </HeaderTag>
   );
 }
@@ -169,14 +170,17 @@ export default Header;
 
 const HeaderTag = styled.header`
   background-color: #f24d0d;
+  color: white;
   width: 100%;
-  height: 10vh;
-  border-bottom: 1px dotted gray;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  // header{}
+  height: 5vh;
+
+  .header-wrapper {
+    height: 5vh;
+    margin: 0 auto;
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   ul {
     margin: 0 auto;
     width: 70%;
@@ -185,35 +189,36 @@ const HeaderTag = styled.header`
     justify-content: center;
     gap: 10vw;
   }
-  li {
+  li{
     a {
+      color: white;
       display: block;
       width: 100%;
       height: 100%;
       transition: filter 0.3s, transform 0.3s !important;
 
-      &:hover {
-        filter: brightness(120%) !important;
-        color: gray !important;
-      }
+    &:hover {
+      filter: brightness(120%) !important;
+      color: #f8aa7d !important;
+    }
 
-      &:active {
-        transform: scale(0.85) !important;
-      }
+    &:active {
+      transform: scale(0.92) !important;
     }
   }
-
+}
+  }
   .logo-wrapper {
     display: flex;
     align-items: center;
 
     .test-logo {
-      width: 80px;
-
-      transition: filter 0.3s, transform 0.3s;
-      &:hover {
-        filter: brightness(120%);
-        transform: scale(0.92);
+      width: 40px;
+        transition: filter 0.3s, transform 0.3s;
+        &:hover {
+          filter: brightness(120%);
+          transform: scale(0.92);
+        
       }
     }
   }
@@ -222,8 +227,8 @@ const HeaderTag = styled.header`
     justify-content: center;
     align-items: center;
     img {
-      width: 60px;
-      height: 60px;
+      width: 40px;
+      height: 40px;
       object-fit: cover;
       border-radius: 50%;
     }
@@ -235,7 +240,7 @@ const HeaderTag = styled.header`
         align-items: center;
         text-align: right;
 
-        img {
+        img{
           transition: filter 0.3s, transform 0.3s;
           &:hover {
             transform: scale(0.92);
@@ -244,14 +249,20 @@ const HeaderTag = styled.header`
         .welcome-mate {
           margin-right: 8px;
           width: 85px;
+
           p {
+            font-size: 10px;
             margin: 4px 0;
           }
         }
       }
+      .welcome-mate p:last-child {
+        font-weight: 600;
+      }
+
       .dropdown-content {
         position: absolute;
-        bottom: -70px;
+        bottom: -70px; 
         right: 0;
         width: 120px;
         background-color: white;
@@ -275,6 +286,7 @@ const HeaderTag = styled.header`
         }
       }
     }
+  }
   }
 `;
 
