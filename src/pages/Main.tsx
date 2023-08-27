@@ -5,6 +5,7 @@ import { Masonry } from '@mui/lab';
 import { supabase } from '../api/supabase';
 import { Store } from '../types/types';
 import Card from '../components/list/Card';
+import AlarmBox from '../components/common/AlarmBox';
 
 const Main = () => {
   const [stores, setStores] = useState<Store[]>([]);

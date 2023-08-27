@@ -28,7 +28,7 @@ export interface SearchListProps {
   storeData: Store[];
 }
 
-export interface Post {
+export interface PostType {
   id: number;
   created_at: string;
   updated_at: string;
@@ -87,7 +87,7 @@ export interface FetchsStore {
 }
 
 export interface FetchPost {
-  posts: Post[];
+  posts: PostType[];
   page: number;
   totalPages: number;
   count: number | null;
@@ -103,6 +103,14 @@ export interface FetchComment {
 export interface SubscribeType {
   subscribe_from: string | undefined;
   subscribe_to: string | undefined;
+}
+
+export interface AlarmType {
+  id: number;
+  created_at: string;
+  targetUserId: string;
+  content: string;
+  isRead: boolean;
 }
 
 // 지오코딩 타입 선언
