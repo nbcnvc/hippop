@@ -7,7 +7,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { Bookmark, FetchsStore, Post, Store } from '../types/types';
 //api
 import { getProfileImg, getUser } from '../api/user';
-import { fetchDetailData, getInfinityStore } from '../api/store';
+import { getInfinityStore } from '../api/store';
 import { supabase } from '../api/supabase';
 
 import { setUserStore, useCurrentUser } from '../store/userStore';
@@ -33,7 +33,7 @@ const MyPage = () => {
   const [fetchUserPost, setFetchUserPost] = useState<Post[]>([]);
   const [fetchSubs, setFetchSubs] = useState<Bookmark[]>([]);
   const [extractedData, setExtractedData] = useState<Store[]>([]);
-// 게시글 & 북마크 토글
+  // 게시글 & 북마크 토글
   const [activeSection, setActiveSection] = useState('myReview'); // Default to 'myReview'
 
   const [toggleMsgBox, setToggleMsgBox] = useState<string>('받은 쪽지함');
@@ -211,10 +211,6 @@ const MyPage = () => {
       setImageUploadVisible(false);
     }
   };
-  const { data }: any = useQuery(['profileImg', currentUser?.id], () => getProfileImg(currentUser?.id));
-
-  const imgUrl = data?.avatar_url;
-
 
   // 프로필 선택후 저장하기
   const handleImageConfirm = async () => {
@@ -255,14 +251,19 @@ const MyPage = () => {
   const handleSectionChange = (e: React.MouseEvent<HTMLButtonElement>) => {
     const button = e.target as HTMLButtonElement;
     const section = button.getAttribute('data-section');
-  
+
     if (section !== null) {
       setActiveSection(section);
     }
   };
-  
-  
-  
+
+  if (isLoading) {
+    return <div>로딩중입니다.</div>;
+  }
+  if (isError) {
+    return <div>오류가 발생했습니다.</div>;
+  }
+
   return (
     <MypageTag>
       <header>
@@ -303,13 +304,9 @@ const MyPage = () => {
               님의 My Page
             </p>
             <span>
-              <div className='user-sub-info'>
-              {currentUser?.email}
-              {sublistData && (
-                <div>
-                  구독한 사람: {sublistData.length}
-                </div>
-              )}
+              <div className="user-sub-info">
+                {currentUser?.email}
+                {sublistData && <div>구독한 사람: {sublistData.length}</div>}
               </div>
               <div>
                 {editingName ? (
@@ -320,26 +317,26 @@ const MyPage = () => {
                 ) : (
                   <button onClick={handleNameEdit}>수정</button>
                 )}
-                </div>
+              </div>
             </span>
           </div>
         </div>
         <div>
-        <button name="받은 쪽지함" onClick={ClickToggleBox}>
-          받은 쪽지함
-        </button>
-        <button name="보낸 쪽지함" onClick={ClickToggleBox}>
-          보낸 쪽지함
-        </button>
-        <div className="alram-wrapper">
-          {toggleMsgBox === '받은 쪽지함' ? (
-            <RecieveBox setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
-          ) : (
-            <SendBox setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
-          )}
-        </div>
-        {/* <img src="/asset/myPage.png" alt="test image" /> */}
-        {replyModal && <MessageReply sendMsgUser={sendMsgUser} setOpenReply={setReplyModal} />}
+          <button name="받은 쪽지함" onClick={ClickToggleBox}>
+            받은 쪽지함
+          </button>
+          <button name="보낸 쪽지함" onClick={ClickToggleBox}>
+            보낸 쪽지함
+          </button>
+          <div className="alram-wrapper">
+            {toggleMsgBox === '받은 쪽지함' ? (
+              <RecieveBox toggleMsgBox={toggleMsgBox} setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
+            ) : (
+              <SendBox toggleMsgBox={toggleMsgBox} setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
+            )}
+          </div>
+          {/* <img src="/asset/myPage.png" alt="test image" /> */}
+          {replyModal && <MessageReply sendMsgUser={sendMsgUser} setOpenReply={setReplyModal} />}
         </div>
       </header>
       <div>
@@ -353,53 +350,54 @@ const MyPage = () => {
           <div>
             <h3>My Review</h3>
             <div className="post-wrapper">
-                  {sliceStore.map((post) => {
-                    const imageTags = extractImageTags(post.body);
-                    return (
-                      <div key={post.id}>
-                        {/* <div dangerouslySetInnerHTML={{ __html: post.body }} /> */}
-                        {imageTags.length > 0 ? (
-                          <div>
-                            {imageTags.map((src, index) => (
-                              <img key={index} src={src} alt={`Image ${index}`} width={250} />
-                              ))}
-                          </div>
-                        ) : (
-                          <div>
-                            <img src="/asset/kakao.png" alt="Default Image" width={250} />
-                          </div>
-                        )}
-                        <h2>{post.title}</h2>
-                        <p>{formatDate(post.created_at)}</p>
+              {sliceStore.map((post) => {
+                const imageTags = extractImageTags(post.body);
+                return (
+                  <div key={post.id}>
+                    {/* <div dangerouslySetInnerHTML={{ __html: post.body }} /> */}
+                    {imageTags.length > 0 ? (
+                      <div>
+                        {imageTags.map((src, index) => (
+                          <img key={index} src={src} alt={`Image ${index}`} width={250} />
+                        ))}
                       </div>
-                    );
-                  })}
-                </div>
+                    ) : (
+                      <div>
+                        <img src="/asset/kakao.png" alt="Default Image" width={250} />
+                      </div>
+                    )}
+                    <h2>{post.title}</h2>
+                    <p>{formatDate(post.created_at)}</p>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
-        
+
         {activeSection === 'myBookmark' && (
           <div>
             <h2>My Boomark</h2>
-              <div className="subs-wrapper">
-                {extractedData.map((store) => (
-                  <div key={store.id} className="user-subs">
-                    <img
-                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`}
-                      alt={`Store Image`}
-                      width={200}
-                      />
-                      <h2>{store.title}</h2>
-                      {/* <a href={store.link}>Link</a> */}
-                      <p>
-                        {store.period_start} ~ {store.period_end}
-                      </p>
-                    </div>
-                  ))}
+            <div className="subs-wrapper">
+              {extractedData.map((store) => (
+                <div key={store.id} className="user-subs">
+                  <img
+                    src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`}
+                    alt={`Store Image`}
+                    width={200}
+                  />
+                  <h2>{store.title}</h2>
+                  {/* <a href={store.link}>Link</a> */}
+                  <p>
+                    {store.period_start} ~ {store.period_end}
+                  </p>
                 </div>
+              ))}
+            </div>
           </div>
         )}
-        <div style={{
+        <div
+          style={{
             backgroundColor: 'yellow',
             width: '100%',
             border: '1px solid black',
@@ -410,7 +408,7 @@ const MyPage = () => {
         >
           Trigger to Fetch Here
         </div>
-        </div>
+      </div>
     </MypageTag>
   );
 };
@@ -421,124 +419,123 @@ const MypageTag = styled.div`
   max-width: 1200px;
   width: 90%;
   margin: 0 auto;
-  
-  margin-top: 1rem;
-  header{
 
+  margin-top: 1rem;
+  header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-  .avatar-container {
-    position: relative;
-    width: 25%;
-    .circle-bg{
-      background-color:white;
-    }
-    img {
-      margin: 0;
-      padding: 0;
-      margin-left: 0;
-      max-width: 100%;
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 10px;
-    }
-
-    .img-uploader {
-      width: 225px;
-      position: absolute;
-      display:flex;
-
-      input{
-        width:50px:
+    .avatar-container {
+      position: relative;
+      width: 25%;
+      .circle-bg {
+        background-color: white;
       }
-      .confirm {
-        width:60px;
+      img {
+        margin: 0;
+        padding: 0;
+        margin-left: 0;
+        max-width: 100%;
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 10px;
       }
-    }
-  }
 
-  .avatar-container
-  .party-icon {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    margin-bottom: 5px;
-    // margin-right: 5px;
-    color: #f24d0d; //rgb(103, 243, 201);
-    background-color:white;
-    padding:4px;
-    border-radius:50%;
-    transition: color 0.3s ease, transform 0.3s ease;
-    cursor: pointer;
-  }
-  .party-icon:hover {
-    color: gray;
-  }
-  
-  .party-icon:active {
-    transform: scale(0.9);
-  }
-
-  .info-wrapper {
-    width: 50%;
-    border: 1px dotted gray;
-    display: flex;
-    justify-content: flex-start;
-    align-items: flex-end;
-
-    .info-inner {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 0;
-      margin-left: 10px;
-      p {
-        font-size: 1.2rem;
-        text-align: left;
-      }
-      span {
-        text-align: left;
-        margin: 10px 0 0;
-        color: gray;
+      .img-uploader {
+        width: 225px;
+        position: absolute;
         display: flex;
-        justify-content: space-between;
 
-        .user-sub-info{
-          display: flex;
+        input {
+          width: 50px;
+        }
+        .confirm {
+          width: 60px;
         }
       }
     }
-  }
 
-  .alram-wrapper {
-    width: 520px;
-    height: 200px;
-    border: 1px dotted gray;
-    display: flex;
-    justify-content: flex-end;
-
-    button{
-      width:120px;
-      height: 22px;
+    .avatar-container .party-icon {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      margin-bottom: 5px;
+      // margin-right: 5px;
+      color: #f24d0d; //rgb(103, 243, 201);
+      background-color: white;
+      padding: 4px;
+      border-radius: 50%;
+      transition: color 0.3s ease, transform 0.3s ease;
+      cursor: pointer;
     }
-    li {
-      text-align: center;
-      padding: 2px 20px;
-      margin: 4px 0;
-      background-color: gray;
-      border-radius: 4px;
-    }}
+    .party-icon:hover {
+      color: gray;
+    }
+
+    .party-icon:active {
+      transform: scale(0.9);
+    }
+
+    .info-wrapper {
+      width: 50%;
+      border: 1px dotted gray;
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-end;
+
+      .info-inner {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 0;
+        margin-left: 10px;
+        p {
+          font-size: 1.2rem;
+          text-align: left;
+        }
+        span {
+          text-align: left;
+          margin: 10px 0 0;
+          color: gray;
+          display: flex;
+          justify-content: space-between;
+
+          .user-sub-info {
+            display: flex;
+          }
+        }
+      }
+    }
+
+    .alram-wrapper {
+      width: 520px;
+      height: 200px;
+      border: 1px dotted gray;
+      display: flex;
+      justify-content: flex-end;
+
+      button {
+        width: 120px;
+        height: 22px;
+      }
+      li {
+        text-align: center;
+        padding: 2px 20px;
+        margin: 4px 0;
+        background-color: gray;
+        border-radius: 4px;
+      }
+    }
   }
-  .post-wrapper{
+  .post-wrapper {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 한 줄에 두 개의 열 */
     gap: 20px; /* 열 사이의 간격 조정 */
     max-width: 900px; /* 그리드가 너무 넓어지는 것을 제한 */
     margin: 0 auto; /* 가운데 정렬 */
   }
-  .subs-wrapper{
+  .subs-wrapper {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 한 줄에 두 개의 열 */
     gap: 20px; /* 열 사이의 간격 조정 */
