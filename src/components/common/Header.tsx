@@ -10,6 +10,7 @@ import { handleLogOut } from '../../pages/Login';
 import { supabase } from '../../api/supabase';
 import { setUserStore } from '../../store/userStore';
 import { useCurrentUser } from '../../store/userStore';
+import Alarm from './Alarm';
 
 function Header() {
   const [user, setUser] = useState<UserInfo | null>(null);
@@ -29,7 +30,6 @@ function Header() {
   // 현재유저 정보 가져오기
   const currentUser = useCurrentUser();
 
-  // console.log('currentUser22', currentUser);
   useEffect(() => {
     const authSubscription = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session) {
@@ -103,62 +103,65 @@ function Header() {
   return (
     <HeaderTag>
       <div className="header-wrapper">
-        <div className="logo-wrapper">
-          <Link to="/">
-            <img src="/asset/test-logo1.png" className="test-logo" alt="test-img" />
-          </Link>
-          Find your Hippop
-        </div>
-        <ul>
-          <li>
-            <Link to="/about">About</Link>
-          </li>
-          <li>
-            <Link to="/review">Review</Link>
-          </li>
-          <li>
-            <Link to="/mate">Mate</Link>
-          </li>
-          <li>
-            <Link to="/search">Search</Link>
-          </li>
-        </ul>
-        <div>
-          <div className="user-info">
-            {currentUser ? (
-              <>
-                <div className="user-dropdown" onClick={handleMenuToggle} ref={menuRef}>
-                  <div className="info-mate">
-                    <div className="welcome-mate">
-                      <p>반갑습니다!</p>
-                      <p>{currentUser.name}님</p>
-                    </div>
+      <Alarm />
+      <div className="logo-wrapper">
+        <Link to="/">
+          <img src="/asset/test-logo1.png" className="test-logo" alt="test-img" />
+        </Link>
+        Find your Hippop
+      </div>
+      <ul>
+        <li>
+          <Link to="/about">About</Link>
+        </li>
+        <li>
+          <Link to="/review">Review</Link>
+        </li>
+        <li>
+          <Link to="/mate">Mate</Link>
+        </li>
+        <li>
+          <Link to="/search">Search</Link>
+        </li>
+      </ul>
+      <div>
+        <div className="user-info">
+          {currentUser ? (
+            <>
+              <div className="user-dropdown" onClick={handleMenuToggle} ref={menuRef}>
+                <div className="info-mate">
+                  <div className="welcome-mate">
+                    <p>반갑습니다!</p>
+                    <p>{currentUser.name}님</p>
+                  </div>
 
-                    {currentUser.avatar_url.startsWith('profile/') ? (
-                      <img
-                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser.avatar_url}`}
-                        alt="User Avatar"
-                      />
-                    ) : (
-                      <img src={currentUser.avatar_url} alt="User Avatar" />
-                    )}
-                  </div>
-                  <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
-                    <Link to="/mypage">My Page</Link>
-                    <div onClick={handleToggle}>Logout</div>
-                  </div>
+                  {currentUser.avatar_url.startsWith('profile/') ? (
+                    <img
+                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser.avatar_url}`}
+                      alt="User Avatar"
+                    />
+                  ) : (
+                    <img src={currentUser.avatar_url} alt="User Avatar" />
+                  )}
                 </div>
-              </>
-            ) : (
-              <button onClick={handleToggle}>Login</button>
-            )}
-          </div>
+                <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
+                  <Link to="/mypage">My Page</Link>
+                  <div onClick={handleToggle}>Logout</div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <button onClick={handleToggle}>Login</button>
+          )}
+        </div>
+        <div>
         </div>
         {isModalOpen && (
           <ModalWrapper isopen={isModalOpen} onClick={handleModalOutsideClick}>
             <Login closeModal={closeModal} />
           </ModalWrapper>
         )}
+      </div>
       </div>
     </HeaderTag>
   );

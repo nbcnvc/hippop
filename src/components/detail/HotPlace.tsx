@@ -15,7 +15,7 @@ const HotPlace = ({ setCategory, setIsSelected }: HotPlaceProps) => {
   };
 
   return (
-    <div style={{ width: '90%' }}>
+    <div style={{ width: '100%' }}>
       <div
         style={{
           display: 'flex',

@@ -16,16 +16,27 @@ import { randomFileName } from '../hooks/useHandleImageName';
 import { styled } from 'styled-components';
 import PartyModeIcon from '@mui/icons-material/PartyMode';
 
+import SendBox from '../components/message/SendBox';
+import MessageReply from '../components/message/MessageReply';
+import { MessageType } from '../types/types';
+import RecieveBox from '../components/message/RecieveBox';
+
 const MyPage = () => {
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState('');
   const [imageUploadVisible, setImageUploadVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  // 쪽지 답장 모달
+  const [replyModal, setReplyModal] = useState<boolean | null>(null);
+  const [sendMsgUser, setSendMsgUser] = useState<MessageType | null>(null);
 
   const [fetchUserPost, setFetchUserPost] = useState<Post[]>([]);
   const [fetchSubs, setFetchSubs] = useState<Bookmark[]>([]);
   const [extractedData, setExtractedData] = useState<Store[]>([]);
+// 게시글 & 북마크 토글
+  const [activeSection, setActiveSection] = useState('myReview'); // Default to 'myReview'
 
+  const [toggleMsgBox, setToggleMsgBox] = useState<string>('받은 쪽지함');
   const imageInputRef = useRef(null);
 
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
@@ -204,6 +215,7 @@ const MyPage = () => {
 
   const imgUrl = data?.avatar_url;
 
+
   // 프로필 선택후 저장하기
   const handleImageConfirm = async () => {
     if (selectedImage) {
@@ -235,10 +247,25 @@ const MyPage = () => {
   };
 
   const sliceStore = fetchUserPost?.slice(0, 4);
+  const ClickToggleBox = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const name = (e.target as HTMLButtonElement).name;
+    setToggleMsgBox(name);
+  };
+
+  const handleSectionChange = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const button = e.target as HTMLButtonElement;
+    const section = button.getAttribute('data-section');
+  
+    if (section !== null) {
+      setActiveSection(section);
+    }
+  };
+  
+  
+  
   return (
     <MypageTag>
       <header>
-        {/* <button onClick={test}>test</button> */}
         <div className="info-wrapper">
           {currentUser?.avatar_url && (
             <div className="avatar-container">
@@ -276,7 +303,14 @@ const MyPage = () => {
               님의 My Page
             </p>
             <span>
+              <div className='user-sub-info'>
               {currentUser?.email}
+              {sublistData && (
+                <div>
+                  구독한 사람: {sublistData.length}
+                </div>
+              )}
+              </div>
               <div>
                 {editingName ? (
                   <>
@@ -286,46 +320,86 @@ const MyPage = () => {
                 ) : (
                   <button onClick={handleNameEdit}>수정</button>
                 )}
-              </div>
+                </div>
             </span>
           </div>
         </div>
+        <div>
+        <button name="받은 쪽지함" onClick={ClickToggleBox}>
+          받은 쪽지함
+        </button>
+        <button name="보낸 쪽지함" onClick={ClickToggleBox}>
+          보낸 쪽지함
+        </button>
         <div className="alram-wrapper">
-          <ul>
-            <li>Alram #1</li>
-            <li>Alram #2</li>
-            <li>Alram #3</li>
-            <li>Alram #4</li>
-          </ul>
+          {toggleMsgBox === '받은 쪽지함' ? (
+            <RecieveBox setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
+          ) : (
+            <SendBox setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
+          )}
+        </div>
+        {/* <img src="/asset/myPage.png" alt="test image" /> */}
+        {replyModal && <MessageReply sendMsgUser={sendMsgUser} setOpenReply={setReplyModal} />}
         </div>
       </header>
       <div>
-        <h3>My Review</h3>
-        <div className="post-wrapper">
-          {sliceStore.map((post) => {
-            const imageTags = extractImageTags(post.body);
-            return (
-              <div key={post.id}>
-                {/* <div dangerouslySetInnerHTML={{ __html: post.body }} /> */}
-                {imageTags.length > 0 ? (
-                  <div>
-                    {imageTags.map((src, index) => (
-                      <img key={index} src={src} alt={`Image ${index}`} width={250} />
-                      ))}
-                  </div>
-                ) : (
-                  <div>
-                    <img src="/asset/kakao.png" alt="Default Image" width={250} />
-                  </div>
-                )}
-                <h2>{post.title}</h2>
-                <p>{formatDate(post.created_at)}</p>
-              </div>
-            );
-          })}
-        </div>
-        <div
-          style={{
+        <button data-section="myReview" onClick={handleSectionChange}>
+          나의 게시글
+        </button>
+        <button data-section="myBookmark" onClick={handleSectionChange}>
+          나의 북마크
+        </button>
+        {activeSection === 'myReview' && (
+          <div>
+            <h3>My Review</h3>
+            <div className="post-wrapper">
+                  {sliceStore.map((post) => {
+                    const imageTags = extractImageTags(post.body);
+                    return (
+                      <div key={post.id}>
+                        {/* <div dangerouslySetInnerHTML={{ __html: post.body }} /> */}
+                        {imageTags.length > 0 ? (
+                          <div>
+                            {imageTags.map((src, index) => (
+                              <img key={index} src={src} alt={`Image ${index}`} width={250} />
+                              ))}
+                          </div>
+                        ) : (
+                          <div>
+                            <img src="/asset/kakao.png" alt="Default Image" width={250} />
+                          </div>
+                        )}
+                        <h2>{post.title}</h2>
+                        <p>{formatDate(post.created_at)}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+          </div>
+        )}
+        
+        {activeSection === 'myBookmark' && (
+          <div>
+            <h2>My Boomark</h2>
+              <div className="subs-wrapper">
+                {extractedData.map((store) => (
+                  <div key={store.id} className="user-subs">
+                    <img
+                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`}
+                      alt={`Store Image`}
+                      width={200}
+                      />
+                      <h2>{store.title}</h2>
+                      {/* <a href={store.link}>Link</a> */}
+                      <p>
+                        {store.period_start} ~ {store.period_end}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+          </div>
+        )}
+        <div style={{
             backgroundColor: 'yellow',
             width: '100%',
             border: '1px solid black',
@@ -336,25 +410,7 @@ const MyPage = () => {
         >
           Trigger to Fetch Here
         </div>
-        <h2>My Boomark</h2>
-        <div className="subs-wrapper">
-          {extractedData.map((store) => (
-            <div key={store.id} className="user-subs">
-              <img
-                src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`}
-                alt={`Store Image`}
-                width={200}
-              />
-              <h2>{store.title}</h2>
-              {/* <a href={store.link}>Link</a> */}
-              <p>
-                {store.period_start} ~ {store.period_end}
-              </p>
-            </div>
-          ))}
         </div>
-      </div>
-      {/* <img src="/asset/myPage.png" alt="test image" /> */}
     </MypageTag>
   );
 };
@@ -449,21 +505,24 @@ const MypageTag = styled.div`
         display: flex;
         justify-content: space-between;
 
-        // .party-icon {
-        //   margin-left: auto;
-        //   align-self: flex-end;
-        //   color: #ffd700; 
-        // }
+        .user-sub-info{
+          display: flex;
+        }
       }
     }
   }
 
   .alram-wrapper {
-    width: 50%;
+    width: 520px;
+    height: 200px;
     border: 1px dotted gray;
     display: flex;
     justify-content: flex-end;
 
+    button{
+      width:120px;
+      height: 22px;
+    }
     li {
       text-align: center;
       padding: 2px 20px;

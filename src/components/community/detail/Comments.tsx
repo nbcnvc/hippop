@@ -1,11 +1,11 @@
 import React, { useMemo, useState } from 'react';
 
 import moment from 'moment';
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { CommentProps } from '../../../types/props';
 import { createComment, deleteComment, getComments, updateComment } from '../../../api/comment';
-import { Comment, FetchComment } from '../../../types/types';
+import { Comment, FetchComment, UserInfo } from '../../../types/types';
 import { useCurrentUser } from '../../../store/userStore';
 
 const Comments = ({ post }: CommentProps) => {
@@ -75,6 +75,7 @@ const Comments = ({ post }: CommentProps) => {
     // 새로운 댓글 객체 선언
     const newComment = {
       user_id: currentUser?.id,
+      user_name: currentUser?.name,
       post_id: id,
       body
     };
@@ -152,7 +153,7 @@ const Comments = ({ post }: CommentProps) => {
       {selectComments?.map((comment) => {
         return (
           <div key={comment.id} style={{ width: '92.5%', border: '1px solid black', padding: '10px', margin: '10px' }}>
-            <div>작성자 : {currentUser?.name}</div>
+            <div>작성자 : {comment.user_name}</div>
             <div>작성일자: {moment(comment.created_at).format('YYYY.MM.DD HH:mm')}</div>
             {isEditId === comment.id ? (
               <input value={edit} onChange={onChangeEdit} style={{ width: '50%' }} />

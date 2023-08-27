@@ -14,7 +14,7 @@ import { Store } from '../../../types/types';
 import { fetchDetailData } from '../../../api/store';
 import { useLocation } from 'react-router-dom';
 
-const Detail = ({ post, setPost, setOpenDetail, msgModal, setMsgModal }: DetailProps) => {
+const Detail = ({ post, setPost, setOpenDetail, msgModal, setMsgModal, setWriterInfo }: DetailProps) => {
   const currentUser = useCurrentUser();
   const id = post?.store_id;
   const [isEdit, setIsEdit] = useState<boolean>(false);
@@ -67,7 +67,7 @@ const Detail = ({ post, setPost, setOpenDetail, msgModal, setMsgModal }: DetailP
         {post && (
           <ModalBox>
             {/* 작성자 */}
-            {isEdit ? <></> : <Writer userId={post.user_id} />}
+            {isEdit ? <></> : <Writer userId={post.user_id} setWriterInfo={setWriterInfo} />}
             <div>{pathname === '/mate' && <button onClick={openMsgModal}>쪽지보내기</button>}</div>
             <div>
               {isEdit ? (

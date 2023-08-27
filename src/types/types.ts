@@ -34,9 +34,9 @@ export interface Post {
   updated_at: string;
   user_id: string;
   store_id: number;
+  ctg_index: number;
   title: string;
   body: string;
-  ctg_index: number;
   isDeleted: boolean;
 }
 
@@ -54,6 +54,7 @@ export interface Comment {
   updated_at: string;
   user_id: string;
   post_id: number;
+  user_name: string;
   body: string;
   isDeleted: boolean;
 }
@@ -61,6 +62,7 @@ export interface Comment {
 export interface NewComment {
   user_id: string | undefined;
   post_id: number;
+  user_name: string | undefined;
   body: string;
 }
 
@@ -176,3 +178,15 @@ export interface HotPlaceInfo {
 //   place_url: string;
 //   images: string;
 // }
+
+export interface MessageType {
+  sender: string;
+  reciever: string;
+  body: string;
+  isRead: boolean;
+
+  id?: number;
+  created_at?: string;
+  avatar_url?: string;
+  name?: string;
+}
