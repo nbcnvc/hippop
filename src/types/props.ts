@@ -1,5 +1,5 @@
 import { SetStateAction } from 'react';
-import { UserInfo, Store, Post, HotPlaceInfo, MessageType } from './types';
+import { UserInfo, Store, PostType, HotPlaceInfo, MessageType } from './types';
 
 export interface EditorProps {
   body: string;
@@ -60,36 +60,21 @@ export interface WriteProps {
   setResult: React.Dispatch<SetStateAction<Store[] | null>>;
 }
 
-export interface PostsProps {
-  setPost: React.Dispatch<SetStateAction<Post | null>>;
-}
-
 export interface CommentProps {
-  post: Post;
+  post: PostType;
 }
 
 export interface WriterProps {
-  userId: string;
-  setWriterInfo: React.Dispatch<SetStateAction<UserInfo | null>>;
+  postId: number | undefined;
+  writer: UserInfo | undefined;
 }
 
 export interface SubscribeProps {
-  userId: string;
-}
-
-export interface DetailProps {
-  post: Post | null;
-  setPost: React.Dispatch<SetStateAction<Post | null>>;
-  setOpenDetail: React.Dispatch<SetStateAction<boolean>>;
-  msgModal: boolean;
-  setMsgModal: React.Dispatch<SetStateAction<boolean>>;
-  openDetail: boolean;
-  setWriterInfo: React.Dispatch<SetStateAction<UserInfo | null>>;
+  userId: string | undefined;
 }
 
 export interface EditProps {
-  post: Post;
-  setPost: React.Dispatch<SetStateAction<Post | null>>;
+  post: PostType;
   isEdit: boolean;
   setIsEdit: React.Dispatch<SetStateAction<boolean>>;
 }
@@ -108,23 +93,26 @@ export interface CardProps {
 export interface RecieveBoxProps {
   setReplyModal: React.Dispatch<SetStateAction<boolean | null>>;
   setSendMsgUser: React.Dispatch<SetStateAction<MessageType | null>>;
+  toggleMsgBox: string;
 }
 
 export interface SendBoxProps {
   setReplyModal: React.Dispatch<SetStateAction<boolean | null>>;
   setSendMsgUser: React.Dispatch<SetStateAction<MessageType | null>>;
+  toggleMsgBox: string;
 }
 
 export interface MessageProps {
+  writer: UserInfo | undefined;
   msgModal: boolean;
   setMsgModal: React.Dispatch<SetStateAction<boolean>>;
-  writerInfo: UserInfo | null;
 }
 
 export interface MsgDetailType {
   selectedMessage: MessageType | null;
   setIsClicked: React.Dispatch<SetStateAction<boolean>>;
   setReplyModal: React.Dispatch<SetStateAction<boolean | null>>;
+  toggleMsgBox: string;
 }
 
 export interface MessageReplyProps {

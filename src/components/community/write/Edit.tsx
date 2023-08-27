@@ -1,13 +1,15 @@
 import Editor from './Editor';
 
 import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { EditProps } from '../../../types/props';
-import { Post } from '../../../types/types';
+import { PostType } from '../../../types/types';
 import { updatePost } from '../../../api/post';
+import { useParams } from 'react-router-dom';
 
-const Edit = ({ post, setPost, isEdit, setIsEdit }: EditProps) => {
+const Edit = ({ post, isEdit, setIsEdit }: EditProps) => {
+  const { id } = useParams();
   const [title, setTitle] = useState<string>(post.title);
   const [body, setBody] = useState<string>(post.body);
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,18 +22,22 @@ const Edit = ({ post, setPost, isEdit, setIsEdit }: EditProps) => {
   };
 
   // Post 수정
-  const updateMutation = useMutation(updatePost);
-  const saveButton = (post: Post) => {
+  const queryClient = useQueryClient();
+  const updateMutation = useMutation(updatePost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['post', Number(id)]);
+    }
+  });
+  const saveButton = (post: PostType) => {
     // 수정된 Post 선언
-    const editPost: Post = {
+    const editPost: PostType = {
       ...post,
       title,
       body
     };
     // DB 수정
     updateMutation.mutate(editPost);
-    // 수정한 게시글 바로 보여주기
-    setPost(editPost);
+
     // 수정 여부
     setIsEdit(!isEdit);
   };
