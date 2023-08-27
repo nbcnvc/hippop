@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Masonry } from '@mui/lab';
 
 import { supabase } from '../api/supabase';
@@ -20,7 +21,9 @@ const Main = () => {
   return (
     <Masonry columns={3} spacing={2}>
       {stores.map((store) => (
-        <Card store={store} key={store.id} />
+        <Link to={`detail/${store.id}`}>
+          <Card store={store} key={store.id} />
+        </Link>
       ))}
     </Masonry>
   );
