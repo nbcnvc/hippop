@@ -6,6 +6,7 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { supabase } from '../api/supabase';
 import { Store } from '../types/types';
 import Card from '../components/list/Card';
+import AlarmBox from '../components/common/AlarmBox';
 
 const PAGE_SIZE = 10;
 

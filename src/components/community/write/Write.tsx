@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { styled } from 'styled-components';
 
-import { NewPost, Post } from '../../../types/types';
+import { NewPost, PostType } from '../../../types/types';
 import { createPost } from '../../../api/post';
 import { WriteProps } from '../../../types/props';
 import { useCurrentUser } from '../../../store/userStore';
