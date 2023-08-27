@@ -9,16 +9,16 @@ import { MessageType } from '../../types/types';
 // 스타일
 import { styled } from 'styled-components';
 
-const Message = ({ setMsgModal, msgModal, writerInfo }: MessageProps) => {
+const Message = ({ writer, setMsgModal, msgModal }: MessageProps) => {
   const [body, setBody] = useState<string>('');
   const currentUser = useCurrentUser() ?? { id: '', name: '', avatar_url: '' };
 
   // 쪽지 보내기 요청
   const sendMessageHandler = async () => {
-    if (writerInfo) {
+    if (writer) {
       const message: MessageType = {
         sender: currentUser.id,
-        reciever: writerInfo.id,
+        reciever: writer.id,
         body,
         isRead: false
       };
@@ -51,12 +51,12 @@ const Message = ({ setMsgModal, msgModal, writerInfo }: MessageProps) => {
           <Wrapper>
             <CloseBtn onClick={closeMsgModal}>닫기</CloseBtn>
             <UserInfoBox>
-              {writerInfo?.avatar_url.startsWith('profile/') ? (
-                <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${writerInfo?.avatar_url}`} alt="User Avatar" />
+              {writer?.avatar_url.startsWith('profile/') ? (
+                <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${writer?.avatar_url}`} alt="User Avatar" />
               ) : (
-                <Img src={writerInfo?.avatar_url} alt="User Avatar" />
+                <Img src={writer?.avatar_url} alt="User Avatar" />
               )}{' '}
-              <div>{writerInfo?.name}</div>
+              <div>{writer?.name}</div>
             </UserInfoBox>
             <form onSubmit={() => handleSendMessage()}>
               <input value={body} onChange={handleBodyChange} placeholder="전달할 내용을 입력해주세요" />

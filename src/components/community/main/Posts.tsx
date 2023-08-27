@@ -1,13 +1,12 @@
 import { useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { FetchPost, Post } from '../../../types/types';
-import { PostsProps } from '../../../types/props';
+import { FetchPost } from '../../../types/types';
 import { getPosts } from '../../../api/post';
 
-const Posts = ({ setPost }: PostsProps) => {
+const Posts = () => {
   const { pathname } = useLocation();
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
   const {
@@ -46,10 +45,8 @@ const Posts = ({ setPost }: PostsProps) => {
     }
   });
 
-  // 상세페이지 모달 열기
-  const openDetail = (post: Post) => {
-    setPost(post);
-  };
+  // 상세페이지로 넘어가기
+  const navigate = useNavigate();
 
   if (isLoading) {
     return <div>로딩중입니다.</div>;
@@ -63,7 +60,11 @@ const Posts = ({ setPost }: PostsProps) => {
         return (
           <div
             key={post.id}
-            onClick={() => openDetail(post)}
+            onClick={() => {
+              if (pathname === '/review') {
+                navigate(`/rdetail/${post.id}`);
+              } else navigate(`/mdetail/${post.id}`);
+            }}
             style={{ width: '95%', border: '1px solid black', padding: '20px', margin: '10px' }}
           >
             <div>카테고리 : {(post.ctg_index === 1 && '팝업후기') || (post.ctg_index === 2 && '팝업메이트')}</div>

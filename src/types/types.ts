@@ -28,7 +28,7 @@ export interface SearchListProps {
   storeData: Store[];
 }
 
-export interface Post {
+export interface PostType {
   id: number;
   created_at: string;
   updated_at: string;
@@ -87,7 +87,7 @@ export interface FetchsStore {
 }
 
 export interface FetchPost {
-  posts: Post[];
+  posts: PostType[];
   page: number;
   totalPages: number;
   count: number | null;
