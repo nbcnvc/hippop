@@ -28,6 +28,7 @@ const Posts = ({ setPost }: PostsProps) => {
       }
     }
   });
+  console.log(posts);
 
   const selectPosts = useMemo(() => {
     return posts?.pages
