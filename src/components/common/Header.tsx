@@ -193,10 +193,10 @@ const HeaderTag = styled.header`
   li{
     a {
       color: white;
-    display: block;
-    width: 100%;
-    height: 100%;
-    transition: filter 0.3s, transform 0.3s !important;
+      display: block;
+      width: 100%;
+      height: 100%;
+      transition: filter 0.3s, transform 0.3s !important;
 
     &:hover {
       filter: brightness(120%) !important;
@@ -214,7 +214,7 @@ const HeaderTag = styled.header`
     align-items: center;
 
     .test-logo {
-      width: 65px;
+      width: 40px;
         transition: filter 0.3s, transform 0.3s;
         &:hover {
           filter: brightness(120%);
@@ -228,8 +228,8 @@ const HeaderTag = styled.header`
     justify-content: center;
     align-items: center;
     img {
-      width: 60px;
-      height: 60px;
+      width: 40px;
+      height: 40px;
       object-fit: cover;
       border-radius: 50%;
     }
@@ -246,17 +246,21 @@ const HeaderTag = styled.header`
           &:hover {
             transform: scale(0.92);
           }
-          
         }
         .welcome-mate {
           margin-right: 8px;
           width: 85px;
+
           p {
-            font-size: 14px;
+            font-size: 10px;
             margin: 4px 0;
           }
         }
       }
+      .welcome-mate p:last-child {
+        font-weight: 600;
+      }
+
       .dropdown-content {
         position: absolute;
         bottom: -70px; 
@@ -286,22 +290,6 @@ const HeaderTag = styled.header`
   }
   }
 `;
-
-// const ModalWrapper = styled.div`
-// =======
-// // const Line = styled.div`
-//   border-bottom: 2px dotted gray;
-//   width: 100%;
-
-//   margin-bottom: 50px;
-// `;
-
-// const Line = styled.div`
-//   border-bottom: 2px dotted gray;
-//   width: 100%;
-
-//   margin-bottom: 50px;
-// `;
 
 const ModalWrapper = styled.div.attrs<{ isopen: boolean }>((props) => ({
   style: {
