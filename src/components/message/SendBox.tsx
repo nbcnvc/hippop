@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { MessageType } from '../../types/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { mySendMessage, readMessage } from '../../api/message';
+import { mySendMessage, readSendMessage } from '../../api/message';
 import { useCurrentUser } from '../../store/userStore';
 import { SendBoxProps } from '../../types/props';
 import { styled } from 'styled-components';
@@ -9,36 +9,35 @@ import moment from 'moment';
 import MessageDetail from './MessageDetail';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import DraftsOutlinedIcon from '@mui/icons-material/DraftsOutlined';
-const SendBox = ({ setSendMsgUser, setReplyModal }: SendBoxProps) => {
+const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) => {
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [selectedMessage, setSelectedMessage] = useState<MessageType | null>(null);
 
   const currentUser = useCurrentUser();
-  const userId = currentUser?.id || ''; // Use an empty string as fallback
-
+  const userId = currentUser?.id ?? '';
   const queryClient = useQueryClient();
   const {
     data: messages,
     isLoading,
     isError
   } = useQuery<MessageType[] | null>({
-    queryKey: ['message', userId],
-    queryFn: () => mySendMessage(userId),
-    enabled: !!currentUser
+    queryKey: ['sendMessage'],
+    queryFn: () => mySendMessage(userId)
+    // enabled: !!currentUser
   });
 
   console.log('SendMessage', messages);
 
   // 읽은 메세지 mutation
-  const readMessageMutation = useMutation((messageId: number) => readMessage(messageId), {
+  const readMessageMutation = useMutation((messageId: number) => readSendMessage(messageId), {
     onSuccess: () => {
-      queryClient.invalidateQueries(['message', userId]);
+      queryClient.invalidateQueries(['sendMessage']);
     }
   });
 
   // 메세지 클릭 handler
   const handleClickMsg = (message: MessageType) => {
-    if (message && !message.isRead) {
+    if (message && !message.isRead && message.sender !== currentUser?.id) {
       readMessageMutation.mutate(message.id ?? 0);
     }
     setIsClicked(true);
@@ -70,19 +69,27 @@ const SendBox = ({ setSendMsgUser, setReplyModal }: SendBoxProps) => {
   return (
     <Container>
       {isClicked ? (
-        <MessageDetail setReplyModal={setReplyModal} selectedMessage={selectedMessage} setIsClicked={setIsClicked} />
+        <MessageDetail
+          toggleMsgBox={toggleMsgBox}
+          setReplyModal={setReplyModal}
+          selectedMessage={selectedMessage}
+          setIsClicked={setIsClicked}
+        />
       ) : (
         <>
           {sortedMessages?.map((message) => {
             return (
               <Wrapper key={message.sender} onClick={() => handleClickMsg(message)}>
                 <ProfileBox>
-                  {message.avatar_url && message.avatar_url.startsWith('profile/') ? (
-                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${message.avatar_url}`} alt="User Avatar" />
+                  {message.user?.avatar_url && message.user?.avatar_url.startsWith('profile/') ? (
+                    <Img
+                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${message.user.avatar_url}`}
+                      alt="User Avatar"
+                    />
                   ) : (
-                    <>{currentUser && <Img src={message.avatar_url} alt="User Avatar" />}</>
+                    <>{currentUser && <Img src={message.user?.avatar_url} alt="User Avatar" />}</>
                   )}
-                  <div>{message.name}</div>
+                  <div>{message.user?.name}</div>
                 </ProfileBox>
                 <div> {moment(message.created_at).format('YYYY-MM-DD HH:mm:ss')}</div>
                 <div> {message.isRead ? <div>상대방이 읽었습니다.</div> : <div>상대방이 읽지 않았습니다.</div>}</div>

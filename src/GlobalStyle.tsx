@@ -21,8 +21,9 @@ ${reset}
 
 body {
     font-family: 'Fira Sans', sans-serif;
-    max-width: 80%;
+    max-width: 100%;
     margin: 0 auto;
+    background-color:#ffeade;
 }
 a {
     text-decoration:none;

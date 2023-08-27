@@ -25,8 +25,10 @@ const Posts = () => {
         // 다음 페이지로 pageParam를 저장
         return lastPage.page + 1;
       }
+      return null; // 마지막 페이지인 경우
     }
   });
+  console.log(posts);
 
   const selectPosts = useMemo(() => {
     return posts?.pages
@@ -65,7 +67,7 @@ const Posts = () => {
                 navigate(`/rdetail/${post.id}`);
               } else navigate(`/mdetail/${post.id}`);
             }}
-            style={{ width: '95%', border: '1px solid black', padding: '20px', margin: '10px' }}
+            style={{ width: '90%', border: '1px solid black', padding: '20px', margin: '10px' }}
           >
             <div>카테고리 : {(post.ctg_index === 1 && '팝업후기') || (post.ctg_index === 2 && '팝업메이트')}</div>
             <div>제목 : {post.title}</div>
@@ -75,7 +77,8 @@ const Posts = () => {
       <div
         style={{
           backgroundColor: 'yellow',
-          width: '100%',
+          width: '90%',
+          alignItems: 'center',
           border: '1px solid black',
           padding: '20px',
           margin: '10px'

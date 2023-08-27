@@ -189,12 +189,16 @@ export interface HotPlaceInfo {
 
 export interface MessageType {
   sender: string;
-  reciever: string;
+  receiver: string;
   body: string;
   isRead: boolean;
 
   id?: number;
   created_at?: string;
+  user?: UserMsgType;
+}
+
+export interface UserMsgType {
   avatar_url?: string;
   name?: string;
 }

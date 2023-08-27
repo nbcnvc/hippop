@@ -28,7 +28,7 @@ const Mate = () => {
     <>
       <div style={{ fontSize: '30px', fontWeight: 'bold', textAlign: 'center', padding: '20px' }}>Mate</div>
       <div style={{ padding: '0 20px 30px 0' }}>
-        <button onClick={searcButton} style={{ float: 'right' }}>
+        <button onClick={searcButton} style={{ float: 'left' }}>
           글 작성
         </button>
       </div>

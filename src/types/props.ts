@@ -93,11 +93,13 @@ export interface CardProps {
 export interface RecieveBoxProps {
   setReplyModal: React.Dispatch<SetStateAction<boolean | null>>;
   setSendMsgUser: React.Dispatch<SetStateAction<MessageType | null>>;
+  toggleMsgBox: string;
 }
 
 export interface SendBoxProps {
   setReplyModal: React.Dispatch<SetStateAction<boolean | null>>;
   setSendMsgUser: React.Dispatch<SetStateAction<MessageType | null>>;
+  toggleMsgBox: string;
 }
 
 export interface MessageProps {
@@ -110,6 +112,7 @@ export interface MsgDetailType {
   selectedMessage: MessageType | null;
   setIsClicked: React.Dispatch<SetStateAction<boolean>>;
   setReplyModal: React.Dispatch<SetStateAction<boolean | null>>;
+  toggleMsgBox: string;
 }
 
 export interface MessageReplyProps {
