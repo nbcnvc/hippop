@@ -11,23 +11,27 @@ import { styled } from 'styled-components';
 
 const Message = ({ setMsgModal, msgModal, writerInfo }: MessageProps) => {
   const [body, setBody] = useState<string>('');
-  const currentUser = useCurrentUser() ?? { id: '', name: '', avatar_url: '' };
+  const currentUser = useCurrentUser() ?? { id: '' };
 
   console.log('sender', currentUser.id);
   // console.log('reciever', writerInfo?.id);
   // console.log('body', body);
 
   // 쪽지 보내기 요청
-  const sendMessageHandler = async () => {
+  const messageHandler = async () => {
     if (writerInfo) {
       const message: MessageType = {
         sender: currentUser.id,
-        reciever: writerInfo.id,
+        receiver: writerInfo.id,
         body,
         isRead: false
       };
 
-      await Promise.all([receiveMessage(message), sendMessage(message)]);
+      const sendMsg = sendMessage(message);
+      const receiveMsg = receiveMessage(message);
+
+      await sendMsg;
+      await receiveMsg;
 
       console.log('메세지 전송 성공!');
     }
@@ -45,7 +49,7 @@ const Message = ({ setMsgModal, msgModal, writerInfo }: MessageProps) => {
 
   // 쪽지 보내기 handler
   const handleSendMessage = () => {
-    sendMessageHandler();
+    messageHandler();
     alert('쪽지가 성공적으로 전송되었습니다!');
   };
 

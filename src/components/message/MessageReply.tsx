@@ -3,25 +3,31 @@ import { styled } from 'styled-components';
 import { MessageReplyProps } from '../../types/props';
 import { useCurrentUser } from '../../store/userStore';
 import { MessageType } from '../../types/types';
-import { sendMessage } from '../../api/message';
+import { receiveMessage, sendMessage } from '../../api/message';
 
 const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
   const [body, setBody] = useState<string>('');
   const currentUser = useCurrentUser() ?? { id: '', name: '', avatar_url: '' };
-
+  //
   // 쪽지 보내기 요청
   const sendMessageHandler = async () => {
     if (sendMsgUser) {
       const message: MessageType = {
         sender: currentUser.id,
-        reciever: sendMsgUser.sender,
+        receiver: sendMsgUser.sender,
         body,
         isRead: false
       };
-      await sendMessage(message);
+
+      const sendMsg = sendMessage(message);
+      const receiveMsg = receiveMessage(message);
+
+      await sendMsg;
+      await receiveMsg;
     }
     console.log('메세지 전송 성공!');
   };
+  console.log('sendMsgUser', sendMsgUser);
 
   // 쪽지 내용 onChange
   const handleBodyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,12 +59,15 @@ const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
         </ProfileBox>
         <ProfileBox>
           수신자:
-          {sendMsgUser?.avatar_url && sendMsgUser.avatar_url.startsWith('profile/') ? (
-            <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${sendMsgUser.avatar_url}`} alt="User Avatar" />
+          {sendMsgUser?.user?.avatar_url && sendMsgUser?.user?.avatar_url.startsWith('profile/') ? (
+            <Img
+              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${sendMsgUser?.user?.avatar_url}`}
+              alt="User Avatar"
+            />
           ) : (
-            <>{currentUser && <Img src={sendMsgUser?.avatar_url} alt="User Avatar" />}</>
+            <>{currentUser && <Img src={sendMsgUser?.user?.avatar_url} alt="User Avatar" />}</>
           )}
-          <div>{sendMsgUser?.name}</div>
+          <div>{sendMsgUser?.user?.name}</div>
         </ProfileBox>
 
         <form onSubmit={() => handleSendMessage()}>
