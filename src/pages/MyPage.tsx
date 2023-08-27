@@ -19,7 +19,7 @@ import PartyModeIcon from '@mui/icons-material/PartyMode';
 import SendBox from '../components/message/SendBox';
 import MessageReply from '../components/message/MessageReply';
 import { MessageType } from '../types/types';
-import RecieveBox from '../components/message/RecieveBox';
+import ReceiveBox from '../components/message/ReceiveBox';
 
 const MyPage = () => {
   const [editingName, setEditingName] = useState(false);
@@ -330,7 +330,7 @@ const MyPage = () => {
           </button>
           <div className="alram-wrapper">
             {toggleMsgBox === '받은 쪽지함' ? (
-              <RecieveBox toggleMsgBox={toggleMsgBox} setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
+              <ReceiveBox toggleMsgBox={toggleMsgBox} setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
             ) : (
               <SendBox toggleMsgBox={toggleMsgBox} setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
             )}

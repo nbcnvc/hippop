@@ -184,6 +184,10 @@ export interface MessageType {
   receiver: string;
   body: string;
   isRead: boolean;
+  sender_avatar_url: string;
+  sender_name: string;
+  receiver_avatar_url?: string;
+  receiver_name: string;
 
   id?: number;
   created_at?: string;

@@ -181,32 +181,32 @@ const HeaderTag = styled.header`
     display: flex;
     justify-content: space-between;
     align-items: center;
-  ul {
-    margin: 0 auto;
-    width: 70%;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    gap: 10vw;
-  }
-  li{
-    a {
-      color: white;
-      display: block;
-      width: 100%;
-      height: 100%;
-      transition: filter 0.3s, transform 0.3s !important;
-
-    &:hover {
-      filter: brightness(120%) !important;
-      color: #f8aa7d !important;
+    ul {
+      margin: 0 auto;
+      width: 70%;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      gap: 10vw;
     }
+    li {
+      a {
+        color: white;
+        display: block;
+        width: 100%;
+        height: 100%;
+        transition: filter 0.3s, transform 0.3s !important;
 
-    &:active {
-      transform: scale(0.92) !important;
+        &:hover {
+          filter: brightness(120%) !important;
+          color: #f8aa7d !important;
+        }
+
+        &:active {
+          transform: scale(0.92) !important;
+        }
+      }
     }
-  }
-}
   }
   .logo-wrapper {
     display: flex;
@@ -214,11 +214,10 @@ const HeaderTag = styled.header`
 
     .test-logo {
       width: 40px;
-        transition: filter 0.3s, transform 0.3s;
-        &:hover {
-          filter: brightness(120%);
-          transform: scale(0.92);
-        
+      transition: filter 0.3s, transform 0.3s;
+      &:hover {
+        filter: brightness(120%);
+        transform: scale(0.92);
       }
     }
   }
@@ -240,7 +239,7 @@ const HeaderTag = styled.header`
         align-items: center;
         text-align: right;
 
-        img{
+        img {
           transition: filter 0.3s, transform 0.3s;
           &:hover {
             transform: scale(0.92);
@@ -262,7 +261,7 @@ const HeaderTag = styled.header`
 
       .dropdown-content {
         position: absolute;
-        bottom: -70px; 
+        bottom: -70px;
         right: 0;
         width: 120px;
         background-color: white;
@@ -286,7 +285,6 @@ const HeaderTag = styled.header`
         }
       }
     }
-  }
   }
 `;
 
