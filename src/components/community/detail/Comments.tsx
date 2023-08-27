@@ -138,7 +138,7 @@ const Comments = ({ post }: CommentProps) => {
   return (
     <>
       {/* 댓글 입력창 */}
-      <div style={{ width: '90%', border: '1px solid black', padding: '20px', margin: '10px' }}>
+      <div style={{ width: '1000px', border: '1px solid black', padding: '10px', margin: '10px' }}>
         댓글 :{' '}
         <input
           value={body}
@@ -156,7 +156,7 @@ const Comments = ({ post }: CommentProps) => {
       {/* 댓글 목록 */}
       {selectComments?.map((comment) => {
         return (
-          <div key={comment.id} style={{ width: '92.5%', border: '1px solid black', padding: '10px', margin: '10px' }}>
+          <div key={comment.id} style={{ width: '1000px', border: '1px solid black', padding: '10px', margin: '10px' }}>
             <div>작성자 : {comment.user_name}</div>
             <div>작성일자: {moment(comment.created_at).format('YYYY.MM.DD HH:mm')}</div>
             {isEditId === comment.id ? (

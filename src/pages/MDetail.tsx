@@ -101,10 +101,7 @@ const MDetail = () => {
                     <button onClick={editButton}>수정</button>
                   </>
                 )}
-                <div
-                  className="ql-snow"
-                  style={{ width: '100%', border: '1px solid black', padding: '20px', margin: '10px' }}
-                >
+                <div className="ql-snow" style={{ border: '1px solid black' }}>
                   <div>카테고리 : {(post.ctg_index === 1 && '팝업후기') || (post.ctg_index === 2 && '팝업메이트')}</div>
                   <div>어떤 팝업? {store?.title}</div>
                   <div>작성일자 : {formatDate}</div>

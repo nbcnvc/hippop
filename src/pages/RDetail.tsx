@@ -103,7 +103,7 @@ const RDetail = () => {
                 )}
                 <div
                   className="ql-snow"
-                  style={{ width: '100%', border: '1px solid black', padding: '20px', margin: '10px' }}
+                  style={{ width: '1000px', border: '1px solid black', padding: '10px', margin: '10px' }}
                 >
                   <div>카테고리 : {(post.ctg_index === 1 && '팝업후기') || (post.ctg_index === 2 && '팝업메이트')}</div>
                   <div>어떤 팝업? {store?.title}</div>

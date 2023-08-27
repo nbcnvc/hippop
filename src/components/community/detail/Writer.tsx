@@ -19,9 +19,9 @@ const Writer = ({ writer, postId }: WriterProps) => {
     <>
       <div
         style={{
-          width: '90%',
+          width: '1000px',
           border: '1px solid black',
-          padding: '20px',
+          padding: '10px',
           margin: '10px',
           display: 'flex',
           justifyContent: 'space-between',

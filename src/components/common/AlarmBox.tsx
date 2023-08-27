@@ -4,12 +4,11 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { deleteAlarm, getAlarms } from '../../api/alarm';
 import { useCurrentUser } from '../../store/userStore';
-import { styled } from 'styled-components';
 
 const AlarmBox = () => {
   const currentUser = useCurrentUser();
   const currentUserId = currentUser?.id;
-  const { data: alarms } = useQuery(['alarms'], () => getAlarms(currentUserId ?? ''));
+  const { data: alarms, isLoading, isError } = useQuery(['alarms'], () => getAlarms(currentUserId ?? ''));
 
   // 시간
   const formatTimeAgo = (createdAt: string) => {
@@ -50,6 +49,12 @@ const AlarmBox = () => {
     alert('삭제되었습니다!');
   };
 
+  if (isLoading) {
+    return <div>로딩중입니다.</div>;
+  }
+  if (isError) {
+    return <div>오류가 발생했습니다.</div>;
+  }
   return (
     <>
       {alarms?.map((alarm) => {
