@@ -33,17 +33,6 @@ const Message = ({ setMsgModal, msgModal, writerInfo }: MessageProps) => {
 
       console.log('메세지 전송 성공!');
     }
-    // if (writerInfo) {
-    //   const message: MessageType = {
-    //     sender: currentUser.id,
-    //     receiver: writerInfo.id,
-    //     body,
-    //     isRead: false
-    //   };
-
-    //   await receiveMessage(message);
-    //   console.log('메세지 전송 성공!');
-    // }
   };
 
   // 쪽지 내용 onChange
