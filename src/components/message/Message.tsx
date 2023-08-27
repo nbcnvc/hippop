@@ -12,9 +12,7 @@ import { styled } from 'styled-components';
 const Message = ({ setMsgModal, msgModal, writerInfo }: MessageProps) => {
   const [body, setBody] = useState<string>('');
   const currentUser = useCurrentUser() ?? { id: '' };
-  console.log('sender', currentUser.id);
-  console.log('reciever', writerInfo?.id);
-  console.log('body', body);
+
   // 쪽지 보내기 요청
   const messageHandler = async () => {
     if (writerInfo) {
