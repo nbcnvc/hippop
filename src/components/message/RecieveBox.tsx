@@ -16,7 +16,7 @@ import DraftsOutlinedIcon from '@mui/icons-material/DraftsOutlined';
 import MessageDetail from './MessageDetail';
 import { SendBoxProps } from '../../types/props';
 
-const RecieveBox = ({ setSendMsgUser, setReplyModal }: SendBoxProps) => {
+const RecieveBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) => {
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [selectedMessage, setSelectedMessage] = useState<MessageType | null>(null);
 
@@ -56,19 +56,19 @@ const RecieveBox = ({ setSendMsgUser, setReplyModal }: SendBoxProps) => {
     setSendMsgUser(message);
   };
 
-  // // 메세지 최신순 정렬과 안읽은 메세지 우선 정렬
-  // const sortedMessages = messages?.sort((a, b) => {
-  //   // a 메세지가 읽음이고, b의 메세지가 읽지 않음이라면, b메세지를 앞으로 옮김
-  //   if (a.isRead && !b.isRead) {
-  //     return 1;
-  //   }
-  //   // b 메세지가 읽음이고, a의 메세지가 읽지 않음이라면, a메세지를 앞으로 옮김
-  //   if (!a.isRead && b.isRead) {
-  //     return -1;
-  //   }
-  //   // 읽음 상태가 같다면 , created_at 기준으로 내림차순으로 정렬
-  //   return new Date(b.created_at ?? '').getTime() - new Date(a.created_at ?? '').getTime();
-  // });
+  // 메세지 최신순 정렬과 안읽은 메세지 우선 정렬
+  const sortedMessages = messages?.sort((a, b) => {
+    // a 메세지가 읽음이고, b의 메세지가 읽지 않음이라면, b메세지를 앞으로 옮김
+    if (a.isRead && !b.isRead) {
+      return 1;
+    }
+    // b 메세지가 읽음이고, a의 메세지가 읽지 않음이라면, a메세지를 앞으로 옮김
+    if (!a.isRead && b.isRead) {
+      return -1;
+    }
+    // 읽음 상태가 같다면 , created_at 기준으로 내림차순으로 정렬
+    return new Date(b.created_at ?? '').getTime() - new Date(a.created_at ?? '').getTime();
+  });
 
   // console.log('sortedMessages', sortedMessages);
   if (isLoading) {
@@ -81,10 +81,15 @@ const RecieveBox = ({ setSendMsgUser, setReplyModal }: SendBoxProps) => {
   return (
     <Container>
       {isClicked ? (
-        <MessageDetail setReplyModal={setReplyModal} selectedMessage={selectedMessage} setIsClicked={setIsClicked} />
+        <MessageDetail
+          toggleMsgBox={toggleMsgBox}
+          setReplyModal={setReplyModal}
+          selectedMessage={selectedMessage}
+          setIsClicked={setIsClicked}
+        />
       ) : (
         <>
-          {messages?.map((message) => {
+          {sortedMessages?.map((message) => {
             return (
               <Wrapper key={message.sender} onClick={() => handleClickMsg(message)}>
                 <ProfileBox>

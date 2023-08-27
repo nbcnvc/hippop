@@ -4,7 +4,7 @@ import { styled } from 'styled-components';
 import { useCurrentUser } from '../../store/userStore';
 import moment from 'moment';
 
-const MessageDetail = ({ selectedMessage, setIsClicked, setReplyModal }: MsgDetailType) => {
+const MessageDetail = ({ selectedMessage, setIsClicked, setReplyModal, toggleMsgBox }: MsgDetailType) => {
   const currentUser = useCurrentUser();
 
   console.log('selectedMessage', selectedMessage);
@@ -22,7 +22,7 @@ const MessageDetail = ({ selectedMessage, setIsClicked, setReplyModal }: MsgDeta
   return (
     <Container>
       <ProfileBox>
-        발신자:
+        {toggleMsgBox === '받은 쪽지함' ? '발신자' : '수신자'}
         {selectedMessage?.user?.avatar_url && selectedMessage.user.avatar_url.startsWith('profile/') ? (
           <Img
             src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${selectedMessage.user.avatar_url}`}
@@ -35,7 +35,8 @@ const MessageDetail = ({ selectedMessage, setIsClicked, setReplyModal }: MsgDeta
       </ProfileBox>
       <RecieveTime> 받은시간: {moment(selectedMessage?.created_at).format('YYYY-MM-DD HH:mm:ss')}</RecieveTime>
       <BodyBox>{selectedMessage?.body}</BodyBox>
-      <button onClick={clickOpenReply}>답장하기</button>
+      {toggleMsgBox === '받은 쪽지함' ? <button onClick={clickOpenReply}>답장하기</button> : <div></div>}
+
       <button onClick={closeDetail}> 창닫기</button>
     </Container>
   );

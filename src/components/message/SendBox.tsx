@@ -9,7 +9,7 @@ import moment from 'moment';
 import MessageDetail from './MessageDetail';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import DraftsOutlinedIcon from '@mui/icons-material/DraftsOutlined';
-const SendBox = ({ setSendMsgUser, setReplyModal }: SendBoxProps) => {
+const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) => {
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [selectedMessage, setSelectedMessage] = useState<MessageType | null>(null);
 
@@ -69,7 +69,12 @@ const SendBox = ({ setSendMsgUser, setReplyModal }: SendBoxProps) => {
   return (
     <Container>
       {isClicked ? (
-        <MessageDetail setReplyModal={setReplyModal} selectedMessage={selectedMessage} setIsClicked={setIsClicked} />
+        <MessageDetail
+          toggleMsgBox={toggleMsgBox}
+          setReplyModal={setReplyModal}
+          selectedMessage={selectedMessage}
+          setIsClicked={setIsClicked}
+        />
       ) : (
         <>
           {sortedMessages?.map((message) => {
