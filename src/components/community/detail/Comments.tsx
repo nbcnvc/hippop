@@ -1,11 +1,11 @@
 import React, { useMemo, useState } from 'react';
 
 import moment from 'moment';
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { CommentProps } from '../../../types/props';
 import { createComment, deleteComment, getComments, updateComment } from '../../../api/comment';
-import { Comment, FetchComment, UserInfo } from '../../../types/types';
+import { Comment, FetchComment } from '../../../types/types';
 import { useCurrentUser } from '../../../store/userStore';
 
 const Comments = ({ post }: CommentProps) => {
@@ -43,14 +43,13 @@ const Comments = ({ post }: CommentProps) => {
     }
   });
 
-  const selectComments =
-    useMemo(() => {
-      return comments?.pages
-        .map((data) => {
-          return data.comments;
-        })
-        .flat();
-    }, [comments]) || [];
+  const selectComments = useMemo(() => {
+    return comments?.pages
+      .map((data) => {
+        return data.comments;
+      })
+      .flat();
+  }, [comments]);
 
   // 더보기 버튼
   const fetchMore = () => {
@@ -69,6 +68,11 @@ const Comments = ({ post }: CommentProps) => {
   });
   const createButton = () => {
     // 유효성 검사
+    if (!currentUser) {
+      alert('로그인을 해주세요.');
+      setBody('');
+      return;
+    }
     if (!body) {
       return alert('댓글을 입력해주세요.');
     }

@@ -4,6 +4,7 @@ import { Masonry } from '@mui/lab';
 import { supabase } from '../api/supabase';
 import { Store } from '../types/types';
 import Card from '../components/list/Card';
+import AlarmBox from '../components/common/AlarmBox';
 
 const Main = () => {
   const [stores, setStores] = useState<Store[]>([]);
@@ -18,11 +19,14 @@ const Main = () => {
   }, []);
 
   return (
-    <Masonry columns={3} spacing={2}>
-      {stores.map((store) => (
-        <Card store={store} key={store.id} />
-      ))}
-    </Masonry>
+    <>
+      <AlarmBox />
+      <Masonry columns={3} spacing={2}>
+        {stores.map((store) => (
+          <Card store={store} key={store.id} />
+        ))}
+      </Masonry>
+    </>
   );
 };
 

@@ -105,6 +105,14 @@ export interface SubscribeType {
   subscribe_to: string | undefined;
 }
 
+export interface AlarmType {
+  id: number;
+  created_at: string;
+  targetUserId: string;
+  content: string;
+  isRead: boolean;
+}
+
 // 지오코딩 타입 선언
 export interface Geocoder {
   address: AddressInfo;

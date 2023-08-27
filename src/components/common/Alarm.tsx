@@ -53,6 +53,7 @@ const Alarm = () => {
             content: `${writerName}님의 새 게시글: ${payloadData.new.title}`
           };
 
+          // 쿼리로 바꿔주기
           await supabase.from('alarm').insert(newAlarm);
 
           const { data: alarms } = await supabase.from('alarm').select('*').eq('targetUserId', currentUserId);
