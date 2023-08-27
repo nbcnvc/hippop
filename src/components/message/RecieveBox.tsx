@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import moment from 'moment';
 // api
-import { readMessage, recieveMessage } from '../../api/message';
+import { readReceiveMessage, recieveMessage } from '../../api/message';
 // zustand 상태관리 hook
 import { useCurrentUser } from '../../store/userStore';
 // 타입
@@ -22,7 +22,7 @@ const RecieveBox = ({ setSendMsgUser, setReplyModal }: SendBoxProps) => {
 
   // 현재 로그인 유저 정보
   const currentUser = useCurrentUser();
-  const userId = currentUser?.id || ''; // Use an empty string as fallback
+  const userId = currentUser?.id ?? '';
 
   const queryClient = useQueryClient();
 
@@ -32,17 +32,17 @@ const RecieveBox = ({ setSendMsgUser, setReplyModal }: SendBoxProps) => {
     isLoading,
     isError
   } = useQuery<MessageType[] | null>({
-    queryKey: ['message', userId],
-    queryFn: () => recieveMessage(userId),
-    enabled: !!currentUser
+    queryKey: ['receiveMessage'],
+    queryFn: () => recieveMessage(userId)
+    // enabled: !!currentUser
   });
 
   console.log('ReciveMessages', messages);
 
   // 읽은 메세지 mutation
-  const readMessageMutation = useMutation((messageId: number) => readMessage(messageId), {
+  const readMessageMutation = useMutation((messageId: number) => readReceiveMessage(messageId), {
     onSuccess: () => {
-      queryClient.invalidateQueries(['message', userId]);
+      queryClient.invalidateQueries(['receiveMessage']);
     }
   });
 
@@ -88,12 +88,15 @@ const RecieveBox = ({ setSendMsgUser, setReplyModal }: SendBoxProps) => {
             return (
               <Wrapper key={message.sender} onClick={() => handleClickMsg(message)}>
                 <ProfileBox>
-                  {message.avatar_url && message.avatar_url.startsWith('profile/') ? (
-                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${message.avatar_url}`} alt="User Avatar" />
+                  {message.user?.avatar_url && message.user.avatar_url.startsWith('profile/') ? (
+                    <Img
+                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${message.user.avatar_url}`}
+                      alt="User Avatar"
+                    />
                   ) : (
-                    <>{currentUser && <Img src={message.avatar_url} alt="User Avatar" />}</>
+                    <>{currentUser && <Img src={message.user?.avatar_url} alt="User Avatar" />}</>
                   )}
-                  <div>{message.name}</div>
+                  <div>{message.user?.name}</div>
                 </ProfileBox>
                 <div> {moment(message.created_at).format('YYYY-MM-DD HH:mm:ss')}</div>
                 <div> {message.isRead ? <div>읽은 메세지입니다..</div> : <div>읽지 않은 메세지입니다..</div>}</div>

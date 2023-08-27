@@ -23,12 +23,15 @@ const MessageDetail = ({ selectedMessage, setIsClicked, setReplyModal }: MsgDeta
     <Container>
       <ProfileBox>
         발신자:
-        {selectedMessage?.avatar_url && selectedMessage.avatar_url.startsWith('profile/') ? (
-          <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${selectedMessage.avatar_url}`} alt="User Avatar" />
+        {selectedMessage?.user?.avatar_url && selectedMessage.user.avatar_url.startsWith('profile/') ? (
+          <Img
+            src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${selectedMessage.user.avatar_url}`}
+            alt="User Avatar"
+          />
         ) : (
-          <>{currentUser && <Img src={selectedMessage?.avatar_url} alt="User Avatar" />}</>
+          <>{currentUser && <Img src={selectedMessage?.user?.avatar_url} alt="User Avatar" />}</>
         )}
-        <div>{selectedMessage?.name}</div>
+        <div>{selectedMessage?.user?.name}</div>
       </ProfileBox>
       <RecieveTime> 받은시간: {moment(selectedMessage?.created_at).format('YYYY-MM-DD HH:mm:ss')}</RecieveTime>
       <BodyBox>{selectedMessage?.body}</BodyBox>
