@@ -1,14 +1,22 @@
 import React, { useState } from 'react';
-import { MessageType } from '../../types/types';
+// 라이브러리
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { mySendMessage, readMessage } from '../../api/message';
-import { useCurrentUser } from '../../store/userStore';
-import { SendBoxProps } from '../../types/props';
-import { styled } from 'styled-components';
 import moment from 'moment';
+// api
+import { deleteMessage, mySendMessage, readMessage } from '../../api/message';
+// zustand 상태관리 hook
+import { useCurrentUser } from '../../store/userStore';
+// 타입
+import { MessageType } from '../../types/types';
+import { SendBoxProps } from '../../types/props';
+// 컴포넌트
 import MessageDetail from './MessageDetail';
+// 스타일
+import { styled } from 'styled-components';
+// mui
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import DraftsOutlinedIcon from '@mui/icons-material/DraftsOutlined';
+
 const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) => {
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [selectedMessage, setSelectedMessage] = useState<MessageType | null>(null);
@@ -26,8 +34,6 @@ const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) 
     // enabled: !!currentUser
   });
 
-  console.log('SendMessage', messages);
-
   // 읽은 메세지 mutation
   const readMessageMutation = useMutation((messageId: number) => readMessage(messageId), {
     onSuccess: () => {
@@ -35,14 +41,34 @@ const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) 
     }
   });
 
-  // 메세지 클릭 handler
+  // 메세지 삭제 mutation
+  const deleteMessageMutation = useMutation((messageId: number) => deleteMessage(messageId), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['receiveMessage']);
+    }
+  });
+
+  // 메세지 isRead 업데이트 handler
   const handleClickMsg = (message: MessageType) => {
     if (message && !message.isRead && message.sender !== currentUser?.id) {
       readMessageMutation.mutate(message.id ?? 0);
     }
-    setIsClicked(true);
     setSelectedMessage(message);
     setSendMsgUser(message);
+  };
+
+  // 메세지 상세 handler
+  const handleShowDetail = () => {
+    setIsClicked(true);
+  };
+
+  // 메세지 삭제 handler
+  const handleDeleteMsg = (message: MessageType) => {
+    if (window.confirm('받은 쪽지를 삭제하시겠습니까?')) {
+      deleteMessageMutation.mutate(message.id ?? 0);
+    } else {
+      alert('삭제를 취소하겠습니다.');
+    }
   };
 
   // 메세지 최신순 정렬과 안읽은 메세지 우선 정렬
@@ -80,20 +106,25 @@ const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) 
           {sortedMessages?.map((message) => {
             return (
               <Wrapper key={message.id} onClick={() => handleClickMsg(message)}>
-                <ProfileBox>
-                  {message?.receiver_avatar_url && message?.receiver_avatar_url.startsWith('profile/') ? (
-                    <Img
-                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${message.receiver_avatar_url}`}
-                      alt="User Avatar"
-                    />
-                  ) : (
-                    <>{currentUser && <Img src={message.receiver_avatar_url} alt="User Avatar" />}</>
-                  )}
-                  <div>{message.receiver_name}</div>
-                </ProfileBox>
-                <div> {moment(message.created_at).format('YYYY-MM-DD HH:mm:ss')}</div>
-                <div> {message.isRead ? <div>상대방이 읽었습니다.</div> : <div>상대방이 읽지 않았습니다.</div>}</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }} onClick={handleShowDetail}>
+                  <ProfileBox>
+                    {message?.receiver_avatar_url && message?.receiver_avatar_url.startsWith('profile/') ? (
+                      <Img
+                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${message.receiver_avatar_url}`}
+                        alt="User Avatar"
+                      />
+                    ) : (
+                      <>{currentUser && <Img src={message.receiver_avatar_url} alt="User Avatar" />}</>
+                    )}
+                    <div>{message.receiver_name}</div>
+                  </ProfileBox>
+                  <div> {moment(message.created_at).format('YYYY-MM-DD HH:mm:ss')}</div>
+                  <div> {message.isRead ? <div>상대방이 읽었습니다.</div> : <div>상대방이 읽지 않았습니다.</div>}</div>
+                </div>
                 <div>{message.isRead ? <DraftsOutlinedIcon /> : <EmailOutlinedIcon />}</div>
+                <button onClick={() => handleDeleteMsg(message)} style={{ width: '50px' }}>
+                  삭제
+                </button>
               </Wrapper>
             );
           })}
