@@ -17,8 +17,8 @@ const Alarm = () => {
   const [payloadData, setPayloadData] = useState<any>();
   const [alarm, setAlarm] = useState<any[]>([]);
 
-  const setIsAlarm = async () => {
-    await supabase
+  useEffect(() => {
+    const channel = supabase
       .channel('table-filter-changes')
       .on(
         'postgres_changes',
@@ -29,22 +29,28 @@ const Alarm = () => {
           filter: `user_id=in.(${subList})`
         },
         (payload) => {
-          setPayloadData(payload);
+          if (payload.new.ctg_index === 1) {
+            setPayloadData(payload);
+          }
         }
       )
       .subscribe();
-  };
 
-  setIsAlarm();
+    return () => {
+      channel.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     if (payloadData) {
       const writerId = payloadData.new.user_id;
 
+      // async 함수 내에서 await를 사용하려면 async 키워드를 추가합니다.
       const fetchAlarm = async () => {
         const { data: user } = await supabase.from('user').select('*').eq('id', writerId).single();
 
         if (user) {
+          // 유저 데이터가 있는 경우에만 처리합니다.
           const writerName = user.name;
 
           const newAlarm = {
@@ -73,7 +79,7 @@ const Alarm = () => {
 
   return (
     <div>
-      <div style={{ backgroundColor: 'yellow' }}>{alarm[alarm.length - 1]?.content}</div>
+      <div style={{ backgroundColor: 'yellow', color: 'black' }}>{alarm[alarm.length - 1]?.content}</div>
     </div>
   );
 };

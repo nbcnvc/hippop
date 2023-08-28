@@ -6,7 +6,6 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { supabase } from '../api/supabase';
 import { Store } from '../types/types';
 import Card from '../components/list/Card';
-import AlarmBox from '../components/common/AlarmBox';
 
 const PAGE_SIZE = 10;
 
@@ -47,19 +46,16 @@ const Main = () => {
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
-    <>
-      <AlarmBox />
-      <Masonry columns={3} spacing={2}>
-        {storesData?.pages
-          .flatMap((page) => page)
-          .map((store) => (
-            <Link to={`detail/${store.id}`} key={store.id}>
-              <Card store={store} />
-            </Link>
-          ))}
-        {isFetchingNextPage && <p>Loading...</p>}
-      </Masonry>
-    </>
+    <Masonry columns={3} spacing={2}>
+      {storesData?.pages
+        .flatMap((page) => page)
+        .map((store) => (
+          <Link to={`detail/${store.id}`} key={store.id}>
+            <Card store={store} />
+          </Link>
+        ))}
+      {isFetchingNextPage && <p>Loading...</p>}
+    </Masonry>
   );
 };
 

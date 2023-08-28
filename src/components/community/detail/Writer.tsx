@@ -11,6 +11,7 @@ import { useCurrentUser } from '../../../store/userStore';
 const Writer = ({ writer, postId }: WriterProps) => {
   const { pathname } = useLocation();
   const currentUser = useCurrentUser();
+  const currentUserId = currentUser?.id;
   const [msgModal, setMsgModal] = useState<boolean>(false);
 
   const openMsgModal = () => {
@@ -41,8 +42,14 @@ const Writer = ({ writer, postId }: WriterProps) => {
           )}
           <div>{writer?.name}</div>
         </div>
-        {pathname === `/rdetail/${postId}` && <Subscribe userId={writer?.id} />}
-        {pathname === `/mdetail/${postId}` && <button onClick={openMsgModal}>쪽지 보내기</button>}
+        {writer && (
+          <>
+            {pathname === `/rdetail/${postId}` && <Subscribe writerId={writer.id} />}
+            {pathname === `/mdetail/${postId}` && currentUserId !== writer.id && (
+              <button onClick={openMsgModal}>쪽지 보내기</button>
+            )}
+          </>
+        )}
         {msgModal && <Message msgModal={msgModal} setMsgModal={setMsgModal} writer={writer} />}
       </div>
     </>

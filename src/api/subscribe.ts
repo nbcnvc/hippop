@@ -4,7 +4,7 @@ import { SubscribeType } from '../types/types';
 
 // 구독 확인
 export const isSubscribe = async (subscribe: SubscribeType) => {
-  const { data, status } = await supabase
+  const { data } = await supabase
     .from('subscribe')
     .select('')
     .eq('subscribe_from', subscribe.subscribe_from)
