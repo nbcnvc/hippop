@@ -47,6 +47,11 @@ export interface NewPost {
   title: string;
   body: string;
 }
+export interface UpdatePost {
+  id: number;
+  title: string;
+  body: string;
+}
 
 export interface Comment {
   id: number;
@@ -54,7 +59,6 @@ export interface Comment {
   updated_at: string;
   user_id: string;
   post_id: number;
-  user_name: string;
   body: string;
   isDeleted: boolean;
 }
@@ -62,7 +66,6 @@ export interface Comment {
 export interface NewComment {
   user_id: string | undefined;
   post_id: number;
-  user_name: string | undefined;
   body: string;
 }
 
@@ -111,6 +114,7 @@ export interface AlarmType {
   targetUserId: string;
   content: string;
   isRead: boolean;
+  post_id: number;
 }
 
 // 지오코딩 타입 선언

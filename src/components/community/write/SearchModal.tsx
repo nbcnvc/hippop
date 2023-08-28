@@ -9,6 +9,8 @@ import { fetchStoreData } from '../../../api/store';
 import SearchDefault from './SearchDefault';
 
 const SearchModal = ({
+  keyword,
+  setKeyword,
   setWriteModal,
   searchModal,
   setSearchModal,
@@ -17,7 +19,6 @@ const SearchModal = ({
   result,
   setResult
 }: SearchModalProps) => {
-  const [keyword, setKeyword] = useState<string>('');
   const onChangeKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
   };
@@ -74,6 +75,7 @@ const SearchModal = ({
     }
     // 입력값 초기화
     setKeyword('');
+    setResult(null);
   };
 
   if (isLoading) {

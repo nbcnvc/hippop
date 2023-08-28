@@ -28,7 +28,6 @@ const Posts = () => {
       return null; // 마지막 페이지인 경우
     }
   });
-  console.log(posts);
 
   const selectPosts = useMemo(() => {
     return posts?.pages

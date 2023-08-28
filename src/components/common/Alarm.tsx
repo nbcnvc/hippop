@@ -17,8 +17,8 @@ const Alarm = () => {
   const [payloadData, setPayloadData] = useState<any>();
   const [alarm, setAlarm] = useState<any[]>([]);
 
-  const setIsAlarm = async () => {
-    await supabase
+  useEffect(() => {
+    const channel = supabase
       .channel('table-filter-changes')
       .on(
         'postgres_changes',
@@ -29,13 +29,17 @@ const Alarm = () => {
           filter: `user_id=in.(${subList})`
         },
         (payload) => {
-          setPayloadData(payload);
+          if (payload.new.ctg_index === 1) {
+            setPayloadData(payload);
+          }
         }
       )
       .subscribe();
-  };
 
-  setIsAlarm();
+    return () => {
+      channel.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     if (payloadData) {
@@ -52,7 +56,8 @@ const Alarm = () => {
           const newAlarm = {
             created_at: payloadData.commit_timestamp,
             targetUserId: currentUserId,
-            content: `${writerName}님의 새 게시글: ${payloadData.new.title}`
+            content: `${writerName}님의 새 게시글: ${payloadData.new.title}`,
+            post_id: payloadData.new.id
           };
 
           // 쿼리로 바꿔주기
@@ -74,7 +79,7 @@ const Alarm = () => {
 
   return (
     <div>
-      <div style={{ backgroundColor: 'yellow' }}>{alarm[alarm.length - 1]?.content}</div>
+      <div style={{ backgroundColor: 'yellow', color: 'black' }}>{alarm[alarm.length - 1]?.content}</div>
     </div>
   );
 };
