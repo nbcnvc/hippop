@@ -21,7 +21,7 @@ const Write = ({
 }: WriteProps) => {
   const { pathname } = useLocation();
   const currentUser = useCurrentUser();
-  const navigate = useNavigate();
+  // const navigate = useNavigate()
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
   const [title, setTitle] = useState<string>('');
   const [body, setBody] = useState<string>('');
@@ -91,6 +91,11 @@ const Write = ({
 
     // 글 작성 모달 닫기
     setWriteModal(false);
+
+    // 상세페이지로 이동
+    // if (pathname === "review") {
+    //   navigate(`/rdetail/${}`)
+    // }
   };
 
   return (

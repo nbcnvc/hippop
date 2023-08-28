@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { styled } from 'styled-components';
 import { useQuery } from '@tanstack/react-query';
 
@@ -7,6 +5,7 @@ import { SearchModalProps } from '../../../types/props';
 import { Store } from '../../../types/types';
 import { fetchStoreData } from '../../../api/store';
 import SearchDefault from './SearchDefault';
+import { useEffect } from 'react';
 
 const SearchModal = ({
   keyword,
@@ -27,7 +26,6 @@ const SearchModal = ({
   const closeSearch = () => {
     setKeyword('');
     setSearchModal(false);
-    setResult(null);
     // 검색 결과가 있을 경우 검색 결과 초기화
     if (result) {
       setResult(null);
@@ -50,7 +48,7 @@ const SearchModal = ({
     setId(store.id);
     setTitle(store.title);
     // 검색 결과 초기화
-    setResult([]);
+    setResult(null);
     // 팝업스토어 선택 완료 후 검색 모달창 닫고 글 작성 모달창 열기
     setSearchModal(false);
     setWriteModal(true);
@@ -75,7 +73,6 @@ const SearchModal = ({
     }
     // 입력값 초기화
     setKeyword('');
-    setResult(null);
   };
 
   if (isLoading) {
