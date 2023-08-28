@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-//api
+// api
 import { receiveMessage, sendMessage } from '../../api/message';
 // zustand 상태관리 hook
 import { useCurrentUser } from '../../store/userStore';
@@ -13,10 +13,6 @@ const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
   const [body, setBody] = useState<string>('');
   const currentUser = useCurrentUser() ?? { id: '', avatar_url: '', name: '' };
 
-  console.log('currentUser', currentUser);
-
-  console.log('writerInfo', writer);
-
   // 쪽지 보내기 요청
   const messageHandler = async () => {
     if (writer) {
@@ -28,8 +24,8 @@ const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
         receiver: writer.id,
         receiver_avatar_url: writer.avatar_url,
         receiver_name: writer.name,
-        body,
 
+        body,
         isRead: false
       };
 
@@ -57,7 +53,7 @@ const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
 
   return (
     <>
-      {msgModal ? (
+      {msgModal && (
         <Container>
           <Wrapper>
             <CloseBtn onClick={closeMsgModal}>닫기</CloseBtn>
@@ -66,7 +62,7 @@ const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
                 <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${writer?.avatar_url}`} alt="User Avatar" />
               ) : (
                 <Img src={writer?.avatar_url} alt="User Avatar" />
-              )}{' '}
+              )}
               <div>{writer?.name}</div>
             </UserInfoBox>
             <form onSubmit={() => handleSendMessage()}>
@@ -75,8 +71,6 @@ const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
             </form>
           </Wrapper>
         </Container>
-      ) : (
-        <></>
       )}
     </>
   );
