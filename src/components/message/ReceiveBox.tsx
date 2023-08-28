@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import moment from 'moment';
 // api
-import { readReceiveMessage, recieveMessage } from '../../api/message';
+import { readMessage, receiveMessage } from '../../api/message';
 // zustand 상태관리 hook
 import { useCurrentUser } from '../../store/userStore';
 // 타입
@@ -16,7 +16,7 @@ import DraftsOutlinedIcon from '@mui/icons-material/DraftsOutlined';
 import MessageDetail from './MessageDetail';
 import { SendBoxProps } from '../../types/props';
 
-const RecieveBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) => {
+const ReceiveBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) => {
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [selectedMessage, setSelectedMessage] = useState<MessageType | null>(null);
 
@@ -33,14 +33,14 @@ const RecieveBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProp
     isError
   } = useQuery<MessageType[] | null>({
     queryKey: ['receiveMessage'],
-    queryFn: () => recieveMessage(userId)
+    queryFn: () => receiveMessage(userId)
     // enabled: !!currentUser
   });
 
   console.log('ReciveMessages', messages);
 
   // 읽은 메세지 mutation
-  const readMessageMutation = useMutation((messageId: number) => readReceiveMessage(messageId), {
+  const readMessageMutation = useMutation((messageId: number) => readMessage(messageId), {
     onSuccess: () => {
       queryClient.invalidateQueries(['receiveMessage']);
     }
@@ -91,17 +91,17 @@ const RecieveBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProp
         <>
           {sortedMessages?.map((message) => {
             return (
-              <Wrapper key={message.sender} onClick={() => handleClickMsg(message)}>
+              <Wrapper key={message.id} onClick={() => handleClickMsg(message)}>
                 <ProfileBox>
-                  {message.user?.avatar_url && message.user.avatar_url.startsWith('profile/') ? (
+                  {message?.sender_avatar_url && message?.sender_avatar_url.startsWith('profile/') ? (
                     <Img
-                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${message.user.avatar_url}`}
+                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${message.sender_avatar_url}`}
                       alt="User Avatar"
                     />
                   ) : (
-                    <>{currentUser && <Img src={message.user?.avatar_url} alt="User Avatar" />}</>
+                    <>{currentUser && <Img src={message.sender_avatar_url} alt="User Avatar" />}</>
                   )}
-                  <div>{message.user?.name}</div>
+                  <div>{message.sender_name}</div>
                 </ProfileBox>
                 <div> {moment(message.created_at).format('YYYY-MM-DD HH:mm:ss')}</div>
                 <div> {message.isRead ? <div>읽은 메세지입니다..</div> : <div>읽지 않은 메세지입니다..</div>}</div>
@@ -115,7 +115,7 @@ const RecieveBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProp
   );
 };
 
-export default RecieveBox;
+export default ReceiveBox;
 
 const Container = styled.div`
   position: relative;

@@ -19,7 +19,7 @@ import PartyModeIcon from '@mui/icons-material/PartyMode';
 import SendBox from '../components/message/SendBox';
 import MessageReply from '../components/message/MessageReply';
 import { MessageType } from '../types/types';
-import RecieveBox from '../components/message/RecieveBox';
+import ReceiveBox from '../components/message/ReceiveBox';
 import { Link } from 'react-router-dom';
 
 const MyPage = () => {
@@ -30,7 +30,7 @@ const MyPage = () => {
   // 쪽지 답장 모달
   const [replyModal, setReplyModal] = useState<boolean | null>(null);
   const [sendMsgUser, setSendMsgUser] = useState<MessageType | null>(null);
-//구독 목록 메뉴 상태
+  //구독 목록 메뉴 상태
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [subscribers, setSubscribers] = useState<string[]>([]);
@@ -56,48 +56,42 @@ const MyPage = () => {
     const { data } = await supabase.from('subscribe').select('subscribe_to').eq('subscribe_from', userId);
     return data;
   };
-//
-useEffect(()=>{
-const loadSubscribers = async () => {
-  if (sublistData) {
-    const subscribeToValues = sublistData.map((item) => item.subscribe_to);
-    const subscribeUserPromises = subscribeToValues.map(async (subscribe_to) => {
-      const { data: subscribeUser } = await supabase
-        .from('user')
-        .select('*')
-        .eq('id', subscribe_to);
-      return subscribeUser;
-    });
-    const allSubscribeUsers = await Promise.all(subscribeUserPromises);
+  //
+  useEffect(() => {
+    const loadSubscribers = async () => {
+      if (sublistData) {
+        const subscribeToValues = sublistData.map((item) => item.subscribe_to);
+        const subscribeUserPromises = subscribeToValues.map(async (subscribe_to) => {
+          const { data: subscribeUser } = await supabase.from('user').select('*').eq('id', subscribe_to);
+          return subscribeUser;
+        });
+        const allSubscribeUsers = await Promise.all(subscribeUserPromises);
 
-    const filteredSubscribers = allSubscribeUsers
-      .filter((subscribeUserArray) => subscribeUserArray && subscribeUserArray.length > 0)
-      .map((subscribeUserArray) => subscribeUserArray && subscribeUserArray[0].name);
+        const filteredSubscribers = allSubscribeUsers
+          .filter((subscribeUserArray) => subscribeUserArray && subscribeUserArray.length > 0)
+          .map((subscribeUserArray) => subscribeUserArray && subscribeUserArray[0].name);
 
-    setSubscribers(filteredSubscribers as string[]);
-  }
-};
-if (sublistData) {
-  loadSubscribers();
-}
-}, [sublistData]);
-
-
-
-// 구독목록 visible
-useEffect(() => {
-  function handleOutsideClick(event: MouseEvent) {
-    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-      setIsMenuOpen(false);
+        setSubscribers(filteredSubscribers as string[]);
+      }
+    };
+    if (sublistData) {
+      loadSubscribers();
     }
-  }
-  window.addEventListener('mousedown', handleOutsideClick);
+  }, [sublistData]);
 
-  return () => {
-    window.removeEventListener('mousedown', handleOutsideClick);
-  };
-}, []);
+  // 구독목록 visible
+  useEffect(() => {
+    function handleOutsideClick(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    }
+    window.addEventListener('mousedown', handleOutsideClick);
 
+    return () => {
+      window.removeEventListener('mousedown', handleOutsideClick);
+    };
+  }, []);
 
   // 인피니티 스크롤을 위한 데이터 조회
   const {
@@ -288,13 +282,13 @@ useEffect(() => {
       }
     }
   };
-/////////////// 무한스크롤 슬라이스
+  /////////////// 무한스크롤 슬라이스
   const sliceStore = fetchUserPost?.slice(0, 10);
   const ClickToggleBox = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = (e.target as HTMLButtonElement).name;
     setToggleMsgBox(name);
   };
-////////////
+  ////////////
   const handleSectionChange = (e: React.MouseEvent<HTMLButtonElement>) => {
     const button = e.target as HTMLButtonElement;
     const section = button.getAttribute('data-section');
@@ -303,7 +297,7 @@ useEffect(() => {
       setActiveSection(section);
     }
   };
-  
+
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -322,34 +316,37 @@ useEffect(() => {
           {currentUser?.avatar_url && (
             <div className="avatar-container">
               {selectedImage ? (
-          <img
-            src={URL.createObjectURL(selectedImage)} // 선택한 이미지 파일을 미리보기로 보여줌
-            alt="Selected Image"
-            width={120}
-            height={120}
-          />
-        ) : (
-          <div className="avatar">
-            {currentUser.avatar_url.startsWith('profile/') ? (
-              <img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser.avatar_url}`} alt="User Avatar" />
-            ) : (
-              <img src={currentUser.avatar_url} alt="User Avatar" />
-            )}
-          </div>
-        )}
-          <div className="circle-bg">
-            <PartyModeIcon className="party-icon" onClick={handleImageUpload} />
-          </div>
-          {imageUploadVisible && (
-            <div className="img-uploader">
-              <input type="file" ref={imageInputRef} onChange={handleImageInputChange} />
-              <button className="confirm" onClick={handleImageConfirm}>
-                저장
-              </button>
+                <img
+                  src={URL.createObjectURL(selectedImage)} // 선택한 이미지 파일을 미리보기로 보여줌
+                  alt="Selected Image"
+                  width={120}
+                  height={120}
+                />
+              ) : (
+                <div className="avatar">
+                  {currentUser.avatar_url.startsWith('profile/') ? (
+                    <img
+                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser.avatar_url}`}
+                      alt="User Avatar"
+                    />
+                  ) : (
+                    <img src={currentUser.avatar_url} alt="User Avatar" />
+                  )}
+                </div>
+              )}
+              <div className="circle-bg">
+                <PartyModeIcon className="party-icon" onClick={handleImageUpload} />
+              </div>
+              {imageUploadVisible && (
+                <div className="img-uploader">
+                  <input type="file" ref={imageInputRef} onChange={handleImageInputChange} />
+                  <button className="confirm" onClick={handleImageConfirm}>
+                    저장
+                  </button>
+                </div>
+              )}
             </div>
           )}
-        </div>
-      )}
           <div className="info-inner">
             <p>
               Welcome,&nbsp;&nbsp;
@@ -366,37 +363,36 @@ useEffect(() => {
               님의 My Page
             </p>
             <span>
-  <div className='user-sub-info'>
-    {currentUser?.email}
-    {sublistData && (
-      <h5 onClick={handleMenuToggle} ref={menuRef}>
-        &nbsp;구독한 사람: {subscribers.length}
-      </h5>
-    )}
-    <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
-      {/* <Link to="/mypage">My Page</Link> */}
-      <ul>
-        {subscribers
-          .slice() // 복사본 생성
-          .sort() // 알파벳 순으로 정렬
-          .map((subscriber, index) => (
-            <li key={index}>{subscriber}</li>
-          ))}
-      </ul>
-    </div>
-  </div>
-  <div>
-    {editingName ? (
-      <>
-        <button onClick={handleNameSave}>저장</button>
-        <button onClick={handleNameCancel}>취소</button>
-      </>
-    ) : (
-      <button onClick={handleNameEdit}>수정</button>
-    )}
-  </div>
-</span>
-
+              <div className="user-sub-info">
+                {currentUser?.email}
+                {sublistData && (
+                  <h5 onClick={handleMenuToggle} ref={menuRef}>
+                    &nbsp;구독한 사람: {subscribers.length}
+                  </h5>
+                )}
+                <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
+                  {/* <Link to="/mypage">My Page</Link> */}
+                  <ul>
+                    {subscribers
+                      .slice() // 복사본 생성
+                      .sort() // 알파벳 순으로 정렬
+                      .map((subscriber, index) => (
+                        <li key={index}>{subscriber}</li>
+                      ))}
+                  </ul>
+                </div>
+              </div>
+              <div>
+                {editingName ? (
+                  <>
+                    <button onClick={handleNameSave}>저장</button>
+                    <button onClick={handleNameCancel}>취소</button>
+                  </>
+                ) : (
+                  <button onClick={handleNameEdit}>수정</button>
+                )}
+              </div>
+            </span>
           </div>
         </div>
         <div>
@@ -408,7 +404,7 @@ useEffect(() => {
           </button>
           <div className="alram-wrapper">
             {toggleMsgBox === '받은 쪽지함' ? (
-              <RecieveBox toggleMsgBox={toggleMsgBox} setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
+              <ReceiveBox toggleMsgBox={toggleMsgBox} setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
             ) : (
               <SendBox toggleMsgBox={toggleMsgBox} setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
             )}
@@ -492,12 +488,10 @@ useEffect(() => {
 };
 
 export default MyPage;
-
 const MypageTag = styled.div`
   max-width: 1200px;
   width: 90%;
   margin: 0 auto;
-
   margin-top: 1rem;
   header {
     display: flex;
@@ -519,43 +513,43 @@ const MypageTag = styled.div`
         object-fit: cover;
         border-radius: 10px;
       }
-
       .img-uploader {
         width: 225px;
         position: absolute;
         display: flex;
-
-        .user-sub-info{
+        .confirm {
+          width: 60px;
+        }
+        .user-sub-info {
           display: flex;
           justify-content: space-between;
-          align-items:center;
-          h5{
+          align-items: center;
+          h5 {
             margin-top: 6px;
             font-size: 10px;
-          }
-          .dropdown-content{
-            position: relative;
-            ul{
-            position: absolute;
-            width: 100px;
-            background: white;
-            left: -64px;
-            top: 14px;
-            border-radius: 8px;
-          }
-          li{
-              padding: 5px 10px;
-              &:hover {
-              border-radius: 8px;
-              background-color: #f1f1f1;
-              }
-            }
-            
           }
         }
       }
     }
-
+    .dropdown-content {
+      position: relative;
+      ul {
+        position: absolute;
+        width: 100px;
+        background: white;
+        left: -104px;
+        top: 20px;
+        border-radius: 8px;
+      }
+      li {
+        padding: 5px 10px;
+        cursor: pointer;
+        &:hover {
+          border-radius: 8px;
+          background-color: #f1f1f1;
+        }
+      }
+    }
     .avatar-container .party-icon {
       position: absolute;
       bottom: 0;
@@ -572,18 +566,15 @@ const MypageTag = styled.div`
     .party-icon:hover {
       color: gray;
     }
-
     .party-icon:active {
       transform: scale(0.9);
     }
-
     .info-wrapper {
       width: 50%;
       border: 1px dotted gray;
       display: flex;
       justify-content: flex-start;
       align-items: flex-end;
-
       .info-inner {
         width: 100%;
         display: flex;
@@ -600,21 +591,18 @@ const MypageTag = styled.div`
           color: gray;
           display: flex;
           justify-content: space-between;
-
           .user-sub-info {
             display: flex;
           }
         }
       }
     }
-
     .alram-wrapper {
       width: 520px;
       height: 200px;
       border: 1px dotted gray;
       display: flex;
       justify-content: flex-end;
-
       button {
         width: 120px;
         height: 22px;
@@ -637,14 +625,9 @@ const MypageTag = styled.div`
   }
   .subs-wrapper {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 한 줄에 두 개의 열 */
-    gap: 20px; /* 열 사이의 간격 조정 */
-    max-width: 900px; /* 그리드가 너무 넓어지는 것을 제한 */
-    margin: 0 auto; /* 가운데 정렬 */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
   }
-  // img {
-  //   margin: 0 auto;
-  //   display: flex;
-  //   max-width: 100%;
-  // }
 `;

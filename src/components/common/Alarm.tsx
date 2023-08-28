@@ -41,10 +41,12 @@ const Alarm = () => {
     if (payloadData) {
       const writerId = payloadData.new.user_id;
 
+      // async 함수 내에서 await를 사용하려면 async 키워드를 추가합니다.
       const fetchAlarm = async () => {
         const { data: user } = await supabase.from('user').select('*').eq('id', writerId).single();
 
         if (user) {
+          // 유저 데이터가 있는 경우에만 처리합니다.
           const writerName = user.name;
 
           const newAlarm = {

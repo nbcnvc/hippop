@@ -9,25 +9,31 @@ import { MessageType } from '../../types/types';
 // 스타일
 import { styled } from 'styled-components';
 
-const Message = ({ writer, setMsgModal, msgModal }: MessageProps) => {
+const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
   const [body, setBody] = useState<string>('');
-  const currentUser = useCurrentUser() ?? { id: '' };
+  const currentUser = useCurrentUser() ?? { id: '', avatar_url: '', name: '' };
+
+  console.log('currentUser', currentUser);
+
+  console.log('writerInfo', writer);
 
   // 쪽지 보내기 요청
   const messageHandler = async () => {
     if (writer) {
       const message: MessageType = {
         sender: currentUser.id,
+        sender_avatar_url: currentUser.avatar_url,
+        sender_name: currentUser.name,
+
         receiver: writer.id,
+        receiver_avatar_url: writer.avatar_url,
+        receiver_name: writer.name,
         body,
+
         isRead: false
       };
 
-      const sendMsg = sendMessage(message);
-      const receiveMsg = receiveMessage(message);
-
-      await sendMsg;
-      await receiveMsg;
+      await sendMessage(message);
 
       console.log('메세지 전송 성공!');
     }

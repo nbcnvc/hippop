@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { MessageType } from '../../types/types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { mySendMessage, readSendMessage } from '../../api/message';
+import { mySendMessage, readMessage } from '../../api/message';
 import { useCurrentUser } from '../../store/userStore';
 import { SendBoxProps } from '../../types/props';
 import { styled } from 'styled-components';
@@ -29,7 +29,7 @@ const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) 
   console.log('SendMessage', messages);
 
   // 읽은 메세지 mutation
-  const readMessageMutation = useMutation((messageId: number) => readSendMessage(messageId), {
+  const readMessageMutation = useMutation((messageId: number) => readMessage(messageId), {
     onSuccess: () => {
       queryClient.invalidateQueries(['sendMessage']);
     }
@@ -79,17 +79,17 @@ const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) 
         <>
           {sortedMessages?.map((message) => {
             return (
-              <Wrapper key={message.sender} onClick={() => handleClickMsg(message)}>
+              <Wrapper key={message.id} onClick={() => handleClickMsg(message)}>
                 <ProfileBox>
-                  {message.user?.avatar_url && message.user?.avatar_url.startsWith('profile/') ? (
+                  {message?.receiver_avatar_url && message?.receiver_avatar_url.startsWith('profile/') ? (
                     <Img
-                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${message.user.avatar_url}`}
+                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${message.receiver_avatar_url}`}
                       alt="User Avatar"
                     />
                   ) : (
-                    <>{currentUser && <Img src={message.user?.avatar_url} alt="User Avatar" />}</>
+                    <>{currentUser && <Img src={message.receiver_avatar_url} alt="User Avatar" />}</>
                   )}
-                  <div>{message.user?.name}</div>
+                  <div>{message.receiver_name}</div>
                 </ProfileBox>
                 <div> {moment(message.created_at).format('YYYY-MM-DD HH:mm:ss')}</div>
                 <div> {message.isRead ? <div>상대방이 읽었습니다.</div> : <div>상대방이 읽지 않았습니다.</div>}</div>
