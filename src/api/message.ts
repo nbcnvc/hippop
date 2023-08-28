@@ -44,9 +44,11 @@ export const mySendMessage = async (userId: string): Promise<MessageType[] | nul
 // 메세지 확인
 export const readSendMessage = async (id: number): Promise<void> => {
   await supabase.from('send_message').update({ isRead: true }).eq('id', id);
+  console.log('readSendMessage', readSendMessage);
 };
 
 // 메세지 확인
 export const readReceiveMessage = async (id: number): Promise<void> => {
   await supabase.from('receive_message').update({ isRead: true }).eq('id', id);
+  console.log('readReceiveMessage', readReceiveMessage);
 };

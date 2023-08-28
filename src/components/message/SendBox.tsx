@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { MessageType } from '../../types/types';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { mySendMessage, readSendMessage } from '../../api/message';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { mySendMessage } from '../../api/message';
 import { useCurrentUser } from '../../store/userStore';
 import { SendBoxProps } from '../../types/props';
 import { styled } from 'styled-components';
@@ -15,7 +15,7 @@ const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) 
 
   const currentUser = useCurrentUser();
   const userId = currentUser?.id ?? '';
-  const queryClient = useQueryClient();
+
   const {
     data: messages,
     isLoading,
@@ -28,18 +28,15 @@ const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) 
 
   console.log('SendMessage', messages);
 
-  // 읽은 메세지 mutation
-  const readMessageMutation = useMutation((messageId: number) => readSendMessage(messageId), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['sendMessage']);
-    }
-  });
+  // // 읽은 메세지 mutation
+  // const readMessageMutation = useMutation((messageId: number) => readSendMessage(messageId), {
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries(['sendMessage']);
+  //   }
+  // });
 
   // 메세지 클릭 handler
   const handleClickMsg = (message: MessageType) => {
-    if (message && !message.isRead && message.sender !== currentUser?.id) {
-      readMessageMutation.mutate(message.id ?? 0);
-    }
     setIsClicked(true);
     setSelectedMessage(message);
     setSendMsgUser(message);

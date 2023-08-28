@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import moment from 'moment';
 // api
-import { readReceiveMessage, recieveMessage } from '../../api/message';
+import { readReceiveMessage, readSendMessage, recieveMessage } from '../../api/message';
 // zustand 상태관리 hook
 import { useCurrentUser } from '../../store/userStore';
 // 타입
@@ -39,17 +39,24 @@ const RecieveBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProp
 
   console.log('ReciveMessages', messages);
 
-  // 읽은 메세지 mutation
-  const readMessageMutation = useMutation((messageId: number) => readReceiveMessage(messageId), {
+  // 받은 메세지함 읽기 mutation
+  const readMessageMutation1 = useMutation((messageId: number) => readReceiveMessage(messageId), {
     onSuccess: () => {
       queryClient.invalidateQueries(['receiveMessage']);
+    }
+  });
+  // 보낸 메세지함 읽기 mutation
+  const readMessageMutation2 = useMutation((messageId: number) => readSendMessage(messageId), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['receiveMessage1']);
     }
   });
 
   // 메세지 클릭 handler
   const handleClickMsg = (message: MessageType) => {
     if (message && !message.isRead) {
-      readMessageMutation.mutate(message.id ?? 0);
+      readMessageMutation1.mutate(message.id ?? 0);
+      readMessageMutation2.mutate(message.id ?? 0);
     }
     setIsClicked(true);
     setSelectedMessage(message);

@@ -1,16 +1,15 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 // 라이브러리
 import { useNavigate } from 'react-router-dom';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { useInView } from 'react-intersection-observer';
+import { useQuery } from '@tanstack/react-query';
 // import DatePicker1 from './DatePicker';
 // 컴포넌트
 import SearchCalendar from './SearchCalendar';
 // api
 import { fetchStoreIdCount } from '../../api/bookmark';
-import { getInfinityStore } from '../../api/store';
+
 // 타입
-import { FetchsStore, SearchListProps, Store } from '../../types/types';
+import { SearchListProps, Store } from '../../types/types';
 //스타일
 import { styled } from 'styled-components';
 // mui
@@ -31,44 +30,6 @@ const SearchList = ({ storeData }: SearchListProps) => {
 
   // filter된 storeList state
   const [filteredStoreList, setFilteredStoreList] = useState<Store[] | null>(null);
-
-  // 인피니티 스크롤을 위한 데이터 조회
-  const {
-    data: stores,
-    isLoading,
-    isError,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage
-  } = useInfiniteQuery<FetchsStore>({
-    queryKey: [`/search`],
-    queryFn: ({ pageParam }) => getInfinityStore(pageParam),
-    getNextPageParam: (lastPage) => {
-      // 전체 페이지 개수보다 작을 때
-      if (lastPage.page < lastPage.totalPages) {
-        // 다음 페이지로 pageParam를 저장
-        return lastPage.page + 1;
-      }
-    }
-  });
-
-  // 인피니티 스크롤로 필터된 store
-  const selectStores = useMemo(() => {
-    return stores?.pages
-      .map((data) => {
-        return data.stores;
-      })
-      .flat();
-  }, [stores]);
-
-  // 언제 다음 페이지를 가져올 것
-  const { ref } = useInView({
-    threshold: 1, // 맨 아래에 교차될 때
-    onChange: (inView: any) => {
-      if (!inView || !hasNextPage || isFetchingNextPage) return;
-      fetchNextPage();
-    }
-  });
 
   // 북마크 카운트를 가져오는 함수
   const fetchBookmarkCounts = async () => {
@@ -117,8 +78,8 @@ const SearchList = ({ storeData }: SearchListProps) => {
   // 데이터 필터링
   useEffect(() => {
     // storeData가 존재하면 필터링을 진행합니다.
-    if (filteredStoreList || inputValue || startDate || endDate) {
-      const filteredStores = selectStores?.filter((store) => {
+    if (filteredStoreList) {
+      const filteredStores = storeData.filter((store) => {
         const lowercaseInputValue = inputValue.toLowerCase();
         const storeStartDate = moment(store.period_start);
         const storeEndDate = moment(store.period_end);
@@ -139,15 +100,23 @@ const SearchList = ({ storeData }: SearchListProps) => {
       console.log('필터링 결과:', filteredStores);
 
       // 검색 결과를 상태로 설정
-      setFilteredStoreList(filteredStores || null);
+      setFilteredStoreList(filteredStores);
     }
-  }, [selectStores, inputValue, startDate, endDate]);
+  }, [inputValue, startDate, endDate, storeData, filteredStoreList]);
 
   // onChange 핸들러
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     console.log('새로운 입력 값:', newValue);
     setInputValue(newValue);
+  };
+
+  // onSubmit 핸들러
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (startDate && endDate) {
+      handleSearch(startDate, endDate);
+    }
   };
 
   // SearchCalendar 컴포넌트에서 지정 검색한 date를 받아옴 props로 받아옴
@@ -188,23 +157,20 @@ const SearchList = ({ storeData }: SearchListProps) => {
   // 최신 팝업스토어 자르기
   const latStores = latestStores?.slice(0, 3);
 
-  if (isLoading) {
-    return <div>로딩중입니다.</div>;
-  }
-  if (isError) {
-    return <div>오류가 발생했습니다.</div>;
-  }
   return (
     <Container>
       <SearchBox>
         <Search />
-        <SearchInput
-          type="text"
-          value={inputValue}
-          onChange={handleInputChange}
-          placeholder="팝업스토어를 검색해보세요!"
-        />
-        <Filter />
+        <form onSubmit={handleFormSubmit}>
+          <SearchInput
+            type="text"
+            value={inputValue}
+            onChange={handleInputChange}
+            placeholder="팝업스토어를 검색해보세요!"
+          />
+          <Filter type="submit">검색</Filter>
+        </form>
+        {/* <Filter /> */}
         <Reset onClick={handleReset} />
       </SearchBox>
 
@@ -221,25 +187,7 @@ const SearchList = ({ storeData }: SearchListProps) => {
       {/* <DatePicker1 /> */}
       <SearchCalendar storeData={storeData} onSearch={handleSearch} />
       <>
-        {filteredStoreList ? (
-          <div>
-            {filteredStoreList.length > 0 ? (
-              <GridContainer>
-                {filteredStoreList?.map((store) => (
-                  <GridItem key={store.id} onClick={() => navDetail(store.id)}>
-                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-                    <div>{store.title}</div>
-                    <div>
-                      {store.period_start} ~ {store.period_end}{' '}
-                    </div>
-                  </GridItem>
-                ))}
-              </GridContainer>
-            ) : (
-              <div>검색 결과가 없습니다.</div>
-            )}
-          </div>
-        ) : (
+        {!filteredStoreList ? (
           <>
             <Title>인기 팝업스토어</Title>
             <GridContainer>
@@ -267,9 +215,28 @@ const SearchList = ({ storeData }: SearchListProps) => {
               ))}
             </GridContainer>
           </>
+        ) : (
+          <div>
+            {filteredStoreList.length > 0 ? (
+              <GridContainer>
+                {filteredStoreList?.map((store) => (
+                  <GridItem key={store.id} onClick={() => navDetail(store.id)}>
+                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                    <div>{store.title}</div>
+                    <div>
+                      {store.period_start} ~ {store.period_end}{' '}
+                    </div>
+                  </GridItem>
+                ))}
+              </GridContainer>
+            ) : (
+              <div>검색 결과가 없습니다.</div>
+            )}
+          </div>
         )}
       </>
-      <div
+
+      {/* <div
         style={{
           backgroundColor: 'yellow',
           width: '100%',
@@ -280,7 +247,7 @@ const SearchList = ({ storeData }: SearchListProps) => {
         ref={ref}
       >
         Trigger to Fetch Here
-      </div>
+      </div> */}
     </Container>
   );
 };

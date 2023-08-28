@@ -11,7 +11,7 @@ const SearchCalendar = ({ onSearch }: SearchCalendarProps) => {
   const [endDate, setEndDate] = useState<Date>(new Date());
 
   const handleStartDateChange = (date: Date) => {
-    if (startDate < date) {
+    if (endDate < date) {
       alert('종료일 보다 클 수는 없어요~ ');
       setEndDate(date);
       setStartDate(date);
