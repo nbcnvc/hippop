@@ -50,7 +50,8 @@ const Alarm = () => {
           const newAlarm = {
             created_at: payloadData.commit_timestamp,
             targetUserId: currentUserId,
-            content: `${writerName}님의 새 게시글: ${payloadData.new.title}`
+            content: `${writerName}님의 새 게시글: ${payloadData.new.title}`,
+            post_id: payloadData.new.id
           };
 
           // 쿼리로 바꿔주기

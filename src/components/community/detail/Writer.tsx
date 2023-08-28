@@ -6,12 +6,17 @@ import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { WriterProps } from '../../../types/props';
+import { useCurrentUser } from '../../../store/userStore';
 
 const Writer = ({ writer, postId }: WriterProps) => {
   const { pathname } = useLocation();
+  const currentUser = useCurrentUser();
   const [msgModal, setMsgModal] = useState<boolean>(false);
 
   const openMsgModal = () => {
+    if (!currentUser) {
+      return alert('로그인을 해주세요.');
+    }
     setMsgModal(true);
   };
 

@@ -4,8 +4,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { deleteAlarm, getAlarms } from '../../api/alarm';
 import { useCurrentUser } from '../../store/userStore';
+import { useNavigate } from 'react-router';
 
 const AlarmBox = () => {
+  const navigate = useNavigate();
   const currentUser = useCurrentUser();
   const currentUserId = currentUser?.id;
   const { data: alarms, isLoading, isError } = useQuery(['alarms'], () => getAlarms(currentUserId ?? ''));
@@ -64,7 +66,13 @@ const AlarmBox = () => {
             key={alarm.id}
             style={{ border: '1px solid black', borderRadius: '10px', padding: '10px', margin: 'px' }}
           >
-            <span>"{alarm.content}"</span>
+            <span
+              onClick={() => {
+                navigate(`rdetail/${alarm.post_id}`);
+              }}
+            >
+              {alarm.content}
+            </span>
             <span>&nbsp;{timeAgo}</span>
             <button onClick={() => deleteButton(alarm.id)}>삭제</button>
           </div>
