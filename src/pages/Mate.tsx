@@ -14,10 +14,7 @@ const Mate = () => {
   const [storeTitle, setStoreTitle] = useState<string>('');
   const [result, setResult] = useState<Store[] | null>(null);
   const [keyword, setKeyword] = useState<string>('');
-
   const currentUser = useCurrentUser();
-
-  console.log(result);
 
   // 검색 모달 열기
   const searcButton = () => {
