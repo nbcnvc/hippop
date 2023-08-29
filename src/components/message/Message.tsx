@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // api
-import { receiveMessage, sendMessage } from '../../api/message';
+import { sendMessage } from '../../api/message';
 // zustand 상태관리 hook
 import { useCurrentUser } from '../../store/userStore';
 // 타입

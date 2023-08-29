@@ -3,7 +3,6 @@ import { supabase } from '../../api/supabase';
 import { getSubList } from '../../api/subscribe';
 import { useCurrentUser } from '../../store/userStore';
 import { useState, useEffect } from 'react';
-import AlarmSub from './AlarmSub';
 
 const Alarm = () => {
   const currentUser = useCurrentUser();
