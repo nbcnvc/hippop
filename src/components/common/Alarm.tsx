@@ -3,6 +3,7 @@ import { supabase } from '../../api/supabase';
 import { getSubList } from '../../api/subscribe';
 import { useCurrentUser } from '../../store/userStore';
 import { useState, useEffect } from 'react';
+import AlarmSub from './AlarmSub';
 
 const Alarm = () => {
   const currentUser = useCurrentUser();
@@ -17,22 +18,17 @@ const Alarm = () => {
   const [payloadData, setPayloadData] = useState<any>();
   const [alarm, setAlarm] = useState<any[]>([]);
 
-  const setIsAlarm = async () => {
-    await supabase
-      .channel('table-filter-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'post',
-          filter: `user_id=in.(${subList})`
-        },
-        (payload) => {
-          setPayloadData(payload);
-        }
-      )
-      .subscribe();
+  const setIsAlarm = () => {
+    supabase.channel('db-changes').on(
+      'postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'post',
+        filter: `user_id=in.(${subList})`
+      },
+      (payload) => setPayloadData(payload)
+    );
   };
 
   setIsAlarm();
@@ -74,7 +70,7 @@ const Alarm = () => {
 
   return (
     <div>
-      <div style={{ backgroundColor: 'yellow' }}>{alarm[alarm.length - 1]?.content}</div>
+      <div style={{ backgroundColor: 'yellow', color: 'black' }}>{alarm[alarm.length - 1]?.content}</div>
     </div>
   );
 };
