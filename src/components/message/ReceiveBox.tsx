@@ -38,8 +38,6 @@ const ReceiveBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProp
     // enabled: !!currentUser
   });
 
-  console.log(receiveMessages);
-
   // 읽은 메세지 mutation
   const readMessageMutation = useMutation((messageId: number) => readMessage(messageId), {
     onSuccess: () => {
