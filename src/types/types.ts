@@ -114,7 +114,7 @@ export interface AlarmType {
   targetUserId: string;
   content: string;
   isRead: boolean;
-  post_id: number;
+  // post_id: number;
 }
 
 // 지오코딩 타입 선언
