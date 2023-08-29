@@ -34,6 +34,16 @@ const Alarm = () => {
           }
         }
       )
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'subscribe',
+          filter: `subscribe_from=eq.${currentUserId}`
+        },
+        (payload) => console.log(payload)
+      )
       .subscribe();
 
     return () => {
