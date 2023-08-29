@@ -11,7 +11,7 @@ import { styled } from 'styled-components';
 
 const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
   const [body, setBody] = useState<string>('');
-  const currentUser = useCurrentUser() ?? { id: '' };
+  const currentUser = useCurrentUser() ?? { id: '', name: '', avatar_url: '' };
 
   // 쪽지 보내기 요청
   const sendMessageHandler = async () => {
@@ -29,7 +29,7 @@ const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
   };
 
   // 쪽지 내용 onChange
-  const handleBodyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBodyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBody(e.target.value);
   };
 
@@ -48,7 +48,7 @@ const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
     <Container>
       <Wrapper>
         <button onClick={closeReply}>창닫기</button>
-        {/* <ProfileBox>
+        <ProfileBox>
           발신자:
           {currentUser?.avatar_url && currentUser.avatar_url.startsWith('profile/') ? (
             <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser?.avatar_url}`} alt="User Avatar" />
@@ -59,16 +59,13 @@ const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
         </ProfileBox>
         <ProfileBox>
           수신자:
-          {sendMsgUser?.sender_avatar_url && sendMsgUser?.sender_avatar_url.startsWith('profile/') ? (
-            <Img
-              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${sendMsgUser?.sender_avatar_url}`}
-              alt="User Avatar"
-            />
+          {sendMsgUser?.to.avatar_url && sendMsgUser?.to.avatar_url.startsWith('profile/') ? (
+            <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${sendMsgUser?.to.avatar_url}`} alt="User Avatar" />
           ) : (
-            <>{currentUser && <Img src={sendMsgUser?.sender_avatar_url} alt="User Avatar" />}</>
+            <>{currentUser && <Img src={sendMsgUser?.to.avatar_url} alt="User Avatar" />}</>
           )}
-          <div>{sendMsgUser?.sender_name}</div>
-        </ProfileBox> */}
+          <div>{sendMsgUser?.to.name}</div>
+        </ProfileBox>
         <form onSubmit={() => handleSendMessage()}>
           <Input value={body} onChange={handleBodyChange} placeholder="전달할 내용을 입력해주세요" />
           <button>쪽지 보내기</button>
@@ -120,7 +117,7 @@ const Img = styled.img`
   border-radius: 50%;
 `;
 
-const Input = styled.input`
+const Input = styled.textarea`
   width: 470px;
   height: 200px;
   border: 1px solid black;
