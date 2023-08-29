@@ -44,3 +44,44 @@ export const getInfinityStore = async (pageParam: number = 1): Promise<FetchsSto
 
   return { stores: data as Store[], page: pageParam, totalPages, count };
 };
+
+// 검색페이지 인피니티 스크롤(3개씩) store 조회
+// API function with added filters
+export const getInfinityStore1 = async (
+  pageParam: number = 1,
+  inputValue: string,
+  startDate: string | null,
+  endDate: string | null
+): Promise<FetchsStore> => {
+  let data: Store[] | null = [];
+  let count: number | null = null;
+
+  let query = supabase
+    .from('store')
+    .select()
+    .gte('period_end', startDate)
+    .lte('period_start', endDate)
+    .order('created_at', { ascending: false })
+    .range(pageParam * 3 - 3, pageParam * 3 - 1);
+
+  if (inputValue) {
+    query = query.or(`title.ilike.%${inputValue}%,body.ilike.%${inputValue}%,location.ilike.%${inputValue}%`);
+  }
+
+  console.log('startDate ====>', startDate);
+  console.log('endDate ====>', endDate);
+
+  const { data: stores } = await query;
+
+  data = stores;
+
+  console.log('stores ===> ', stores);
+
+  const { count: storeCount } = await supabase.from('store').select('count', { count: 'exact' });
+  count = storeCount;
+  console.log('storeCount ===> ', storeCount);
+  // Calculate total pages
+  const totalPages = count ? Math.floor(count / 3) + (count % 3 === 0 ? 0 : 1) : 1;
+
+  return { stores: data as Store[], page: pageParam, totalPages, count };
+};

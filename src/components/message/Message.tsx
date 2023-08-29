@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-//api
+// api
 import { receiveMessage, sendMessage } from '../../api/message';
 // zustand 상태관리 hook
 import { useCurrentUser } from '../../store/userStore';
@@ -9,25 +9,27 @@ import { MessageType } from '../../types/types';
 // 스타일
 import { styled } from 'styled-components';
 
-const Message = ({ setMsgModal, msgModal, writerInfo }: MessageProps) => {
+const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
   const [body, setBody] = useState<string>('');
-  const currentUser = useCurrentUser() ?? { id: '' };
+  const currentUser = useCurrentUser() ?? { id: '', avatar_url: '', name: '' };
 
   // 쪽지 보내기 요청
   const messageHandler = async () => {
-    if (writerInfo) {
+    if (writer) {
       const message: MessageType = {
         sender: currentUser.id,
-        receiver: writerInfo.id,
+        sender_avatar_url: currentUser.avatar_url,
+        sender_name: currentUser.name,
+
+        receiver: writer.id,
+        receiver_avatar_url: writer.avatar_url,
+        receiver_name: writer.name,
+
         body,
         isRead: false
       };
 
-      const sendMsg = sendMessage(message);
-      const receiveMsg = receiveMessage(message);
-
-      await sendMsg;
-      await receiveMsg;
+      await sendMessage(message);
 
       console.log('메세지 전송 성공!');
     }
@@ -51,17 +53,17 @@ const Message = ({ setMsgModal, msgModal, writerInfo }: MessageProps) => {
 
   return (
     <>
-      {msgModal ? (
+      {msgModal && (
         <Container>
           <Wrapper>
             <CloseBtn onClick={closeMsgModal}>닫기</CloseBtn>
             <UserInfoBox>
-              {writerInfo?.avatar_url.startsWith('profile/') ? (
-                <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${writerInfo?.avatar_url}`} alt="User Avatar" />
+              {writer?.avatar_url.startsWith('profile/') ? (
+                <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${writer?.avatar_url}`} alt="User Avatar" />
               ) : (
-                <Img src={writerInfo?.avatar_url} alt="User Avatar" />
-              )}{' '}
-              <div>{writerInfo?.name}</div>
+                <Img src={writer?.avatar_url} alt="User Avatar" />
+              )}
+              <div>{writer?.name}</div>
             </UserInfoBox>
             <form onSubmit={() => handleSendMessage()}>
               <input value={body} onChange={handleBodyChange} placeholder="전달할 내용을 입력해주세요" />
@@ -69,8 +71,6 @@ const Message = ({ setMsgModal, msgModal, writerInfo }: MessageProps) => {
             </form>
           </Wrapper>
         </Container>
-      ) : (
-        <></>
       )}
     </>
   );

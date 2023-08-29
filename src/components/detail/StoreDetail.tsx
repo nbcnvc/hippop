@@ -1,14 +1,10 @@
-import React from 'react';
-// 라이브러리
-import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
-// 타입
-import { Store } from '../../types/types';
-// api
-import { fetchDetailData } from '../../api/store';
-// 스타일
 import { styled } from 'styled-components';
-// 컴포넌트
+import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+
+import { Store } from '../../types/types';
+import { fetchDetailData } from '../../api/store';
+
 import Share from './Share';
 import Calendar from './Calendar';
 import BookMark from './BookMark';
@@ -17,14 +13,12 @@ import StoreMap from './StoreMap';
 const StoreDetail = () => {
   const { id } = useParams<{ id: string }>();
 
-  // store 상세 데이터 가져오기
   const {
     data: storeData,
     isLoading,
     isError
   } = useQuery<Store | null>({ queryKey: ['detailData', Number(id)], queryFn: () => fetchDetailData(Number(id)) });
 
-  // 팝업스토어 링크 오픈 핸들러
   const handleopenlink = () => {
     const linkUrl = `${storeData?.link}`;
     window.open(linkUrl, '_blank');

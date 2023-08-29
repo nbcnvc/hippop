@@ -29,9 +29,10 @@ const SearchCalendar = ({ onSearch }: SearchCalendarProps) => {
   };
 
   const handleSearch = () => {
+    setStartDate(startDate);
+    setEndDate(endDate);
     onSearch(startDate, endDate);
   };
-
   return (
     <Container>
       {/* <div>기간별</div> */}

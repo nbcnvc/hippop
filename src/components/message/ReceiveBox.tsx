@@ -3,20 +3,21 @@ import React, { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import moment from 'moment';
 // api
-import { readReceiveMessage, readSendMessage, recieveMessage } from '../../api/message';
+import { deleteMessage, readMessage, receiveMessage } from '../../api/message';
 // zustand 상태관리 hook
 import { useCurrentUser } from '../../store/userStore';
 // 타입
 import { MessageType } from '../../types/types';
+import { SendBoxProps } from '../../types/props';
+// 컴포넌트
+import MessageDetail from './MessageDetail';
 // style
 import { styled } from 'styled-components';
 // mui
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import DraftsOutlinedIcon from '@mui/icons-material/DraftsOutlined';
-import MessageDetail from './MessageDetail';
-import { SendBoxProps } from '../../types/props';
 
-const RecieveBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) => {
+const ReceiveBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) => {
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [selectedMessage, setSelectedMessage] = useState<MessageType | null>(null);
 
@@ -33,34 +34,45 @@ const RecieveBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProp
     isError
   } = useQuery<MessageType[] | null>({
     queryKey: ['receiveMessage'],
-    queryFn: () => recieveMessage(userId)
+    queryFn: () => receiveMessage(userId)
     // enabled: !!currentUser
   });
 
-  console.log('ReciveMessages', messages);
-
-  // 받은 메세지함 읽기 mutation
-  const readMessageMutation1 = useMutation((messageId: number) => readReceiveMessage(messageId), {
+  // 읽은 메세지 mutation
+  const readMessageMutation = useMutation((messageId: number) => readMessage(messageId), {
     onSuccess: () => {
       queryClient.invalidateQueries(['receiveMessage']);
     }
   });
-  // 보낸 메세지함 읽기 mutation
-  const readMessageMutation2 = useMutation((messageId: number) => readSendMessage(messageId), {
+
+  // 메세지 삭제 mutation
+  const deleteMessageMutation = useMutation((messageId: number) => deleteMessage(messageId), {
     onSuccess: () => {
-      queryClient.invalidateQueries(['receiveMessage1']);
+      queryClient.invalidateQueries(['receiveMessage']);
     }
   });
 
-  // 메세지 클릭 handler
+  // 메세지 isRead 업데이트 handler
   const handleClickMsg = (message: MessageType) => {
     if (message && !message.isRead) {
-      readMessageMutation1.mutate(message.id ?? 0);
-      readMessageMutation2.mutate(message.id ?? 0);
+      readMessageMutation.mutate(message.id ?? 0);
     }
-    setIsClicked(true);
     setSelectedMessage(message);
     setSendMsgUser(message);
+  };
+
+  // 메세지 상세 handler
+  const handleShowDetail = () => {
+    setIsClicked(true);
+  };
+
+  // 메세지 삭제 handler
+  const handleDeleteMsg = (message: MessageType) => {
+    if (window.confirm('받은 쪽지를 삭제하시겠습니까?')) {
+      deleteMessageMutation.mutate(message.id ?? 0);
+    } else {
+      alert('삭제를 취소하겠습니다.');
+    }
   };
 
   // 메세지 최신순 정렬과 안읽은 메세지 우선 정렬
@@ -98,21 +110,26 @@ const RecieveBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProp
         <>
           {sortedMessages?.map((message) => {
             return (
-              <Wrapper key={message.sender} onClick={() => handleClickMsg(message)}>
-                <ProfileBox>
-                  {message.user?.avatar_url && message.user.avatar_url.startsWith('profile/') ? (
-                    <Img
-                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${message.user.avatar_url}`}
-                      alt="User Avatar"
-                    />
-                  ) : (
-                    <>{currentUser && <Img src={message.user?.avatar_url} alt="User Avatar" />}</>
-                  )}
-                  <div>{message.user?.name}</div>
-                </ProfileBox>
-                <div> {moment(message.created_at).format('YYYY-MM-DD HH:mm:ss')}</div>
-                <div> {message.isRead ? <div>읽은 메세지입니다..</div> : <div>읽지 않은 메세지입니다..</div>}</div>
+              <Wrapper key={message.id} onClick={() => handleClickMsg(message)}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }} onClick={handleShowDetail}>
+                  <ProfileBox>
+                    {message?.sender_avatar_url && message?.sender_avatar_url.startsWith('profile/') ? (
+                      <Img
+                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${message.sender_avatar_url}`}
+                        alt="User Avatar"
+                      />
+                    ) : (
+                      <>{currentUser && <Img src={message.sender_avatar_url} alt="User Avatar" />}</>
+                    )}
+                    <div>{message.sender_name}</div>
+                  </ProfileBox>
+                  <div> {moment(message.created_at).format('YYYY-MM-DD HH:mm:ss')}</div>
+                  <div> {message.isRead ? <div>읽은 메세지입니다..</div> : <div>읽지 않은 메세지입니다..</div>}</div>
+                </div>
                 <div>{message.isRead ? <DraftsOutlinedIcon /> : <EmailOutlinedIcon />}</div>
+                <button onClick={() => handleDeleteMsg(message)} style={{ width: '50px' }}>
+                  삭제
+                </button>
               </Wrapper>
             );
           })}
@@ -122,7 +139,7 @@ const RecieveBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProp
   );
 };
 
-export default RecieveBox;
+export default ReceiveBox;
 
 const Container = styled.div`
   position: relative;

@@ -1,13 +1,15 @@
 import React from 'react';
-import { MsgDetailType } from '../../types/props';
-import { styled } from 'styled-components';
-import { useCurrentUser } from '../../store/userStore';
+// 라이브러리
 import moment from 'moment';
+// zustand 상태관리 hook
+import { useCurrentUser } from '../../store/userStore';
+// 타입
+import { MsgDetailType } from '../../types/props';
+// 스타일
+import { styled } from 'styled-components';
 
 const MessageDetail = ({ selectedMessage, setIsClicked, setReplyModal, toggleMsgBox }: MsgDetailType) => {
   const currentUser = useCurrentUser();
-
-  console.log('selectedMessage', selectedMessage);
 
   // 메세지 상세 닫기
   const closeDetail = () => {
@@ -21,18 +23,33 @@ const MessageDetail = ({ selectedMessage, setIsClicked, setReplyModal, toggleMsg
 
   return (
     <Container>
-      <ProfileBox>
-        {toggleMsgBox === '받은 쪽지함' ? '발신자' : '수신자'}
-        {selectedMessage?.user?.avatar_url && selectedMessage.user.avatar_url.startsWith('profile/') ? (
-          <Img
-            src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${selectedMessage.user.avatar_url}`}
-            alt="User Avatar"
-          />
-        ) : (
-          <>{currentUser && <Img src={selectedMessage?.user?.avatar_url} alt="User Avatar" />}</>
-        )}
-        <div>{selectedMessage?.user?.name}</div>
-      </ProfileBox>
+      {toggleMsgBox === '받은 쪽지함' ? (
+        <ProfileBox>
+          {toggleMsgBox === '받은 쪽지함' ? '발신자' : '수신자'}
+          {selectedMessage?.sender_avatar_url && selectedMessage.sender_avatar_url.startsWith('profile/') ? (
+            <Img
+              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${selectedMessage.sender_avatar_url}`}
+              alt="User Avatar"
+            />
+          ) : (
+            <>{currentUser && <Img src={selectedMessage?.sender_avatar_url} alt="User Avatar" />}</>
+          )}
+          <div>{selectedMessage?.sender_name}</div>
+        </ProfileBox>
+      ) : (
+        <ProfileBox>
+          {toggleMsgBox === '받은 쪽지함' ? '발신자' : '수신자'}
+          {selectedMessage?.receiver_avatar_url && selectedMessage.receiver_avatar_url.startsWith('profile/') ? (
+            <Img
+              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${selectedMessage.receiver_avatar_url}`}
+              alt="User Avatar"
+            />
+          ) : (
+            <>{currentUser && <Img src={selectedMessage?.receiver_avatar_url} alt="User Avatar" />}</>
+          )}
+          <div>{selectedMessage?.receiver_name}</div>
+        </ProfileBox>
+      )}
       <RecieveTime> 받은시간: {moment(selectedMessage?.created_at).format('YYYY-MM-DD HH:mm:ss')}</RecieveTime>
       <BodyBox>{selectedMessage?.body}</BodyBox>
       {toggleMsgBox === '받은 쪽지함' ? <button onClick={clickOpenReply}>답장하기</button> : <div></div>}

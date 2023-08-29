@@ -1,35 +1,102 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 // 라이브러리
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInView } from 'react-intersection-observer';
 // import DatePicker1 from './DatePicker';
 // 컴포넌트
 import SearchCalendar from './SearchCalendar';
 // api
 import { fetchStoreIdCount } from '../../api/bookmark';
+import { getInfinityStore1 } from '../../api/store';
+// 라이브러리
+import moment from 'moment';
+import _debounce from 'lodash/debounce';
 
 // 타입
-import { SearchListProps, Store } from '../../types/types';
+import { FetchsStore, SearchListProps, Store } from '../../types/types';
 //스타일
 import { styled } from 'styled-components';
 // mui
 import SearchIcon from '@mui/icons-material/Search';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import moment from 'moment';
 
 const SearchList = ({ storeData }: SearchListProps) => {
   const navigate = useNavigate();
 
   // 검색 inputValue state
   const [inputValue, setInputValue] = useState<string>('');
-
+  const [debouncedInputValue, setDebouncedInputValue] = useState<string>('');
   // 기간별 filter state
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
   // filter된 storeList state
   const [filteredStoreList, setFilteredStoreList] = useState<Store[] | null>(null);
+
+  // moment 라이브러리로 원하는 형태로 날짜 포멧
+  const momentStart = startDate ? moment(startDate).format('YYYY.MM.DD') : '0000.01.01';
+  const momentEnd = endDate ? moment(endDate).format('YYYY.MM.DD') : '9999.12.31';
+
+  // 검색결과 length state
+  const [searchResultCount, setSearchResultCount] = useState<number>(0);
+
+  // 디바운싱
+  const debouncedSearch = _debounce((value: string) => {
+    setDebouncedInputValue(value);
+  }, 3000);
+
+  useEffect(() => {
+    debouncedSearch(inputValue);
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [inputValue]);
+
+  // 인피니티 스크롤을 위한 데이터 조회
+  const {
+    data: stores,
+    isLoading,
+    isError,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage
+  } = useInfiniteQuery<FetchsStore>({
+    queryKey: ['/search', debouncedInputValue, momentStart, momentEnd],
+    queryFn: ({ pageParam }) => getInfinityStore1(pageParam, debouncedInputValue, momentStart, momentEnd),
+    // Pass filter values
+    getNextPageParam: (lastPage) => {
+      // 전체 페이지 개수보다 작을 때
+      if (lastPage.page < lastPage.totalPages) {
+        // 다음 페이지로 pageParam를 저장
+        return lastPage.page + 1;
+      }
+    }
+  });
+
+  // 리액트 쿼리에서 쿼리키는 => 시작하는 단어가 동일하면 ,일치하면 전에것을 가져옴
+  // exact
+  // 인피니티 스크롤로 필터된 store
+  const selectStores = useMemo(() => {
+    return stores?.pages
+      .map((data) => {
+        return data.stores;
+      })
+      .flat();
+  }, [stores]);
+  console.log('momentStart==>, ', momentStart);
+  console.log('momentEnd==>,', momentEnd);
+  console.log('stores 쿼리 데이터 ==>, ', stores);
+  console.log('selectStores 데이터 ==>, ', selectStores);
+  // 언제 다음 페이지를 가져올 것
+  const { ref } = useInView({
+    threshold: 1, // 맨 아래에 교차될 때
+    onChange: (inView: any) => {
+      if (!inView || !hasNextPage || isFetchingNextPage) return;
+      fetchNextPage();
+    }
+  });
 
   // 북마크 카운트를 가져오는 함수
   const fetchBookmarkCounts = async () => {
@@ -75,17 +142,34 @@ const SearchList = ({ storeData }: SearchListProps) => {
     return indexD.localeCompare(indexC); // Compare as strings
   });
 
+  // 인기 팝업스토어 자르기
+  const popStores = sortedStores?.slice(0, 3);
+
+  // 최신 팝업스토어 자르기
+  const latStores = latestStores?.slice(0, 3);
+
+  // onChange 핸들러
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setInputValue(newValue);
+  };
+
+  // 검색 버튼  핸들러
+  const handleSearchButtonClick = () => {
+    setDebouncedInputValue(inputValue);
+    if (!inputValue) {
+      alert('검색어를 입력해주세요!');
+      setDebouncedInputValue('');
+    }
+  };
+
   // 데이터 필터링
   useEffect(() => {
-    // storeData가 존재하면 필터링을 진행합니다.
-    if (filteredStoreList) {
-      const filteredStores = storeData.filter((store) => {
-        const lowercaseInputValue = inputValue.toLowerCase();
+    if (debouncedInputValue || inputValue || startDate || endDate) {
+      const filteredStores = selectStores?.filter((store) => {
+        const lowercaseInputValue = debouncedInputValue.toLowerCase();
         const storeStartDate = moment(store.period_start);
         const storeEndDate = moment(store.period_end);
-
-        const momentStart = startDate ? moment(startDate).format('YYYY.MM.DD') : '0000.01.01';
-        const momentEnd = endDate ? moment(endDate).format('YYYY.MM.DD') : '9999.12.31';
 
         return (
           (store.title.toLowerCase().includes(lowercaseInputValue) ||
@@ -100,24 +184,10 @@ const SearchList = ({ storeData }: SearchListProps) => {
       console.log('필터링 결과:', filteredStores);
 
       // 검색 결과를 상태로 설정
-      setFilteredStoreList(filteredStores);
+      setFilteredStoreList(filteredStores || null);
+      setSearchResultCount(filteredStores?.length || 0);
     }
-  }, [inputValue, startDate, endDate, storeData, filteredStoreList]);
-
-  // onChange 핸들러
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    console.log('새로운 입력 값:', newValue);
-    setInputValue(newValue);
-  };
-
-  // onSubmit 핸들러
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (startDate && endDate) {
-      handleSearch(startDate, endDate);
-    }
-  };
+  }, [selectStores, debouncedInputValue, startDate, endDate]);
 
   // SearchCalendar 컴포넌트에서 지정 검색한 date를 받아옴 props로 받아옴
   const handleSearch = (start: Date, end: Date) => {
@@ -151,29 +221,33 @@ const SearchList = ({ storeData }: SearchListProps) => {
     navigate(`/detail/${id}`);
   };
 
-  // 인기 팝업스토어 자르기
-  const popStores = sortedStores?.slice(0, 3);
-
-  // 최신 팝업스토어 자르기
-  const latStores = latestStores?.slice(0, 3);
-
+  if (isLoading) {
+    return <div>로딩중입니다.</div>;
+  }
+  if (isError) {
+    return <div>오류가 발생했습니다.</div>;
+  }
   return (
     <Container>
       <SearchBox>
         <Search />
-        <form onSubmit={handleFormSubmit}>
+        <form onSubmit={handleSearchButtonClick}>
           <SearchInput
             type="text"
             value={inputValue}
-            onChange={handleInputChange}
             placeholder="팝업스토어를 검색해보세요!"
+            onChange={handleInputChange}
           />
-          <Filter type="submit">검색</Filter>
+          <button type="submit">검색</button>
         </form>
+
         {/* <Filter /> */}
         <Reset onClick={handleReset} />
       </SearchBox>
-
+      <TagBox>
+        <TagTitle>검색 Tip</TagTitle>
+        <Tag> "성수" or "제목 또는 내용" </Tag>
+      </TagBox>
       <TagBox>
         <TagTitle>인기 검색어</TagTitle>
         <Tag>#김우리 </Tag>
@@ -186,8 +260,29 @@ const SearchList = ({ storeData }: SearchListProps) => {
       </TagBox>
       {/* <DatePicker1 /> */}
       <SearchCalendar storeData={storeData} onSearch={handleSearch} />
+      {searchResultCount > 0 && (
+        <SearchResultCount>{`${searchResultCount}개의 검색 결과가 있습니다.`}</SearchResultCount>
+      )}
       <>
-        {!filteredStoreList ? (
+        {filteredStoreList ? (
+          <div>
+            {filteredStoreList.length > 0 ? (
+              <GridContainer>
+                {filteredStoreList?.map((store) => (
+                  <GridItem key={store.id} onClick={() => navDetail(store.id)}>
+                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                    <div>{store.title}</div>
+                    <div>
+                      {store.period_start} ~ {store.period_end}{' '}
+                    </div>
+                  </GridItem>
+                ))}
+              </GridContainer>
+            ) : (
+              <div>검색 결과가 없습니다.</div>
+            )}
+          </div>
+        ) : (
           <>
             <Title>인기 팝업스토어</Title>
             <GridContainer>
@@ -215,31 +310,12 @@ const SearchList = ({ storeData }: SearchListProps) => {
               ))}
             </GridContainer>
           </>
-        ) : (
-          <div>
-            {filteredStoreList.length > 0 ? (
-              <GridContainer>
-                {filteredStoreList?.map((store) => (
-                  <GridItem key={store.id} onClick={() => navDetail(store.id)}>
-                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-                    <div>{store.title}</div>
-                    <div>
-                      {store.period_start} ~ {store.period_end}{' '}
-                    </div>
-                  </GridItem>
-                ))}
-              </GridContainer>
-            ) : (
-              <div>검색 결과가 없습니다.</div>
-            )}
-          </div>
         )}
       </>
-
-      {/* <div
+      <div
         style={{
           backgroundColor: 'yellow',
-          width: '100%',
+          width: '50%',
           border: '1px solid black',
           padding: '20px',
           margin: '10px'
@@ -247,7 +323,7 @@ const SearchList = ({ storeData }: SearchListProps) => {
         ref={ref}
       >
         Trigger to Fetch Here
-      </div> */}
+      </div>
     </Container>
   );
 };
@@ -279,7 +355,7 @@ const Reset = styled(RestartAltIcon)`
   position: absolute;
 
   top: 25%;
-  right: 0;
+  right: 10%;
 `;
 
 const SearchInput = styled.input`
@@ -334,6 +410,12 @@ const PopupTitle = styled.div`
   margin-top: 15px;
 
   font-weight: bold;
+`;
+
+const SearchResultCount = styled.div`
+  font-size: 16px;
+  margin: 10px 0;
+  color: #f24d0d;
 `;
 
 const GridContainer = styled.div`

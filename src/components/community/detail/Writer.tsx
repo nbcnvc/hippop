@@ -1,22 +1,19 @@
 import Subscribe from './Subscribe';
+import Message from '../../message/Message';
 
 import { styled } from 'styled-components';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 
-import { getUser } from '../../../api/user';
-import { UserInfo } from '../../../types/types';
 import { WriterProps } from '../../../types/props';
 
-const Writer = ({ userId, setWriterInfo }: WriterProps) => {
+const Writer = ({ writer, postId }: WriterProps) => {
   const { pathname } = useLocation();
+  const [msgModal, setMsgModal] = useState<boolean>(false);
 
-  // 작성자 정보 가져오기 (To)
-  const { data: user } = useQuery<UserInfo | null>({ queryKey: ['user', userId], queryFn: () => getUser(userId) });
-
-  if (user) {
-    setWriterInfo(user);
-  }
+  const openMsgModal = () => {
+    setMsgModal(true);
+  };
 
   return (
     <>
@@ -32,15 +29,16 @@ const Writer = ({ userId, setWriterInfo }: WriterProps) => {
         }}
       >
         <div>
-          {user?.avatar_url.startsWith('profile/') ? (
-            <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${user?.avatar_url}`} alt="User Avatar" />
+          {writer?.avatar_url.startsWith('profile/') ? (
+            <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${writer?.avatar_url}`} alt="User Avatar" />
           ) : (
-            <Img src={user?.avatar_url} alt="User Avatar" />
+            <Img src={writer?.avatar_url} alt="User Avatar" />
           )}
-          <div>{user?.name}</div>
+          <div>{writer?.name}</div>
         </div>
-
-        {pathname === '/review' && <Subscribe userId={userId} />}
+        {pathname === `/rdetail/${postId}` && <Subscribe userId={writer?.id} />}
+        {pathname === `/mdetail/${postId}` && <button onClick={openMsgModal}>쪽지 보내기</button>}
+        {msgModal && <Message msgModal={msgModal} setMsgModal={setMsgModal} writer={writer} />}
       </div>
     </>
   );
