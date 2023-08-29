@@ -97,9 +97,9 @@ const AlarmBox = () => {
                 }}
               >
                 <div
-                  onClick={() => {
-                    navigate(`rdetail/${alarm.post_id}`);
-                  }}
+                // onClick={() => {
+                //   navigate(`rdetail/${alarm.post_id}`);
+                // }}
                 >
                   {alarm.content}
                 </div>

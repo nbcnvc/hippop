@@ -88,6 +88,7 @@ const Write = ({
     // 입력값 초기화
     setTitle('');
     setBody('');
+    setKeyword('');
 
     // 글 작성 모달 닫기
     setWriteModal(false);
