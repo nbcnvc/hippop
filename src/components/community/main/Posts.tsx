@@ -28,7 +28,7 @@ const Posts = () => {
       return null; // 마지막 페이지인 경우
     }
   });
-  console.log(posts);
+  // console.log(posts);
 
   const selectPosts = useMemo(() => {
     return posts?.pages
@@ -37,6 +37,7 @@ const Posts = () => {
       })
       .flat();
   }, [posts]);
+  // console.log(selectPosts);
 
   // 언제 다음 페이지를 가져올 것
   const { ref } = useInView({

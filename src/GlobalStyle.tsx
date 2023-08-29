@@ -23,7 +23,7 @@ body {
     font-family: 'Fira Sans', sans-serif;
     max-width: 100%;
     margin: 0 auto;
-    background-color: #fffbf4;
+    background-color: #fffbf4; //cream color
 }
 a {
     text-decoration:none;

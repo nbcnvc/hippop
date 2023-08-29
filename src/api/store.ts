@@ -39,8 +39,30 @@ export const getInfinityStore = async (pageParam: number = 1): Promise<FetchsSto
 
   count = storeCount;
 
-  // 총 페이지
   const totalPages = count ? Math.floor(count / 3) + (count % 3 === 0 ? 0 : 1) : 1;
 
   return { stores: data as Store[], page: pageParam, totalPages, count };
+};
+
+// myPage - pageParam
+export const getMyStores = async (userId: string, pageParam: number = 1): Promise<FetchsStore> => {
+  const PAGE_SIZE = 3; // 페이지당 아이템 개수
+
+  const { data: trigger } = await supabase.from('bookmark').select('store_id').eq('user_id', userId);
+
+  const storeIds = (trigger || []).map((item) => item.store_id);
+  // store_id만 추출한 배열 생성
+
+  const { data: stores } = await supabase
+    .from('store')
+    .select()
+    .in('id', storeIds) // storeIds 배열에 포함된 id들을 가진 store 조회
+    .order('created_at', { ascending: false })
+    .range((pageParam - 1) * PAGE_SIZE, pageParam * PAGE_SIZE - 1);
+
+  const { count } = await supabase.from('store').select('count', { count: 'exact' });
+
+  const totalPages = count ? Math.ceil(count / PAGE_SIZE) : 1;
+
+  return { stores: stores as Store[], page: pageParam, totalPages, count };
 };

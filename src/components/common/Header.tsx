@@ -118,6 +118,7 @@ function Header() {
                       <p>반갑습니다!</p>
                       <p>{currentUser.name}님</p>
                     </div>
+
                     {currentUser.avatar_url.startsWith('profile/') ? (
                       <img
                         src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser.avatar_url}`}
@@ -149,25 +150,27 @@ function Header() {
   );
 }
 export default Header;
+
 const HeaderTag = styled.header`
   background-color: #F24D0D;
   color: white;
   width: 100%;
-  height: 5vh;
+  height: 50px;
   .header-wrapper {
-    height: 5vh;
+    height: 50px;
     margin: 0 auto;
-    width: 80%;
+    width: 50%;
     display: flex;
     justify-content: space-between;
     align-items: center;
   ul {
     margin: 0 auto;
-    width: 70%;
+    margin-right:0;
+    width: 40%;
     text-align: center;
     display: flex;
-    justify-content: center;
-    gap: 10vw;
+    justify-content: flex-end;
+    gap: 80px;
   }
   li{
     a {

@@ -57,6 +57,24 @@ export const getPosts = async (pageParam: number = 1, param?: string): Promise<F
   return { posts: data as PostType[], page: pageParam, totalPages, count };
 };
 
+//myPage - pageParam
+// 내가 쓴 글 Post 전체 조회 (isDeleted가 false인 것만)
+export const getMyItems = async (userId: string, itemType: 'posts' | 'stores', pageParam: number = 1): Promise<any> => {
+  const PAGE_SIZE = 3; // 페이지당 아이템 개수
+  const resource = itemType === 'posts' ? 'post' : 'store';
+  const { data: items } = await supabase
+    .from(resource)
+    .select()
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .range((pageParam - 1) * PAGE_SIZE, pageParam * PAGE_SIZE - 1);
+  const { count } = await supabase.from(resource).select('count', { count: 'exact' });
+
+  const totalPages = count ? Math.ceil(count / PAGE_SIZE) : 1;
+
+  return { items, page: pageParam, totalPages, count };
+};
+
 // Post 상세 조회
 export const getPost = async (id: number): Promise<PostType | null> => {
   const { data } = await supabase.from('post').select('*').eq('id', id).single();
