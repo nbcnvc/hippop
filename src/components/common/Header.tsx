@@ -30,6 +30,7 @@ function Header() {
     const authSubscription = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session) {
         const response = await supabase.from('user').select().eq('id', session?.user.id).single();
+
         if (response.data) {
           setCurrentUser(response.data);
           setUser(response.data);
@@ -42,9 +43,12 @@ function Header() {
             avatar_url: session.user.user_metadata.avatar_url,
             name: session.user.user_metadata.name
           };
+
           await supabase.from('user').insert(userInfo);
+
           setCurrentUser(userInfo);
           setUser(userInfo);
+
           localStorage.setItem('user', JSON.stringify(userInfo));
         }
       } else if (event === 'SIGNED_OUT') {
@@ -53,21 +57,25 @@ function Header() {
         localStorage.removeItem('user');
       }
     });
+
     return () => {
       authSubscription.data.subscription.unsubscribe();
     };
   }, []);
+
   useEffect(() => {
     function handleOutsideClick(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsMenuOpen(false);
       }
     }
+
     window.addEventListener('mousedown', handleOutsideClick);
     return () => {
       window.removeEventListener('mousedown', handleOutsideClick);
     };
   }, []);
+
   const handleToggle = () => {
     if (user) {
       handleLogOut();
@@ -76,14 +84,17 @@ function Header() {
       setIsModalOpen(true);
     }
   };
+
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
   const handleModalOutsideClick = (event: React.MouseEvent) => {
     if (event.target === event.currentTarget) {
       closeModal();
     }
   };
+
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
   };

@@ -29,6 +29,8 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
     }
   }, [storeData]);
 
+  console.log(filteredStore);
+
   const PrevArrow = ({ onClick }: SliderButton) => {
     return (
       <button onClick={onClick} type="button">
@@ -45,28 +47,8 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
     );
   };
 
-  // filteredStore.length에 따라 slidesToShow 값을 동적으로 설정
-  let desiredSlidesToShow;
-
-  if (filteredStore && filteredStore.length >= 4) {
-    desiredSlidesToShow = 3;
-  } else if (filteredStore && filteredStore.length === 3) {
-    desiredSlidesToShow = 2;
-  } else if (filteredStore && filteredStore.length === 2) {
-    desiredSlidesToShow = 1;
-  } else if (filteredStore && filteredStore.length === 1) {
-    desiredSlidesToShow = 0;
-  }
-
-  console.log(desiredSlidesToShow);
-
   // 위에서 계산한 값을 사용하여 설정 객체를 생성
   const settings = {
-    // // infinite: filteredStore && filteredStore.length > 0 ? true : false,
-    // // slidesToShow: desiredSlidesToShow,
-    // // slidesToScroll: filteredStore && filteredStore.length > 2 ? 1 : 0,
-    // initialSlide: 0,
-
     slidesToShow: 3,
     slidesToScroll: 1,
     centerMode: true,
@@ -106,8 +88,6 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
   //   //       slidesToScroll: 1
   //   //     }
   //   //   }
-
-  console.log(filteredStore);
 
   if (isLoading) {
     return <div>로딩중입니다...</div>;
