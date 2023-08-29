@@ -9,7 +9,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentUser } from '../store/userStore';
 import { deletePost, getPost } from '../api/post';
-import { UserInfo } from '../types/types';
 
 const MDetail = () => {
   const { id } = useParams();
