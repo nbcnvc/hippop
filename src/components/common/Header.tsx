@@ -164,25 +164,26 @@ function Header() {
   );
 }
 export default Header;
+
 const HeaderTag = styled.header`
   background-color: #f24d0d;
   color: white;
   width: 100%;
-  height: 5vh;
+  height: 50px;
   .header-wrapper {
-    height: 5vh;
+    height: 50px;
     margin: 0 auto;
-    width: 80%;
+    width: 50%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
     ul {
       margin: 0 auto;
+      margin-right: 20px;
       width: 70%;
       text-align: center;
       display: flex;
-      justify-content: center;
-      gap: 10vw;
+      justify-content: flex-end;
+      gap: 40px;
     }
     li {
       a {
