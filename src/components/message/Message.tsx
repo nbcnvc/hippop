@@ -29,10 +29,6 @@ const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
     }
   };
 
-  console.log('currentUser.id', currentUser.id);
-  console.log(' writer.id', writer);
-  console.log('msgModal', msgModal);
-
   // 쪽지 내용 onChange
   const handleBodyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBody(e.target.value);

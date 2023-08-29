@@ -24,7 +24,6 @@ export const receiveMessage = async (userId: string): Promise<MessageType[] | nu
   return data;
 };
 
-// 발신메세지 받기
 export const mySendMessage = async (userId: string): Promise<MessageType[] | null> => {
   const { data, error } = await supabase
     .from('message')

@@ -16,7 +16,7 @@ const Alarm = () => {
   const currentUser = useCurrentUser();
   const currentUserId = currentUser?.id;
 
-  // 유저의 구독자 리스트 가져오기
+  // 유저의 구독자 리스트 가져오기!
   const { data } = useQuery(['sublist'], () => getSubList(currentUserId ?? ''));
   let subList: any[] = [];
   if (data) {

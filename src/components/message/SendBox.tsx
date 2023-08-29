@@ -23,15 +23,17 @@ const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) 
 
   const currentUser = useCurrentUser();
   const userId = currentUser?.id ?? '';
+
   const queryClient = useQueryClient();
+
   const {
     data: sendMessages,
     isLoading,
     isError
   } = useQuery<MessageType[] | null>({
     queryKey: ['sendMessage'],
-    queryFn: () => mySendMessage(userId)
-    // enabled: !!currentUser
+    queryFn: () => mySendMessage(userId),
+    enabled: !!currentUser
   });
 
   // 읽은 메세지 mutation

@@ -1,13 +1,12 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 // 라이브러리
-import { useInView } from 'react-intersection-observer';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 //타입
-import { Bookmark, FetchsStore, PostType, Store } from '../types/types';
+import { Bookmark, PostType, Store } from '../types/types';
 //api
-import { getProfileImg, getUser } from '../api/user';
-import { getInfinityStore } from '../api/store';
+import { getUser } from '../api/user';
+
 import { supabase } from '../api/supabase';
 
 import { setUserStore, useCurrentUser } from '../store/userStore';
@@ -92,44 +91,6 @@ const MyPage = () => {
       window.removeEventListener('mousedown', handleOutsideClick);
     };
   }, []);
-
-  // 인피니티 스크롤을 위한 데이터 조회
-  const {
-    data: stores,
-    isLoading,
-    isError,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage
-  } = useInfiniteQuery<FetchsStore>({
-    queryKey: [`/search`],
-    queryFn: ({ pageParam }) => getInfinityStore(pageParam),
-    getNextPageParam: (lastPage) => {
-      // 전체 페이지 개수보다 작을 때
-      if (lastPage.page < lastPage.totalPages) {
-        // 다음 페이지로 pageParam를 저장
-        return lastPage.page + 1;
-      }
-    }
-  });
-
-  // 인피니티 스크롤로 필터된 store
-  const selectStores = useMemo(() => {
-    return stores?.pages
-      .map((data) => {
-        return data.stores;
-      })
-      .flat();
-  }, [stores]);
-
-  // 언제 다음 페이지를 가져올 것
-  const { ref } = useInView({
-    threshold: 1, // 맨 아래에 교차될 때
-    onChange: (inView: any) => {
-      if (!inView || !hasNextPage || isFetchingNextPage) return;
-      fetchNextPage();
-    }
-  });
 
   // my page가 렌더되면 현재 login상태 user가 작성한 post 배열 가져오기
   useEffect(() => {
@@ -302,13 +263,6 @@ const MyPage = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  if (isLoading) {
-    return <div>로딩중입니다.</div>;
-  }
-  if (isError) {
-    return <div>오류가 발생했습니다.</div>;
-  }
-
   return (
     <MypageTag>
       <header>
@@ -470,18 +424,6 @@ const MyPage = () => {
             </div>
           </div>
         )}
-        <div
-          style={{
-            backgroundColor: 'yellow',
-            width: '100%',
-            border: '1px solid black',
-            padding: '20px',
-            margin: '10px'
-          }}
-          ref={ref}
-        >
-          Trigger to Fetch Here
-        </div>
       </div>
     </MypageTag>
   );
