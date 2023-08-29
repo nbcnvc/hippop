@@ -124,3 +124,8 @@ export interface MessageReplyProps {
   sendMsgUser: MessageType | null;
   setOpenReply: React.Dispatch<SetStateAction<boolean | null>>;
 }
+
+export interface AlarmBoxProps {
+  isAlarmOpen: boolean;
+  setIsAlarmOpen: React.Dispatch<SetStateAction<boolean>>;
+}

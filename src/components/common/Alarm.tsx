@@ -85,10 +85,11 @@ const Alarm = () => {
           // 메세지에 들어갈 내용 세팅
           const writerName = user.name;
           const newAlarm = {
+            ctg_index: 1,
             created_at: postData.commit_timestamp,
             targetUserId: currentUserId,
-            content: `${writerName}님의 새 게시글: ${postData.new.title}`
-            // post_id: postData.new.id
+            content: `${writerName}님의 새 게시글: ${postData.new.title}`,
+            post_id: postData.new.id
           };
 
           // 메세지 테이블에 DB 추가
@@ -122,10 +123,11 @@ const Alarm = () => {
           // 메세지에 들어갈 내용 세팅
           const subFromName = user.name;
           const newAlarm = {
+            ctg_index: 2,
             created_at: subData.commit_timestamp,
             targetUserId: currentUserId,
-            content: `${subFromName}님이 구독하였습니다.`
-            // post_id: postData.new.id
+            content: `${subFromName}님이 나를 구독하였습니다.`,
+            sub_from: subData.new.subscribe_from
           };
 
           // 메세지 테이블에 DB 추가
@@ -159,10 +161,10 @@ const Alarm = () => {
           // 메세지에 들어갈 내용 세팅
           const senderName = user.name;
           const newAlarm = {
+            ctg_index: 3,
             created_at: msgData.commit_timestamp,
             targetUserId: currentUserId,
-            content: `${senderName}님이 쪽지를 보냈습니다.`
-            // post_id: postData.new.id
+            content: `${senderName}님이 나에게 쪽지를 보냈습니다.`
           };
 
           // 메세지 테이블에 DB 추가

@@ -144,7 +144,7 @@ function Header() {
                     )}
                   </div>
                   <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
-                    <Link to="/mypage">My Page</Link>
+                    <Link to={`/mypage/${currentUser.id}`}>My Page</Link>
                     <div onClick={handleToggle}>Logout</div>
                   </div>
                 </div>
