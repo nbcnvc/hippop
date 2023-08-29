@@ -11,20 +11,14 @@ import { styled } from 'styled-components';
 
 const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
   const [body, setBody] = useState<string>('');
-  const currentUser = useCurrentUser() ?? { id: '', avatar_url: '', name: '' };
+  const currentUser = useCurrentUser() ?? { id: '' };
 
   // 쪽지 보내기 요청
   const messageHandler = async () => {
     if (writer) {
-      const message: MessageType = {
+      const message: Omit<MessageType, 'from' | 'to' | 'id' | 'created_at'> = {
         sender: currentUser.id,
-        sender_avatar_url: currentUser.avatar_url,
-        sender_name: currentUser.name,
-
         receiver: writer.id,
-        receiver_avatar_url: writer.avatar_url,
-        receiver_name: writer.name,
-
         body,
         isRead: false
       };
@@ -34,6 +28,10 @@ const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
       console.log('메세지 전송 성공!');
     }
   };
+
+  console.log('currentUser.id', currentUser.id);
+  console.log(' writer.id', writer);
+  console.log('msgModal', msgModal);
 
   // 쪽지 내용 onChange
   const handleBodyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
