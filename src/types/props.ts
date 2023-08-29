@@ -35,6 +35,8 @@ export interface SearchCalendarProps {
 }
 
 export interface SearchModalProps {
+  keyword: string;
+  setKeyword: React.Dispatch<SetStateAction<string>>;
   searchModal: boolean;
   setWriteModal: React.Dispatch<SetStateAction<boolean>>;
   setSearchModal: React.Dispatch<SetStateAction<boolean>>;
@@ -52,6 +54,7 @@ export interface SearchDefaultProps {
 }
 
 export interface WriteProps {
+  setKeyword: React.Dispatch<SetStateAction<string>>;
   writeModal: boolean;
   setWriteModal: React.Dispatch<SetStateAction<boolean>>;
   setSearchModal: React.Dispatch<SetStateAction<boolean>>;
@@ -61,7 +64,7 @@ export interface WriteProps {
 }
 
 export interface CommentProps {
-  post: PostType;
+  postId: number;
 }
 
 export interface WriterProps {
@@ -70,11 +73,13 @@ export interface WriterProps {
 }
 
 export interface SubscribeProps {
-  userId: string | undefined;
+  writerId: string | undefined;
 }
 
 export interface EditProps {
-  post: PostType;
+  postId: number;
+  postBody: string;
+  postTitle: string;
   isEdit: boolean;
   setIsEdit: React.Dispatch<SetStateAction<boolean>>;
 }
@@ -118,4 +123,9 @@ export interface MsgDetailType {
 export interface MessageReplyProps {
   sendMsgUser: MessageType | null;
   setOpenReply: React.Dispatch<SetStateAction<boolean | null>>;
+}
+
+export interface AlarmBoxProps {
+  isAlarmOpen: boolean;
+  setIsAlarmOpen: React.Dispatch<SetStateAction<boolean>>;
 }

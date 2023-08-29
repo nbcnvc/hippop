@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 
-import { FetchPost, NewPost, PostType } from '../types/types';
+import { FetchPost, NewPost, PostType, UpdatePost } from '../types/types';
 
 // Post 이미지 파일 업로드
 export const uploadImages = async (uploadImage: File) => {
@@ -76,8 +76,8 @@ export const getMyItems = async (userId: string, itemType: 'posts' | 'stores', p
 };
 
 // Post 상세 조회
-export const getPost = async (id: number): Promise<PostType | null> => {
-  const { data } = await supabase.from('post').select('*').eq('id', id).single();
+export const getPost = async (id: number): Promise<any> => {
+  const { data } = await supabase.from('post').select(`*, user( * ), store( title )`).eq('id', id).single();
   return data;
 };
 
@@ -92,6 +92,6 @@ export const deletePost = async (id: number): Promise<void> => {
 };
 
 // Post 수정
-export const updatePost = async (editPost: PostType): Promise<void> => {
-  await supabase.from('post').update(editPost).eq('id', editPost.id).select();
+export const updatePost = async (updatePost: UpdatePost): Promise<void> => {
+  await supabase.from('post').update(updatePost).eq('id', updatePost.id).select();
 };

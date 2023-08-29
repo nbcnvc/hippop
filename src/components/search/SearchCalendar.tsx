@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import { SearchCalendarProps } from '../../types/props';
+// 라이브러리
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
+// 타입
+import { SearchCalendarProps } from '../../types/props';
+// 스타일
 import { styled } from 'styled-components';
+// mui
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 
 const SearchCalendar = ({ onSearch }: SearchCalendarProps) => {
@@ -11,7 +15,7 @@ const SearchCalendar = ({ onSearch }: SearchCalendarProps) => {
   const [endDate, setEndDate] = useState<Date>(new Date());
 
   const handleStartDateChange = (date: Date) => {
-    if (startDate < date) {
+    if (endDate < date) {
       alert('종료일 보다 클 수는 없어요~ ');
       setEndDate(date);
       setStartDate(date);
@@ -29,9 +33,10 @@ const SearchCalendar = ({ onSearch }: SearchCalendarProps) => {
   };
 
   const handleSearch = () => {
+    setStartDate(startDate);
+    setEndDate(endDate);
     onSearch(startDate, endDate);
   };
-
   return (
     <Container>
       {/* <div>기간별</div> */}

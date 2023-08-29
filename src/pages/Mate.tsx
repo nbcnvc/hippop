@@ -13,7 +13,7 @@ const Mate = () => {
   const [storeId, setStoreId] = useState<number>(0);
   const [storeTitle, setStoreTitle] = useState<string>('');
   const [result, setResult] = useState<Store[] | null>(null);
-
+  const [keyword, setKeyword] = useState<string>('');
   const currentUser = useCurrentUser();
 
   // 검색 모달 열기
@@ -33,6 +33,8 @@ const Mate = () => {
         </button>
       </div>
       <SearchModal
+        keyword={keyword}
+        setKeyword={setKeyword}
         setWriteModal={setWriteModal}
         searchModal={searchModal}
         setSearchModal={setSearchModal}
@@ -42,6 +44,7 @@ const Mate = () => {
         setResult={setResult}
       />
       <Write
+        setKeyword={setKeyword}
         writeModal={writeModal}
         setWriteModal={setWriteModal}
         setSearchModal={setSearchModal}

@@ -16,15 +16,9 @@ const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
   // 쪽지 보내기 요청
   const sendMessageHandler = async () => {
     if (sendMsgUser) {
-      const message: MessageType = {
+      const message: Omit<MessageType, 'from' | 'to' | 'id' | 'created_at'> = {
         sender: currentUser.id,
-        sender_avatar_url: currentUser.avatar_url,
-        sender_name: currentUser.name,
-
         receiver: sendMsgUser.sender,
-        receiver_avatar_url: sendMsgUser.sender_avatar_url,
-        receiver_name: sendMsgUser.sender_name,
-
         body,
         isRead: false
       };
@@ -35,7 +29,7 @@ const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
   };
 
   // 쪽지 내용 onChange
-  const handleBodyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBodyChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setBody(e.target.value);
   };
 
@@ -65,15 +59,12 @@ const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
         </ProfileBox>
         <ProfileBox>
           수신자:
-          {sendMsgUser?.sender_avatar_url && sendMsgUser?.sender_avatar_url.startsWith('profile/') ? (
-            <Img
-              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${sendMsgUser?.sender_avatar_url}`}
-              alt="User Avatar"
-            />
+          {sendMsgUser?.to.avatar_url && sendMsgUser?.to.avatar_url.startsWith('profile/') ? (
+            <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${sendMsgUser?.to.avatar_url}`} alt="User Avatar" />
           ) : (
-            <>{currentUser && <Img src={sendMsgUser?.sender_avatar_url} alt="User Avatar" />}</>
+            <>{currentUser && <Img src={sendMsgUser?.to.avatar_url} alt="User Avatar" />}</>
           )}
-          <div>{sendMsgUser?.sender_name}</div>
+          <div>{sendMsgUser?.to.name}</div>
         </ProfileBox>
         <form onSubmit={() => handleSendMessage()}>
           <Input value={body} onChange={handleBodyChange} placeholder="전달할 내용을 입력해주세요" />
@@ -126,7 +117,7 @@ const Img = styled.img`
   border-radius: 50%;
 `;
 
-const Input = styled.input`
+const Input = styled.textarea`
   width: 470px;
   height: 200px;
   border: 1px solid black;

@@ -5,15 +5,17 @@ import { useCurrentUser } from '../../../store/userStore';
 import { SubscribeProps } from '../../../types/props';
 import { SubscribeType } from '../../../types/types';
 
-const Subscribe = ({ userId }: SubscribeProps) => {
+const Subscribe = ({ writerId }: SubscribeProps) => {
   // 로그인한 유저 정보 가져오기 (From)
   const currentUser = useCurrentUser();
 
   // 작성자 && 구독자
   const subscribe: SubscribeType = {
     subscribe_from: currentUser?.id,
-    subscribe_to: userId
+    subscribe_to: writerId
   };
+
+  // console.log('userId : ', userId);
 
   // 구독 확인하기
   const { data: subscribed } = useQuery(['subscribe'], async () => {
@@ -27,7 +29,7 @@ const Subscribe = ({ userId }: SubscribeProps) => {
   const queryClient = useQueryClient();
   const createMutation = useMutation(createSubscribe, {
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['subscribe'] });
+      queryClient.invalidateQueries(['subscribe']);
     }
   });
   const subButton = () => {
@@ -44,7 +46,7 @@ const Subscribe = ({ userId }: SubscribeProps) => {
   // 구독 취소
   const deleteMutation = useMutation(deleteSubscribe, {
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['subscribe'] });
+      queryClient.invalidateQueries(['subscribe']);
     }
   });
   const cancelButton = () => {

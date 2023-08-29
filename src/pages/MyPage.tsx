@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 
 // 라이브러리
-import { useInView } from 'react-intersection-observer';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 //타입
 import { Bookmark, PostType, Store } from '../types/types';
@@ -22,6 +21,7 @@ import MessageReply from '../components/message/MessageReply';
 import { MessageType } from '../types/types';
 import ReceiveBox from '../components/message/ReceiveBox';
 import { Link } from 'react-router-dom';
+import { useInView } from 'react-intersection-observer';
 
 const MyPage = () => {
   const [editingName, setEditingName] = useState(false);

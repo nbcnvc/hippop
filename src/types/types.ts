@@ -47,6 +47,11 @@ export interface NewPost {
   title: string;
   body: string;
 }
+export interface UpdatePost {
+  id: number;
+  title: string;
+  body: string;
+}
 
 export interface Comment {
   id: number;
@@ -54,7 +59,6 @@ export interface Comment {
   updated_at: string;
   user_id: string;
   post_id: number;
-  user_name: string;
   body: string;
   isDeleted: boolean;
 }
@@ -62,7 +66,6 @@ export interface Comment {
 export interface NewComment {
   user_id: string | undefined;
   post_id: number;
-  user_name: string | undefined;
   body: string;
 }
 
@@ -111,6 +114,9 @@ export interface AlarmType {
   targetUserId: string;
   content: string;
   isRead: boolean;
+  post_id: number | null;
+  sub_from: string | null;
+  ctg_index: number;
 }
 
 // 지오코딩 타입 선언
@@ -166,40 +172,16 @@ export interface HotPlaceInfo {
   y: string;
 }
 
-// export interface HotPlaceImage {
-//   collection: string;
-//   datetime: string;
-//   display_sitename: string;
-//   doc_url: string;
-//   image_url: string;
-//   thumbnail_url: string;
-//   width: number;
-//   height: number;
-//   thumbnail: string;
-// }
-
-// export interface HotPlaceData {
-//   id: string;
-//   category_code: string;
-//   category_name: string;
-//   place_name: string;
-//   place_url: string;
-//   images: string;
-// }
-
 export interface MessageType {
   sender: string;
   receiver: string;
   body: string;
   isRead: boolean;
-  sender_avatar_url: string;
-  sender_name: string;
-  receiver_avatar_url: string;
-  receiver_name: string;
 
-  id?: number;
-  created_at?: string;
-  user?: UserMsgType;
+  from: UserMsgType;
+  to: UserMsgType;
+  id: number;
+  created_at: string;
 }
 
 export interface UserMsgType {

@@ -26,28 +26,28 @@ const MessageDetail = ({ selectedMessage, setIsClicked, setReplyModal, toggleMsg
       {toggleMsgBox === '받은 쪽지함' ? (
         <ProfileBox>
           {toggleMsgBox === '받은 쪽지함' ? '발신자' : '수신자'}
-          {selectedMessage?.sender_avatar_url && selectedMessage.sender_avatar_url.startsWith('profile/') ? (
+          {selectedMessage?.to.avatar_url && selectedMessage.to.avatar_url.startsWith('profile/') ? (
             <Img
-              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${selectedMessage.sender_avatar_url}`}
+              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${selectedMessage.to.avatar_url}`}
               alt="User Avatar"
             />
           ) : (
-            <>{currentUser && <Img src={selectedMessage?.sender_avatar_url} alt="User Avatar" />}</>
+            <>{currentUser && <Img src={selectedMessage?.to.avatar_url} alt="User Avatar" />}</>
           )}
-          <div>{selectedMessage?.sender_name}</div>
+          <div>{selectedMessage?.to.name}</div>
         </ProfileBox>
       ) : (
         <ProfileBox>
           {toggleMsgBox === '받은 쪽지함' ? '발신자' : '수신자'}
-          {selectedMessage?.receiver_avatar_url && selectedMessage.receiver_avatar_url.startsWith('profile/') ? (
+          {selectedMessage?.to.avatar_url && selectedMessage.to.avatar_url.startsWith('profile/') ? (
             <Img
-              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${selectedMessage.receiver_avatar_url}`}
+              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${selectedMessage.to.avatar_url}`}
               alt="User Avatar"
             />
           ) : (
-            <>{currentUser && <Img src={selectedMessage?.receiver_avatar_url} alt="User Avatar" />}</>
+            <>{currentUser && <Img src={selectedMessage?.to.avatar_url} alt="User Avatar" />}</>
           )}
-          <div>{selectedMessage?.receiver_name}</div>
+          <div>{selectedMessage?.to.name}</div>
         </ProfileBox>
       )}
       <RecieveTime> 받은시간: {moment(selectedMessage?.created_at).format('YYYY-MM-DD HH:mm:ss')}</RecieveTime>

@@ -23,15 +23,17 @@ const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) 
 
   const currentUser = useCurrentUser();
   const userId = currentUser?.id ?? '';
+
   const queryClient = useQueryClient();
+
   const {
-    data: messages,
+    data: sendMessages,
     isLoading,
     isError
   } = useQuery<MessageType[] | null>({
     queryKey: ['sendMessage'],
-    queryFn: () => mySendMessage(userId)
-    // enabled: !!currentUser
+    queryFn: () => mySendMessage(userId),
+    enabled: !!currentUser
   });
 
   // 읽은 메세지 mutation
@@ -72,7 +74,7 @@ const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) 
   };
 
   // 메세지 최신순 정렬과 안읽은 메세지 우선 정렬
-  const sortedMessages = messages?.sort((a, b) => {
+  const sortedMessages = sendMessages?.sort((a, b) => {
     // a 메세지가 읽음이고, b의 메세지가 읽지 않음이라면, b메세지를 앞으로 옮김
     if (a.isRead && !b.isRead) {
       return 1;
@@ -108,15 +110,15 @@ const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) 
               <Wrapper key={message.id} onClick={() => handleClickMsg(message)}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }} onClick={handleShowDetail}>
                   <ProfileBox>
-                    {message?.receiver_avatar_url && message?.receiver_avatar_url.startsWith('profile/') ? (
+                    {message?.to.avatar_url && message?.to.avatar_url.startsWith('profile/') ? (
                       <Img
-                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${message.receiver_avatar_url}`}
+                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${message.to.avatar_url}`}
                         alt="User Avatar"
                       />
                     ) : (
-                      <>{currentUser && <Img src={message.receiver_avatar_url} alt="User Avatar" />}</>
+                      <>{currentUser && <Img src={message.to.avatar_url} alt="User Avatar" />}</>
                     )}
-                    <div>{message.receiver_name}</div>
+                    <div>{message.to.name}</div>
                   </ProfileBox>
                   <div> {moment(message.created_at).format('YYYY-MM-DD HH:mm:ss')}</div>
                   <div> {message.isRead ? <div>상대방이 읽었습니다.</div> : <div>상대방이 읽지 않았습니다.</div>}</div>

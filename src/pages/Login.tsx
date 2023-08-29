@@ -111,7 +111,7 @@ const LoginTag = styled.div`
     width: 100%;
   }
   .btn-wrapper > ul {
-    margin-right: 20px !important;
+    margin-right: 24px !important;
     display: flex;
     justify-content: center;
     align-items: center;

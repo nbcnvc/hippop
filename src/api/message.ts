@@ -2,7 +2,7 @@ import { supabase } from './supabase';
 import { MessageType } from '../types/types';
 
 // 메세지 보내기, 메세지 답장 보내기  => message table
-export const sendMessage = async (message: MessageType) => {
+export const sendMessage = async (message: Omit<MessageType, 'from' | 'to' | 'id' | 'created_at'>) => {
   const { error } = await supabase.from('message').insert(message);
 
   if (error) {
@@ -12,21 +12,28 @@ export const sendMessage = async (message: MessageType) => {
 
 // 수신메세지 받기
 export const receiveMessage = async (userId: string): Promise<MessageType[] | null> => {
-  const { data, error } = await supabase.from('message').select(`*`).eq('receiver', userId);
+  const { data, error } = await supabase
+    .from('message')
+    .select(`*, from:receiver(*), to:sender(*)`)
+    .eq('receiver', userId);
 
   if (error) {
     console.log('Error receiving message:', error.message);
   }
+
   return data;
 };
 
-// 발신메세지 받기
 export const mySendMessage = async (userId: string): Promise<MessageType[] | null> => {
-  const { data, error } = await supabase.from('message').select(`*`).eq('sender', userId);
+  const { data, error } = await supabase
+    .from('message')
+    .select(`*, from:sender(*), to:receiver(*)`)
+    .eq('sender', userId);
 
   if (error) {
     console.log('Error receiving message:', error.message);
   }
+
   return data;
 };
 
