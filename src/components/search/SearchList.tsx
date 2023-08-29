@@ -8,7 +8,7 @@ import { useInView } from 'react-intersection-observer';
 import SearchCalendar from './SearchCalendar';
 // api
 import { fetchStoreIdCount } from '../../api/bookmark';
-import { getInfinityStore1 } from '../../api/store';
+import { getSearchStore } from '../../api/store';
 // 라이브러리
 import moment from 'moment';
 import _debounce from 'lodash/debounce';
@@ -64,7 +64,7 @@ const SearchList = ({ storeData }: SearchListProps) => {
     isFetchingNextPage
   } = useInfiniteQuery<FetchsStore>({
     queryKey: ['/search', debouncedInputValue, momentStart, momentEnd],
-    queryFn: ({ pageParam }) => getInfinityStore1(pageParam, debouncedInputValue, momentStart, momentEnd),
+    queryFn: ({ pageParam }) => getSearchStore(pageParam, debouncedInputValue, momentStart, momentEnd),
     // Pass filter values
     getNextPageParam: (lastPage) => {
       // 전체 페이지 개수보다 작을 때
@@ -75,8 +75,6 @@ const SearchList = ({ storeData }: SearchListProps) => {
     }
   });
 
-  // 리액트 쿼리에서 쿼리키는 => 시작하는 단어가 동일하면 ,일치하면 전에것을 가져옴
-  // exact
   // 인피니티 스크롤로 필터된 store
   const selectStores = useMemo(() => {
     return stores?.pages
@@ -85,10 +83,7 @@ const SearchList = ({ storeData }: SearchListProps) => {
       })
       .flat();
   }, [stores]);
-  console.log('momentStart==>, ', momentStart);
-  console.log('momentEnd==>,', momentEnd);
-  console.log('stores 쿼리 데이터 ==>, ', stores);
-  console.log('selectStores 데이터 ==>, ', selectStores);
+
   // 언제 다음 페이지를 가져올 것
   const { ref } = useInView({
     threshold: 1, // 맨 아래에 교차될 때

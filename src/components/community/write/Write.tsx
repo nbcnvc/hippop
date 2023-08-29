@@ -1,7 +1,7 @@
 import Editor from './Editor';
 
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { styled } from 'styled-components';
 
@@ -10,9 +10,18 @@ import { createPost } from '../../../api/post';
 import { WriteProps } from '../../../types/props';
 import { useCurrentUser } from '../../../store/userStore';
 
-const Write = ({ writeModal, setWriteModal, setSearchModal, storeId, storeTitle, setResult }: WriteProps) => {
-  const currentUser = useCurrentUser();
+const Write = ({
+  setKeyword,
+  writeModal,
+  setWriteModal,
+  setSearchModal,
+  storeId,
+  storeTitle,
+  setResult
+}: WriteProps) => {
   const { pathname } = useLocation();
+  const currentUser = useCurrentUser();
+  // const navigate = useNavigate()
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
   const [title, setTitle] = useState<string>('');
   const [body, setBody] = useState<string>('');
@@ -20,13 +29,11 @@ const Write = ({ writeModal, setWriteModal, setSearchModal, storeId, storeTitle,
     setTitle(e.target.value);
   };
 
-  // Post 상세 조회
-  // const { data: Post } = useQuery<Post | null>({ queryKey: ['post', id], queryFn: () => fetchDetailData(id) });
-
   // 닫기: 글 작성 모달창 && 검색 모달창 닫기
   const closeButton = () => {
     setSearchModal(false);
     setWriteModal(false);
+    setKeyword('');
   };
 
   // 이전: 글 작성 모달창 닫기
@@ -34,6 +41,7 @@ const Write = ({ writeModal, setWriteModal, setSearchModal, storeId, storeTitle,
     setWriteModal(false);
     setSearchModal(true);
     setResult(null);
+    setKeyword('');
   };
 
   // Post 추가
@@ -80,9 +88,15 @@ const Write = ({ writeModal, setWriteModal, setSearchModal, storeId, storeTitle,
     // 입력값 초기화
     setTitle('');
     setBody('');
+    setKeyword('');
 
     // 글 작성 모달 닫기
     setWriteModal(false);
+
+    // 상세페이지로 이동
+    // if (pathname === "review") {
+    //   navigate(`/rdetail/${}`)
+    // }
   };
 
   return (

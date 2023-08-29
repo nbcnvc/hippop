@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import { SearchCalendarProps } from '../../types/props';
+// 라이브러리
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
+// 타입
+import { SearchCalendarProps } from '../../types/props';
+// 스타일
 import { styled } from 'styled-components';
+// mui
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 
 const SearchCalendar = ({ onSearch }: SearchCalendarProps) => {
