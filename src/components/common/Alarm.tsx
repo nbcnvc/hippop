@@ -1,12 +1,21 @@
+import { useEffect, useState } from 'react';
+// 라이브러리
 import { useQuery } from '@tanstack/react-query';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+// api
 import { supabase } from '../../api/supabase';
 import { getSubList } from '../../api/subscribe';
+// zustand 상태관리 hook
 import { useCurrentUser } from '../../store/userStore';
-import { useEffect, useState } from 'react';
+// 스타일
+import { styled } from 'styled-components';
+// mui
+import TextsmsIcon from '@mui/icons-material/Textsms';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 
 const Alarm = () => {
-  // 유저에게 보낼 알람 세팅
-  const [alarm, setAlarm] = useState<any[]>([]);
   // realtime으로 받아온 정보 세팅
   const [postData, setPostData] = useState<any>();
   const [subData, setSubData] = useState<any>();
@@ -85,10 +94,11 @@ const Alarm = () => {
           // 메세지에 들어갈 내용 세팅
           const writerName = user.name;
           const newAlarm = {
+            ctg_index: 1,
             created_at: postData.commit_timestamp,
             targetUserId: currentUserId,
-            content: `${writerName}님의 새 게시글: ${postData.new.title}`
-            // post_id: postData.new.id
+            content: `${writerName}님의 새 게시글: ${postData.new.title}`,
+            post_id: postData.new.id
           };
 
           // 메세지 테이블에 DB 추가
@@ -96,12 +106,13 @@ const Alarm = () => {
 
           // 메세지 테이블에서 알람 데이터 가져오기
           const { data: alarm } = await supabase.from('alarm').select('*').eq('targetUserId', currentUserId);
+
           if (alarm) {
-            setAlarm(alarm);
+            toast.info(alarm[alarm.length - 1]?.content, {
+              theme: 'light',
+              icon: <BorderColorIcon />
+            });
           }
-          setTimeout(() => {
-            setAlarm([]);
-          }, 5000);
         }
       };
       postAlarm();
@@ -122,10 +133,11 @@ const Alarm = () => {
           // 메세지에 들어갈 내용 세팅
           const subFromName = user.name;
           const newAlarm = {
+            ctg_index: 2,
             created_at: subData.commit_timestamp,
             targetUserId: currentUserId,
-            content: `${subFromName}님이 구독하였습니다.`
-            // post_id: postData.new.id
+            content: `${subFromName}님이 나를 구독하였습니다.`,
+            sub_from: subData.new.subscribe_from
           };
 
           // 메세지 테이블에 DB 추가
@@ -133,12 +145,13 @@ const Alarm = () => {
 
           // 메세지 테이블에서 알람 데이터 가져오기
           const { data: alarm } = await supabase.from('alarm').select('*').eq('targetUserId', currentUserId);
+
           if (alarm) {
-            setAlarm(alarm);
+            toast.info(alarm[alarm.length - 1]?.content, {
+              theme: 'colored',
+              icon: <PeopleAltIcon />
+            });
           }
-          setTimeout(() => {
-            setAlarm([]);
-          }, 5000);
         }
       };
       subAlarm();
@@ -159,10 +172,10 @@ const Alarm = () => {
           // 메세지에 들어갈 내용 세팅
           const senderName = user.name;
           const newAlarm = {
+            ctg_index: 3,
             created_at: msgData.commit_timestamp,
             targetUserId: currentUserId,
-            content: `${senderName}님이 쪽지를 보냈습니다.`
-            // post_id: postData.new.id
+            content: `${senderName}님이 나에게 쪽지를 보냈습니다.`
           };
 
           // 메세지 테이블에 DB 추가
@@ -170,23 +183,65 @@ const Alarm = () => {
 
           // 메세지 테이블에서 알람 데이터 가져오기
           const { data: alarm } = await supabase.from('alarm').select('*').eq('targetUserId', currentUserId);
+
+          console.log(alarm?.length);
+
           if (alarm) {
-            setAlarm(alarm);
+            toast.info(alarm[alarm.length - 1]?.content, {
+              theme: 'dark',
+              icon: <TextsmsIcon />
+            });
           }
-          setTimeout(() => {
-            setAlarm([]);
-          }, 5000);
         }
       };
+
       msgAlarm();
     }
   }, [msgData, currentUserId]);
 
   return (
     <div>
-      <div style={{ backgroundColor: 'yellow', color: 'black' }}>{alarm[alarm.length - 1]?.content}</div>
+      <AlarmContainer
+        position="top-left"
+        autoClose={3000}
+        // hideProgressBar={true}
+        newestOnTop={true}
+        // closeOnClick={true}
+        // rtl={true}
+        pauseOnFocusLoss={false}
+        draggable={true}
+        pauseOnHover={true}
+        // limit={3}
+      />
     </div>
   );
 };
 
 export default Alarm;
+
+const AlarmContainer = styled(ToastContainer)`
+  .Toastify__toast {
+    font-size: 15px;
+    /* border-radius: 50px; */
+    padding: 15px 20px;
+    color: #ffffff;
+    /* background: rgba(107, 115, 135, 0.8); */
+  }
+
+  .Toastify__toast-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .Toastify__toast--info {
+    background: #136e65;
+  }
+
+  /* .Toastify__toast--success {
+    background: rgba(48, 173, 120, 0.8);
+  } */
+
+  /* .Toastify__toast--error {
+    background: rgba(224, 72, 82, 0.8);
+  } */
+`;

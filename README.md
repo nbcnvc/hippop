@@ -21,3 +21,4 @@ yarn start
 - @types/react-slick
 - slick-carousel
 - @tanstack/react-query-devtools
+- react-toastify

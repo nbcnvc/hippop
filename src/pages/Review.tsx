@@ -28,10 +28,8 @@ const Review = () => {
   return (
     <>
       <div style={{ fontSize: '30px', fontWeight: 'bold', textAlign: 'center', padding: '20px' }}>Review</div>
-      <div style={{ padding: '0 20px 30px 0' }}>
-        <button onClick={searcButton} style={{ float: 'left' }}>
-          글 작성
-        </button>
+      <div style={{ margin: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <button onClick={searcButton}>글 작성</button>
       </div>
       <SearchModal
         keyword={keyword}
