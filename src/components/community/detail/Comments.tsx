@@ -5,12 +5,11 @@ import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-q
 
 import { CommentProps } from '../../../types/props';
 import { createComment, deleteComment, getComments, updateComment } from '../../../api/comment';
-import { Comment, FetchComment } from '../../../types/types';
+import { Comment } from '../../../types/types';
 import { useCurrentUser } from '../../../store/userStore';
+import { styled } from 'styled-components';
 
-const Comments = ({ post }: CommentProps) => {
-  // post_id 가져오기
-  const { id } = post;
+const Comments = ({ postId }: CommentProps) => {
   const queryClient = useQueryClient();
   const currentUser = useCurrentUser();
   const [body, setBody] = useState<string>('');
@@ -31,9 +30,9 @@ const Comments = ({ post }: CommentProps) => {
     isError,
     hasNextPage,
     fetchNextPage
-  } = useInfiniteQuery<FetchComment>({
-    queryKey: ['comment', id],
-    queryFn: ({ pageParam }) => getComments(pageParam, id),
+  } = useInfiniteQuery({
+    queryKey: ['comment', postId],
+    queryFn: ({ pageParam }) => getComments(pageParam, postId),
     getNextPageParam: (lastPage) => {
       // 전체 페이지 개수보다 작을 때
       if (lastPage.page < lastPage.totalPages) {
@@ -63,7 +62,7 @@ const Comments = ({ post }: CommentProps) => {
   // Comment 추가
   const createMutation = useMutation(createComment, {
     onSuccess: () => {
-      queryClient.invalidateQueries(['comment', id]);
+      queryClient.invalidateQueries(['comment', postId]);
     }
   });
   const createButton = () => {
@@ -79,8 +78,7 @@ const Comments = ({ post }: CommentProps) => {
     // 새로운 댓글 객체 선언
     const newComment = {
       user_id: currentUser?.id,
-      user_name: currentUser?.name,
-      post_id: id,
+      post_id: postId,
       body
     };
     createMutation.mutate(newComment);
@@ -91,7 +89,7 @@ const Comments = ({ post }: CommentProps) => {
   // Commnet 삭제
   const deleteMutation = useMutation(deleteComment, {
     onSuccess: () => {
-      queryClient.invalidateQueries(['comment', id]);
+      queryClient.invalidateQueries(['comment', postId]);
     }
   });
   const deleteButton = (id: number) => {
@@ -100,15 +98,16 @@ const Comments = ({ post }: CommentProps) => {
     if (confirm) {
       // DB 수정
       deleteMutation.mutate(id);
+
+      // 삭제 완료
+      alert('삭제되었습니다!');
     }
-    // 삭제 완료
-    alert('삭제되었습니다!');
   };
 
   // Commnet 수정
   const updateMutation = useMutation(updateComment, {
     onSuccess: () => {
-      queryClient.invalidateQueries(['comment', id]);
+      queryClient.invalidateQueries(['comment', postId]);
     }
   });
   const editButton = (comment: Comment) => {
@@ -125,7 +124,7 @@ const Comments = ({ post }: CommentProps) => {
     } else {
       // 수정 모드로 변경
       setIsEditId(comment.id);
-      setEdit(comment?.body);
+      setEdit(comment.body);
     }
   };
 
@@ -138,7 +137,7 @@ const Comments = ({ post }: CommentProps) => {
   return (
     <>
       {/* 댓글 입력창 */}
-      <div style={{ width: '90%', border: '1px solid black', padding: '20px', margin: '10px' }}>
+      <div style={{ width: '1000px', border: '1px solid black', padding: '10px', margin: '10px' }}>
         댓글 :{' '}
         <input
           value={body}
@@ -156,8 +155,13 @@ const Comments = ({ post }: CommentProps) => {
       {/* 댓글 목록 */}
       {selectComments?.map((comment) => {
         return (
-          <div key={comment.id} style={{ width: '92.5%', border: '1px solid black', padding: '10px', margin: '10px' }}>
-            <div>작성자 : {comment.user_name}</div>
+          <div key={comment.id} style={{ width: '1000px', border: '1px solid black', padding: '10px', margin: '10px' }}>
+            {comment.user.avatar_url.startsWith('profile/') ? (
+              <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${comment.user.avatar_url}`} alt="User Avatar" />
+            ) : (
+              <Img src={comment.user.avatar_url} alt="User Avatar" />
+            )}
+            <span>{comment.user.name}</span>
             <div>작성일자: {moment(comment.created_at).format('YYYY.MM.DD HH:mm')}</div>
             {isEditId === comment.id ? (
               <input value={edit} onChange={onChangeEdit} style={{ width: '50%' }} />
@@ -180,3 +184,10 @@ const Comments = ({ post }: CommentProps) => {
 };
 
 export default Comments;
+
+const Img = styled.img`
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+`;

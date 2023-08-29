@@ -18,20 +18,39 @@ const Alarm = () => {
   const [payloadData, setPayloadData] = useState<any>();
   const [alarm, setAlarm] = useState<any[]>([]);
 
-  const setIsAlarm = () => {
-    supabase.channel('db-changes').on(
-      'postgres_changes',
-      {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'post',
-        filter: `user_id=in.(${subList})`
-      },
-      (payload) => setPayloadData(payload)
-    );
-  };
+  useEffect(() => {
+    const channel = supabase
+      .channel('table-filter-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'post',
+          filter: `user_id=in.(${subList})`
+        },
+        (payload) => {
+          if (payload.new.ctg_index === 1) {
+            setPayloadData(payload);
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'subscribe',
+          filter: `subscribe_from=eq.${currentUserId}`
+        },
+        (payload) => console.log(payload)
+      )
+      .subscribe();
 
-  setIsAlarm();
+    return () => {
+      channel.unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     if (payloadData) {
@@ -48,7 +67,8 @@ const Alarm = () => {
           const newAlarm = {
             created_at: payloadData.commit_timestamp,
             targetUserId: currentUserId,
-            content: `${writerName}님의 새 게시글: ${payloadData.new.title}`
+            content: `${writerName}님의 새 게시글: ${payloadData.new.title}`,
+            post_id: payloadData.new.id
           };
 
           // 쿼리로 바꿔주기

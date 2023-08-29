@@ -8,11 +8,17 @@ import { supabase } from '../../api/supabase';
 import { setUserStore } from '../../store/userStore';
 import { useCurrentUser } from '../../store/userStore';
 import Alarm from './Alarm';
+import AlarmBox from './AlarmBox';
+
 function Header() {
   const [user, setUser] = useState<UserInfo | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  // 셋 해주는 함수 가져오기
+  const setCurrentUser = setUserStore((state) => state.setCurrentUser);
+  // 현재유저 정보 가져오기
+  const currentUser = useCurrentUser();
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -20,15 +26,6 @@ function Header() {
       setUser(JSON.parse(storedUser));
     }
   }, []);
-
-  // 셋 해주는 함수 가져오기
-  const setCurrentUser = setUserStore((state) => state.setCurrentUser);
-  console.log('setCurrentUser', setCurrentUser);
-
-  // 현재유저 정보 가져오기
-  const currentUser = useCurrentUser();
-  console.log('currentUser', currentUser);
-
   useEffect(() => {
     const authSubscription = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session) {
@@ -136,6 +133,7 @@ function Header() {
                       <p>반갑습니다!</p>
                       <p>{currentUser.name}님</p>
                     </div>
+                    <AlarmBox />
                     {currentUser.avatar_url.startsWith('profile/') ? (
                       <img
                         src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser.avatar_url}`}
@@ -155,7 +153,6 @@ function Header() {
               <button onClick={handleToggle}>Login</button>
             )}
           </div>
-          <div></div>
           {isModalOpen && (
             <ModalWrapper isopen={isModalOpen} onClick={handleModalOutsideClick}>
               <Login closeModal={closeModal} />
@@ -168,7 +165,7 @@ function Header() {
 }
 export default Header;
 const HeaderTag = styled.header`
-  background-color: #F24D0D;
+  background-color: #f24d0d;
   color: white;
   width: 100%;
   height: 5vh;
@@ -179,40 +176,40 @@ const HeaderTag = styled.header`
     display: flex;
     justify-content: space-between;
     align-items: center;
-  ul {
-    margin: 0 auto;
-    width: 70%;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    gap: 10vw;
-  }
-  li{
-    a {
-      color: white;
-      display: block;
-      width: 100%;
-      height: 100%;
-      transition: filter 0.3s, transform 0.3s !important;
-    &:hover {
-      filter: brightness(120%) !important;
-      color: #F8AA7D !important;
+    ul {
+      margin: 0 auto;
+      width: 70%;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      gap: 10vw;
     }
-    &:active {
-      transform: scale(0.92) !important;
+    li {
+      a {
+        color: white;
+        display: block;
+        width: 100%;
+        height: 100%;
+        transition: filter 0.3s, transform 0.3s !important;
+        &:hover {
+          filter: brightness(120%) !important;
+          color: #f8aa7d !important;
+        }
+        &:active {
+          transform: scale(0.92) !important;
+        }
+      }
     }
-  }
-}
   }
   .logo-wrapper {
     display: flex;
     align-items: center;
     .test-logo {
       width: 40px;
-        transition: filter 0.3s, transform 0.3s;
-        &:hover {
-          filter: brightness(120%);
-          transform: scale(0.92);
+      transition: filter 0.3s, transform 0.3s;
+      &:hover {
+        filter: brightness(120%);
+        transform: scale(0.92);
       }
     }
   }
@@ -233,7 +230,7 @@ const HeaderTag = styled.header`
         display: flex;
         align-items: center;
         text-align: right;
-        img{
+        img {
           transition: filter 0.3s, transform 0.3s;
           &:hover {
             transform: scale(0.92);
@@ -270,14 +267,14 @@ const HeaderTag = styled.header`
           text-decoration: none;
           color: #333;
           &:hover {
-            background-color: #F1F1F1;
+            background-color: #f1f1f1;
           }
         }
       }
     }
   }
-  }
 `;
+
 const ModalWrapper = styled.div.attrs<{ isopen: boolean }>((props) => ({
   style: {
     transform: props.isopen ? 'translateY(0)' : 'translateY(100%)'

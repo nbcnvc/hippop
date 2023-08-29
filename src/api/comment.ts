@@ -3,13 +3,13 @@ import { supabase } from './supabase';
 import { Comment, FetchComment, NewComment } from '../types/types';
 
 // Comment 상세 조회 (isDeleted가 false 것만, 추후에 더보기 기능 추가)
-export const getComments = async (pageParam: number = 1, postId: number): Promise<FetchComment> => {
+export const getComments = async (pageParam: number = 1, postId: number): Promise<any> => {
   let data: Comment[] | null = [];
   let count: number | null = null;
 
   const { data: comments } = await supabase
     .from('comment')
-    .select()
+    .select(`*, user( * )`)
     .eq('post_id', postId)
     .eq('isDeleted', false)
     .order('created_at', { ascending: false }) // 내림차순
@@ -43,5 +43,5 @@ export const deleteComment = async (id: number): Promise<void> => {
 
 // Commnet 수정
 export const updateComment = async (editComment: Comment): Promise<void> => {
-  await supabase.from('comment').update(editComment).eq('id', editComment.id).select();
+  await supabase.from('comment').update({ body: editComment.body }).eq('id', editComment.id).select();
 };

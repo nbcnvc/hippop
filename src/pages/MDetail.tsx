@@ -8,10 +8,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentUser } from '../store/userStore';
-import { getUser } from '../api/user';
-import { fetchDetailData } from '../api/store';
 import { deletePost, getPost } from '../api/post';
-import { PostType, Store, UserInfo } from '../types/types';
+import { UserInfo } from '../types/types';
 
 const MDetail = () => {
   const { id } = useParams();
@@ -19,33 +17,9 @@ const MDetail = () => {
   const navigate = useNavigate();
   const currentUser = useCurrentUser();
   const [isEdit, setIsEdit] = useState<boolean>(false);
-  const [writerInfo, setWriterInfo] = useState<UserInfo>();
 
   // Post 상세 조회
-  const {
-    data: post,
-    isLoading: isLoading1,
-    isError: isError1
-  } = useQuery<PostType | null>(['post', postId], () => getPost(postId));
-
-  // 작성자 정보 조회
-  const writerId = post?.user_id;
-  const {
-    data: writer,
-    isLoading: isLoading2,
-    isError: isError2
-  } = useQuery<UserInfo | null>(['writer', writerId], () => getUser(writerId ?? ''), {
-    onSuccess: (data) => {
-      if (data) setWriterInfo(data);
-    }
-  });
-
-  // Store 상세 조회
-  const storeId = post?.store_id;
-  const { data: store } = useQuery<Store | null>({
-    queryKey: ['store', storeId],
-    queryFn: () => fetchDetailData(storeId ?? 0)
-  });
+  const { data: post, isLoading, isError } = useQuery(['post', postId], () => getPost(postId));
 
   // 날짜 포맷
   const formatDate = moment(post?.created_at).format('YYYY.MM.DD HH:mm');
@@ -77,10 +51,10 @@ const MDetail = () => {
     setIsEdit(!isEdit);
   };
 
-  if (isLoading1 || isLoading2) {
+  if (isLoading) {
     return <div>로딩중입니다.</div>;
   }
-  if (isError1 || isError2) {
+  if (isError) {
     return <div>오류가 발생했습니다.</div>;
   }
   return (
@@ -88,14 +62,20 @@ const MDetail = () => {
       {post && (
         <>
           {/* 작성자 */}
-          {isEdit ? <></> : <Writer writer={writerInfo} postId={postId} />}
+          {isEdit ? <></> : <Writer writer={post.user} postId={postId} />}
           {/* 글 내용 */}
           <div>
             {isEdit ? (
-              <Edit post={post} isEdit={isEdit} setIsEdit={setIsEdit} />
+              <Edit
+                postId={post.id}
+                postTitle={post.title}
+                postBody={post.body}
+                isEdit={isEdit}
+                setIsEdit={setIsEdit}
+              />
             ) : (
               <>
-                {currentUser?.id === post?.user_id && (
+                {currentUser?.id === post.user_id && (
                   <>
                     <button onClick={() => deleteButton(post.id)}>삭제</button>
                     <button onClick={editButton}>수정</button>
@@ -103,10 +83,10 @@ const MDetail = () => {
                 )}
                 <div
                   className="ql-snow"
-                  style={{ width: '100%', border: '1px solid black', padding: '20px', margin: '10px' }}
+                  style={{ width: '1000px', border: '1px solid black', padding: '10px', margin: '10px' }}
                 >
                   <div>카테고리 : {(post.ctg_index === 1 && '팝업후기') || (post.ctg_index === 2 && '팝업메이트')}</div>
-                  <div>어떤 팝업? {store?.title}</div>
+                  <div>어떤 팝업? {post.store.title}</div>
                   <div>작성일자 : {formatDate}</div>
                   <div>제목 : {post.title}</div>
                   <div className="ql-editor" dangerouslySetInnerHTML={{ __html: post.body }} />
@@ -115,7 +95,7 @@ const MDetail = () => {
             )}
           </div>
           {/* 댓글 */}
-          {isEdit ? <></> : <Comments post={post} />}
+          {isEdit ? <></> : <Comments postId={post.id} />}
         </>
       )}
     </>

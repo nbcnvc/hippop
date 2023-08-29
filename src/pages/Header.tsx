@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import { handleLogOut } from './Login';
 import Search from './Search';
 import { styled } from 'styled-components';
-import Alarm from '../components/common/Alarm';
 
 function Header() {
   const navigate = useNavigate();

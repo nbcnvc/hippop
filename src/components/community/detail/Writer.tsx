@@ -6,12 +6,18 @@ import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { WriterProps } from '../../../types/props';
+import { useCurrentUser } from '../../../store/userStore';
 
 const Writer = ({ writer, postId }: WriterProps) => {
   const { pathname } = useLocation();
+  const currentUser = useCurrentUser();
+  const currentUserId = currentUser?.id;
   const [msgModal, setMsgModal] = useState<boolean>(false);
 
   const openMsgModal = () => {
+    if (!currentUser) {
+      return alert('로그인을 해주세요.');
+    }
     setMsgModal(true);
   };
 
@@ -19,9 +25,9 @@ const Writer = ({ writer, postId }: WriterProps) => {
     <>
       <div
         style={{
-          width: '90%',
+          width: '1000px',
           border: '1px solid black',
-          padding: '20px',
+          padding: '10px',
           margin: '10px',
           display: 'flex',
           justifyContent: 'space-between',
@@ -36,8 +42,14 @@ const Writer = ({ writer, postId }: WriterProps) => {
           )}
           <div>{writer?.name}</div>
         </div>
-        {pathname === `/rdetail/${postId}` && <Subscribe userId={writer?.id} />}
-        {pathname === `/mdetail/${postId}` && <button onClick={openMsgModal}>쪽지 보내기</button>}
+        {writer && (
+          <>
+            {pathname === `/rdetail/${postId}` && <Subscribe writerId={writer.id} />}
+            {pathname === `/mdetail/${postId}` && currentUserId !== writer.id && (
+              <button onClick={openMsgModal}>쪽지 보내기</button>
+            )}
+          </>
+        )}
         {msgModal && <Message msgModal={msgModal} setMsgModal={setMsgModal} writer={writer} />}
       </div>
     </>
