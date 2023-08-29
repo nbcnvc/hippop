@@ -1,12 +1,13 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 
 // 라이브러리
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 //타입
 import { Bookmark, PostType, Store } from '../types/types';
 //api
 import { getUser } from '../api/user';
-
+import { getMyItems } from '../api/post';
+import { getMyStores } from '../api/store';
 import { supabase } from '../api/supabase';
 
 import { setUserStore, useCurrentUser } from '../store/userStore';
@@ -20,6 +21,7 @@ import MessageReply from '../components/message/MessageReply';
 import { MessageType } from '../types/types';
 import ReceiveBox from '../components/message/ReceiveBox';
 import { Link } from 'react-router-dom';
+import { useInView } from 'react-intersection-observer';
 
 const MyPage = () => {
   const [editingName, setEditingName] = useState(false);
@@ -38,10 +40,13 @@ const MyPage = () => {
   const [fetchSubs, setFetchSubs] = useState<Bookmark[]>([]);
   const [extractedData, setExtractedData] = useState<Store[]>([]);
   // 게시글 & 북마크 토글
-  const [activeSection, setActiveSection] = useState('myReview'); // Default to 'myReview'
+  const [activeSection, setActiveSection] = useState('myReview');
 
   const [toggleMsgBox, setToggleMsgBox] = useState<string>('받은 쪽지함');
   const imageInputRef = useRef(null);
+
+  // 무한스크롤상태
+  const initialPosts: any = [];
 
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
   // 현재유저 정보 가져오기
@@ -91,6 +96,72 @@ const MyPage = () => {
       window.removeEventListener('mousedown', handleOutsideClick);
     };
   }, []);
+
+  // 인피니티 스크롤을 위한 데이터 조회
+  const getMySectionItems = ({
+    pageParam,
+    activeSection,
+    userId
+  }: {
+    pageParam: number;
+    activeSection: string;
+    userId: string;
+  }) => {
+    if (activeSection === 'myReview') {
+      return getMyItems(userId, 'posts', pageParam);
+    } else if (activeSection === 'myBookmark') {
+      return getMyStores(userId, pageParam);
+    }
+    return null;
+  };
+
+  const {
+    data: items,
+    isLoading,
+    isError,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage
+  } = useInfiniteQuery({
+    queryKey: ['mypage', currentUser?.id, activeSection],
+    queryFn: ({ pageParam }) => getMySectionItems({ pageParam, activeSection, userId: currentUser?.id }),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.page < lastPage.totalPages) {
+        return lastPage.page + 1;
+      }
+      return null;
+    }
+  });
+  // console.log(posts);
+
+  // 인피니티 스크롤로 필터된 post
+  const selectItems = useMemo(() => {
+    return items?.pages
+      .map((data) => {
+        return data.items;
+      })
+      .flat();
+  }, [items]);
+  // console.log(selectPosts);
+  // console.log(posts);
+
+  // 언제 다음 페이지를 가져올 것
+  const { ref } = useInView({
+    threshold: 1, // 맨 아래에 교차될 때
+    onChange: (inView: any) => {
+      if (!inView || !hasNextPage || isFetchingNextPage) return;
+      fetchNextPage();
+    }
+  });
+  const tu = async () => {
+    const userId = currentUserId; // 실제 사용할 유저 ID
+    const pageParam = 1; // 원하는 페이지 번호
+    const storesData = await getMyStores(userId, pageParam);
+    console.log('storesData:', storesData);
+  };
+
+  // 함수 호출
+  tu();
 
   // my page가 렌더되면 현재 login상태 user가 작성한 post 배열 가져오기
   useEffect(() => {
@@ -151,7 +222,7 @@ const MyPage = () => {
     const formattedDate = new Date(dateTimeString).toLocaleString('en-US', options);
 
     const [month, day, year] = formattedDate.split('/'); // 날짜를 월, 일, 년 순서로 분리
-    return `${year}-${month}-${day}`; // 'YYYY-MM-DD' 형식으로 재조합하여 반환
+    return `${year}. ${month}. ${day}`; // 'YYYY-MM-DD' 형식으로 재조합하여 반환
     // return new Date(dateTimeString).toLocaleString('en-US', options); // 기본 년월일
   }
 
@@ -168,7 +239,7 @@ const MyPage = () => {
   }
 
   // post.body에서 이미지 태그 추출
-  const imageTags = fetchUserPost.map((post) => extractImageTags(post.body)).flat();
+  // const imageTags = fetchUserPost.map((post) => extractImageTags(post.body)).flat();
 
   // 닉네임 수정 handler
   const handleNameEdit = () => {
@@ -243,13 +314,6 @@ const MyPage = () => {
       }
     }
   };
-  /////////////// 무한스크롤 슬라이스
-  const sliceStore = fetchUserPost?.slice(0, 10);
-  const ClickToggleBox = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const name = (e.target as HTMLButtonElement).name;
-    setToggleMsgBox(name);
-  };
-  ////////////
   const handleSectionChange = (e: React.MouseEvent<HTMLButtonElement>) => {
     const button = e.target as HTMLButtonElement;
     const section = button.getAttribute('data-section');
@@ -263,9 +327,22 @@ const MyPage = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  if (isLoading) {
+    return <div>로딩중입니다.</div>;
+  }
+  if (isError) {
+    return <div>오류가 발생했습니다.</div>;
+  }
+
+  const ClickToggleBox = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const name = (e.target as HTMLButtonElement).name;
+    setToggleMsgBox(name);
+  };
+
   return (
     <MypageTag>
       <header>
+        {/* user Info tab */}
         <div className="info-wrapper">
           {currentUser?.avatar_url && (
             <div className="avatar-container">
@@ -325,7 +402,6 @@ const MyPage = () => {
                   </h5>
                 )}
                 <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
-                  {/* <Link to="/mypage">My Page</Link> */}
                   <ul>
                     {subscribers
                       .slice() // 복사본 생성
@@ -349,6 +425,7 @@ const MyPage = () => {
             </span>
           </div>
         </div>
+        {/* message tab */}
         <div>
           <button name="받은 쪽지함" onClick={ClickToggleBox}>
             받은 쪽지함
@@ -367,6 +444,7 @@ const MyPage = () => {
           {replyModal && <MessageReply sendMsgUser={sendMsgUser} setOpenReply={setReplyModal} />}
         </div>
       </header>
+      {/* Toggle tab */}
       <div>
         <button data-section="myReview" onClick={handleSectionChange}>
           나의 게시글
@@ -374,56 +452,69 @@ const MyPage = () => {
         <button data-section="myBookmark" onClick={handleSectionChange}>
           나의 북마크
         </button>
+        {/* Review tab */}
         {activeSection === 'myReview' && (
           <div>
             <h3>My Review</h3>
             <div className="post-wrapper">
-              {sliceStore.map((post) => {
+              {selectItems?.map((post) => {
                 const imageTags = extractImageTags(post.body);
                 return (
-                  <div key={post.id}>
-                    {/* <div dangerouslySetInnerHTML={{ __html: post.body }} /> */}
+                  <Link to={`/rdetail/${post.id}`} key={post.id}>
                     {imageTags.length > 0 ? (
                       <div>
-                        {imageTags.map((src, index) => (
-                          <img key={index} src={src} alt={`Image ${index}`} width={250} />
-                        ))}
+                        <img src={imageTags[0]} alt={`Image 0`} width={250} />
                       </div>
                     ) : (
                       <div>
-                        <img src="/asset/kakao.png" alt="Default Image" width={250} />
+                        <img src="/asset/defaultImg.jpg" alt="Default Image" width={250} />
                       </div>
                     )}
                     <h2>{post.title}</h2>
                     <p>{formatDate(post.created_at)}</p>
-                  </div>
+                  </Link>
                 );
               })}
             </div>
           </div>
         )}
-
+        {/* Bookmark tab */}
         {activeSection === 'myBookmark' && (
           <div>
-            <h2>My Boomark</h2>
+            <h2>My Bookmark</h2>
             <div className="subs-wrapper">
-              {extractedData.map((store) => (
-                <div key={store.id} className="user-subs">
-                  <img
-                    src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`}
-                    alt={`Store Image`}
-                    width={200}
-                  />
-                  <h2>{store.title}</h2>
-                  {/* <a href={store.link}>Link</a> */}
-                  <p>
-                    {store.period_start} ~ {store.period_end}
-                  </p>
-                </div>
+              {items?.pages.map((page) => (
+                <React.Fragment key={page.page}>
+                  {page.stores.slice(0, 3).map((store: Store) => (
+                    <Link to={`/detail/${store.id}`} key={store.id} className="user-subs">
+                      <img
+                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`}
+                        alt={`Store Image`}
+                        width={200}
+                      />
+                      <h2>{store.title}</h2>
+                      <p>
+                        {store.period_start} ~ {store.period_end}
+                      </p>
+                    </Link>
+                  ))}
+                </React.Fragment>
               ))}
             </div>
           </div>
         )}
+        <div
+          style={{
+            backgroundColor: 'yellow',
+            width: '90%',
+            border: '1px solid black',
+            padding: '20px',
+            margin: '10px'
+          }}
+          ref={ref}
+        >
+          Trigger to Fetch Here
+        </div>
       </div>
     </MypageTag>
   );
@@ -459,7 +550,8 @@ const MypageTag = styled.div`
         width: 225px;
         position: absolute;
         display: flex;
-        .confirm {
+
+        button {
           width: 60px;
         }
         .user-sub-info {
@@ -469,6 +561,24 @@ const MypageTag = styled.div`
           h5 {
             margin-top: 6px;
             font-size: 10px;
+          }
+          .dropdown-content {
+            position: relative;
+            ul {
+              position: absolute;
+              width: 100px;
+              background: white;
+              left: -64px;
+              top: 14px;
+              border-radius: 8px;
+            }
+            li {
+              padding: 5px 10px;
+              &:hover {
+                border-radius: 8px;
+                background-color: #f1f1f1;
+              }
+            }
           }
         }
       }
@@ -560,10 +670,10 @@ const MypageTag = styled.div`
   }
   .post-wrapper {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 한 줄에 두 개의 열 */
-    gap: 20px; /* 열 사이의 간격 조정 */
-    max-width: 900px; /* 그리드가 너무 넓어지는 것을 제한 */
-    margin: 0 auto; /* 가운데 정렬 */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
   }
   .subs-wrapper {
     display: grid;

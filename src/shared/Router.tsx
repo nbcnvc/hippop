@@ -10,6 +10,7 @@ import About from '../pages/About';
 import Header from '../components/common/Header';
 import RDetail from '../pages/RDetail';
 import MDetail from '../pages/MDetail';
+import Footer from '../pages/Footer';
 
 const Router = () => {
   return (
@@ -29,6 +30,7 @@ const Router = () => {
         <Route path="/mdetail/:id" element={<MDetail />} />
         <Route path="/about" element={<About />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 };
