@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { CardProps } from '../../types/props';
 import { supabaseStorageUrl } from '../../api/supabase';
 
-const heights = [300, 550, 450, 370, 320, 390, 330];
+const heights = [300, 550, 450, 330, 600, 720];
 
 function getRandomElement(arr: number[]) {
   const randomIndex = Math.floor(Math.random() * arr.length);
@@ -62,7 +62,7 @@ const Card = (props: CardProps) => {
     <CardContainer
       ref={sliderRef}
       className="keen-slider"
-      style={{ width: '30%', height: cardHeight }}
+      style={{ height: cardHeight }}
       onMouseOver={() => setIsHovered(true)}
       onMouseOut={() => setIsHovered(false)}
     >
@@ -85,8 +85,6 @@ export default Card;
 const CardContainer = styled.div`
   position: relative;
   border-radius: 7px;
-  width: 300px;
-  height: 200px;
   overflow: hidden;
 
   img {
