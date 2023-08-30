@@ -6,24 +6,53 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import TopButton from './components/common/TopButton';
 import { supabase } from './api/supabase';
-import { setUserStore } from './store/userStore';
+import { setUserStore, useCurrentUser } from './store/userStore';
+
 function App() {
   const queryClient = new QueryClient();
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
+  const currentUser = useCurrentUser();
+
+  console.log('currentUser', currentUser);
+
+  // if (session && !response.data) {
+  //   await supabase.from('user').insert({
+  //     id: session.user.id,
+  //     created_at: session.user.created_at,
+  //     email: session.user.user_metadata.email,
+  //     avatar_url: session.user.user_metadata.avatar_url,
+  //     name: session.user.user_metadata.name
+  //   });
+
+  //   setCurrentUser({
+  //     id: session.user.id,
+  //     created_at: session.user.created_at,
+  //     email: session.user.user_metadata.email,
+  //     avatar_url: session.user.user_metadata.avatar_url,
+  //     name: session.user.user_metadata.name
+  //   });
+  // }
 
   useEffect(() => {
-    supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN') {
-        console.log('로그인 감지!');
+    const {
+      data: { subscription }
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('event => ', event);
+      console.log('subscription => ', subscription);
+
+      if (event === 'SIGNED_IN' && !currentUser) {
         console.log('------------------------');
         console.log('event => ', event);
         console.log('session => ', session);
         console.log('------------------------');
+
         const response = await supabase.from('user').select(`*`).eq('id', session?.user.id);
+
         console.log('response => ', response);
 
         let id, avatar_url, email, name, created_at;
-        if (response.data) {
+
+        if (session && response.data) {
           id = response.data[0].id;
           avatar_url = response.data[0].avatar_url;
           email = response.data[0].email;
@@ -31,16 +60,6 @@ function App() {
           created_at = response.data[0].created_at;
         }
 
-        console.log('id', id);
-        console.log('avatar_url', avatar_url);
-        console.log('email', email);
-        console.log('name', name);
-        console.log('createdAt', created_at);
-
-        // (1) Zustand 사용 전 localStorage
-        // localStorage.setItem('userName', response.data ? response.data[0].name : '');
-
-        // (2) Zustand에 담기
         setCurrentUser({
           id,
           avatar_url,
@@ -50,9 +69,10 @@ function App() {
         });
       } else if (event === 'SIGNED_OUT') {
         console.log('로그아웃 감지!');
-        // localStorage.removeItem('userName');
       }
     });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   return (

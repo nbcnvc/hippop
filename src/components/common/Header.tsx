@@ -8,11 +8,13 @@ import Alarm from './Alarm';
 import AlarmBox from './AlarmBox';
 import { supabase } from '../../api/supabase';
 import { User } from '@supabase/supabase-js';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 function Header() {
   const [user, setUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAlarmOpen, setIsAlarmOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   // 유저 셋 해주는 함수 가져오기
@@ -136,6 +138,10 @@ function Header() {
 
   const userName = localStorage.getItem('userName');
 
+  const ToggleAlarm = () => {
+    setIsAlarmOpen(!isAlarmOpen);
+  };
+
   return (
     <HeaderTag>
       <div className="header-wrapper">
@@ -163,10 +169,9 @@ function Header() {
         <div>
           <div className="user-info">
             {currentUser !== null ? (
-              // {userName ? (
               <>
-                {/* <AlarmButton onClick={ToggleAlarm} />
-                <ul style={{ position: 'relative' }}>{isAlarmOpen && <AlarmBox />}</ul> */}
+                <AlarmButton onClick={ToggleAlarm} />
+                <ul style={{ position: 'relative' }}>{isAlarmOpen && <AlarmBox />}</ul>
                 <div className="user-dropdown" onClick={handleMenuToggle} ref={menuRef}>
                   <div className="info-mate">
                     <div className="welcome-mate">
@@ -330,3 +335,5 @@ const ModalWrapper = styled.div.attrs<{ isopen: boolean }>((props) => ({
   align-items: center;
   z-index: 9;
 `;
+
+const AlarmButton = styled(NotificationsIcon)``;
