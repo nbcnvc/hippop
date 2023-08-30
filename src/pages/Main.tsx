@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Masonry } from '@mui/lab';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -30,30 +30,38 @@ const Main = () => {
     }
   });
 
+  const observerRef = useRef(null);
+
   useEffect(() => {
-    const handleScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 500 &&
-        hasNextPage &&
-        !isFetchingNextPage
-      ) {
-        fetchNextPage();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => {
+      if (observerRef.current) {
+        observer.unobserve(observerRef.current);
       }
     };
-    window.addEventListener('scroll', handleScroll);
-
-    return () => window.removeEventListener('scroll', handleScroll);
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const allStores = storesData?.pages.flatMap((page) => page) || [];
 
   return (
     <Masonry columns={3} spacing={2}>
-      {storesData?.pages
-        .flatMap((page) => page)
-        .map((store) => (
-          <Link to={`detail/${store.id}`} key={store.id}>
-            <Card store={store} />
-          </Link>
-        ))}
+      {allStores.map((store, index) => (
+        <Link to={`detail/${store.id}`} key={store.id} ref={index === allStores.length - 1 ? observerRef : null}>
+          <Card store={store} />
+        </Link>
+      ))}
       {isFetchingNextPage && <p>Loading...</p>}
     </Masonry>
   );
