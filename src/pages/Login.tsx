@@ -14,6 +14,8 @@ import { setUserStore } from '../store/userStore';
 // };
 
 const Login = ({ closeModal }: { closeModal: () => void }) => {
+  const setCurrentUser = setUserStore((state) => state.setCurrentUser);
+
   //google
   const signupGoogle = async (e: React.FormEvent) => {
     const { data, error } = await supabase.auth.signInWithOAuth({

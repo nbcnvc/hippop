@@ -8,12 +8,14 @@ import Alarm from './Alarm';
 import AlarmBox from './AlarmBox';
 import { supabase } from '../../api/supabase';
 import { User } from '@supabase/supabase-js';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useQuery } from '@tanstack/react-query';
 import { getUser } from '../../api/user';
 
 function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAlarmOpen, setIsAlarmOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   // 유저 셋 해주는 함수 가져오기
@@ -53,6 +55,10 @@ function Header() {
     }
   };
 
+  const ToggleAlarm = () => {
+    setIsAlarmOpen(!isAlarmOpen);
+  };
+
   return (
     <HeaderTag>
       <div className="header-wrapper">
@@ -81,13 +87,14 @@ function Header() {
           <div className="user-info">
             {user ? (
               <>
+                <AlarmButton onClick={ToggleAlarm} />
+                <ul style={{ position: 'relative' }}>{isAlarmOpen && <AlarmBox />}</ul>
                 <div className="user-dropdown" onClick={handleMenuToggle} ref={menuRef}>
                   <div className="info-mate">
                     <div className="welcome-mate">
                       <p>반갑습니다!</p>
                       <p>{user.name}님</p>
                     </div>
-                    <AlarmBox />
                     {user.avatar_url && user.avatar_url.startsWith('profile/') ? (
                       <img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${user.avatar_url}`} alt="User Avatar" />
                     ) : (
@@ -115,7 +122,6 @@ function Header() {
   );
 }
 export default Header;
-
 const HeaderTag = styled.header`
   background-color: #f24d0d;
   color: white;
@@ -242,4 +248,8 @@ const ModalWrapper = styled.div.attrs<{ isopen: boolean }>((props) => ({
   justify-content: center;
   align-items: center;
   z-index: 9;
+`;
+
+const AlarmButton = styled(NotificationsIcon)`
+  cursor: pointer;
 `;
