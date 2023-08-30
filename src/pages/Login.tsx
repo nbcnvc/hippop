@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { supabase } from '../api/supabase';
 
 import { styled } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { randomFileName } from '../hooks/useHandleImageName';
+import { setUserStore } from '../store/userStore';
 
-export const handleLogOut = async () => {
-  const { error } = await supabase.auth.signOut();
+// export const handleLogOut = async () => {
+//   const { error } = await supabase.auth.signOut();
 
-  alert('로그아웃 되었습니다.');
-  if (error) console.log('error=>', error);
-};
+//   if (error) console.log('error=>', error);
+// };
 
 const Login = ({ closeModal }: { closeModal: () => void }) => {
   //google
@@ -71,7 +71,6 @@ const Login = ({ closeModal }: { closeModal: () => void }) => {
             </ul>
           </div>
         </div>
-        <form></form>
       </div>
     </LoginTag>
   );

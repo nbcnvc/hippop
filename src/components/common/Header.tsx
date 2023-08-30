@@ -1,88 +1,29 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import Login from '../../pages/Login';
 import { UserInfo } from '../../types/types';
-import { handleLogOut } from '../../pages/Login';
-import { supabase } from '../../api/supabase';
-import { setUserStore } from '../../store/userStore';
-import { useCurrentUser } from '../../store/userStore';
+import { setUserStore, useCurrentUser } from '../../store/userStore';
 import Alarm from './Alarm';
 import AlarmBox from './AlarmBox';
+import { supabase } from '../../api/supabase';
+import { User } from '@supabase/supabase-js';
+import { useQuery } from '@tanstack/react-query';
+import { getUser } from '../../api/user';
 
 function Header() {
-  const [user, setUser] = useState<UserInfo | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
-  // 셋 해주는 함수 가져오기
+
+  // 유저 셋 해주는 함수 가져오기
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
-  // 현재유저 정보 가져오기
   const currentUser = useCurrentUser();
+  const currentUserId = currentUser?.id;
+  const { data: user } = useQuery(['user', currentUserId], () => getUser(currentUserId ?? ''));
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
-  useEffect(() => {
-    const authSubscription = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session) {
-        const response = await supabase.from('user').select().eq('id', session?.user.id).single();
-
-        if (response.data) {
-          setCurrentUser(response.data);
-          setUser(response.data);
-          localStorage.setItem('user', JSON.stringify(response.data));
-        } else {
-          const userInfo: UserInfo = {
-            id: session.user.id,
-            created_at: session.user.created_at,
-            email: session.user.user_metadata.email,
-            avatar_url: session.user.user_metadata.avatar_url,
-            name: session.user.user_metadata.name
-          };
-
-          await supabase.from('user').insert(userInfo);
-
-          setCurrentUser(userInfo);
-          setUser(userInfo);
-
-          localStorage.setItem('user', JSON.stringify(userInfo));
-        }
-      } else if (event === 'SIGNED_OUT') {
-        setCurrentUser(null);
-        setUser(null);
-        localStorage.removeItem('user');
-      }
-    });
-
-    return () => {
-      authSubscription.data.subscription.unsubscribe();
-    };
-  }, []);
-
-  useEffect(() => {
-    function handleOutsideClick(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsMenuOpen(false);
-      }
-    }
-
-    window.addEventListener('mousedown', handleOutsideClick);
-    return () => {
-      window.removeEventListener('mousedown', handleOutsideClick);
-    };
-  }, []);
-
-  const handleToggle = () => {
-    if (user) {
-      handleLogOut();
-      setUser(null);
-    } else {
-      setIsModalOpen(true);
-    }
+  const openLoginModal = () => {
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
@@ -97,6 +38,19 @@ function Header() {
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const navigate = useNavigate();
+
+  const handleLogOut = async () => {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error('error=>', error);
+    } else {
+      navigate('/');
+      alert(':) 안녕히가세요 !');
+    }
   };
 
   return (
@@ -125,32 +79,29 @@ function Header() {
         </ul>
         <div>
           <div className="user-info">
-            {currentUser ? (
+            {user ? (
               <>
                 <div className="user-dropdown" onClick={handleMenuToggle} ref={menuRef}>
                   <div className="info-mate">
                     <div className="welcome-mate">
                       <p>반갑습니다!</p>
-                      <p>{currentUser.name}님</p>
+                      <p>{user.name}님</p>
                     </div>
                     <AlarmBox />
-                    {currentUser.avatar_url.startsWith('profile/') ? (
-                      <img
-                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser.avatar_url}`}
-                        alt="User Avatar"
-                      />
+                    {user.avatar_url && user.avatar_url.startsWith('profile/') ? (
+                      <img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${user.avatar_url}`} alt="User Avatar" />
                     ) : (
-                      <img src={currentUser.avatar_url} alt="User Avatar" />
+                      <img src={user.avatar_url} alt="User Avatar" />
                     )}
                   </div>
                   <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
-                    <Link to={`/mypage/${currentUser.id}`}>My Page</Link>
-                    <div onClick={handleToggle}>Logout</div>
+                    <Link to={`/mypage/${user.id}`}>My Page</Link>
+                    <div onClick={handleLogOut}>Logout</div>
                   </div>
                 </div>
               </>
             ) : (
-              <button onClick={handleToggle}>Login</button>
+              <button onClick={openLoginModal}>Login</button>
             )}
           </div>
           {isModalOpen && (

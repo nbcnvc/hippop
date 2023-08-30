@@ -70,11 +70,11 @@ export interface NewComment {
 }
 
 export interface UserInfo {
-  id: string;
-  created_at: string;
-  email: string;
-  name: string;
-  avatar_url: string;
+  id: string | undefined;
+  created_at: string | undefined;
+  email: string | undefined;
+  name: string | undefined;
+  avatar_url: string | undefined;
 }
 
 export interface User extends SupabaseUser {

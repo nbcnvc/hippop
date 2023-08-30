@@ -17,8 +17,8 @@ const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
   const messageHandler = async () => {
     if (writer) {
       const message: Omit<MessageType, 'from' | 'to' | 'id' | 'created_at'> = {
-        sender: currentUser.id,
-        receiver: writer.id,
+        sender: currentUser.id ?? '',
+        receiver: writer.id ?? '',
         body,
         isRead: false
       };
@@ -52,7 +52,7 @@ const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
           <Wrapper>
             <CloseBtn onClick={closeMsgModal}>닫기</CloseBtn>
             <UserInfoBox>
-              {writer?.avatar_url.startsWith('profile/') ? (
+              {writer?.avatar_url && writer?.avatar_url.startsWith('profile/') ? (
                 <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${writer?.avatar_url}`} alt="User Avatar" />
               ) : (
                 <Img src={writer?.avatar_url} alt="User Avatar" />
