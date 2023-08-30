@@ -1,27 +1,27 @@
+import { useEffect, useState } from 'react';
+// 라이브러리
+import { useNavigate } from 'react-router';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import moment from 'moment';
 import 'moment/locale/ko'; // 한국어 설정
-import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
+// api
 import { deleteAlarm, getAlarms } from '../../api/alarm';
+// zustand
 import { useCurrentUser } from '../../store/userStore';
-import { useNavigate } from 'react-router';
-import { useEffect, useState } from 'react';
-import { styled } from 'styled-components';
+// 타입
 import { AlarmType } from '../../types/types';
+// 스타일
+import { styled } from 'styled-components';
+// mui
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const AlarmBox = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const currentUser = useCurrentUser();
   const currentUserId = currentUser?.id;
-  const [isAlarmOpen, setIsAlarmOpen] = useState(false);
-  const { data: alarms, isLoading, isError } = useQuery(['alarms'], () => getAlarms(currentUserId ?? ''));
 
-  // 알람 드롭박스 토글
-  const ToggleAlarm = () => {
-    setIsAlarmOpen(!isAlarmOpen);
-  };
+  const { data: alarms, isLoading, isError } = useQuery(['alarms'], () => getAlarms(currentUserId ?? ''));
 
   // 알람 드롭 박스 닫기
   // const closeAlarm = () => {
@@ -87,33 +87,21 @@ const AlarmBox = () => {
   }
   return (
     <>
-      <AlarmButton onClick={ToggleAlarm} />
-      {isAlarmOpen && (
-        <AlarmContainer>
-          {AlarmList?.map((alarm) => {
-            const timeAgo = formatTimeAgo(alarm.created_at);
-            return (
-              <div
-                key={alarm.id}
-                style={{
-                  backgroundColor: '#FFFBF4',
-                  border: '2px solid #F24D0D',
-                  color: '#333',
-                  borderRadius: '10px',
-                  padding: '10px',
-                  margin: '5px'
-                }}
-              >
+      <AlarmContainer>
+        {AlarmList?.map((alarm) => {
+          const timeAgo = formatTimeAgo(alarm.created_at);
+          return (
+            <AlarmContents key={alarm.id}>
+              <AlarmTime>{timeAgo}</AlarmTime>
+              <AlarmInfo>
                 <div onClick={() => naviAlarm(alarm)}>{alarm.content}</div>
-                <div>
-                  <span>{timeAgo}</span>
-                  <button onClick={() => deleteButton(alarm.id)}>삭제</button>
-                </div>
-              </div>
-            );
-          })}
-        </AlarmContainer>
-      )}
+                <AlarmDeleteIcon onClick={() => deleteButton(alarm.id)} />
+              </AlarmInfo>
+            </AlarmContents>
+          );
+        })}
+      </AlarmContainer>
+
       {/* {isAlarmOpen && <div onClick={closeAlarm} />} */}
     </>
   );
@@ -121,14 +109,46 @@ const AlarmBox = () => {
 
 export default AlarmBox;
 
-const AlarmButton = styled(NotificationsRoundedIcon)`
-  cursor: pointer;
+const AlarmContainer = styled.li`
+  position: absolute;
+  top: 24px;
+  right: -20px;
+  list-style: none;
+  color: black;
+  background-color: white;
+  box-shadow: 1px 1px 3px #bdbdbd9c;
+  border: 1px solid #a7a7a7b3;
+  border-radius: 4px;
+
+  z-index: 1;
 `;
 
-const AlarmContainer = styled.div`
-  position: absolute;
-  right: 0;
-  top: 100%;
-  width: 300px;
-  z-index: 1;
+const AlarmContents = styled.div`
+  width: 290px;
+  /* border-bottom: 1px solid #a7a7a79d; */
+  font-size: 14px;
+  text-align: left;
+  padding: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #d9d9d970;
+  }
+`;
+
+const AlarmTime = styled.span`
+  font-size: 10px;
+  color: #686868;
+`;
+
+const AlarmInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const AlarmDeleteIcon = styled(DeleteIcon)`
+  &:hover {
+    color: #f24d0d;
+  }
 `;
