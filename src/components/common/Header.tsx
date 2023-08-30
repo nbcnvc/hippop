@@ -24,6 +24,21 @@ function Header() {
   const currentUserId = currentUser?.id;
   const { data: user } = useQuery(['user', currentUserId], () => getUser(currentUserId ?? ''));
 
+  useEffect(() => {
+    const handleWindowClick = (event: MouseEvent) => {
+      // 클릭한 요소가 메뉴나 관련된 요소가 아닌 경우에만 메뉴 닫기
+      if (!menuRef.current?.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('click', handleWindowClick);
+
+    return () => {
+      window.removeEventListener('click', handleWindowClick);
+    };
+  }, []);
+
   const openLoginModal = () => {
     setIsModalOpen(true);
   };
@@ -65,9 +80,8 @@ function Header() {
         <Alarm />
         <div className="logo-wrapper">
           <Link to="/">
-            <img src="/asset/test-logo1.png" className="test-logo" alt="test-img" />
+            <img src="/asset/nyb_logo.png" className="nyb-logo" alt="nyb-img" />
           </Link>
-          Find your Hippop
         </div>
         <ul>
           <li>
@@ -87,12 +101,11 @@ function Header() {
           <div className="user-info">
             {user ? (
               <>
-                <AlarmButton onClick={ToggleAlarm} />
                 <ul style={{ position: 'relative' }}>{isAlarmOpen && <AlarmBox />}</ul>
                 <div className="user-dropdown" onClick={handleMenuToggle} ref={menuRef}>
                   <div className="info-mate">
                     <div className="welcome-mate">
-                      <p>반갑습니다!</p>
+                      <p>Hello,</p>
                       <p>{user.name}님</p>
                     </div>
                     {user.avatar_url && user.avatar_url.startsWith('profile/') ? (
@@ -102,7 +115,13 @@ function Header() {
                     )}
                   </div>
                   <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
-                    <Link to={`/mypage/${user.id}`}>My Page</Link>
+                    <div
+                      onClick={() => {
+                        navigate(`/mypage/${user.id}`);
+                      }}
+                    >
+                      My Page
+                    </div>
                     <div onClick={handleLogOut}>Logout</div>
                   </div>
                 </div>
@@ -110,6 +129,7 @@ function Header() {
             ) : (
               <button onClick={openLoginModal}>Login</button>
             )}
+            <AlarmButton onClick={ToggleAlarm} style={{ marginLeft: '10px' }} />
           </div>
           {isModalOpen && (
             <ModalWrapper isopen={isModalOpen} onClick={handleModalOutsideClick}>
@@ -122,24 +142,27 @@ function Header() {
   );
 }
 export default Header;
+
 const HeaderTag = styled.header`
-  background-color: #f24d0d;
+  background-color: var(--primary-color);
   color: white;
   width: 100%;
-  height: 50px;
+  height: 100px;
   .header-wrapper {
-    height: 50px;
     margin: 0 auto;
+    height: 100%;
+    max-width: 1920px;
+    min-width: 800px;
     width: 50%;
     display: flex;
+    justify-content: center;
     align-items: center;
     ul {
       margin: 0 auto;
-      margin-right: 20px;
-      width: 70%;
+      width: 40%;
       text-align: center;
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       gap: 40px;
     }
     li {
@@ -149,6 +172,10 @@ const HeaderTag = styled.header`
         width: 100%;
         height: 100%;
         transition: filter 0.3s, transform 0.3s !important;
+        font-size: 20px;
+        text-shadow: -1px -1px 0 var(--fifth-color), 1px -1px 0 var(--fifth-color), -1px 1px 0 var(--fifth-color),
+          1px 1px 0 var(--fifth-color);
+
         &:hover {
           filter: brightness(120%) !important;
           color: #f8aa7d !important;
@@ -162,8 +189,8 @@ const HeaderTag = styled.header`
   .logo-wrapper {
     display: flex;
     align-items: center;
-    .test-logo {
-      width: 40px;
+    .nyb-logo {
+      width: 140px;
       transition: filter 0.3s, transform 0.3s;
       &:hover {
         filter: brightness(120%);
@@ -176,8 +203,8 @@ const HeaderTag = styled.header`
     justify-content: center;
     align-items: center;
     img {
-      width: 40px;
-      height: 40px;
+      width: 44px;
+      height: 44px;
       object-fit: cover;
       border-radius: 50%;
     }
@@ -192,14 +219,15 @@ const HeaderTag = styled.header`
           transition: filter 0.3s, transform 0.3s;
           &:hover {
             transform: scale(0.92);
+            filter: brightness(107%);
           }
         }
         .welcome-mate {
           margin-right: 8px;
           width: 85px;
           p {
-            font-size: 10px;
-            margin: 4px 0;
+            font-size: 14px;
+            margin: 10px 0;
           }
         }
       }
@@ -212,7 +240,7 @@ const HeaderTag = styled.header`
         right: 0;
         width: 120px;
         background-color: white;
-        border: 1px solid #ccc;
+        border: 1px solid var(--fifth-color);
         border-radius: 5px;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         display: none;
@@ -225,7 +253,7 @@ const HeaderTag = styled.header`
           text-decoration: none;
           color: #333;
           &:hover {
-            background-color: #f1f1f1;
+            background-color: var(--sixth-color);
           }
         }
       }
@@ -252,4 +280,7 @@ const ModalWrapper = styled.div.attrs<{ isopen: boolean }>((props) => ({
 
 const AlarmButton = styled(NotificationsIcon)`
   cursor: pointer;
+  transition: filter 0.3s, transform 0.3s;
+  &:hover {
+    transform: rotate(-30deg);
 `;

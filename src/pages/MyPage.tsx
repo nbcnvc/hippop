@@ -20,10 +20,11 @@ import SendBox from '../components/message/SendBox';
 import MessageReply from '../components/message/MessageReply';
 import { MessageType } from '../types/types';
 import ReceiveBox from '../components/message/ReceiveBox';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 
 const MyPage = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const { data: currentUser } = useQuery(['user', id], () => getUser(id ?? ''));
   const [editingName, setEditingName] = useState(false);
@@ -34,7 +35,7 @@ const MyPage = () => {
   const [replyModal, setReplyModal] = useState<boolean | null>(null);
   const [sendMsgUser, setSendMsgUser] = useState<MessageType | null>(null);
   //구독 목록 메뉴 상태
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean | null>(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [subscribers, setSubscribers] = useState<string[]>([]);
 
@@ -332,6 +333,12 @@ const MyPage = () => {
     setToggleMsgBox(name);
   };
 
+  // console.log(sublistData);
+  // console.log(sublistData[0] ?? null.subscribe_to);
+  // console.log(currentUser.id);
+  // console.log(id);
+  // console.log(subscriberData.subscribe_to);
+
   return (
     <MypageTag>
       <header>
@@ -386,24 +393,32 @@ const MyPage = () => {
               )}
               님의 My Page
             </p>
+
             <span>
+              <Link to="/yourpage/c3c3e2b7-ea91-4932-aa3f-6e6238e5399f">
+                <button>링쿠트?</button>
+              </Link>
               <div className="user-sub-info">
                 {currentUser?.email}
-                {sublistData && (
-                  <h5 onClick={handleMenuToggle} ref={menuRef}>
-                    &nbsp;구독한 사람: {subscribers.length}
-                  </h5>
-                )}
-                <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
+                {sublistData && <h5>&nbsp;구독한 사람: {subscribers.length}</h5>}
+                <button onClick={() => setIsMenuOpen((isMenuOpen) => !isMenuOpen)}>이거</button>
+                {isMenuOpen && (
                   <ul>
-                    {subscribers
-                      .slice() // 복사본 생성
-                      .sort() // 알파벳 순으로 정렬
-                      .map((subscriber, index) => (
-                        <li key={index}>{subscriber}</li>
-                      ))}
+                    {sublistData?.map((subscriberData, index) => (
+                      <li
+                        key={index}
+                        onClick={() => {
+                          navigate(`/yourpage/${subscriberData.subscribe_to}`);
+                        }}
+                      >
+                        Subscriber {index + 1}
+                      </li>
+                    ))}
                   </ul>
-                </div>
+                )}
+
+                {/* <Link to="/yourpage/c3c3e2b7-ea91-4932-aa3f-6e6238e5399f"> */}
+                {/* </Link> */}
               </div>
               <div>
                 {editingName ? (
@@ -412,7 +427,7 @@ const MyPage = () => {
                     <button onClick={handleNameCancel}>취소</button>
                   </>
                 ) : (
-                  <button onClick={handleNameEdit}>수정</button>
+                  currentUser?.id === id && <button onClick={handleNameEdit}>수정</button>
                 )}
               </div>
             </span>
@@ -450,7 +465,8 @@ const MyPage = () => {
           <div>
             <h3>My Review</h3>
             <div className="post-wrapper">
-              {selectItems?.map((post) => {
+              {selectItems?.map((post: PostType) => {
+                console.log(post);
                 const imageTags = extractImageTags(post.body);
                 return (
                   <Link to={`/rdetail/${post.id}`} key={post.id}>

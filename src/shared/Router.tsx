@@ -10,6 +10,7 @@ import About from '../pages/About';
 import RDetail from '../pages/RDetail';
 import MDetail from '../pages/MDetail';
 import Layout from './Layout';
+import YourPage from '../pages/YourPage';
 
 const Router = () => {
   return (
@@ -17,9 +18,8 @@ const Router = () => {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Main />} />
-          {/* <Route path="/auth/signin" element={<Login />} /> */}
-          {/* <Route path="/mypage/:id" element={<MyPage />} /> */}
           <Route path="/mypage/:id" element={<MyPage />} />
+          <Route path="/yourpage/:id" element={<YourPage />} />
           <Route path="/detail/:id" element={<Detail />} />
           <Route path="/search" element={<Search />} />
           <Route path="/review" element={<Review />} />

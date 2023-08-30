@@ -233,7 +233,9 @@ const SearchList = ({ storeData }: SearchListProps) => {
             placeholder="팝업스토어를 검색해보세요!"
             onChange={handleInputChange}
           />
-          <button type="submit">검색</button>
+          <button type="submit" className="custom-btn">
+            검색
+          </button>
         </form>
 
         {/* <Filter /> */}
@@ -337,6 +339,12 @@ const SearchBox = styled.div`
   position: relative;
 
   margin-top: 50px;
+
+  .custom-btn {
+    // background-color: var(--second-color);
+    border-radius: 0 18px 18px 0;
+    padding: 14px 20px;
+  }
 `;
 
 const Filter = styled(FilterAltIcon)`

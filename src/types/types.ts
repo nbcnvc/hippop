@@ -36,7 +36,7 @@ export interface PostType {
   store_id: number;
   ctg_index: number;
   title: string;
-  body: string;
+  body: any;
   isDeleted: boolean;
 }
 

@@ -55,22 +55,22 @@ const Login = ({ closeModal }: { closeModal: () => void }) => {
       <div>
         <div className="login-content">
           <Link to="/">
-            <img src="/asset/test-logo1.png" alt="logo" width={80} />
+            <img src="/asset/nyb_logo.png" alt="logo" width={220} />
           </Link>
           <h2>Find your HipPop</h2>
           <span>힙-팝에 오신걸 환영해요 :)</span>
           <div className="btn-wrapper">
-            <ul>
-              <li onClick={signupGoogle}>
-                <img src="/asset/google.png" alt="google" />
-              </li>
-              <li onClick={signupKakao}>
-                <img src="/asset/kakao.png" alt="kakao" />
-              </li>
-              <li onClick={signInWithFacebook}>
-                <img src="/asset/facebook.png" alt="naver" />
-              </li>
-            </ul>
+            <div className="list-wrapper">
+              <div className="list" onClick={signupGoogle}>
+                <img src="/asset/gglogin-horizon.png" alt="google" />
+              </div>
+              <div className="list" onClick={signupKakao}>
+                <img src="/asset/kakao-horizon.png" alt="kakao" />
+              </div>
+              <div className="list" onClick={signInWithFacebook}>
+                <img src="/asset/fblogin-horizon.png" alt="naver" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -82,13 +82,17 @@ export default Login;
 
 const LoginTag = styled.div`
   margin: 0 auto;
-  margin-bottom: 10%;
-
-  width: 280px;
-  height: 220px;
+  margin-bottom: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 320px;
+  height: 520px;
   background: rgba(183, 79, 231, 0.76);
   border-radius: 10px;
   padding: 1rem;
+  // backdrop-filter: blur(10px);
+  box-shadow: 4px 4px 18px rgba(0, 0, 0, 0.3);
 
   .login-content {
     gap: 10px;
@@ -111,23 +115,24 @@ const LoginTag = styled.div`
   .btn-wrapper {
     width: 100%;
   }
-  .btn-wrapper > ul {
-    margin-right: 24px !important;
+  .list-wrapper {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 0px !important;
   }
-  ul > li {
-    margin: 1rem;
+  .list {
+    margin: 0.5rem;
     cursor: pointer;
     transition: transform 0.5s, filter 0.5s;
   }
-  ul > li:hover {
-    transform: scale(1.05);
+  .list:hover {
+    transform: scale(0.98);
     filter: brightness(1.2);
   }
-  ul > li > img {
-    width: 45px;
+  .list > img {
+    width: 200px;
+    border-radius: 8px;
   }
 `;

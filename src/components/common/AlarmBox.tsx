@@ -111,16 +111,18 @@ export default AlarmBox;
 
 const AlarmContainer = styled.li`
   position: absolute;
-  top: 24px;
-  right: -25px;
+  top: 33px;
+  right: -460px;
   list-style: none;
   color: black;
   background-color: white;
   box-shadow: 1px 1px 3px #bdbdbd9c;
-  border: 1px solid #a7a7a7b3;
-  border-radius: 4px;
-
+  border: 1px solid var(--fifth-color);
+  border-radius: 5px;
   z-index: 1;
+
+
+  }
 `;
 
 const AlarmContents = styled.div`
@@ -132,7 +134,7 @@ const AlarmContents = styled.div`
   cursor: pointer;
 
   &:hover {
-    background-color: #d9d9d970;
+    background-color: var(--sixth-color);
   }
 `;
 
