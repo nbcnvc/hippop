@@ -7,11 +7,11 @@ import { Link } from 'react-router-dom';
 import { randomFileName } from '../hooks/useHandleImageName';
 import { setUserStore } from '../store/userStore';
 
-export const handleLogOut = async () => {
-  const { error } = await supabase.auth.signOut();
+// export const handleLogOut = async () => {
+//   const { error } = await supabase.auth.signOut();
 
-  if (error) console.log('error=>', error);
-};
+//   if (error) console.log('error=>', error);
+// };
 
 const Login = ({ closeModal }: { closeModal: () => void }) => {
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
@@ -73,7 +73,6 @@ const Login = ({ closeModal }: { closeModal: () => void }) => {
             </ul>
           </div>
         </div>
-        <form></form>
       </div>
     </LoginTag>
   );

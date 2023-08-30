@@ -7,9 +7,6 @@ interface UserState {
   setCurrentUser: (user: UserInfo | null) => void;
 }
 
-// const tokenKey = localStorage.getItem('sb-jlmwyvwmjcanbthgkpmh-auth-token');
-// const parsedToken = tokenKey ? JSON.parse(tokenKey) : null;
-
 // 현재 유저 set 해주기
 export const setUserStore = create(
   persist<UserState>(

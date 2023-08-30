@@ -112,7 +112,7 @@ export default AlarmBox;
 const AlarmContainer = styled.li`
   position: absolute;
   top: 24px;
-  right: -20px;
+  right: -25px;
   list-style: none;
   color: black;
   background-color: white;
