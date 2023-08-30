@@ -40,7 +40,7 @@ const BookMark = ({ storeData }: CalendarProps) => {
     if (currentUser) {
       // Check if currentUser is not null
       const toogleBookMark: Bookmark = {
-        user_id: currentUser.id,
+        user_id: currentUser.id ?? '',
         store_id: storeId
       };
       toggleMutation.mutate(toogleBookMark);

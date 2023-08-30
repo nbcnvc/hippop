@@ -17,7 +17,7 @@ const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
   const sendMessageHandler = async () => {
     if (sendMsgUser) {
       const message: Omit<MessageType, 'from' | 'to' | 'id' | 'created_at'> = {
-        sender: currentUser.id,
+        sender: currentUser.id ?? '',
         receiver: sendMsgUser.sender,
         body,
         isRead: false

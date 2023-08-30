@@ -20,10 +20,12 @@ import SendBox from '../components/message/SendBox';
 import MessageReply from '../components/message/MessageReply';
 import { MessageType } from '../types/types';
 import ReceiveBox from '../components/message/ReceiveBox';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 
 const MyPage = () => {
+  const { id } = useParams();
+  const { data: currentUser } = useQuery(['user', id], () => getUser(id ?? ''));
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState('');
   const [imageUploadVisible, setImageUploadVisible] = useState(false);
@@ -50,7 +52,7 @@ const MyPage = () => {
 
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
   // 현재유저 정보 가져오기
-  const currentUser: any | null = useCurrentUser();
+  // const currentUser: any | null = useCurrentUser();
   // console.log('test ====> ', currentUser);
   const currentUserId = currentUser?.id;
   const { data: sublistData } = useQuery(['sublist'], () => getSubList(currentUserId ?? ''));
@@ -124,7 +126,7 @@ const MyPage = () => {
     isFetchingNextPage
   } = useInfiniteQuery({
     queryKey: ['mypage', currentUser?.id, activeSection],
-    queryFn: ({ pageParam }) => getMySectionItems({ pageParam, activeSection, userId: currentUser?.id }),
+    queryFn: ({ pageParam }) => getMySectionItems({ pageParam, activeSection, userId: currentUser?.id ?? '' }),
     getNextPageParam: (lastPage) => {
       if (lastPage.page < lastPage.totalPages) {
         return lastPage.page + 1;
@@ -153,15 +155,6 @@ const MyPage = () => {
       fetchNextPage();
     }
   });
-  const tu = async () => {
-    const userId = currentUserId; // 실제 사용할 유저 ID
-    const pageParam = 1; // 원하는 페이지 번호
-    const storesData = await getMyStores(userId, pageParam);
-    console.log('storesData:', storesData);
-  };
-
-  // 함수 호출
-  tu();
 
   // my page가 렌더되면 현재 login상태 user가 작성한 post 배열 가져오기
   useEffect(() => {
@@ -255,7 +248,7 @@ const MyPage = () => {
 
     const { error } = await supabase.from('user').update({ name: newName }).eq('id', currentUser?.id);
     if (currentUser && !error) {
-      const userData = await getUser(currentUser?.id);
+      const userData = await getUser(currentUser?.id ?? '');
       setCurrentUser(userData);
       setEditingName(false); // 수정 모드 해제
       alert('닉네임이 변경 됐습니다 :)');
@@ -301,7 +294,7 @@ const MyPage = () => {
 
           // Fetch updated user data using getUser
           if (currentUser) {
-            const userData = await getUser(currentUser?.id);
+            const userData = await getUser(currentUser?.id ?? '');
             setCurrentUser(userData);
             // console.log('userData', userData);
           }
