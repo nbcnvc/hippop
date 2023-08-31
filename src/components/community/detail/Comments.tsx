@@ -157,39 +157,41 @@ const Comments = ({ postId }: CommentProps) => {
         </button>
       </CommentWrite>
       {/* 댓글 목록 */}
-      {selectComments?.map((comment) => {
-        return (
-          <>
-            {currentUser?.id === comment.user_id && (
-              <ButtonBox>
-                <Button onClick={() => deleteButton(comment.id)}>삭제</Button>
-                <Button onClick={() => editButton(comment)}>{isEditId ? '저장' : '수정'}</Button>
-              </ButtonBox>
-            )}
-            <CommentBox>
-              <DateBox>
-                <Date>{moment(comment.created_at).format('YYYY.MM.DD HH:mm')}</Date>
-              </DateBox>
-              <ProfileBox>
-                {comment.user.avatar_url.startsWith('profile/') ? (
-                  <Img
-                    src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${comment.user.avatar_url}`}
-                    alt="User Avatar"
-                  />
-                ) : (
-                  <Img src={comment.user.avatar_url} alt="User Avatar" />
-                )}
-                <Name>{comment.user.name}</Name>
-              </ProfileBox>
-              {isEditId === comment.id ? (
-                <input value={edit} onChange={onChangeEdit} style={{ width: '50%' }} />
-              ) : (
-                <Content>{comment.body}</Content>
+      <CommentContainer>
+        {selectComments?.map((comment) => {
+          return (
+            <>
+              {currentUser?.id === comment.user_id && (
+                <ButtonBox>
+                  <Button onClick={() => deleteButton(comment.id)}>삭제</Button>
+                  <Button onClick={() => editButton(comment)}>{isEditId ? '저장' : '수정'}</Button>
+                </ButtonBox>
               )}
-            </CommentBox>
-          </>
-        );
-      })}
+              <CommentBox>
+                <DateBox>
+                  <Date>{moment(comment.created_at).format('YYYY.MM.DD HH:mm')}</Date>
+                </DateBox>
+                <ProfileBox>
+                  {comment.user.avatar_url.startsWith('profile/') ? (
+                    <Img
+                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${comment.user.avatar_url}`}
+                      alt="User Avatar"
+                    />
+                  ) : (
+                    <Img src={comment.user.avatar_url} alt="User Avatar" />
+                  )}
+                  <Name>{comment.user.name}</Name>
+                </ProfileBox>
+                {isEditId === comment.id ? (
+                  <input value={edit} onChange={onChangeEdit} style={{ width: '50%' }} />
+                ) : (
+                  <Content>{comment.body}</Content>
+                )}
+              </CommentBox>
+            </>
+          );
+        })}
+      </CommentContainer>
       {/* 더보기 버튼 */}
       {showButton && hasNextPage && <MoreButton onClick={fetchMore}>더보기</MoreButton>}
     </Layout>
@@ -233,6 +235,10 @@ const Input = styled.input`
   outline: none;
   border-radius: 20px 0 0 20px;
   border: 2px solid var(--fifth-color);
+`;
+
+const CommentContainer = styled.div`
+  margin-bottom: 20px;
 `;
 
 const ButtonBox = styled.div`
