@@ -18,37 +18,50 @@ const Login = ({ closeModal }: { closeModal: () => void }) => {
 
   //google
   const signupGoogle = async (e: React.FormEvent) => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google'
-    });
-    if (data) alert('로그인이 완료되었습니다');
-    console.log(data);
-    if (error) console.error('error =>', error);
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google'
+      });
+
+      if (error) {
+        console.error('error =>', error);
+      }
+    } catch (error) {
+      console.error('로그인 중 오류가 발생했어요 :(', error);
+    }
   };
 
   const signupKakao = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'kakao'
-    });
-    if (data) alert('로그인이 완료되었습니다');
-    console.log(data);
-    if (error) console.error('error =>', error);
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'kakao'
+      });
+
+      if (error) {
+        console.error('error =>', error);
+      }
+    } catch (error) {
+      console.error('로그인 중 오류가 발생했어요 :(', error);
+    }
   };
 
   const signInWithFacebook = async (e: React.FormEvent) => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'facebook'
-    });
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'facebook'
+      });
 
-    // const newFileName = randomFileName(selectedImage.name);
-    // const renamedFile = new File([selectedImage], newFileName);
-
-    // const { data } = await supabase.storage.from('images').upload(`profile/${renamedFile.name}`, renamedFile);
-
-    if (data) alert('로그인이 완료되었습니다');
-    console.log(data);
-    if (error) console.error('error =>', error);
+      if (error) {
+        console.error('error =>', error);
+      }
+    } catch (error) {
+      console.error('로그인 중 오류가 발생했어요 :(', error);
+    }
   };
+  // const newFileName = randomFileName(selectedImage.name);
+  // const renamedFile = new File([selectedImage], newFileName);
+
+  // const { data } = await supabase.storage.from('images').upload(`profile/${renamedFile.name}`, renamedFile);
 
   return (
     <LoginTag>
