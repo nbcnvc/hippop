@@ -67,7 +67,7 @@ const SearchDefault = ({ setId, setTitle, setSearchModal, setWriteModal }: Searc
     : [];
 
   // 인기 팝업스토어 자르기
-  const popStores = sortedStores?.slice(0, 8);
+  const popStores = sortedStores?.slice(0, 6);
 
   if (isLoading) {
     return <div>로딩중입니다.</div>;
@@ -77,33 +77,68 @@ const SearchDefault = ({ setId, setTitle, setSearchModal, setWriteModal }: Searc
   }
   return (
     <>
-      <div style={{ width: '95%', border: '1px solid black', padding: '20px' }}>
-        <h1>요즘 인기 있는 팝업스토어</h1>
+      <ResultBox>
+        <Comment>인기 팝업스토어</Comment>
         <GridContainer>
           {popStores?.map((store: Store) => (
-            <div key={store.id} onClick={() => selectStore(store)}>
+            <Card key={store.id} onClick={() => selectStore(store)}>
               <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-              <title>{store.title}</title>
-            </div>
+              <StoreName>{store.title}</StoreName>
+            </Card>
           ))}
         </GridContainer>
-      </div>
+      </ResultBox>
     </>
   );
 };
 
 export default SearchDefault;
 
+const ResultBox = styled.div`
+  height: 550px;
+  margin: 20px;
+  overflow: scroll;
+`;
+
+const Comment = styled.div`
+  font-weight: 600;
+  margin: 10px;
+`;
+
 const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 한 줄에 두 개의 열 */
-  gap: 10px; /* 열 사이의 간격 조정 */
+  grid-template-columns: repeat(3, 1fr); /* 한 줄에 두 개의 열 */
+  gap: 15px; /* 열 사이의 간격 조정 */
   max-width: 800px; /* 그리드가 너무 넓어지는 것을 제한 */
   margin: 0 auto; /* 가운데 정렬 */
 `;
 
+const Card = styled.div`
+  width: 230px;
+  border-radius: 18px;
+  border: 2px solid var(--fifth-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Img = styled.img`
-  width: 180px;
-  height: 220px;
+  width: 210px;
+  height: 175px;
+  margin-top: 10px;
   object-fit: cover;
+  border-radius: 10px;
+  /* border: 1.5px solid var(--fifth-color); */
+`;
+
+const StoreName = styled.div`
+  display: flex;
+  align-items: center;
+  text-align: center;
+  line-height: 1.2;
+  font-size: 14px;
+  font-weight: 700;
+  height: 30px;
+  margin: 10px 15px;
 `;

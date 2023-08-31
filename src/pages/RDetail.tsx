@@ -9,6 +9,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentUser } from '../store/userStore';
 import { deletePost, getPost } from '../api/post';
+import { styled } from 'styled-components';
 
 const RDetail = () => {
   const { id } = useParams();
@@ -57,11 +58,12 @@ const RDetail = () => {
     return <div>오류가 발생했습니다.</div>;
   }
   return (
-    <>
+    <Layout>
+      <CategoryBox>
+        <Category>Review</Category>
+      </CategoryBox>
       {post && (
         <>
-          {/* 작성자 */}
-          {isEdit ? <></> : <Writer writer={post.user} postId={postId} />}
           {/* 글 내용 */}
           <div>
             {isEdit ? (
@@ -74,31 +76,82 @@ const RDetail = () => {
               />
             ) : (
               <>
-                {currentUser?.id === post.user_id && (
+                {/* {currentUser?.id === post.user_id && (
                   <>
                     <button onClick={() => deleteButton(post.id)}>삭제</button>
                     <button onClick={editButton}>수정</button>
                   </>
-                )}
-                <div
-                  className="ql-snow"
-                  style={{ width: '1000px', border: '1px solid black', padding: '10px', margin: '10px' }}
-                >
-                  <div>카테고리 : {(post.ctg_index === 1 && '팝업후기') || (post.ctg_index === 2 && '팝업메이트')}</div>
-                  <div>어떤 팝업? {post.store.title}</div>
-                  <div>작성일자 : {formatDate}</div>
-                  <div>제목 : {post.title}</div>
-                  <div className="ql-editor" dangerouslySetInnerHTML={{ __html: post.body }} />
+                )} */}
+                <div className="ql-snow">
+                  <HeadContainer>
+                    <TextBox>
+                      <Text>{post.store.title}</Text>
+                      <Text>{formatDate}</Text>
+                    </TextBox>
+                    <Title>{post.title}</Title>
+                  </HeadContainer>
+                  <Body className="ql-editor" dangerouslySetInnerHTML={{ __html: post.body }} />
                 </div>
               </>
             )}
           </div>
+          {/* 작성자 */}
+          {isEdit ? <></> : <Writer writer={post.user} postId={postId} />}
           {/* 댓글 */}
           {isEdit ? <></> : <Comments postId={post.id} />}
         </>
       )}
-    </>
+    </Layout>
   );
 };
 
 export default RDetail;
+
+const Layout = styled.div`
+  min-width: 900px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const CategoryBox = styled.div`
+  width: 900px;
+`;
+
+const Category = styled.h1`
+  color: var(--fifth-color);
+  margin: 30px 0;
+  padding-bottom: 5px;
+  font-size: 24px;
+  float: left;
+  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+`;
+
+const HeadContainer = styled.div`
+  width: 900px;
+  height: 100px;
+  margin: 10px 0px;
+`;
+
+const TextBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Text = styled.div`
+  font-size: 18px;
+  font-weight: 600;
+  margin: 10px;
+`;
+
+const Title = styled.div`
+  font-size: 28px;
+  font-weight: 600;
+  float: left;
+  margin: 10px;
+`;
+
+const Body = styled.div`
+  width: 900px;
+`;
