@@ -153,6 +153,10 @@ const DetailContainer = styled.div`
         font-weight: 600;
         margin-right: 10px;
       }
+
+      button {
+        margin: 10px 20px 0 0;
+      }
     }
   }
 `;
