@@ -142,7 +142,6 @@ function Header() {
   );
 }
 export default Header;
-
 const HeaderTag = styled.header`
   background-color: var(--primary-color);
   color: white;
@@ -283,4 +282,5 @@ const AlarmButton = styled(NotificationsIcon)`
   transition: filter 0.3s, transform 0.3s;
   &:hover {
     transform: rotate(-30deg);
+  }
 `;
