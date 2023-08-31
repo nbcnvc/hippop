@@ -1,19 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { supabase } from '../api/supabase';
 
 import { styled } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { randomFileName } from '../hooks/useHandleImageName';
-
-export const handleLogOut = async () => {
-  const { error } = await supabase.auth.signOut();
-
-  alert('로그아웃 되었습니다.');
-  if (error) console.log('error=>', error);
-};
+import { setUserStore } from '../store/userStore';
+import { UserInfo } from '../types/types';
 
 const Login = ({ closeModal }: { closeModal: () => void }) => {
+  const setCurrentUser = setUserStore((state) => state.setCurrentUser);
+
+  console.log('setCurrentUser', setCurrentUser);
   //google
   const signupGoogle = async (e: React.FormEvent) => {
     const { data, error } = await supabase.auth.signInWithOAuth({
@@ -47,6 +44,59 @@ const Login = ({ closeModal }: { closeModal: () => void }) => {
     console.log(data);
     if (error) console.error('error =>', error);
   };
+  // useEffect(() => {
+  //   supabase.auth.onAuthStateChange(async (event, session) => {
+  //     console.log('session ==> ,', session);
+
+  //     if (session) {
+  //       const user = {
+  //         id: session.user.id,
+  //         created_at: session.user.created_at,
+  //         email: session.user.user_metadata.email,
+  //         avatar_url: session.user.user_metadata.avatar_url,
+  //         name: session.user.user_metadata.name
+  //       };
+
+  //       setCurrentUser(user);
+
+  //       await supabase.from('user').insert(user);
+  //     } else {
+  //       setCurrentUser(null);
+  //     }
+
+  //     if (session) {
+  //       const response = await supabase.from('user').select().eq('userid', session?.user.id).single();
+
+  //       if (response.data) {
+  //         setCurrentUser(response.data);
+  //       }
+  //     }
+  //   });
+  // }, []);
+
+  // useEffect(() => {
+  //   supabase.auth.onAuthStateChange(async (event, session) => {
+  //     const response = await supabase.from('user').select().eq('userid', session?.user.id).single();
+  //     console.log('res data', response.data);
+  //     if (session) {
+  //       const response = await supabase.from('user').select().eq('userid', session?.user.id).single();
+  //       console.log('res data', response.data);
+  //       if (response.data) {
+  //         setCurrentUser(response.data);
+  //       } else {
+  //         const user = {
+  //           id: session.user.id,
+  //           created_at: session.user.created_at,
+  //           email: session.user.user_metadata.email,
+  //           avatar_url: session.user.user_metadata.avatar_url,
+  //           name: session.user.user_metadata.name
+  //         };
+  //         setCurrentUser(user);
+  //         await supabase.from('user').insert(user);
+  //       }
+  //     } else setCurrentUser(null);
+  //   });
+  // }, []);
 
   return (
     <LoginTag>
@@ -111,11 +161,10 @@ const LoginTag = styled.div`
     width: 100%;
   }
   .btn-wrapper > ul {
-    margin-right: 24px !important;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0px !important;
+    gap: 0 !important;
   }
   ul > li {
     margin: 1rem;

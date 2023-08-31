@@ -1,88 +1,114 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { styled } from 'styled-components';
 import Login from '../../pages/Login';
 import { UserInfo } from '../../types/types';
-import { handleLogOut } from '../../pages/Login';
-import { supabase } from '../../api/supabase';
-import { setUserStore } from '../../store/userStore';
-import { useCurrentUser } from '../../store/userStore';
+import { setUserStore, useCurrentUser } from '../../store/userStore';
 import Alarm from './Alarm';
 import AlarmBox from './AlarmBox';
+import { supabase } from '../../api/supabase';
+import { User } from '@supabase/supabase-js';
 
 function Header() {
-  const [user, setUser] = useState<UserInfo | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
-  // 셋 해주는 함수 가져오기
+
+  // 유저 셋 해주는 함수 가져오기
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
   // 현재유저 정보 가져오기
   const currentUser = useCurrentUser();
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
-  useEffect(() => {
-    const authSubscription = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session) {
-        const response = await supabase.from('user').select().eq('id', session?.user.id).single();
+  console.log('currentUser', currentUser);
 
-        if (response.data) {
-          setCurrentUser(response.data);
-          setUser(response.data);
-          localStorage.setItem('user', JSON.stringify(response.data));
-        } else {
-          const userInfo: UserInfo = {
-            id: session.user.id,
-            created_at: session.user.created_at,
-            email: session.user.user_metadata.email,
-            avatar_url: session.user.user_metadata.avatar_url,
-            name: session.user.user_metadata.name
-          };
+  // useEffect(() => {
+  //   const authSubscription = supabase.auth.onAuthStateChange(async (event, session) => {
+  //     const response = await supabase.from('user').select().eq('id', session?.user.id).single();
 
-          await supabase.from('user').insert(userInfo);
+  //     setCurrentUser(response.data);
+  //   });
+  // }, []);
 
-          setCurrentUser(userInfo);
-          setUser(userInfo);
+  // useEffect(() => {
+  //   setUser(currentUser);
+  // }, [currentUser]);
 
-          localStorage.setItem('user', JSON.stringify(userInfo));
-        }
-      } else if (event === 'SIGNED_OUT') {
-        setCurrentUser(null);
-        setUser(null);
-        localStorage.removeItem('user');
-      }
-    });
+  console.log('user', user);
+  // useEffect(() => {
+  //   function handleOutsideClick(event: MouseEvent) {
+  //     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+  //       setIsMenuOpen(false);
+  //     }
+  //   }
 
-    return () => {
-      authSubscription.data.subscription.unsubscribe();
-    };
-  }, []);
+  //   window.addEventListener('mousedown', handleOutsideClick);
+  //   return () => {
+  //     window.removeEventListener('mousedown', handleOutsideClick);
+  //   };
+  // }, []);
 
   useEffect(() => {
-    function handleOutsideClick(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsMenuOpen(false);
-      }
-    }
-
-    window.addEventListener('mousedown', handleOutsideClick);
-    return () => {
-      window.removeEventListener('mousedown', handleOutsideClick);
-    };
-  }, []);
-
-  const handleToggle = () => {
-    if (user) {
-      handleLogOut();
-      setUser(null);
+    if (currentUser) {
+      return;
     } else {
-      setIsModalOpen(true);
+      const tokenKey = localStorage.getItem('sb-jlmwyvwmjcanbthgkpmh-auth-token');
+      const parsedToken = tokenKey ? JSON.parse(tokenKey) : null;
+
+      const userId = parsedToken?.user.id;
+      const userName = parsedToken?.user.user_metadata.name;
+      const userEmail = parsedToken?.user.email;
+      const userCreateAt = parsedToken?.user.created_at;
+      const userAvatar_url = parsedToken?.user.user_metadata.avatar_url;
+      const userInsertData = {
+        id: userId,
+        created_at: userCreateAt,
+        email: userEmail,
+        avatar_url: userAvatar_url,
+        name: userName
+      };
+
+      setCurrentUser(userInsertData);
     }
+  }, []);
+
+  // 생성한 토큰 가져와서 새로고침 방지
+  useEffect(() => {
+    const storedUserData = localStorage.getItem('UserStorage');
+    if (storedUserData) {
+      const parsedUserData = JSON.parse(storedUserData);
+      setUser(parsedUserData);
+    }
+  }, []);
+
+  // 현재 유저의 정보 가져오기!!
+  const checkUser = async () => {
+    const { data: userData, error } = await supabase.auth.getUser();
+    if (error) {
+      // Handle the error if needed
+      console.error('Error fetching user data:', error);
+      return;
+    }
+    console.log('userDa', userData);
+
+    if (userData) {
+      setUser(userData as any); // Explicit cast to User
+    } else {
+      setUser(null);
+    }
+  };
+
+  // window.addEventListener('hashchange' =>브라우저의 URL 해시(예: # 뒤의 일부)가 변경될 때 발생!
+  // 의존성 배열을 빈 배열([])을 전달했기 때문에, 컴포넌트가 처음 렌더링될 때 한 번만 실행되며, 이후에는 의존성 변경 없이는 다시 실행되지 않음
+  useEffect(() => {
+    checkUser();
+    window.addEventListener('hashchange', function () {
+      checkUser();
+    });
+  }, []);
+
+  const openLoginModal = () => {
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
@@ -97,6 +123,14 @@ function Header() {
 
   const handleMenuToggle = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleLogOut = async () => {
+    const { error } = await supabase.auth.signOut();
+    localStorage.removeItem('UserStorage');
+    setCurrentUser(null);
+    alert('로그아웃 되었습니다.');
+    if (error) console.log('error=>', error);
   };
 
   return (
@@ -125,7 +159,7 @@ function Header() {
         </ul>
         <div>
           <div className="user-info">
-            {currentUser ? (
+            {currentUser !== null ? (
               <>
                 <div className="user-dropdown" onClick={handleMenuToggle} ref={menuRef}>
                   <div className="info-mate">
@@ -134,23 +168,23 @@ function Header() {
                       <p>{currentUser.name}님</p>
                     </div>
                     <AlarmBox />
-                    {currentUser.avatar_url.startsWith('profile/') ? (
+                    {currentUser && currentUser?.avatar_url && currentUser.avatar_url?.startsWith('profile/') ? (
                       <img
-                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser.avatar_url}`}
+                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser?.avatar_url}`}
                         alt="User Avatar"
                       />
                     ) : (
-                      <img src={currentUser.avatar_url} alt="User Avatar" />
+                      <img src={currentUser?.avatar_url} alt="User Avatar" />
                     )}
                   </div>
                   <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
-                    <Link to={`/mypage/${currentUser.id}`}>My Page</Link>
-                    <div onClick={handleToggle}>Logout</div>
+                    <Link to="/mypage">My Page</Link>
+                    <div onClick={handleLogOut}>Logout</div>
                   </div>
                 </div>
               </>
             ) : (
-              <button onClick={handleToggle}>Login</button>
+              <button onClick={openLoginModal}>Login</button>
             )}
           </div>
           {isModalOpen && (
@@ -164,26 +198,25 @@ function Header() {
   );
 }
 export default Header;
-
 const HeaderTag = styled.header`
   background-color: #f24d0d;
   color: white;
   width: 100%;
-  height: 50px;
+  height: 5vh;
   .header-wrapper {
-    height: 50px;
+    height: 5vh;
     margin: 0 auto;
-    width: 50%;
+    width: 80%;
     display: flex;
+    justify-content: space-between;
     align-items: center;
     ul {
       margin: 0 auto;
-      margin-right: 20px;
       width: 70%;
       text-align: center;
       display: flex;
-      justify-content: flex-end;
-      gap: 40px;
+      justify-content: center;
+      gap: 10vw;
     }
     li {
       a {
