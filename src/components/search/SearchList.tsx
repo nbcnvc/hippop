@@ -3,7 +3,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
-// import DatePicker1 from './DatePicker';
 // 컴포넌트
 import SearchCalendar from './SearchCalendar';
 // api
@@ -12,14 +11,11 @@ import { getSearchStore } from '../../api/store';
 // 라이브러리
 import moment from 'moment';
 import _debounce from 'lodash/debounce';
-
 // 타입
 import { FetchsStore, SearchListProps, Store } from '../../types/types';
 //스타일
 import { styled } from 'styled-components';
 // mui
-import SearchIcon from '@mui/icons-material/Search';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 const SearchList = ({ storeData }: SearchListProps) => {
@@ -224,8 +220,13 @@ const SearchList = ({ storeData }: SearchListProps) => {
   }
   return (
     <Container>
+      {' '}
+      <TagBox>
+        <TagTitle>검색 Tip</TagTitle>
+        <Tag> "성수" or "제목 또는 내용" </Tag>
+      </TagBox>
       <SearchBox>
-        <Search />
+        {/* <Search /> */}
         <form onSubmit={handleSearchButtonClick}>
           <SearchInput
             type="text"
@@ -241,86 +242,89 @@ const SearchList = ({ storeData }: SearchListProps) => {
         {/* <Filter /> */}
         <Reset onClick={handleReset} />
       </SearchBox>
-      <TagBox>
-        <TagTitle>검색 Tip</TagTitle>
-        <Tag> "성수" or "제목 또는 내용" </Tag>
-      </TagBox>
-      <TagBox>
-        <TagTitle>인기 검색어</TagTitle>
-        <Tag>#김우리 </Tag>
-        <Tag>#나윤빈</Tag>
-        <Tag>#양윤아</Tag>
-        <Tag>#장혜진</Tag>
-        <Tag>#조성록</Tag>
-        <Tag>#조진명</Tag>
-        <Tag>#최원장</Tag>
-      </TagBox>
       {/* <DatePicker1 /> */}
       <SearchCalendar storeData={storeData} onSearch={handleSearch} />
-      {searchResultCount > 0 && (
-        <SearchResultCount>{`${searchResultCount}개의 검색 결과가 있습니다.`}</SearchResultCount>
-      )}
       <>
         {filteredStoreList ? (
           <div>
             {filteredStoreList.length > 0 ? (
-              <GridContainer>
-                {filteredStoreList?.map((store) => (
-                  <GridItem key={store.id} onClick={() => navDetail(store.id)}>
-                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-                    <div>{store.title}</div>
-                    <div>
-                      {store.period_start} ~ {store.period_end}{' '}
-                    </div>
-                  </GridItem>
-                ))}
-              </GridContainer>
+              <>
+                <Title>
+                  <H1Tag>검색 결과 </H1Tag>
+                  {searchResultCount > 0 && filteredStoreList && (
+                    <SearchCountBox>
+                      총<SearchCount>{` ${searchResultCount}`}개</SearchCount>의 결과를 찾았어요! :)
+                    </SearchCountBox>
+                  )}
+                </Title>
+                <GridContainer>
+                  {filteredStoreList?.map((store) => (
+                    <Card key={store.id} onClick={() => navDetail(store.id)}>
+                      <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                      <InfoBox>
+                        <div>
+                          {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
+                          <StoreName>{store.title}</StoreName>
+                          {store.period_start} ~ {store.period_end}
+                        </div>
+
+                        <DetailBtn>상세보기</DetailBtn>
+                      </InfoBox>
+                    </Card>
+                  ))}
+                </GridContainer>
+              </>
             ) : (
               <div>검색 결과가 없습니다.</div>
             )}
           </div>
         ) : (
           <>
-            <Title>인기 팝업스토어</Title>
-            <GridContainer>
-              {popStores?.map((store: Store) => (
-                <ImgWrapper key={store.id} onClick={() => navDetail(store.id)}>
-                  <PImg src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-                  <PopupTitle>{store.title}</PopupTitle>
-                  <div>
-                    {store.period_start} ~ {store.period_end}
-                  </div>
-                </ImgWrapper>
-              ))}
-            </GridContainer>
+            {' '}
+            <div>
+              <Title>
+                <H1Tag>인기 팝업스토어</H1Tag>
+              </Title>
+              <GridContainer>
+                {popStores?.map((store: Store) => (
+                  <Card key={store.id} onClick={() => navDetail(store.id)}>
+                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                    <InfoBox>
+                      <div>
+                        {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
+                        <StoreName>{store.title}</StoreName>
+                        {store.period_start} ~ {store.period_end}
+                      </div>
 
-            <Title>최신 팝업스토어</Title>
-            <GridContainer>
-              {latStores?.map((store: Store) => (
-                <ImgWrapper key={store.id} onClick={() => navDetail(store.id)}>
-                  <PImg src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-                  <PopupTitle>{store.title}</PopupTitle>
-                  <div>
-                    {store.period_start} ~ {store.period_end}
-                  </div>
-                </ImgWrapper>
-              ))}
-            </GridContainer>
+                      <DetailBtn>상세보기</DetailBtn>
+                    </InfoBox>
+                  </Card>
+                ))}
+              </GridContainer>
+              <Title>
+                <H1Tag>최신 팝업스토어</H1Tag>
+              </Title>
+              <GridContainer>
+                {latStores?.map((store: Store) => (
+                  <Card key={store.id} onClick={() => navDetail(store.id)}>
+                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                    <InfoBox>
+                      <div>
+                        {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
+                        <StoreName>{store.title}</StoreName>
+                        {store.period_start} ~ {store.period_end}
+                      </div>
+
+                      <DetailBtn>상세보기</DetailBtn>
+                    </InfoBox>
+                  </Card>
+                ))}
+              </GridContainer>{' '}
+            </div>
           </>
         )}
       </>
-      <div
-        style={{
-          backgroundColor: 'yellow',
-          width: '50%',
-          border: '1px solid black',
-          padding: '20px',
-          margin: '10px'
-        }}
-        ref={ref}
-      >
-        Trigger to Fetch Here
-      </div>
+      <Ref ref={ref}></Ref>
     </Container>
   );
 };
@@ -482,8 +486,6 @@ const StoreName = styled.div`
 
   margin: 7px 0 7px 0;
 `;
-
-const BtnBox = styled.div``;
 
 const DetailBtn = styled.button`
   /* background-color: var(--primary-color); */

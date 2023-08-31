@@ -38,6 +38,7 @@ export interface PostType {
   title: string;
   body: any;
   isDeleted: boolean;
+  store: { title: string };
 }
 
 export interface NewPost {

@@ -408,12 +408,30 @@ const MyPage = () => {
         </div>
       </header>
       {/* Toggle tab */}
-      <div>
-        <h3>{activeSection === 'myReview' ? '내가 찜한 팝업스토어 :D' : '나만의 북마크-리스트 :)'}</h3>
-        <button data-section="myReview" onClick={handleSectionChange}>
+      <div className="toggle-wrapper">
+        <h3>
+          {activeSection === 'myReview' ? (
+            <p>
+              <span>내가 찜한</span> 팝업스토어 :D
+            </p>
+          ) : (
+            <p>
+              <span>나만의</span> 북마크-리스트 :)
+            </p>
+          )}
+        </h3>
+        <button
+          data-section="myReview"
+          onClick={handleSectionChange}
+          className={activeSection === 'myReview' ? 'active' : ''}
+        >
           나의 게시글
         </button>
-        <button data-section="myBookmark" onClick={handleSectionChange}>
+        <button
+          data-section="myBookmark"
+          onClick={handleSectionChange}
+          className={activeSection === 'myBookmark' ? 'active' : ''}
+        >
           나의 북마크
         </button>
         {/* Review tab */}
@@ -652,10 +670,28 @@ const MypageTag = styled.div`
       }
     }
   }
+  .toggle-wrapper button {
+    background-color: white; /* 비활성 버튼 배경색 */
+    color: black; /* 버튼 텍스트 색상 */
+    padding: 10px 20px;
+    cursor: pointer;
+
+    margin-right: 10px;
+  }
+  button.active {
+    background-color: var(--primary-color);
+  }
   h3 {
     text-align: center;
     margin: 4rem 0;
     font-size: 28px;
+
+    p {
+      span {
+        padding: 2px;
+        background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+      }
+    }
   }
   .send-btn {
     margin-left: 10px;
@@ -664,17 +700,106 @@ const MypageTag = styled.div`
     font-weight: 600;
   }
   .post-wrapper {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    max-width: 900px;
     margin: 0 auto;
+    padding: 0;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 50px;
+    max-width: 1920px;
+    width: 100%;
+    margin-top: 50px;
+
+    .fid {
+      margin: 0 auto;
+      width: 380px;
+      height: 500px;
+      border-radius: 18px;
+      border: 3px solid var(--fifth-color);
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #ffffff;
+      transition: color 0.3s ease, transform 0.3s ease;
+      &:hover {
+        border: 6px solid var(--primary-color);
+      }
+      &:active {
+        background-color: var(--sixth-color);
+        transform: scale(0.98);
+      }
+      img {
+        width: 340px;
+        height: 370px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 3px solid var(--fifth-color);
+      }
+      .info-box {
+        width: 330px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-top: 20px;
+      }
+      button {
+        background-color: var(--second-color);
+        color: white;
+      }
+    }
   }
   .subs-wrapper {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    max-width: 900px;
     margin: 0 auto;
+    padding: 0;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 50px;
+    max-width: 1920px;
+    width: 100%;
+    margin-top: 50px;
+
+    // .fids {
+    //   margin: 0 auto;
+    //   width: 380px;
+    //   height: 500px;
+    //   border-radius: 18px;
+    //   border: 3px solid var(--fifth-color);
+    //   box-sizing: border-box;
+    //   display: flex;
+    //   flex-direction: column;
+    //   align-items: center;
+    //   background-color: #ffffff;
+    //   transition: color 0.3s ease, transform 0.3s ease;
+    //   &:hover {
+    //     border: 6px solid var(--primary-color);
+    //   }
+    //   &:active {
+    //     background-color: var(--sixth-color);
+    //     transform: scale(0.98);
+
+    //   img {
+    //     width: 340px;
+    //     height: 370px;
+    //     object-fit: cover;
+    //     border-radius: 10px;
+    //     border: 3px solid var(--fifth-color);
+    //   }
+    //   .info-wrap {
+    //     width: 330px;
+    //     display: flex;
+    //     justify-content: space-between;
+    //     align-items: flex-end;
+    //     margin-top: 20px;
+    //   }
+    //   button {
+    //     background-color: var(--second-color);
+    //     color: white;
+    //   }
+    // }
   }
 `;

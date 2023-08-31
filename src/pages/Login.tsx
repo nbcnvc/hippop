@@ -123,7 +123,7 @@ const LoginTag = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 0px !important;
+    gap: 0 !important;
   }
   .list {
     margin: 0.5rem;

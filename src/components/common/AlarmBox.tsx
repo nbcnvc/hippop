@@ -14,19 +14,12 @@ import { AlarmType } from '../../types/types';
 import { styled } from 'styled-components';
 // mui
 import DeleteIcon from '@mui/icons-material/Delete';
+import { AlarmBoxProps } from '../../types/props';
 
-const AlarmBox = () => {
+const AlarmBox = ({ alarms }: AlarmBoxProps) => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const currentUser = useCurrentUser();
   const currentUserId = currentUser?.id;
-
-  const { data: alarms, isLoading, isError } = useQuery(['alarms'], () => getAlarms(currentUserId ?? ''));
-
-  // 알람 드롭 박스 닫기
-  // const closeAlarm = () => {
-  //   setIsAlarmOpen(false)
-  // }
 
   // 알람은 무조건 5개만
   const AlarmList = alarms?.slice(0, 5);
@@ -52,12 +45,15 @@ const AlarmBox = () => {
     }
   };
 
+  const queryClient = useQueryClient();
+
   // 알람 삭제
   const deleteMutation = useMutation(deleteAlarm, {
     onSuccess: () => {
       queryClient.invalidateQueries(['alarms']);
     }
   });
+
   const deleteButton = (id: number) => {
     // DB 수정
     deleteMutation.mutate(id);
@@ -79,12 +75,6 @@ const AlarmBox = () => {
     }
   };
 
-  if (isLoading) {
-    return <div>로딩중입니다.</div>;
-  }
-  if (isError) {
-    return <div>오류가 발생했습니다.</div>;
-  }
   return (
     <>
       <AlarmContainer>
@@ -101,8 +91,6 @@ const AlarmBox = () => {
           );
         })}
       </AlarmContainer>
-
-      {/* {isAlarmOpen && <div onClick={closeAlarm} />} */}
     </>
   );
 };
@@ -111,22 +99,19 @@ export default AlarmBox;
 
 const AlarmContainer = styled.li`
   position: absolute;
-  top: 33px;
-  right: -460px;
+  top: 19px;
+  right: -285px;
   list-style: none;
   color: black;
   background-color: white;
-  box-shadow: 1px 1px 3px #bdbdbd9c;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--fifth-color);
   border-radius: 5px;
   z-index: 1;
-
-
-  }
 `;
 
 const AlarmContents = styled.div`
-  width: 290px;
+  width: 280px;
   /* border-bottom: 1px solid #a7a7a79d; */
   font-size: 14px;
   text-align: left;
@@ -151,6 +136,6 @@ const AlarmInfo = styled.div`
 
 const AlarmDeleteIcon = styled(DeleteIcon)`
   &:hover {
-    color: #f24d0d;
+    color: var(--primary-color);
   }
 `;

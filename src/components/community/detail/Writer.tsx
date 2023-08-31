@@ -23,44 +23,76 @@ const Writer = ({ writer, postId }: WriterProps) => {
 
   return (
     <>
-      <div
-        style={{
-          width: '1000px',
-          border: '1px solid black',
-          padding: '10px',
-          margin: '10px',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}
-      >
-        <div>
+      <WriterContainer>
+        <ProfileBox>
           {writer?.avatar_url && writer.avatar_url.startsWith('profile/') ? (
             <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${writer?.avatar_url}`} alt="User Avatar" />
           ) : (
             <Img src={writer?.avatar_url} alt="User Avatar" />
           )}
-          <div>{writer?.name}</div>
-        </div>
+          <Name>
+            <TitleLine>{writer?.name}</TitleLine>님이 궁금하시다면?
+          </Name>
+        </ProfileBox>
         {writer && (
-          <>
+          <ButtonBox>
             {pathname === `/rdetail/${postId}` && <Subscribe writerId={writer.id} />}
             {pathname === `/mdetail/${postId}` && currentUserId !== writer.id && (
-              <button onClick={openMsgModal}>쪽지 보내기</button>
+              <Button onClick={openMsgModal}>쪽지 보내기</Button>
             )}
-          </>
+          </ButtonBox>
         )}
         {msgModal && <Message msgModal={msgModal} setMsgModal={setMsgModal} writer={writer} />}
-      </div>
+      </WriterContainer>
     </>
   );
 };
 
 export default Writer;
 
+const WriterContainer = styled.div`
+  width: 900px;
+  display: flex;
+  justify-content: space-between;
+  border: 2px solid var(--fifth-color);
+  border-radius: 14px;
+  padding: 10px;
+`;
+
+const ProfileBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+`;
+
 const Img = styled.img`
   width: 60px;
   height: 60px;
   object-fit: cover;
   border-radius: 50%;
+`;
+
+const Name = styled.div`
+  font-size: 18px;
+  font-weight: 600;
+  padding: 0 20px;
+`;
+
+const TitleLine = styled.span`
+  padding: 2px;
+  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+`;
+
+const ButtonBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 20px;
+`;
+
+const Button = styled.button`
+  width: 120px;
+  height: 40px;
+  font-weight: 600;
 `;

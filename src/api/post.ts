@@ -16,7 +16,7 @@ export const getPosts = async (pageParam: number = 1, param?: string): Promise<F
   if (param === '/review') {
     const { data: reviews } = await supabase
       .from('post')
-      .select()
+      .select(`*, store(title)`)
       .eq('ctg_index', 1)
       .eq('isDeleted', false)
       .order('created_at', { ascending: false }) // 내림차순
@@ -34,7 +34,7 @@ export const getPosts = async (pageParam: number = 1, param?: string): Promise<F
   } else if (param === '/mate') {
     const { data: mates } = await supabase
       .from('post')
-      .select()
+      .select(`*, store(title)`)
       .eq('ctg_index', 2)
       .eq('isDeleted', false)
       .order('created_at', { ascending: false })

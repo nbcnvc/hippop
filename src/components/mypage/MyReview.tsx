@@ -30,24 +30,31 @@ const MyReview = ({ selectItems }: ReviewProps) => {
   }
 
   return (
-    <div>
+    <div style={{ margin: '0 auto' }}>
       <div className="post-wrapper">
         {selectItems.map((post: PostType) => {
           const imageTags = extractImageTags(post.body);
           return (
-            <Link to={`/rdetail/${post.id}`} key={post.id}>
-              {imageTags.length > 0 ? (
-                <div>
-                  <img src={imageTags[0]} alt={`Image 0`} width={250} />
+            <div className="fid" key={post.id}>
+              <Link to={`/rdetail/${post.id}`}>
+                {imageTags.length > 0 ? (
+                  <div>
+                    <img src={imageTags[0]} alt={`Image 0`} width={250} />
+                  </div>
+                ) : (
+                  <div>
+                    <img src="/asset/defaultImg.jpg" alt="Default Image" width={250} />
+                  </div>
+                )}
+                <div className="info-box">
+                  <div>
+                    <h2>{post.title}</h2>
+                    <p>{formatDate(post.created_at)}</p>
+                  </div>
+                  <button>상세보기</button>
                 </div>
-              ) : (
-                <div>
-                  <img src="/asset/defaultImg.jpg" alt="Default Image" width={250} />
-                </div>
-              )}
-              <h2>{post.title}</h2>
-              <p>{formatDate(post.created_at)}</p>
-            </Link>
+              </Link>
+            </div>
           );
         })}
       </div>
