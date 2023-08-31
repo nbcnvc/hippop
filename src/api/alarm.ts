@@ -8,7 +8,6 @@ export const getAlarms = async (userId: string): Promise<AlarmType[]> => {
     .from('alarm')
     .select('*')
     .eq('targetUserId', userId)
-    .eq('isRead', false)
     .order('created_at', { ascending: false }); // 내림차순
   return data as AlarmType[];
 };
@@ -16,4 +15,8 @@ export const getAlarms = async (userId: string): Promise<AlarmType[]> => {
 // 알람 삭제
 export const deleteAlarm = async (id: number): Promise<void> => {
   await supabase.from('alarm').delete().eq('id', id);
+};
+
+export const readAlarm = async (readAlarms: AlarmType[] | undefined): Promise<void> => {
+  await supabase.from('alarm').upsert(readAlarms, { onConflict: 'id' });
 };

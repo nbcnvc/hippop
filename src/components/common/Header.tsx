@@ -2,27 +2,38 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import Login from '../../pages/Login';
-import { UserInfo } from '../../types/types';
 import { setUserStore, useCurrentUser } from '../../store/userStore';
 import Alarm from './Alarm';
 import AlarmBox from './AlarmBox';
 import { supabase } from '../../api/supabase';
-import { User } from '@supabase/supabase-js';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getUser } from '../../api/user';
+import { getAlarms, readAlarm } from '../../api/alarm';
 
 function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAlarmOpen, setIsAlarmOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const alarmRef = useRef<HTMLDivElement | null>(null);
 
   // 유저 셋 해주는 함수 가져오기
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
   const currentUser = useCurrentUser();
   const currentUserId = currentUser?.id;
   const { data: user } = useQuery(['user', currentUserId], () => getUser(currentUserId ?? ''));
+
+  // 알림 데이터 가져오기
+  const { data: alarms, isLoading, isError } = useQuery(['alarms'], () => getAlarms(currentUserId ?? ''));
+  const readAlarms = alarms?.filter((alarm) => alarm.isRead === false);
+
+  const queryClient = useQueryClient();
+  const readAlarmMutation = useMutation(readAlarm, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(['alarms']);
+    }
+  });
 
   useEffect(() => {
     const handleWindowClick = (event: MouseEvent) => {
@@ -70,9 +81,36 @@ function Header() {
     }
   };
 
-  const ToggleAlarm = () => {
-    setIsAlarmOpen(!isAlarmOpen);
+  useEffect(() => {
+    const handleAlarmWindowClick = (event: MouseEvent) => {
+      if (!alarmRef.current?.contains(event.target as Node)) {
+        setIsAlarmOpen(false);
+      }
+    };
+
+    window.addEventListener('click', handleAlarmWindowClick);
+    return () => {
+      window.removeEventListener('click', handleAlarmWindowClick);
+    };
+  }, []);
+
+  // 종 클릭 시 알람 목록(그럼 기준을 currentUserId...?)에 있는 isRead가 false -> true로 바뀌어야 함
+  const handleToggleAlarm = () => {
+    if (isAlarmOpen === false) {
+      setIsAlarmOpen(!isAlarmOpen);
+
+      const readAlarms = alarms?.map((alarm) => ({ ...alarm, isRead: true }));
+
+      readAlarmMutation.mutate(readAlarms);
+    }
   };
+
+  if (isLoading) {
+    return <div>로딩중입니다.</div>;
+  }
+  if (isError) {
+    return <div>오류가 발생했습니다.</div>;
+  }
 
   return (
     <HeaderTag>
@@ -101,7 +139,6 @@ function Header() {
           <div className="user-info">
             {user ? (
               <>
-                <ul style={{ position: 'relative' }}>{isAlarmOpen && <AlarmBox />}</ul>
                 <div className="user-dropdown" onClick={handleMenuToggle} ref={menuRef}>
                   <div className="info-mate">
                     <div className="welcome-mate">
@@ -125,11 +162,21 @@ function Header() {
                     <div onClick={handleLogOut}>Logout</div>
                   </div>
                 </div>
+                <div className="alarm" ref={alarmRef}>
+                  <AlarmButton onClick={handleToggleAlarm} />
+                  {readAlarms && readAlarms?.length > 0 && (
+                    <img src="/asset/headLight.png" alt="Alarm headLight image" />
+                  )}
+                  {isAlarmOpen && (
+                    <ul>
+                      <AlarmBox alarms={alarms} />
+                    </ul>
+                  )}
+                </div>
               </>
             ) : (
               <button onClick={openLoginModal}>Login</button>
             )}
-            <AlarmButton onClick={ToggleAlarm} style={{ marginLeft: '10px' }} />
           </div>
           {isModalOpen && (
             <ModalWrapper isopen={isModalOpen} onClick={handleModalOutsideClick}>
@@ -142,11 +189,13 @@ function Header() {
   );
 }
 export default Header;
+
 const HeaderTag = styled.header`
   background-color: var(--primary-color);
   color: white;
   width: 100%;
   height: 100px;
+
   .header-wrapper {
     margin: 0 auto;
     height: 100%;
@@ -255,6 +304,20 @@ const HeaderTag = styled.header`
             background-color: var(--sixth-color);
           }
         }
+      }
+    }
+    .alarm {
+      position: relative;
+      margin-left: 15px;
+      img {
+        position: absolute;
+        top: -17%;
+        right: -25%;
+        width: 10px;
+        height: 10px;
+      }
+      ul {
+        position: relative;
       }
     }
   }
