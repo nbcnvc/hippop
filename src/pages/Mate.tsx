@@ -77,11 +77,10 @@ const TitleBox = styled.div`
 
 const Title = styled.h1`
   color: var(--fifth-color);
-  margin: 70px;
-  padding-bottom: 5px;
   font-size: 28px;
   font-style: normal;
   font-weight: 400;
+  margin: 70px;
   background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
 `;
 

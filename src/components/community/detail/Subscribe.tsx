@@ -5,6 +5,8 @@ import { useCurrentUser } from '../../../store/userStore';
 import { SubscribeProps } from '../../../types/props';
 import { SubscribeType } from '../../../types/types';
 
+import { styled } from 'styled-components';
+
 const Subscribe = ({ writerId }: SubscribeProps) => {
   // 로그인한 유저 정보 가져오기 (From)
   const currentUser = useCurrentUser();
@@ -65,9 +67,9 @@ const Subscribe = ({ writerId }: SubscribeProps) => {
       {subscribe.subscribe_from !== subscribe.subscribe_to && (
         <>
           {subscribed && subscribed.length > 0 ? (
-            <button onClick={cancelButton}>구독 취소</button>
+            <Button onClick={cancelButton}>구독 취소</Button>
           ) : (
-            <button onClick={subButton}>구독 하기</button>
+            <Button onClick={subButton}>구독 하기</Button>
           )}
         </>
       )}
@@ -76,3 +78,9 @@ const Subscribe = ({ writerId }: SubscribeProps) => {
 };
 
 export default Subscribe;
+
+const Button = styled.button`
+  width: 120px;
+  height: 40px;
+  font-weight: 600;
+`;
