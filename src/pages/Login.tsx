@@ -7,12 +7,6 @@ import { Link } from 'react-router-dom';
 import { randomFileName } from '../hooks/useHandleImageName';
 import { setUserStore } from '../store/userStore';
 
-// export const handleLogOut = async () => {
-//   const { error } = await supabase.auth.signOut();
-
-//   if (error) console.log('error=>', error);
-// };
-
 const Login = ({ closeModal }: { closeModal: () => void }) => {
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
 
@@ -58,10 +52,6 @@ const Login = ({ closeModal }: { closeModal: () => void }) => {
       console.error('로그인 중 오류가 발생했어요 :(', error);
     }
   };
-  // const newFileName = randomFileName(selectedImage.name);
-  // const renamedFile = new File([selectedImage], newFileName);
-
-  // const { data } = await supabase.storage.from('images').upload(`profile/${renamedFile.name}`, renamedFile);
 
   return (
     <LoginTag>
@@ -133,7 +123,7 @@ const LoginTag = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 0px !important;
+    gap: 0 !important;
   }
   .list {
     margin: 0.5rem;

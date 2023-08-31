@@ -6,10 +6,12 @@ import 'react-quill/dist/quill.snow.css';
 import { EditorProps } from '../../../types/props';
 import { randomFileName } from '../../../hooks/useHandleImageName';
 import { supabase } from '../../../api/supabase';
+import { styled } from 'styled-components';
 
 // 이미지 크기 조절
 import { ImageActions } from '@xeger/quill-image-actions';
 import { ImageFormats } from '@xeger/quill-image-formats';
+
 Quill.register('modules/imageActions', ImageActions);
 Quill.register('modules/imageFormats', ImageFormats);
 
@@ -116,7 +118,6 @@ const Editor = ({ body, setBody }: EditorProps) => {
   return (
     <>
       <ReactQuill
-        style={{ width: '650px', height: '650px' }}
         ref={quillRef}
         theme="snow"
         modules={modules}

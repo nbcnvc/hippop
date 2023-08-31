@@ -6,8 +6,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { FetchPost, PostType } from '../../../types/types';
 import { getPosts } from '../../../api/post';
 
-import DefaultImg from '../../../assets/defaultImg.png';
-import { display } from '@mui/system';
 import { styled } from 'styled-components';
 
 const Posts = () => {
@@ -41,7 +39,7 @@ const Posts = () => {
       })
       .flat();
   }, [posts]);
-  // console.log(selectPosts);
+  console.log(selectPosts);
 
   // 언제 다음 페이지를 가져올 것
   const { ref } = useInView({
@@ -80,64 +78,93 @@ const Posts = () => {
     return <div>오류가 발생했습니다.</div>;
   }
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
+    <PostContainer>
       {selectPosts?.map((post) => {
         const imageTags = extractImageTags(post.body);
         const postText = post.body.replace(/<img.*?>/g, '');
         return (
-          <div
-            key={post.id}
-            onClick={() => naviDetail(post)}
-            style={{
-              width: '50%',
-              border: '1px solid black',
-              padding: '10px',
-              margin: '10px',
-              display: 'flex'
-            }}
-          >
+          <PostBox key={post.id} onClick={() => naviDetail(post)}>
             {imageTags.length > 0 ? (
               <div>
-                <img src={imageTags[0]} width={250} height={140} />
+                <ImageBox src={imageTags[0]} />
               </div>
             ) : (
               <div>
-                <img src={DefaultImg} alt="Default Image" width={250} height={140} />
+                <ImageBox src="/asset/defaultImg.png" alt="Default Image" width={250} height={140} />
               </div>
             )}
-            <div>
-              <div style={{ fontSize: '18px', fontWeight: 'bold', margin: '10px 0 20px 20px' }}>{post.title}</div>
-              <ContentBox dangerouslySetInnerHTML={{ __html: postText }} />
-            </div>
-          </div>
+            <ContentBox>
+              <Store>{post.store.title}</Store>
+              <Title>{post.title}</Title>
+              <Body dangerouslySetInnerHTML={{ __html: postText }} />
+            </ContentBox>
+          </PostBox>
         );
       })}
-      <div
-        style={{
-          backgroundColor: 'yellow',
-          width: '90%',
-          alignItems: 'center',
-          border: '1px solid black',
-          padding: '20px',
-          margin: '10px'
-        }}
-        ref={ref}
-      >
-        Trigger to Fetch Here
-      </div>
-    </div>
+      <Trigger ref={ref} />
+    </PostContainer>
   );
 };
 
 export default Posts;
 
+const PostContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const PostBox = styled.div`
+  width: 900px;
+  height: 200px;
+  background-color: #fff;
+  border: 3px solid var(--fifth-color);
+  border-radius: 18px;
+  padding: 10px;
+  margin: 10px;
+  display: flex;
+`;
+
+const ImageBox = styled.img`
+  width: 340px;
+  height: 190px;
+  border: 2px solid var(--fifth-color);
+  border-radius: 10px;
+  margin: 3px 5px 0 5px;
+  object-fit: cover;
+`;
+
 const ContentBox = styled.div`
+  width: 505px;
+  padding: 10px 20px;
+`;
+
+const Store = styled.div`
+  font-weight: 400;
+  padding: 10px 0;
+`;
+
+const Title = styled.div`
+  font-size: 18px;
+  font-weight: 700;
+  padding: 10px 0;
+`;
+
+const Body = styled.div`
   color: black;
-  margin: 20px 20px 0 20px;
-  max-height: 55%;
+  font-size: 14px;
+  line-height: 1.5;
+  max-height: 85px;
+  padding-top: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 5; /* 표시할 줄 수 설정 */
+  -webkit-line-clamp: 4; /* 표시할 줄 수 설정 */
   -webkit-box-orient: vertical; /* 텍스트의 방향 설정 */
+`;
+
+const Trigger = styled.div`
+  width: 100%;
+  align-items: center;
 `;

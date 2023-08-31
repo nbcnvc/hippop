@@ -105,7 +105,11 @@ const Alarm = () => {
           await supabase.from('alarm').insert(newAlarm);
 
           // 메세지 테이블에서 알람 데이터 가져오기
-          const { data: alarm } = await supabase.from('alarm').select('*').eq('targetUserId', currentUserId);
+          const { data: alarm } = await supabase
+            .from('alarm')
+            .select('*')
+            .eq('targetUserId', currentUserId)
+            .order('created_at', { ascending: true });
 
           if (alarm) {
             toast.info(alarm[alarm.length - 1]?.content, {
@@ -144,7 +148,11 @@ const Alarm = () => {
           await supabase.from('alarm').insert(newAlarm);
 
           // 메세지 테이블에서 알람 데이터 가져오기
-          const { data: alarm } = await supabase.from('alarm').select('*').eq('targetUserId', currentUserId);
+          const { data: alarm } = await supabase
+            .from('alarm')
+            .select('*')
+            .eq('targetUserId', currentUserId)
+            .order('created_at', { ascending: true });
 
           if (alarm) {
             toast.info(alarm[alarm.length - 1]?.content, {
@@ -182,7 +190,11 @@ const Alarm = () => {
           await supabase.from('alarm').insert(newAlarm);
 
           // 메세지 테이블에서 알람 데이터 가져오기
-          const { data: alarm } = await supabase.from('alarm').select('*').eq('targetUserId', currentUserId);
+          const { data: alarm } = await supabase
+            .from('alarm')
+            .select('*')
+            .eq('targetUserId', currentUserId)
+            .order('created_at', { ascending: true });
 
           console.log(alarm?.length);
 
