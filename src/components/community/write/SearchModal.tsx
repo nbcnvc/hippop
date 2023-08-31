@@ -102,7 +102,9 @@ const SearchModal = ({
                 placeholder="팝업스토어를 검색하세요."
                 style={{ width: '30%' }}
               />
-              <button onClick={searchButton}>검색</button>
+              <button className="custom-btn" onClick={searchButton}>
+                검색
+              </button>
             </div>
             {/* 검색 결과창 */}
             {result ? (
@@ -161,6 +163,13 @@ const ModalBox = styled.div`
   height: 800px;
   border-radius: 10px;
   position: relative;
+
+  .custom-btn {
+    background-color: var(--second-color);
+    border-radius: 0 18px 18px 0;
+    padding: 4px 16px;
+    font-size: 12px;
+  }
 `;
 
 const GridContainer = styled.div`

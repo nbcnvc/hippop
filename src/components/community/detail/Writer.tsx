@@ -35,7 +35,7 @@ const Writer = ({ writer, postId }: WriterProps) => {
         }}
       >
         <div>
-          {writer?.avatar_url.startsWith('profile/') ? (
+          {writer?.avatar_url && writer.avatar_url.startsWith('profile/') ? (
             <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${writer?.avatar_url}`} alt="User Avatar" />
           ) : (
             <Img src={writer?.avatar_url} alt="User Avatar" />

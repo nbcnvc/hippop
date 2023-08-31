@@ -4,124 +4,78 @@ import { supabase } from '../api/supabase';
 
 import { styled } from 'styled-components';
 import { Link } from 'react-router-dom';
+import { randomFileName } from '../hooks/useHandleImageName';
 import { setUserStore } from '../store/userStore';
-import { UserInfo } from '../types/types';
 
 const Login = ({ closeModal }: { closeModal: () => void }) => {
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
 
-  console.log('setCurrentUser', setCurrentUser);
   //google
   const signupGoogle = async (e: React.FormEvent) => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google'
-    });
-    if (data) alert('로그인이 완료되었습니다');
-    console.log(data);
-    if (error) console.error('error =>', error);
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google'
+      });
+
+      if (error) {
+        console.error('error =>', error);
+      }
+    } catch (error) {
+      console.error('로그인 중 오류가 발생했어요 :(', error);
+    }
   };
 
   const signupKakao = async () => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'kakao'
-    });
-    if (data) alert('로그인이 완료되었습니다');
-    console.log(data);
-    if (error) console.error('error =>', error);
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'kakao'
+      });
+
+      if (error) {
+        console.error('error =>', error);
+      }
+    } catch (error) {
+      console.error('로그인 중 오류가 발생했어요 :(', error);
+    }
   };
 
   const signInWithFacebook = async (e: React.FormEvent) => {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'facebook'
-    });
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'facebook'
+      });
 
-    // const newFileName = randomFileName(selectedImage.name);
-    // const renamedFile = new File([selectedImage], newFileName);
-
-    // const { data } = await supabase.storage.from('images').upload(`profile/${renamedFile.name}`, renamedFile);
-
-    if (data) alert('로그인이 완료되었습니다');
-    console.log(data);
-    if (error) console.error('error =>', error);
+      if (error) {
+        console.error('error =>', error);
+      }
+    } catch (error) {
+      console.error('로그인 중 오류가 발생했어요 :(', error);
+    }
   };
-  // useEffect(() => {
-  //   supabase.auth.onAuthStateChange(async (event, session) => {
-  //     console.log('session ==> ,', session);
-
-  //     if (session) {
-  //       const user = {
-  //         id: session.user.id,
-  //         created_at: session.user.created_at,
-  //         email: session.user.user_metadata.email,
-  //         avatar_url: session.user.user_metadata.avatar_url,
-  //         name: session.user.user_metadata.name
-  //       };
-
-  //       setCurrentUser(user);
-
-  //       await supabase.from('user').insert(user);
-  //     } else {
-  //       setCurrentUser(null);
-  //     }
-
-  //     if (session) {
-  //       const response = await supabase.from('user').select().eq('userid', session?.user.id).single();
-
-  //       if (response.data) {
-  //         setCurrentUser(response.data);
-  //       }
-  //     }
-  //   });
-  // }, []);
-
-  // useEffect(() => {
-  //   supabase.auth.onAuthStateChange(async (event, session) => {
-  //     const response = await supabase.from('user').select().eq('userid', session?.user.id).single();
-  //     console.log('res data', response.data);
-  //     if (session) {
-  //       const response = await supabase.from('user').select().eq('userid', session?.user.id).single();
-  //       console.log('res data', response.data);
-  //       if (response.data) {
-  //         setCurrentUser(response.data);
-  //       } else {
-  //         const user = {
-  //           id: session.user.id,
-  //           created_at: session.user.created_at,
-  //           email: session.user.user_metadata.email,
-  //           avatar_url: session.user.user_metadata.avatar_url,
-  //           name: session.user.user_metadata.name
-  //         };
-  //         setCurrentUser(user);
-  //         await supabase.from('user').insert(user);
-  //       }
-  //     } else setCurrentUser(null);
-  //   });
-  // }, []);
 
   return (
     <LoginTag>
       <div>
         <div className="login-content">
           <Link to="/">
-            <img src="/asset/test-logo1.png" alt="logo" width={80} />
+            <img src="/asset/nyb_logo.png" alt="logo" width={220} />
           </Link>
           <h2>Find your HipPop</h2>
           <span>힙-팝에 오신걸 환영해요 :)</span>
           <div className="btn-wrapper">
-            <ul>
-              <li onClick={signupGoogle}>
-                <img src="/asset/google.png" alt="google" />
-              </li>
-              <li onClick={signupKakao}>
-                <img src="/asset/kakao.png" alt="kakao" />
-              </li>
-              <li onClick={signInWithFacebook}>
-                <img src="/asset/facebook.png" alt="naver" />
-              </li>
-            </ul>
+            <div className="list-wrapper">
+              <div className="list" onClick={signupGoogle}>
+                <img src="/asset/gglogin-horizon.png" alt="google" />
+              </div>
+              <div className="list" onClick={signupKakao}>
+                <img src="/asset/kakao-horizon.png" alt="kakao" />
+              </div>
+              <div className="list" onClick={signInWithFacebook}>
+                <img src="/asset/fblogin-horizon.png" alt="naver" />
+              </div>
+            </div>
           </div>
         </div>
-        <form></form>
       </div>
     </LoginTag>
   );
@@ -131,13 +85,17 @@ export default Login;
 
 const LoginTag = styled.div`
   margin: 0 auto;
-  margin-bottom: 10%;
-
-  width: 280px;
-  height: 220px;
+  margin-bottom: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 320px;
+  height: 520px;
   background: rgba(183, 79, 231, 0.76);
   border-radius: 10px;
   padding: 1rem;
+  // backdrop-filter: blur(10px);
+  box-shadow: 4px 4px 18px rgba(0, 0, 0, 0.3);
 
   .login-content {
     gap: 10px;
@@ -160,22 +118,24 @@ const LoginTag = styled.div`
   .btn-wrapper {
     width: 100%;
   }
-  .btn-wrapper > ul {
+  .list-wrapper {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 0 !important;
   }
-  ul > li {
-    margin: 1rem;
+  .list {
+    margin: 0.5rem;
     cursor: pointer;
     transition: transform 0.5s, filter 0.5s;
   }
-  ul > li:hover {
-    transform: scale(1.05);
+  .list:hover {
+    transform: scale(0.98);
     filter: brightness(1.2);
   }
-  ul > li > img {
-    width: 45px;
+  .list > img {
+    width: 200px;
+    border-radius: 8px;
   }
 `;

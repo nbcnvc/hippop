@@ -20,10 +20,13 @@ import SendBox from '../components/message/SendBox';
 import MessageReply from '../components/message/MessageReply';
 import { MessageType } from '../types/types';
 import ReceiveBox from '../components/message/ReceiveBox';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 
 const MyPage = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { data: currentUser } = useQuery(['user', id], () => getUser(id ?? ''));
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState('');
   const [imageUploadVisible, setImageUploadVisible] = useState(false);
@@ -32,7 +35,7 @@ const MyPage = () => {
   const [replyModal, setReplyModal] = useState<boolean | null>(null);
   const [sendMsgUser, setSendMsgUser] = useState<MessageType | null>(null);
   //구독 목록 메뉴 상태
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean | null>(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [subscribers, setSubscribers] = useState<string[]>([]);
 
@@ -50,7 +53,7 @@ const MyPage = () => {
 
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
   // 현재유저 정보 가져오기
-  const currentUser: any | null = useCurrentUser();
+  // const currentUser: any | null = useCurrentUser();
   // console.log('test ====> ', currentUser);
   const currentUserId = currentUser?.id;
   const { data: sublistData } = useQuery(['sublist'], () => getSubList(currentUserId ?? ''));
@@ -124,7 +127,7 @@ const MyPage = () => {
     isFetchingNextPage
   } = useInfiniteQuery({
     queryKey: ['mypage', currentUser?.id, activeSection],
-    queryFn: ({ pageParam }) => getMySectionItems({ pageParam, activeSection, userId: currentUser?.id }),
+    queryFn: ({ pageParam }) => getMySectionItems({ pageParam, activeSection, userId: currentUser?.id ?? '' }),
     getNextPageParam: (lastPage) => {
       if (lastPage.page < lastPage.totalPages) {
         return lastPage.page + 1;
@@ -153,15 +156,6 @@ const MyPage = () => {
       fetchNextPage();
     }
   });
-  const tu = async () => {
-    const userId = currentUserId; // 실제 사용할 유저 ID
-    const pageParam = 1; // 원하는 페이지 번호
-    const storesData = await getMyStores(userId, pageParam);
-    console.log('storesData:', storesData);
-  };
-
-  // 함수 호출
-  tu();
 
   // my page가 렌더되면 현재 login상태 user가 작성한 post 배열 가져오기
   useEffect(() => {
@@ -255,7 +249,7 @@ const MyPage = () => {
 
     const { error } = await supabase.from('user').update({ name: newName }).eq('id', currentUser?.id);
     if (currentUser && !error) {
-      const userData = await getUser(currentUser?.id);
+      const userData = await getUser(currentUser?.id ?? '');
       setCurrentUser(userData);
       setEditingName(false); // 수정 모드 해제
       alert('닉네임이 변경 됐습니다 :)');
@@ -301,7 +295,7 @@ const MyPage = () => {
 
           // Fetch updated user data using getUser
           if (currentUser) {
-            const userData = await getUser(currentUser?.id);
+            const userData = await getUser(currentUser?.id ?? '');
             setCurrentUser(userData);
             // console.log('userData', userData);
           }
@@ -338,6 +332,12 @@ const MyPage = () => {
     const name = (e.target as HTMLButtonElement).name;
     setToggleMsgBox(name);
   };
+
+  // console.log(sublistData);
+  // console.log(sublistData[0] ?? null.subscribe_to);
+  // console.log(currentUser.id);
+  // console.log(id);
+  // console.log(subscriberData.subscribe_to);
 
   return (
     <MypageTag>
@@ -393,24 +393,32 @@ const MyPage = () => {
               )}
               님의 My Page
             </p>
+
             <span>
+              <Link to="/yourpage/c3c3e2b7-ea91-4932-aa3f-6e6238e5399f">
+                <button>링쿠트?</button>
+              </Link>
               <div className="user-sub-info">
                 {currentUser?.email}
-                {sublistData && (
-                  <h5 onClick={handleMenuToggle} ref={menuRef}>
-                    &nbsp;구독한 사람: {subscribers.length}
-                  </h5>
-                )}
-                <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
+                {sublistData && <h5>&nbsp;구독한 사람: {subscribers.length}</h5>}
+                <button onClick={() => setIsMenuOpen((isMenuOpen) => !isMenuOpen)}>이거</button>
+                {isMenuOpen && (
                   <ul>
-                    {subscribers
-                      .slice() // 복사본 생성
-                      .sort() // 알파벳 순으로 정렬
-                      .map((subscriber, index) => (
-                        <li key={index}>{subscriber}</li>
-                      ))}
+                    {sublistData?.map((subscriberData, index) => (
+                      <li
+                        key={index}
+                        onClick={() => {
+                          navigate(`/yourpage/${subscriberData.subscribe_to}`);
+                        }}
+                      >
+                        Subscriber {index + 1}
+                      </li>
+                    ))}
                   </ul>
-                </div>
+                )}
+
+                {/* <Link to="/yourpage/c3c3e2b7-ea91-4932-aa3f-6e6238e5399f"> */}
+                {/* </Link> */}
               </div>
               <div>
                 {editingName ? (
@@ -419,7 +427,7 @@ const MyPage = () => {
                     <button onClick={handleNameCancel}>취소</button>
                   </>
                 ) : (
-                  <button onClick={handleNameEdit}>수정</button>
+                  currentUser?.id === id && <button onClick={handleNameEdit}>수정</button>
                 )}
               </div>
             </span>
@@ -457,7 +465,8 @@ const MyPage = () => {
           <div>
             <h3>My Review</h3>
             <div className="post-wrapper">
-              {selectItems?.map((post) => {
+              {selectItems?.map((post: PostType) => {
+                console.log(post);
                 const imageTags = extractImageTags(post.body);
                 return (
                   <Link to={`/rdetail/${post.id}`} key={post.id}>

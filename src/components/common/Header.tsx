@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import Login from '../../pages/Login';
 import { UserInfo } from '../../types/types';
@@ -8,103 +8,35 @@ import Alarm from './Alarm';
 import AlarmBox from './AlarmBox';
 import { supabase } from '../../api/supabase';
 import { User } from '@supabase/supabase-js';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import { useQuery } from '@tanstack/react-query';
+import { getUser } from '../../api/user';
 
 function Header() {
-  const [user, setUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAlarmOpen, setIsAlarmOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   // 유저 셋 해주는 함수 가져오기
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
-  // 현재유저 정보 가져오기
   const currentUser = useCurrentUser();
-
-  console.log('currentUser', currentUser);
-
-  // useEffect(() => {
-  //   const authSubscription = supabase.auth.onAuthStateChange(async (event, session) => {
-  //     const response = await supabase.from('user').select().eq('id', session?.user.id).single();
-
-  //     setCurrentUser(response.data);
-  //   });
-  // }, []);
-
-  // useEffect(() => {
-  //   setUser(currentUser);
-  // }, [currentUser]);
-
-  console.log('user', user);
-  // useEffect(() => {
-  //   function handleOutsideClick(event: MouseEvent) {
-  //     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-  //       setIsMenuOpen(false);
-  //     }
-  //   }
-
-  //   window.addEventListener('mousedown', handleOutsideClick);
-  //   return () => {
-  //     window.removeEventListener('mousedown', handleOutsideClick);
-  //   };
-  // }, []);
+  const currentUserId = currentUser?.id;
+  const { data: user } = useQuery(['user', currentUserId], () => getUser(currentUserId ?? ''));
 
   useEffect(() => {
-    if (currentUser) {
-      return;
-    } else {
-      const tokenKey = localStorage.getItem('sb-jlmwyvwmjcanbthgkpmh-auth-token');
-      const parsedToken = tokenKey ? JSON.parse(tokenKey) : null;
+    const handleWindowClick = (event: MouseEvent) => {
+      // 클릭한 요소가 메뉴나 관련된 요소가 아닌 경우에만 메뉴 닫기
+      if (!menuRef.current?.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
 
-      const userId = parsedToken?.user.id;
-      const userName = parsedToken?.user.user_metadata.name;
-      const userEmail = parsedToken?.user.email;
-      const userCreateAt = parsedToken?.user.created_at;
-      const userAvatar_url = parsedToken?.user.user_metadata.avatar_url;
-      const userInsertData = {
-        id: userId,
-        created_at: userCreateAt,
-        email: userEmail,
-        avatar_url: userAvatar_url,
-        name: userName
-      };
+    window.addEventListener('click', handleWindowClick);
 
-      setCurrentUser(userInsertData);
-    }
-  }, []);
-
-  // 생성한 토큰 가져와서 새로고침 방지
-  useEffect(() => {
-    const storedUserData = localStorage.getItem('UserStorage');
-    if (storedUserData) {
-      const parsedUserData = JSON.parse(storedUserData);
-      setUser(parsedUserData);
-    }
-  }, []);
-
-  // 현재 유저의 정보 가져오기!!
-  const checkUser = async () => {
-    const { data: userData, error } = await supabase.auth.getUser();
-    if (error) {
-      // Handle the error if needed
-      console.error('Error fetching user data:', error);
-      return;
-    }
-    console.log('userDa', userData);
-
-    if (userData) {
-      setUser(userData as any); // Explicit cast to User
-    } else {
-      setUser(null);
-    }
-  };
-
-  // window.addEventListener('hashchange' =>브라우저의 URL 해시(예: # 뒤의 일부)가 변경될 때 발생!
-  // 의존성 배열을 빈 배열([])을 전달했기 때문에, 컴포넌트가 처음 렌더링될 때 한 번만 실행되며, 이후에는 의존성 변경 없이는 다시 실행되지 않음
-  useEffect(() => {
-    checkUser();
-    window.addEventListener('hashchange', function () {
-      checkUser();
-    });
+    return () => {
+      window.removeEventListener('click', handleWindowClick);
+    };
   }, []);
 
   const openLoginModal = () => {
@@ -125,12 +57,21 @@ function Header() {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const navigate = useNavigate();
+
   const handleLogOut = async () => {
     const { error } = await supabase.auth.signOut();
-    localStorage.removeItem('UserStorage');
-    setCurrentUser(null);
-    alert('로그아웃 되었습니다.');
-    if (error) console.log('error=>', error);
+
+    if (error) {
+      console.error('error=>', error);
+    } else {
+      navigate('/');
+      alert(':) 안녕히가세요 !');
+    }
+  };
+
+  const ToggleAlarm = () => {
+    setIsAlarmOpen(!isAlarmOpen);
   };
 
   return (
@@ -139,9 +80,8 @@ function Header() {
         <Alarm />
         <div className="logo-wrapper">
           <Link to="/">
-            <img src="/asset/test-logo1.png" className="test-logo" alt="test-img" />
+            <img src="/asset/nyb_logo.png" className="nyb-logo" alt="nyb-img" />
           </Link>
-          Find your Hippop
         </div>
         <ul>
           <li>
@@ -159,26 +99,29 @@ function Header() {
         </ul>
         <div>
           <div className="user-info">
-            {currentUser !== null ? (
+            {user ? (
               <>
+                <ul style={{ position: 'relative' }}>{isAlarmOpen && <AlarmBox />}</ul>
                 <div className="user-dropdown" onClick={handleMenuToggle} ref={menuRef}>
                   <div className="info-mate">
                     <div className="welcome-mate">
-                      <p>반갑습니다!</p>
-                      <p>{currentUser.name}님</p>
+                      <p>Hello,</p>
+                      <p>{user.name}님</p>
                     </div>
-                    <AlarmBox />
-                    {currentUser && currentUser?.avatar_url && currentUser.avatar_url?.startsWith('profile/') ? (
-                      <img
-                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser?.avatar_url}`}
-                        alt="User Avatar"
-                      />
+                    {user.avatar_url && user.avatar_url.startsWith('profile/') ? (
+                      <img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${user.avatar_url}`} alt="User Avatar" />
                     ) : (
-                      <img src={currentUser?.avatar_url} alt="User Avatar" />
+                      <img src={user.avatar_url} alt="User Avatar" />
                     )}
                   </div>
                   <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
-                    <Link to="/mypage">My Page</Link>
+                    <div
+                      onClick={() => {
+                        navigate(`/mypage/${user.id}`);
+                      }}
+                    >
+                      My Page
+                    </div>
                     <div onClick={handleLogOut}>Logout</div>
                   </div>
                 </div>
@@ -186,6 +129,7 @@ function Header() {
             ) : (
               <button onClick={openLoginModal}>Login</button>
             )}
+            <AlarmButton onClick={ToggleAlarm} style={{ marginLeft: '10px' }} />
           </div>
           {isModalOpen && (
             <ModalWrapper isopen={isModalOpen} onClick={handleModalOutsideClick}>
@@ -199,24 +143,26 @@ function Header() {
 }
 export default Header;
 const HeaderTag = styled.header`
-  background-color: #f24d0d;
+  background-color: var(--primary-color);
   color: white;
   width: 100%;
-  height: 5vh;
+  height: 100px;
   .header-wrapper {
-    height: 5vh;
     margin: 0 auto;
-    width: 80%;
+    height: 100%;
+    max-width: 1920px;
+    min-width: 800px;
+    width: 50%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     ul {
       margin: 0 auto;
-      width: 70%;
+      width: 40%;
       text-align: center;
       display: flex;
-      justify-content: center;
-      gap: 10vw;
+      justify-content: space-between;
+      gap: 40px;
     }
     li {
       a {
@@ -225,6 +171,10 @@ const HeaderTag = styled.header`
         width: 100%;
         height: 100%;
         transition: filter 0.3s, transform 0.3s !important;
+        font-size: 20px;
+        text-shadow: -1px -1px 0 var(--fifth-color), 1px -1px 0 var(--fifth-color), -1px 1px 0 var(--fifth-color),
+          1px 1px 0 var(--fifth-color);
+
         &:hover {
           filter: brightness(120%) !important;
           color: #f8aa7d !important;
@@ -238,8 +188,8 @@ const HeaderTag = styled.header`
   .logo-wrapper {
     display: flex;
     align-items: center;
-    .test-logo {
-      width: 40px;
+    .nyb-logo {
+      width: 140px;
       transition: filter 0.3s, transform 0.3s;
       &:hover {
         filter: brightness(120%);
@@ -252,8 +202,8 @@ const HeaderTag = styled.header`
     justify-content: center;
     align-items: center;
     img {
-      width: 40px;
-      height: 40px;
+      width: 44px;
+      height: 44px;
       object-fit: cover;
       border-radius: 50%;
     }
@@ -268,14 +218,15 @@ const HeaderTag = styled.header`
           transition: filter 0.3s, transform 0.3s;
           &:hover {
             transform: scale(0.92);
+            filter: brightness(107%);
           }
         }
         .welcome-mate {
           margin-right: 8px;
           width: 85px;
           p {
-            font-size: 10px;
-            margin: 4px 0;
+            font-size: 14px;
+            margin: 10px 0;
           }
         }
       }
@@ -288,7 +239,7 @@ const HeaderTag = styled.header`
         right: 0;
         width: 120px;
         background-color: white;
-        border: 1px solid #ccc;
+        border: 1px solid var(--fifth-color);
         border-radius: 5px;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         display: none;
@@ -301,7 +252,7 @@ const HeaderTag = styled.header`
           text-decoration: none;
           color: #333;
           &:hover {
-            background-color: #f1f1f1;
+            background-color: var(--sixth-color);
           }
         }
       }
@@ -324,4 +275,12 @@ const ModalWrapper = styled.div.attrs<{ isopen: boolean }>((props) => ({
   justify-content: center;
   align-items: center;
   z-index: 9;
+`;
+
+const AlarmButton = styled(NotificationsIcon)`
+  cursor: pointer;
+  transition: filter 0.3s, transform 0.3s;
+  &:hover {
+    transform: rotate(-30deg);
+  }
 `;

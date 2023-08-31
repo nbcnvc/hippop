@@ -10,7 +10,6 @@ import { supabase } from '../../../api/supabase';
 // 이미지 크기 조절
 import { ImageActions } from '@xeger/quill-image-actions';
 import { ImageFormats } from '@xeger/quill-image-formats';
-
 Quill.register('modules/imageActions', ImageActions);
 Quill.register('modules/imageFormats', ImageFormats);
 
