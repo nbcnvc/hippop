@@ -283,4 +283,5 @@ const AlarmButton = styled(NotificationsIcon)`
   transition: filter 0.3s, transform 0.3s;
   &:hover {
     transform: rotate(-30deg);
+  }
 `;

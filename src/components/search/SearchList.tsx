@@ -224,8 +224,13 @@ const SearchList = ({ storeData }: SearchListProps) => {
   }
   return (
     <Container>
+      {' '}
+      <TagBox>
+        <TagTitle>검색 Tip</TagTitle>
+        <Tag> "성수" or "제목 또는 내용" </Tag>
+      </TagBox>
       <SearchBox>
-        <Search />
+        {/* <Search /> */}
         <form onSubmit={handleSearchButtonClick}>
           <SearchInput
             type="text"
@@ -241,71 +246,77 @@ const SearchList = ({ storeData }: SearchListProps) => {
         {/* <Filter /> */}
         <Reset onClick={handleReset} />
       </SearchBox>
-      <TagBox>
-        <TagTitle>검색 Tip</TagTitle>
-        <Tag> "성수" or "제목 또는 내용" </Tag>
-      </TagBox>
-      <TagBox>
-        <TagTitle>인기 검색어</TagTitle>
-        <Tag>#김우리 </Tag>
-        <Tag>#나윤빈</Tag>
-        <Tag>#양윤아</Tag>
-        <Tag>#장혜진</Tag>
-        <Tag>#조성록</Tag>
-        <Tag>#조진명</Tag>
-        <Tag>#최원장</Tag>
-      </TagBox>
       {/* <DatePicker1 /> */}
       <SearchCalendar storeData={storeData} onSearch={handleSearch} />
-      {searchResultCount > 0 && (
-        <SearchResultCount>{`${searchResultCount}개의 검색 결과가 있습니다.`}</SearchResultCount>
-      )}
       <>
         {filteredStoreList ? (
           <div>
             {filteredStoreList.length > 0 ? (
-              <GridContainer>
-                {filteredStoreList?.map((store) => (
-                  <GridItem key={store.id} onClick={() => navDetail(store.id)}>
-                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-                    <div>{store.title}</div>
-                    <div>
-                      {store.period_start} ~ {store.period_end}{' '}
-                    </div>
-                  </GridItem>
-                ))}
-              </GridContainer>
+              <>
+                <Title>
+                  <H1Tag>검색 결과 </H1Tag>
+                  {searchResultCount > 0 && filteredStoreList && (
+                    <SearchCountBox>
+                      총<SearchCount>{` ${searchResultCount}`}개</SearchCount>의 결과를 찾았어요! :)
+                    </SearchCountBox>
+                  )}
+                </Title>
+                <GridContainer>
+                  {filteredStoreList?.map((store) => (
+                    <Card key={store.id} onClick={() => navDetail(store.id)}>
+                      <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                      <InfoBox>
+                        <div>
+                          <div>
+                            {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
+                            <StoreName>{store.title}</StoreName>
+                            {store.period_start} ~ {store.period_end}
+                          </div>
+
+                          <div>
+                            <button>상세보기</button>
+                          </div>
+                        </div>
+                      </InfoBox>
+                    </Card>
+                  ))}
+                </GridContainer>
+              </>
             ) : (
               <div>검색 결과가 없습니다.</div>
             )}
           </div>
         ) : (
           <>
-            <Title>인기 팝업스토어</Title>
-            <GridContainer>
-              {popStores?.map((store: Store) => (
-                <ImgWrapper key={store.id} onClick={() => navDetail(store.id)}>
-                  <PImg src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-                  <PopupTitle>{store.title}</PopupTitle>
-                  <div>
-                    {store.period_start} ~ {store.period_end}
-                  </div>
-                </ImgWrapper>
-              ))}
-            </GridContainer>
+            {' '}
+            <div>
+              <Title>인기 팝업스토어</Title>{' '}
+              <GridContainer>
+                {popStores?.map((store: Store) => (
+                  <Card key={store.id} onClick={() => navDetail(store.id)}>
+                    <PImg src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
 
-            <Title>최신 팝업스토어</Title>
-            <GridContainer>
-              {latStores?.map((store: Store) => (
-                <ImgWrapper key={store.id} onClick={() => navDetail(store.id)}>
-                  <PImg src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-                  <PopupTitle>{store.title}</PopupTitle>
-                  <div>
-                    {store.period_start} ~ {store.period_end}
-                  </div>
-                </ImgWrapper>
-              ))}
-            </GridContainer>
+                    <div>{store.location}</div>
+                    <PopupTitle>{store.title}</PopupTitle>
+                    <div>
+                      {store.period_start} ~ {store.period_end}
+                    </div>
+                  </Card>
+                ))}
+              </GridContainer>
+              <Title>최신 팝업스토어</Title>
+              <GridContainer>
+                {latStores?.map((store: Store) => (
+                  <Card key={store.id} onClick={() => navDetail(store.id)}>
+                    <PImg src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                    <PopupTitle>{store.title}</PopupTitle>
+                    <div>
+                      {store.period_start} ~ {store.period_end}
+                    </div>
+                  </Card>
+                ))}
+              </GridContainer>{' '}
+            </div>
           </>
         )}
       </>
@@ -335,50 +346,10 @@ const Container = styled.div`
   margin-top: 70px;
 `;
 
-const SearchBox = styled.div`
-  position: relative;
+const TagBox = styled.div`
+  display: flex;
 
-  margin-top: 50px;
-
-  .custom-btn {
-    // background-color: var(--second-color);
-    border-radius: 0 18px 18px 0;
-    padding: 14px 20px;
-  }
-`;
-
-const Filter = styled(FilterAltIcon)`
-  position: absolute;
-
-  top: 25%;
-  right: 5%;
-`;
-
-const Reset = styled(RestartAltIcon)`
-  position: absolute;
-
-  top: 25%;
-  right: 10%;
-`;
-
-const SearchInput = styled.input`
-  width: 450px;
-  height: 50px;
-
-  box-shadow: 1px;
-
-  border: none;
-  border-bottom: 2px solid black;
-
-  outline: none;
-
-  padding-left: 35px;
-`;
-
-const Search = styled(SearchIcon)`
-  position: absolute;
-
-  top: 25%;
+  margin-top: 40px;
 `;
 
 const TagTitle = styled.div`
@@ -386,14 +357,46 @@ const TagTitle = styled.div`
   font-weight: bold;
 `;
 
-const TagBox = styled.div`
-  display: flex;
-
-  margin-top: 20px;
-`;
-
 const Tag = styled.div`
   margin-right: 5px;
+`;
+
+const SearchBox = styled.div`
+  position: relative;
+
+  margin-top: 20px;
+
+  .custom-btn {
+    // background-color: var(--second-color);
+    border: 2px solid black;
+    /* border-bottom: 6px solid var(--fifth-color); */
+    border-bottom: 3.4px solid var(--fifth-color);
+    border-radius: 0 18px 18px 0;
+    padding: 14.4px 20px;
+  }
+`;
+
+const Reset = styled(RestartAltIcon)`
+  position: absolute;
+
+  top: 25%;
+  right: 15%;
+`;
+
+const SearchInput = styled.input`
+  width: 450px;
+  height: 48px;
+
+  box-shadow: 1px;
+
+  border: 2px solid black;
+  border-right: none;
+  border-radius: 18px 0px 0px 18px;
+  /* border-bottom: 2px solid black; */
+
+  outline: none;
+
+  padding-left: 35px;
 `;
 
 const ImgWrapper = styled.div`
@@ -415,31 +418,6 @@ const PopupTitle = styled.div`
   font-weight: bold;
 `;
 
-const SearchResultCount = styled.div`
-  font-size: 16px;
-  margin: 10px 0;
-  color: #f24d0d;
-`;
-
-const GridContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 한 줄에 두 개의 열 */
-  gap: 20px; /* 열 사이의 간격 조정 */
-  max-width: 900px; /* 그리드가 너무 넓어지는 것을 제한 */
-  margin: 0 auto; /* 가운데 정렬 */
-`;
-
-const GridItem = styled.div`
-  cursor: pointer;
-  padding: 10px;
-`;
-
-const Img = styled.img`
-  width: 290px;
-  height: 330px;
-  object-fit: cover;
-`;
-
 const Title = styled.div`
   font-size: 20px;
   font-weight: bold;
@@ -447,4 +425,99 @@ const Title = styled.div`
   padding: 20px;
 
   margin-top: 50px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const H1Tag = styled.h1`
+  font-size: 28px;
+  color: #333333;
+  /* font-weight: bold; */
+  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+  padding: 4px;
+`;
+
+const SearchCountBox = styled.div`
+  font-size: 16px;
+  margin: 10px 0;
+  /* color: #f24d0d; */
+
+  margin-top: 35px;
+`;
+
+const SearchCount = styled.span`
+  color: var(--primary-color);
+`;
+
+// const GridContainer = styled.div`
+//   display: grid;
+//   grid-template-columns: repeat(3, 1fr); /* 한 줄에 두 개의 열 */
+//   gap: 20px; /* 열 사이의 간격 조정 */
+//   max-width: 900px; /* 그리드가 너무 넓어지는 것을 제한 */
+//   margin: 0 auto; /* 가운데 정렬 */
+// `;
+
+// const GridItem = styled.div`
+//   cursor: pointer;
+//   padding: 10px;
+
+// `;
+
+// const Img = styled.img`
+//   width: 290px;
+//   height: 330px;
+//   object-fit: cover;
+// `;
+
+const GridContainer = styled.div`
+  margin: 0 auto; /* 가운데 정렬 */
+
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr); // 한 줄에 두 개의 열
+  gap: 50px; // 열 사이의 간격 조정
+
+  max-width: 1920px; /* 그리드가 너무 넓어지는 것을 제한 */
+  width: 100%;
+
+  margin-top: 100px;
+`;
+
+const Card = styled.div`
+  width: 380px;
+  height: 500px;
+  border-radius: 18px;
+  border: 2px solid var(--fifth-color);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+`;
+
+const InfoBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  /* align-items: flex-end; */
+`;
+
+const Img = styled.img`
+  width: 330px;
+  height: 370px;
+  /* margin-top: 10px; */
+  object-fit: cover;
+  border-radius: 10px;
+`;
+
+const StoreName = styled.div`
+  display: flex;
+  align-items: center;
+  text-align: center;
+  line-height: 1.2;
+  font-size: 20px;
+  font-weight: 500;
 `;
