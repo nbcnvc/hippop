@@ -1,5 +1,5 @@
 import { SetStateAction } from 'react';
-import { UserInfo, Store, PostType, HotPlaceInfo, MessageType } from './types';
+import { UserInfo, Store, HotPlaceInfo, MessageType, AlarmType } from './types';
 
 export interface EditorProps {
   body: string;
@@ -126,6 +126,5 @@ export interface MessageReplyProps {
 }
 
 export interface AlarmBoxProps {
-  isAlarmOpen: boolean;
-  setIsAlarmOpen: React.Dispatch<SetStateAction<boolean>>;
+  alarms: AlarmType[];
 }

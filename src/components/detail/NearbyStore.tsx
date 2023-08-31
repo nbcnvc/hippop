@@ -211,9 +211,6 @@ const StyledSlider = styled(Slider)`
     justify-content: center;
     align-items: center;
   }
-  .slick-slide {
-    /* margin: 0 30px; // space(여백)/2 */
-  }
   .slick-list {
     /* margin: 0 -30px; // space(여백)/-2 */
     overflow: hidden;
