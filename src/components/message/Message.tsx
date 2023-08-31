@@ -149,7 +149,7 @@ const SenderInfoBox = styled.div`
 
 const SendIconBox = styled.div`
   position: absolute;
-  top: 18.7%;
+  top: 18.6%;
   left: 40%;
   width: 100px;
   height: 50px;
