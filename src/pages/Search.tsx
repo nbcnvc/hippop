@@ -1,5 +1,5 @@
 import React from 'react';
-import SearchList from '../components/search/SearchList';
+import SearchList from '../components/search/searchlist/SearchList';
 import { Store } from '../types/types';
 import { useQuery } from '@tanstack/react-query';
 import { fetchStoreData } from '../api/store';

@@ -6,12 +6,12 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { supabase } from './api/supabase';
 import { setUserStore, useCurrentUser } from './store/userStore';
-import TopButton from './components/common/TopButton';
 
 const queryClient = new QueryClient();
 
 function App() {
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
+
   const currentUser = useCurrentUser();
   useEffect(() => {
     supabase.auth.onAuthStateChange(async (event, session) => {
