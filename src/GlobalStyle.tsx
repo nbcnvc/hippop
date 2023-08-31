@@ -13,6 +13,17 @@ ${reset}
         font-style: italic;
     }
 }
+.ql-toolbar.ql-snow {
+  width: 760px;
+  border-radius: 18px 18px 0 0;
+  border: 2px solid var(--fifth-color);
+}
+.ql-container.ql-snow  {
+  height: 500px;
+  border-radius: 0 0 18px 18px ;
+  border: 2px solid var(--fifth-color);
+}
+
 // Color chip
 :root {
     --primary-color: #eb455f; // King Pink
@@ -51,12 +62,12 @@ a {
 
 button {
     // background-color: #eb455f;
-    border: 3px solid var(--fifth-color);
-    border-bottom: 6px solid var(--fifth-color);
+    border: 2px solid var(--fifth-color);
+    border-bottom: 4px solid var(--fifth-color);
     border-radius: 18px;
     color: white;
     font-size: 16px;
-    padding: 10px 20px;
+    padding: 5px 10px;
     cursor: pointer;
     transition: filter 0.3s, transform 0.3s;
   

@@ -147,7 +147,7 @@ const HeaderTag = styled.header`
   background-color: var(--primary-color);
   color: white;
   width: 100%;
-  height: 100px;
+  height: 80px;
   .header-wrapper {
     margin: 0 auto;
     height: 100%;
@@ -173,6 +173,7 @@ const HeaderTag = styled.header`
         height: 100%;
         transition: filter 0.3s, transform 0.3s !important;
         font-size: 20px;
+        font-weight: 700;
         text-shadow: -1px -1px 0 var(--fifth-color), 1px -1px 0 var(--fifth-color), -1px 1px 0 var(--fifth-color),
           1px 1px 0 var(--fifth-color);
 
@@ -190,7 +191,7 @@ const HeaderTag = styled.header`
     display: flex;
     align-items: center;
     .nyb-logo {
-      width: 140px;
+      width: 120px;
       transition: filter 0.3s, transform 0.3s;
       &:hover {
         filter: brightness(120%);

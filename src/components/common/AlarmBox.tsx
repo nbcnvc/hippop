@@ -120,9 +120,6 @@ const AlarmContainer = styled.li`
   border: 1px solid var(--fifth-color);
   border-radius: 5px;
   z-index: 1;
-
-
-  }
 `;
 
 const AlarmContents = styled.div`

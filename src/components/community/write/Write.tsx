@@ -1,14 +1,18 @@
 import Editor from './Editor';
 
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { styled } from 'styled-components';
+import { useLocation } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { NewPost, PostType } from '../../../types/types';
+import { NewPost } from '../../../types/types';
 import { createPost } from '../../../api/post';
 import { WriteProps } from '../../../types/props';
 import { useCurrentUser } from '../../../store/userStore';
+
+import { styled } from 'styled-components';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
+import StorefrontRoundedIcon from '@mui/icons-material/StorefrontRounded';
 
 const Write = ({
   setKeyword,
@@ -104,26 +108,27 @@ const Write = ({
       {writeModal && (
         <ModalContainer>
           <ModalBox>
-            <button onClick={closeButton}>닫기</button>
-            <button onClick={closeWrite}>이전</button>
+            <ButtonBox1>
+              <ArrowBackRoundedIcon onClick={closeWrite} />
+              <CloseRoundedIcon onClick={closeButton} />
+            </ButtonBox1>
             <div>
-              <div>
-                <div>어떤 팝업 ? {storeTitle}</div>
-                <span>제목 : </span>
-                <input
-                  value={title}
-                  onChange={onChangeTitle}
-                  placeholder="제목은 25글자 이하로 입력해주세요."
-                  style={{ width: '600px' }}
-                />
-              </div>
-              <div>
+              <StoreBox>
+                <Store>{storeTitle}</Store>
+              </StoreBox>
+              <ContentBox>
+                <Title>제목</Title>
+                <Input value={title} onChange={onChangeTitle} placeholder="제목을 입력해주세요." />
+                <Title>내용</Title>
                 <Editor body={body} setBody={setBody} />
-              </div>
+              </ContentBox>
             </div>
-            <div style={{ position: 'absolute', bottom: '3%' }}>
-              <button onClick={createButton}>등록</button>
-            </div>
+            <ButtonBox2>
+              <Button onClick={createButton}>등록</Button>
+              <Button onClick={closeButton} style={{ backgroundColor: '#2B3467' }}>
+                취소
+              </Button>
+            </ButtonBox2>
           </ModalBox>
         </ModalContainer>
       )}
@@ -134,24 +139,80 @@ const Write = ({
 export default Write;
 
 const ModalContainer = styled.div`
+  width: 100%;
+  height: 100%;
   position: fixed;
   z-index: 1;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  backdrop-filter: blur(5px);
   background-color: rgb(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(8px);
 `;
 
 const ModalBox = styled.div`
-  background-color: #fff;
-  padding: 20px;
   width: 800px;
-  height: 800px;
-  border-radius: 10px;
+  height: 810px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 18px;
+  border: 3px solid var(--fifth-color);
   position: relative;
+`;
+
+const ButtonBox1 = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const StoreBox = styled.div`
+  margin: 20px 10px;
+`;
+
+const Store = styled.span`
+  font-size: 18px;
+  font-weight: 700;
+  margin: 15px;
+  padding: 2px;
+  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+`;
+
+const ContentBox = styled.div`
+  margin: 20px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+`;
+
+const Title = styled.div`
+  font-weight: 700;
+  padding: 10px;
+`;
+
+const Input = styled.input`
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 715px;
+  height: 30px;
+  padding: 2px 20px;
+  margin-bottom: 10px;
+  outline: none;
+  border-radius: 18px;
+  border: 2px solid var(--fifth-color);
+`;
+const ButtonBox2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Button = styled.button`
+  width: 100px;
+  margin: 0 10px;
+  font-size: 14px;
+  font-weight: 700;
 `;
