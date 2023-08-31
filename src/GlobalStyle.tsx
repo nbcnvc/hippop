@@ -23,33 +23,41 @@ ${reset}
     --sixth-color: #ffb4bf; // Hover Primary color
   }
 
-// Font-ENG / KOR
-@font-face {
-    font-family: 'Fira Sans', sans-serif;
-    src: url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@500&display=swap');
+  // Font-ENG / KOR
+  @font-face {
+      font-family: 'RixYeoljeongdo_Regular';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2102-01@1.0/RixYeoljeongdo_Regular.woff') format('woff');
   }
-
-body {
-    font-family: 'Fira Sans', sans-serif;
-    max-width: 100%;
-    min-width: 900px;
-    // width:1920px;
-    margin: 0 auto;
-    background-color:var(--fourth-color);
-}
+  @font-face {
+      font-family: 'Pretendard-Regular';
+      src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+  }
+  
+  h1, h2, h3, h4, h5 {
+    font-family: 'RixYeoljeongdo_Regular';
+  }  
+  body {
+      font-family: 'Pretendard-Regular';
+      max-width: 100%;
+      min-width: 900px;
+      // width:1920px;
+      margin: 0 auto;
+      background-color:var(--fourth-color);
+  }
 a {
     text-decoration:none;
     color: black;
 }
 
 button {
-    // background-color: #eb455f;
-    border: 3px solid var(--fifth-color);
+    font-family: 'Pretendard-Regular';
+    background-color: var(--primary-color);
+    border: 2px solid var(--fifth-color);
     border-bottom: 6px solid var(--fifth-color);
     border-radius: 18px;
     color: white;
     font-size: 16px;
-    padding: 10px 20px;
+    padding: 5px 10px;
     cursor: pointer;
     transition: filter 0.3s, transform 0.3s;
   

@@ -335,50 +335,10 @@ const Container = styled.div`
   margin-top: 70px;
 `;
 
-const SearchBox = styled.div`
-  position: relative;
+const TagBox = styled.div`
+  display: flex;
 
-  margin-top: 50px;
-
-  .custom-btn {
-    // background-color: var(--second-color);
-    border-radius: 0 18px 18px 0;
-    padding: 14px 20px;
-  }
-`;
-
-const Filter = styled(FilterAltIcon)`
-  position: absolute;
-
-  top: 25%;
-  right: 5%;
-`;
-
-const Reset = styled(RestartAltIcon)`
-  position: absolute;
-
-  top: 25%;
-  right: 10%;
-`;
-
-const SearchInput = styled.input`
-  width: 450px;
-  height: 50px;
-
-  box-shadow: 1px;
-
-  border: none;
-  border-bottom: 2px solid black;
-
-  outline: none;
-
-  padding-left: 35px;
-`;
-
-const Search = styled(SearchIcon)`
-  position: absolute;
-
-  top: 25%;
+  margin-top: 40px;
 `;
 
 const TagTitle = styled.div`
@@ -386,58 +346,44 @@ const TagTitle = styled.div`
   font-weight: bold;
 `;
 
-const TagBox = styled.div`
-  display: flex;
-
-  margin-top: 20px;
-`;
-
 const Tag = styled.div`
   margin-right: 5px;
 `;
 
-const ImgWrapper = styled.div`
-  margin-right: 30px;
+const SearchBox = styled.div`
+  position: relative;
 
-  cursor: pointer;
+  margin-top: 20px;
+
+  .custom-btn {
+    border: 2px solid black;
+
+    border-bottom: 3.4px solid var(--fifth-color);
+    border-radius: 0 18px 18px 0;
+    padding: 14.4px 20px;
+  }
 `;
 
-const PImg = styled.img`
-  width: 270px;
-  height: 330px;
+const Reset = styled(RestartAltIcon)`
+  position: absolute;
 
-  object-fit: cover;
+  top: 25%;
+  right: 15%;
 `;
 
-const PopupTitle = styled.div`
-  margin-top: 15px;
+const SearchInput = styled.input`
+  width: 450px;
+  height: 48px;
 
-  font-weight: bold;
-`;
+  box-shadow: 1px;
 
-const SearchResultCount = styled.div`
-  font-size: 16px;
-  margin: 10px 0;
-  color: #f24d0d;
-`;
+  border: px solid black;
+  border-right: none;
+  border-radius: 18px 0px 0px 18px;
 
-const GridContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 한 줄에 두 개의 열 */
-  gap: 20px; /* 열 사이의 간격 조정 */
-  max-width: 900px; /* 그리드가 너무 넓어지는 것을 제한 */
-  margin: 0 auto; /* 가운데 정렬 */
-`;
+  outline: none;
 
-const GridItem = styled.div`
-  cursor: pointer;
-  padding: 10px;
-`;
-
-const Img = styled.img`
-  width: 290px;
-  height: 330px;
-  object-fit: cover;
+  padding-left: 35px;
 `;
 
 const Title = styled.div`
@@ -447,4 +393,106 @@ const Title = styled.div`
   padding: 20px;
 
   margin-top: 50px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const H1Tag = styled.h1`
+  font-size: 28px;
+  color: #333333;
+  /* font-weight: bold; */
+  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+  padding: 4px;
+`;
+
+const SearchCountBox = styled.div`
+  font-size: 16px;
+  margin: 10px 0;
+  /* color: #f24d0d; */
+
+  margin-top: 35px;
+`;
+
+const SearchCount = styled.span`
+  color: var(--primary-color);
+`;
+
+const GridContainer = styled.div`
+  margin: 0 auto; /* 가운데 정렬 */
+
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr); // 한 줄에 두 개의 열
+  gap: 50px; // 열 사이의 간격 조정
+
+  max-width: 1920px; /* 그리드가 너무 넓어지는 것을 제한 */
+  width: 100%;
+
+  margin-top: 50px;
+`;
+
+const Card = styled.div`
+  width: 380px;
+  height: 500px;
+  border-radius: 18px;
+  border: 3px solid var(--fifth-color);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+`;
+
+const InfoBox = styled.div`
+  width: 330px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  margin-top: 20px;
+`;
+
+const Img = styled.img`
+  width: 340px;
+  height: 370px;
+  /* margin-top: 10px; */
+  object-fit: cover;
+  border-radius: 10px;
+
+  border: 3px solid var(--fifth-color);
+`;
+
+const StoreName = styled.div`
+  display: flex;
+  align-items: center;
+  text-align: center;
+  line-height: 1.2;
+  font-size: 20px;
+  font-weight: bold;
+
+  width: 235px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  margin: 7px 0 7px 0;
+`;
+
+const BtnBox = styled.div``;
+
+const DetailBtn = styled.button`
+  /* background-color: var(--primary-color); */
+  background-color: var(--second-color);
+  /* background-color: var(--third-color); */
+  /* color: black; */
+  color: white;
+`;
+
+const Ref = styled.div`
+  margin-bottom: 150px;
 `;

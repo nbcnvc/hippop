@@ -120,13 +120,13 @@ const ReceiveBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProp
                     ) : (
                       <>{currentUser && <Img src={message.to.avatar_url} alt="User Avatar" />}</>
                     )}
-                    <div>{message.to.name}</div>
+                    <h4>{message.to.name}</h4>
                   </ProfileBox>
-                  <div> {moment(message.created_at).format('YYYY-MM-DD HH:mm:ss')}</div>
-                  <div> {message.isRead ? <div>읽은 메세지입니다..</div> : <div>읽지 않은 메세지입니다..</div>}</div>
+                  <p>{moment(message.created_at).format('YYYY-MM-DD HH:mm:ss')}</p>
+                  <div>{message.isRead ? <span>읽은 메세지입니다..</span> : <span>읽지 않은 메세지입니다..</span>}</div>
                 </div>
-                <div>{message.isRead ? <DraftsOutlinedIcon /> : <EmailOutlinedIcon />}</div>
-                <button onClick={() => handleDeleteMsg(message)} style={{ width: '50px' }}>
+                <h5>{message.isRead ? <DraftsOutlinedIcon /> : <EmailOutlinedIcon />}</h5>
+                <button className="deletBtn" onClick={() => handleDeleteMsg(message)} style={{ width: '60px' }}>
                   삭제
                 </button>
               </Wrapper>
@@ -143,16 +143,42 @@ export default ReceiveBox;
 const Container = styled.div`
   position: relative;
   overflow-y: auto;
+  width: 100%;
 `;
 
 const Wrapper = styled.div`
-  width: 490px;
   display: flex;
   justify-content: space-between;
+  background-color: var(--fourth-color);
   align-items: center;
-
-  padding: 5px;
-  border: 1px solid black;
+  height: 50px;
+  // padding: 5px;
+  // border: 2px solid black;
+  border-radius: 14px;
+  margin: 6px 0 0;
+  color: var(--fifth-color);
+  cursor: pointer;
+  transition: filter 0.3s, transform 0.3s;
+  &:hover {
+    background-color: var(--sixth-color);
+  }
+  &:active {
+    transform: scale(0.988);
+  }
+  h4 {
+    margin-left: 8px;
+    width: 65px;
+  }
+  span {
+    display: block;
+    width: 155px;
+  }
+  .deletBtn {
+    height: 50px !important;
+    font-size: 14px;
+    border-radius: 0 14px 14px 0;
+    border-bottom: 4px solid var(--fifth-color);
+  }
 `;
 
 const ProfileBox = styled.div`
@@ -162,8 +188,9 @@ const ProfileBox = styled.div`
 `;
 
 const Img = styled.img`
-  width: 30px;
-  height: 30px;
+  margin-left: 10px;
+  width: 40px;
+  height: 40px;
   object-fit: cover;
   border-radius: 50%;
 `;

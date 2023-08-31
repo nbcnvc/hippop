@@ -1,13 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import Login from '../../pages/Login';
-import { UserInfo } from '../../types/types';
 import { setUserStore, useCurrentUser } from '../../store/userStore';
 import Alarm from './Alarm';
 import AlarmBox from './AlarmBox';
 import { supabase } from '../../api/supabase';
-import { User } from '@supabase/supabase-js';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useQuery } from '@tanstack/react-query';
 import { getUser } from '../../api/user';
@@ -283,4 +281,5 @@ const AlarmButton = styled(NotificationsIcon)`
   transition: filter 0.3s, transform 0.3s;
   &:hover {
     transform: rotate(-30deg);
+  }
 `;

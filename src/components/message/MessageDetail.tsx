@@ -23,38 +23,44 @@ const MessageDetail = ({ selectedMessage, setIsClicked, setReplyModal, toggleMsg
 
   return (
     <Container>
-      {toggleMsgBox === '받은 쪽지함' ? (
-        <ProfileBox>
-          {toggleMsgBox === '받은 쪽지함' ? '발신자' : '수신자'}
-          {selectedMessage?.to.avatar_url && selectedMessage.to.avatar_url.startsWith('profile/') ? (
-            <Img
-              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${selectedMessage.to.avatar_url}`}
-              alt="User Avatar"
-            />
-          ) : (
-            <>{currentUser && <Img src={selectedMessage?.to.avatar_url} alt="User Avatar" />}</>
-          )}
-          <div>{selectedMessage?.to.name}</div>
-        </ProfileBox>
-      ) : (
-        <ProfileBox>
-          {toggleMsgBox === '받은 쪽지함' ? '발신자' : '수신자'}
-          {selectedMessage?.to.avatar_url && selectedMessage.to.avatar_url.startsWith('profile/') ? (
-            <Img
-              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${selectedMessage.to.avatar_url}`}
-              alt="User Avatar"
-            />
-          ) : (
-            <>{currentUser && <Img src={selectedMessage?.to.avatar_url} alt="User Avatar" />}</>
-          )}
-          <div>{selectedMessage?.to.name}</div>
-        </ProfileBox>
-      )}
-      <RecieveTime> 받은시간: {moment(selectedMessage?.created_at).format('YYYY-MM-DD HH:mm:ss')}</RecieveTime>
-      <BodyBox>{selectedMessage?.body}</BodyBox>
-      {toggleMsgBox === '받은 쪽지함' ? <button onClick={clickOpenReply}>답장하기</button> : <div></div>}
+      <div className="header-wrapper">
+        {toggleMsgBox === '받은 쪽지함' ? (
+          <ProfileBox>
+            {toggleMsgBox === '받은 쪽지함' ? '' : '수신자'}
+            {selectedMessage?.to.avatar_url && selectedMessage.to.avatar_url.startsWith('profile/') ? (
+              <Img
+                src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${selectedMessage.to.avatar_url}`}
+                alt="User Avatar"
+              />
+            ) : (
+              <>{currentUser && <Img src={selectedMessage?.to.avatar_url} alt="User Avatar" />}</>
+            )}
+            <h4>{selectedMessage?.to.name}</h4>
+          </ProfileBox>
+        ) : (
+          <ProfileBox>
+            {toggleMsgBox === '받은 쪽지함' ? '발신자' : '수신자'}
+            {selectedMessage?.to.avatar_url && selectedMessage.to.avatar_url.startsWith('profile/') ? (
+              <Img
+                src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${selectedMessage.to.avatar_url}`}
+                alt="User Avatar"
+              />
+            ) : (
+              <>{currentUser && <Img src={selectedMessage?.to.avatar_url} alt="User Avatar" />}</>
+            )}
+            <h4>{selectedMessage?.to.name}</h4>
+          </ProfileBox>
+        )}
 
-      <button onClick={closeDetail}> 창닫기</button>
+        <RecieveTime> 받은시간: {moment(selectedMessage?.created_at).format('YYYY-MM-DD HH:mm:ss')}</RecieveTime>
+      </div>
+      <div className="boxBtn-wrapper">
+        <BodyBox>{selectedMessage?.body}</BodyBox>
+        <span>
+          {toggleMsgBox === '받은 쪽지함' ? <button onClick={clickOpenReply}>답장하기</button> : <div></div>}
+          <button onClick={closeDetail}> 창닫기</button>
+        </span>
+      </div>
     </Container>
   );
 };
@@ -64,35 +70,61 @@ export default MessageDetail;
 const Container = styled.div`
   overflow-y: hidden;
   position: relative;
+  .header-wrapper {
+    padding: 10px;
+    display: flex;
+    background-color: var(--fourth-color);
+    border-radius: 14px;
+    h4 {
+      margin-left: 6px;
+    }
+  }
+
+  .boxBtn-wrapper {
+    display: flex;
+    span {
+      display: flex;
+      align-items: flex-end;
+    }
+  }
+  button {
+    border-radius: 20px;
+    padding: 10px 0px 30px;
+
+    &:first-child {
+      margin: 0 8px;
+    }
+  }
 `;
 
 const ProfileBox = styled.div`
+  width: 50%;
   display: flex;
-
   align-items: center;
-  border: 1px solid black;
 
   margin-top: 6px;
 `;
 
 const RecieveTime = styled.div`
-  border: 1px solid black;
+  width: 50%;
   padding: 5px;
-  margin-top: 6px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 `;
 
 const Img = styled.img`
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   object-fit: cover;
   border-radius: 50%;
 `;
 
 const BodyBox = styled.div`
-  width: 500px;
-  height: 220px;
-
-  border: 1px solid black;
-
+  background-color: var(--fourth-color);
+  border-radius: 14px;
+  padding: 10px;
+  width: 370px;
+  height: 143px;
   margin-top: 10px;
 `;
