@@ -3,24 +3,21 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
-// import DatePicker1 from './DatePicker';
 // 컴포넌트
-import SearchCalendar from './SearchCalendar';
+
 // api
-import { fetchStoreIdCount } from '../../api/bookmark';
-import { getSearchStore } from '../../api/store';
+import { fetchStoreIdCount } from '../../../api/bookmark';
+import { getSearchStore } from '../../../api/store';
 // 라이브러리
 import moment from 'moment';
 import _debounce from 'lodash/debounce';
-
 // 타입
-import { FetchsStore, SearchListProps, Store } from '../../types/types';
+import { FetchsStore, SearchListProps, Store } from '../../../types/types';
 //스타일
 import { styled } from 'styled-components';
 // mui
-import SearchIcon from '@mui/icons-material/Search';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import SearchCalendar from '../searchcalander/SearchCalendar';
 
 const SearchList = ({ storeData }: SearchListProps) => {
   const navigate = useNavigate();
@@ -267,16 +264,12 @@ const SearchList = ({ storeData }: SearchListProps) => {
                       <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
                       <InfoBox>
                         <div>
-                          <div>
-                            {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
-                            <StoreName>{store.title}</StoreName>
-                            {store.period_start} ~ {store.period_end}
-                          </div>
-
-                          <div>
-                            <button>상세보기</button>
-                          </div>
+                          {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
+                          <StoreName>{store.title}</StoreName>
+                          {store.period_start} ~ {store.period_end}
                         </div>
+
+                        <DetailBtn>상세보기</DetailBtn>
                       </InfoBox>
                     </Card>
                   ))}
@@ -290,29 +283,41 @@ const SearchList = ({ storeData }: SearchListProps) => {
           <>
             {' '}
             <div>
-              <Title>인기 팝업스토어</Title>{' '}
+              <Title>
+                <H1Tag>인기 팝업스토어</H1Tag>
+              </Title>
               <GridContainer>
                 {popStores?.map((store: Store) => (
                   <Card key={store.id} onClick={() => navDetail(store.id)}>
-                    <PImg src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                    <InfoBox>
+                      <div>
+                        {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
+                        <StoreName>{store.title}</StoreName>
+                        {store.period_start} ~ {store.period_end}
+                      </div>
 
-                    <div>{store.location}</div>
-                    <PopupTitle>{store.title}</PopupTitle>
-                    <div>
-                      {store.period_start} ~ {store.period_end}
-                    </div>
+                      <DetailBtn>상세보기</DetailBtn>
+                    </InfoBox>
                   </Card>
                 ))}
               </GridContainer>
-              <Title>최신 팝업스토어</Title>
+              <Title>
+                <H1Tag>최신 팝업스토어</H1Tag>
+              </Title>
               <GridContainer>
                 {latStores?.map((store: Store) => (
                   <Card key={store.id} onClick={() => navDetail(store.id)}>
-                    <PImg src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-                    <PopupTitle>{store.title}</PopupTitle>
-                    <div>
-                      {store.period_start} ~ {store.period_end}
-                    </div>
+                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                    <InfoBox>
+                      <div>
+                        {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
+                        <StoreName>{store.title}</StoreName>
+                        {store.period_start} ~ {store.period_end}
+                      </div>
+
+                      <DetailBtn>상세보기</DetailBtn>
+                    </InfoBox>
                   </Card>
                 ))}
               </GridContainer>{' '}
@@ -320,24 +325,12 @@ const SearchList = ({ storeData }: SearchListProps) => {
           </>
         )}
       </>
-      <div
-        style={{
-          backgroundColor: 'yellow',
-          width: '50%',
-          border: '1px solid black',
-          padding: '20px',
-          margin: '10px'
-        }}
-        ref={ref}
-      >
-        Trigger to Fetch Here
-      </div>
+      <Ref ref={ref}></Ref>
     </Container>
   );
 };
 
 export default SearchList;
-
 const Container = styled.div`
   display: flex;
   justify-content: center;
@@ -367,9 +360,8 @@ const SearchBox = styled.div`
   margin-top: 20px;
 
   .custom-btn {
-    // background-color: var(--second-color);
     border: 2px solid black;
-    /* border-bottom: 6px solid var(--fifth-color); */
+
     border-bottom: 3.4px solid var(--fifth-color);
     border-radius: 0 18px 18px 0;
     padding: 14.4px 20px;
@@ -389,33 +381,13 @@ const SearchInput = styled.input`
 
   box-shadow: 1px;
 
-  border: 2px solid black;
+  border: px solid black;
   border-right: none;
   border-radius: 18px 0px 0px 18px;
-  /* border-bottom: 2px solid black; */
 
   outline: none;
 
   padding-left: 35px;
-`;
-
-const ImgWrapper = styled.div`
-  margin-right: 30px;
-
-  cursor: pointer;
-`;
-
-const PImg = styled.img`
-  width: 270px;
-  height: 330px;
-
-  object-fit: cover;
-`;
-
-const PopupTitle = styled.div`
-  margin-top: 15px;
-
-  font-weight: bold;
 `;
 
 const Title = styled.div`
@@ -452,26 +424,6 @@ const SearchCount = styled.span`
   color: var(--primary-color);
 `;
 
-// const GridContainer = styled.div`
-//   display: grid;
-//   grid-template-columns: repeat(3, 1fr); /* 한 줄에 두 개의 열 */
-//   gap: 20px; /* 열 사이의 간격 조정 */
-//   max-width: 900px; /* 그리드가 너무 넓어지는 것을 제한 */
-//   margin: 0 auto; /* 가운데 정렬 */
-// `;
-
-// const GridItem = styled.div`
-//   cursor: pointer;
-//   padding: 10px;
-
-// `;
-
-// const Img = styled.img`
-//   width: 290px;
-//   height: 330px;
-//   object-fit: cover;
-// `;
-
 const GridContainer = styled.div`
   margin: 0 auto; /* 가운데 정렬 */
 
@@ -483,14 +435,14 @@ const GridContainer = styled.div`
   max-width: 1920px; /* 그리드가 너무 넓어지는 것을 제한 */
   width: 100%;
 
-  margin-top: 100px;
+  margin-top: 50px;
 `;
 
 const Card = styled.div`
   width: 380px;
   height: 500px;
   border-radius: 18px;
-  border: 2px solid var(--fifth-color);
+  border: 3px solid var(--fifth-color);
 
   display: flex;
   flex-direction: column;
@@ -500,17 +452,23 @@ const Card = styled.div`
 `;
 
 const InfoBox = styled.div`
+  width: 330px;
+
   display: flex;
   justify-content: space-between;
-  /* align-items: flex-end; */
+  align-items: flex-end;
+
+  margin-top: 20px;
 `;
 
 const Img = styled.img`
-  width: 330px;
+  width: 340px;
   height: 370px;
   /* margin-top: 10px; */
   object-fit: cover;
   border-radius: 10px;
+
+  border: 3px solid var(--fifth-color);
 `;
 
 const StoreName = styled.div`
@@ -519,5 +477,26 @@ const StoreName = styled.div`
   text-align: center;
   line-height: 1.2;
   font-size: 20px;
-  font-weight: 500;
+  font-weight: bold;
+
+  width: 235px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  margin: 7px 0 7px 0;
+`;
+
+const BtnBox = styled.div``;
+
+const DetailBtn = styled.button`
+  /* background-color: var(--primary-color); */
+  background-color: var(--second-color);
+  /* background-color: var(--third-color); */
+  /* color: black; */
+  color: white;
+`;
+
+const Ref = styled.div`
+  margin-bottom: 150px;
 `;
