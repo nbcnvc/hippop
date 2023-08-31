@@ -60,7 +60,17 @@ const RDetail = () => {
   return (
     <Layout>
       <CategoryBox>
-        <Category>Review</Category>
+        <Category>
+          <TitleLine>Review</TitleLine>
+        </Category>
+        {currentUser?.id === post.user_id && (
+          <ButtonBox>
+            <Button onClick={() => deleteButton(post.id)} style={{ marginRight: '10px' }}>
+              삭제
+            </Button>
+            <Button onClick={editButton}>수정</Button>
+          </ButtonBox>
+        )}
       </CategoryBox>
       {post && (
         <>
@@ -76,12 +86,6 @@ const RDetail = () => {
               />
             ) : (
               <>
-                {/* {currentUser?.id === post.user_id && (
-                  <>
-                    <button onClick={() => deleteButton(post.id)}>삭제</button>
-                    <button onClick={editButton}>수정</button>
-                  </>
-                )} */}
                 <div className="ql-snow">
                   <HeadContainer>
                     <TextBox>
@@ -108,7 +112,6 @@ const RDetail = () => {
 export default RDetail;
 
 const Layout = styled.div`
-  min-width: 900px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -117,41 +120,61 @@ const Layout = styled.div`
 
 const CategoryBox = styled.div`
   width: 900px;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const Category = styled.h1`
   color: var(--fifth-color);
-  margin: 30px 0;
-  padding-bottom: 5px;
+  margin: 30px 0 10px 0;
   font-size: 24px;
   float: left;
+`;
+
+const TitleLine = styled.span`
+  padding: 2px;
   background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+`;
+
+const ButtonBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0px;
+`;
+
+const Button = styled.button`
+  width: 80px;
+  height: 35px;
+  font-weight: 600;
+  color: var(--second-color);
+  background-color: var(--third-color);
 `;
 
 const HeadContainer = styled.div`
   width: 900px;
-  height: 100px;
-  margin: 10px 0px;
 `;
 
 const TextBox = styled.div`
   display: flex;
   justify-content: space-between;
+  padding: 30px 0px 10px 0px;
+  border-bottom: 2px dashed var(--fifth-color);
 `;
 
 const Text = styled.div`
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-  margin: 10px;
 `;
 
 const Title = styled.div`
-  font-size: 28px;
+  font-size: 26px;
   font-weight: 600;
   float: left;
-  margin: 10px;
+  padding: 10px 0px 30px 0;
 `;
 
 const Body = styled.div`
   width: 900px;
+  margin: 20px 0;
 `;

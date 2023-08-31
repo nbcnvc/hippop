@@ -12,7 +12,6 @@ import { useCurrentUser } from '../../../store/userStore';
 import { styled } from 'styled-components';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
-import StorefrontRoundedIcon from '@mui/icons-material/StorefrontRounded';
 
 const Write = ({
   setKeyword,
@@ -204,6 +203,7 @@ const Input = styled.input`
   border-radius: 18px;
   border: 2px solid var(--fifth-color);
 `;
+
 const ButtonBox2 = styled.div`
   display: flex;
   align-items: center;
