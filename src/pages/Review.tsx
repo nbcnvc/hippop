@@ -27,7 +27,7 @@ const Review = () => {
 
   return (
     <>
-      <div style={{ fontSize: '30px', fontWeight: 'bold', textAlign: 'center', padding: '20px' }}>Review</div>
+      <h1 style={{ fontSize: '30px', textAlign: 'center', padding: '20px' }}>Review</h1>
       <div style={{ margin: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <button onClick={searcButton}>글 작성</button>
       </div>

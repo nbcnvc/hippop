@@ -25,12 +25,19 @@ ${reset}
 
 // Font-ENG / KOR
 @font-face {
-    font-family: 'Fira Sans', sans-serif;
-    src: url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@500&display=swap');
-  }
+    font-family: 'RixYeoljeongdo_Regular';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2102-01@1.0/RixYeoljeongdo_Regular.woff') format('woff');
+}
+@font-face {
+    font-family: 'Pretendard-Regular';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+}
 
+h1, h2, h3, h4, h5 {
+  font-family: 'RixYeoljeongdo_Regular';
+}  
 body {
-    font-family: 'Fira Sans', sans-serif;
+    font-family: 'Pretendard-Regular';
     max-width: 100%;
     min-width: 900px;
     // width:1920px;
