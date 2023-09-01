@@ -20,7 +20,10 @@ const Edit = ({ postId, postTitle, postBody, isEdit, setIsEdit }: EditProps) => 
 
   // 취소 버튼
   const cancelButton = () => {
-    setIsEdit(!isEdit);
+    const confirm = window.confirm(`수정 중인 내용이 사라집니다. 수정을 취소하시겠습니까?`);
+    if (confirm) {
+      setIsEdit(!isEdit);
+    }
   };
 
   // Post 수정
@@ -31,6 +34,20 @@ const Edit = ({ postId, postTitle, postBody, isEdit, setIsEdit }: EditProps) => 
     }
   });
   const saveButton = () => {
+    // 유효성 검사
+    if (!title) {
+      return alert('제목을 입력해주세요.');
+    }
+    if (title.length > 30) {
+      return alert('제목은 30글자 이하로 입력해주세요.');
+    }
+    if (!body) {
+      return alert('내용을 입력해주세요.');
+    }
+    if (body === `<p><br></p>`) {
+      return alert('내용을 입력해주세요.');
+    }
+
     // 수정된 내용
     const updatePost = {
       id: postId,
@@ -48,7 +65,7 @@ const Edit = ({ postId, postTitle, postBody, isEdit, setIsEdit }: EditProps) => 
     <ModalContainer>
       <ModalBox>
         <ButtonBox>
-          <CloseRoundedIcon onClick={cancelButton} />
+          <XButton onClick={cancelButton} />
           <Button onClick={saveButton}>저장</Button>
         </ButtonBox>
         <ContentBox>
@@ -125,4 +142,8 @@ const Input = styled.input`
   outline: none;
   border-radius: 18px;
   border: 2px solid var(--fifth-color);
+`;
+
+const XButton = styled(CloseRoundedIcon)`
+  cursor: pointer;
 `;

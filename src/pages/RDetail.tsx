@@ -140,12 +140,13 @@ const ButtonBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 20px 0px;
+  margin: 30px 0px;
 `;
 
 const Button = styled.button`
-  width: 80px;
-  height: 35px;
+  width: 60px;
+  height: 32px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--second-color);
   background-color: var(--third-color);

@@ -10,6 +10,7 @@ import { WriteProps } from '../../../types/props';
 import { useCurrentUser } from '../../../store/userStore';
 
 import { styled } from 'styled-components';
+import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 
@@ -34,9 +35,12 @@ const Write = ({
 
   // 닫기: 글 작성 모달창 && 검색 모달창 닫기
   const closeButton = () => {
-    setSearchModal(false);
-    setWriteModal(false);
-    setKeyword('');
+    const confirm = window.confirm(`작성 중인 내용이 사라집니다. 작성을 취소하시겠습니까?`);
+    if (confirm) {
+      setSearchModal(false);
+      setWriteModal(false);
+      setKeyword('');
+    }
   };
 
   // 이전: 글 작성 모달창 닫기
@@ -60,10 +64,13 @@ const Write = ({
     if (!title) {
       return alert('제목을 입력해주세요.');
     }
-    if (title.length > 35) {
+    if (title.length > 25) {
       return alert('제목은 25글자 이하로 입력해주세요.');
     }
     if (!body) {
+      return alert('내용을 입력해주세요.');
+    }
+    if (body === `<p><br></p>`) {
       return alert('내용을 입력해주세요.');
     }
 
@@ -95,11 +102,6 @@ const Write = ({
 
     // 글 작성 모달 닫기
     setWriteModal(false);
-
-    // 상세페이지로 이동
-    // if (pathname === "review") {
-    //   navigate(`/rdetail/${}`)
-    // }
   };
 
   return (
@@ -108,11 +110,12 @@ const Write = ({
         <ModalContainer>
           <ModalBox>
             <ButtonBox1>
-              <ArrowBackRoundedIcon onClick={closeWrite} />
-              <CloseRoundedIcon onClick={closeButton} />
+              <BackButton onClick={closeWrite} />
+              <XButton onClick={closeButton} />
             </ButtonBox1>
             <div>
               <StoreBox>
+                <Picker /> &nbsp;
                 <Store>{storeTitle}</Store>
               </StoreBox>
               <ContentBox>
@@ -141,7 +144,7 @@ const ModalContainer = styled.div`
   width: 100%;
   height: 100%;
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   top: 0;
   left: 0;
   backdrop-filter: blur(5px);
@@ -153,7 +156,7 @@ const ModalContainer = styled.div`
 
 const ModalBox = styled.div`
   width: 800px;
-  height: 810px;
+  height: 820px;
   padding: 20px;
   background-color: #fff;
   border-radius: 18px;
@@ -166,14 +169,28 @@ const ButtonBox1 = styled.div`
   justify-content: space-between;
 `;
 
-const StoreBox = styled.div`
-  margin: 20px 10px;
+const XButton = styled(CloseRoundedIcon)`
+  cursor: pointer;
 `;
 
-const Store = styled.span`
+const BackButton = styled(ArrowBackRoundedIcon)`
+  cursor: pointer;
+`;
+
+const StoreBox = styled.div`
+  margin: 20px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+`;
+
+const Picker = styled(RoomRoundedIcon)`
+  padding: 2px;
+`;
+
+const Store = styled.div`
   font-size: 18px;
   font-weight: 700;
-  margin: 15px;
   padding: 2px;
   background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
 `;
