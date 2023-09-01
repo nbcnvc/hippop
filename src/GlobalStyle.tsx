@@ -55,6 +55,7 @@ body {
     margin: 0 auto;
     background-color:var(--fourth-color);
 
+    // 검색 페이지 달력 삼각형 
     .react-datepicker__triangle  {
       &:after{
         border-bottom-color: #2B3467!important;
@@ -72,12 +73,17 @@ body {
 
       }
 
+    // 검색 페이지 달력
     .react-datepicker {
     border: 2px solid #333333;
-    box-shadow: 4px 4px  10px #33333380  ;
+    box-shadow: 7px 7px  10px #00000080  ;
     border-radius: 18px;
     font-weight:600;
 
+
+    
+    
+    // 검색 페이지 헤더
     .react-datepicker__header {
       background-color: #2B3467;
     

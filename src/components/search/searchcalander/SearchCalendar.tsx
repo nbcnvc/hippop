@@ -154,7 +154,7 @@ const Container = styled.div`
 
   padding: 25px;
 
-  margin-bottom: 160px;
+  /* margin-bottom: 80px; */
 `;
 
 const StartDateBox = styled.div`
