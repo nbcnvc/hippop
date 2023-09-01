@@ -17,6 +17,7 @@ declare global {
 const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
   const [guName, setGuName] = useState<string>('');
   const [category, setCategory] = useState<string>('');
+  const [hImageSrc, setHImageSrc] = useState<string>('');
   const [searchData, setSearchData] = useState<HotPlaceInfo[]>();
   const [isSelected, setIsSelected] = useState<HotPlaceInfo | undefined>();
   const [nearbyStoreMarker, setNearbyStoreMarker] = useState<Store[] | undefined>();
@@ -90,10 +91,20 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
 
         const displayMarker = (place: HotPlaceInfo) => {
           // 메인 마커이미지의 주소
-          const imageSrc = '/asset/hotPlaceMarker.png';
+
+          if (category && category === '맛집') {
+            setHImageSrc('/asset/rMarker.png');
+          } else if (category && category === '카페') {
+            setHImageSrc('/asset/cMarker.png');
+          } else if (category && category === '술집') {
+            setHImageSrc('/asset/bMarker.png');
+          }
+          console.log('hImageSrc', hImageSrc);
+          console.log('category', category);
+
           // 마커이미지의 크기
-          const imageSize = new kakao.maps.Size(45, 50);
-          const hpMarkerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+          const imageSize = new kakao.maps.Size(30, 40);
+          const hpMarkerImage = new kakao.maps.MarkerImage(hImageSrc, imageSize);
 
           const marker = new kakao.maps.Marker({
             map: map,
@@ -112,7 +123,7 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
         // 메인 마커이미지의 주소
         const imageSrc = '/asset/mainMarker.png';
         // 마커이미지의 크기
-        const imageSize = new kakao.maps.Size(100, 105);
+        const imageSize = new kakao.maps.Size(80, 85);
         // 마커이미지의 옵션 // 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
         // const imageOption = { offset: new kakao.maps.Point(40, 70) };
         // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
@@ -158,7 +169,7 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
                 // 메인 마커이미지의 주소
                 const imageSrc = '/asset/nearbyMarker.png';
                 // // 마커이미지의 크기
-                const imageSize = new kakao.maps.Size(50, 55);
+                const imageSize = new kakao.maps.Size(55, 60);
                 const nearbyMarkerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
                 const marker = new kakao.maps.Marker({
@@ -193,36 +204,50 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
         }
       }
     });
-  }, [storeLocation, category, nearbyStoreMarker]);
+  }, [storeLocation, category, hImageSrc, nearbyStoreMarker]);
 
   console.log(nearbyStoreMarker);
 
   return (
-    <div>
+    <MapContainer>
       {searchData && <HotPlace setCategory={setCategory} setIsSelected={setIsSelected} />}
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '30px' }}>
-        {isSelected && category && <IframeStyle src={`https://place.map.kakao.com/m/${isSelected.id}`} />}
-        <div
-          ref={mapElement}
-          style={{
-            width: `${isSelected && category ? '55%' : '90%'}`,
-            height: '550px',
-            borderRadius: '10px',
-            border: '1px solid #c9c9c9ff'
-          }}
-        />
+      <div className="map-iframe">
+        {isSelected && category && <iframe src={`https://place.map.kakao.com/m/${isSelected.id}`} />}
+        <KaKaoMap ref={mapElement} isSelected={isSelected} category={category} />
       </div>
       <NearbyStore guName={guName} setNearbyStoreMarker={setNearbyStoreMarker} />
-    </div>
+    </MapContainer>
   );
 };
 
 export default StoreMap;
 
-const IframeStyle = styled.iframe`
-  width: 33%;
-  height: 550px;
-  margin-right: 20px;
+const MapContainer = styled.div`
+  max-width: 1920px;
+  min-width: 900px;
+
+  .map-iframe {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    gap: 20px;
+
+    iframe {
+      width: 35%;
+      height: 600px;
+      /* margin-right: 20px; */
+      border-radius: 10px;
+      /* border: 2px solid #c9c9c9ff; */
+      border: 3px solid #333333;
+    }
+  }
+`;
+
+const KaKaoMap = styled.div<{ isSelected: HotPlaceInfo | undefined; category: string }>`
+  width: ${(props) => (props.isSelected && props.category ? '65%' : '100%')};
+  height: 600px;
   border-radius: 10px;
-  border: 1px solid #c9c9c9ff;
+  /* border: 2px solid #c9c9c9ff; */
+  border: 3px solid #333333;
 `;
