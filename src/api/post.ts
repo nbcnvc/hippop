@@ -34,7 +34,7 @@ export const getPosts = async (pageParam: number = 1, param?: string): Promise<F
   } else if (param === '/mate') {
     const { data: mates } = await supabase
       .from('post')
-      .select(`*, store(title)`)
+      .select(`*, user( * ), store( title )`)
       .eq('ctg_index', 2)
       .eq('isDeleted', false)
       .order('created_at', { ascending: false })
@@ -54,7 +54,7 @@ export const getPosts = async (pageParam: number = 1, param?: string): Promise<F
   // 총 페이지
   const totalPages = count ? Math.floor(count / 10) + (count % 10 === 0 ? 0 : 1) : 1;
 
-  return { posts: data as PostType[], page: pageParam, totalPages, count };
+  return { posts: data as any, page: pageParam, totalPages, count };
 };
 
 //myPage - pageParam

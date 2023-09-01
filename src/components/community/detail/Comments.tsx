@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from 'react';
 
 import moment from 'moment';
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { CommentProps } from '../../../types/props';
-import { createComment, deleteComment, getComments, updateComment } from '../../../api/comment';
+import { createComment, deleteComment, getCommentCount, getComments, updateComment } from '../../../api/comment';
 import { Comment } from '../../../types/types';
 import { useCurrentUser } from '../../../store/userStore';
 import { styled } from 'styled-components';
@@ -26,8 +26,8 @@ const Comments = ({ postId }: CommentProps) => {
   // Comment 조회
   const {
     data: comments,
-    isLoading,
-    isError,
+    isLoading: isLoading1,
+    isError: isError1,
     hasNextPage,
     fetchNextPage
   } = useInfiniteQuery({
@@ -58,6 +58,9 @@ const Comments = ({ postId }: CommentProps) => {
     }
     fetchNextPage();
   };
+
+  // Comment 전체 개수
+  const { data: count, isLoading: isLoading2, isError: isError2 } = useQuery(['count'], () => getCommentCount(postId));
 
   // Comment 추가
   const createMutation = useMutation(createComment, {
@@ -131,10 +134,10 @@ const Comments = ({ postId }: CommentProps) => {
     }
   };
 
-  if (isLoading) {
+  if (isLoading1 || isLoading2) {
     return <div>로딩중입니다.</div>;
   }
-  if (isError) {
+  if (isError1 || isError2) {
     return <div>오류가 발생했습니다.</div>;
   }
   return (

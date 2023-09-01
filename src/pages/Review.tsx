@@ -1,4 +1,4 @@
-import Posts from '../components/community/main/Posts';
+import RPosts from '../components/community/main/RPosts';
 import Write from '../components/community/write/Write';
 import SearchModal from '../components/community/write/SearchModal';
 
@@ -16,7 +16,6 @@ const Review = () => {
   const [storeTitle, setStoreTitle] = useState<string>('');
   const [result, setResult] = useState<Store[] | null>(null);
   const [keyword, setKeyword] = useState<string>('');
-
   const currentUser = useCurrentUser();
 
   // 검색 모달 열기
@@ -25,6 +24,7 @@ const Review = () => {
       return alert('로그인 해주세요.');
     }
     setSearchModal(true);
+    document.body.style.overflow = 'hidden';
   };
 
   return (
@@ -55,7 +55,7 @@ const Review = () => {
         storeTitle={storeTitle}
         setResult={setResult}
       />
-      <Posts />
+      <RPosts />
     </Layout>
   );
 };

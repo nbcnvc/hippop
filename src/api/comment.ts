@@ -1,6 +1,6 @@
 import { supabase } from './supabase';
 
-import { Comment, FetchComment, NewComment } from '../types/types';
+import { Comment, NewComment } from '../types/types';
 
 // Comment 상세 조회 (isDeleted가 false 것만, 추후에 더보기 기능 추가)
 export const getComments = async (pageParam: number = 1, postId: number): Promise<any> => {
@@ -29,6 +29,16 @@ export const getComments = async (pageParam: number = 1, postId: number): Promis
   const totalPages = count ? Math.floor(count / 5) + (count % 5 === 0 ? 0 : 1) : 1;
 
   return { comments: data as Comment[], page: pageParam, totalPages, count };
+};
+
+// Comment 개수 가져오기
+export const getCommentCount = async (postId: number): Promise<any> => {
+  const { count } = await supabase
+    .from('comment')
+    .select('count', { count: 'exact' })
+    .eq('post_id', postId)
+    .eq('isDeleted', false);
+  return count;
 };
 
 // Comment 추가

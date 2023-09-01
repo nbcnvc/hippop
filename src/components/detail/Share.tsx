@@ -8,7 +8,11 @@ import { styled } from 'styled-components';
 import LinkIcon from '../../images/LinkIcon.png';
 import KakaoIcon from '../../images/kakaoIcon.png';
 
-const Share = () => {
+interface ShareProps {
+  onClick: () => void;
+}
+
+const Share = ({ onClick }: ShareProps) => {
   // 현재 주소 가져오기
   const currentUrl = window.location.href;
 
@@ -40,7 +44,7 @@ const Share = () => {
   };
 
   return (
-    <>
+    <Container>
       <KakaoBtn
         className="grey-btn"
         onClick={() => {
@@ -49,23 +53,39 @@ const Share = () => {
       >
         <Img src={KakaoIcon} alt="카카오톡 아이콘" />
       </KakaoBtn>
-      <FacebookShareButton url={currentUrl}>
-        <FacebookIcon size={38} round={true} />
-      </FacebookShareButton>
-      <TwitterShareButton url={currentUrl}>
-        <TwitterIcon size={38} round={true} />
-      </TwitterShareButton>
+      <FacebookBtn url={currentUrl}>
+        <FacebookIcon size={45} round={true} />
+      </FacebookBtn>
+      <TwitterBtn url={currentUrl}>
+        <TwitterIcon size={45} round={true} />
+      </TwitterBtn>
       <CopyToClipboard text={currentUrl} onCopy={() => alert('주소가 복사되었습니다.')}>
         <Img src={LinkIcon} alt="링크 아이콘" />
       </CopyToClipboard>
-    </>
+    </Container>
   );
 };
 
 export default Share;
 
+const Container = styled.div`
+  /* padding: 20px;
+  gap: 20px;
+  border: 2px solid #333333; */
+  /* border-radius: 18px; */
+`;
+
 const Img = styled.img`
-  width: 38px;
+  width: 43px;
+  &:hover {
+    filter: brightness(120%);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  cursor: pointer;
 `;
 
 const KakaoBtn = styled.button`
@@ -73,4 +93,12 @@ const KakaoBtn = styled.button`
   margin: 0;
   border: none;
   background: none;
+`;
+
+const FacebookBtn = styled(FacebookShareButton)`
+  margin: 0 7px 0 14px;
+`;
+
+const TwitterBtn = styled(TwitterShareButton)`
+  margin: 0 14px 0 7px;
 `;

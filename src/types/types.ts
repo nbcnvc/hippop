@@ -48,6 +48,7 @@ export interface NewPost {
   title: string;
   body: string;
 }
+
 export interface UpdatePost {
   id: number;
   title: string;
@@ -91,7 +92,7 @@ export interface FetchsStore {
 }
 
 export interface FetchPost {
-  posts: PostType[];
+  posts: any;
   page: number;
   totalPages: number;
   count: number | null;
