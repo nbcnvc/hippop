@@ -29,7 +29,7 @@ ${reset}
     --primary-color: #eb455f; // King Pink
     --second-color: #2B3467; // Melange Navy
     --third-color: #E2EE32; // Lemon Yellow
-    --fourth-color: #FFFDED; // Cream
+    --fourth-color: #FFFDED; // Cream 
     --fifth-color: #333333; // Deep Dark Gray
     --sixth-color: #ffb4bf; // Hover Primary color
   }
@@ -55,6 +55,7 @@ body {
     margin: 0 auto;
     background-color:var(--fourth-color);
 
+    // 검색 페이지 달력 삼각형 
     .react-datepicker__triangle  {
       &:after{
         border-bottom-color: #2B3467!important;
@@ -72,12 +73,17 @@ body {
 
       }
 
+    // 검색 페이지 달력
     .react-datepicker {
     border: 2px solid #333333;
-    box-shadow: 4px 4px  10px #33333380  ;
+    box-shadow: 7px 7px  10px #00000080  ;
     border-radius: 18px;
     font-weight:600;
 
+
+    
+    
+    // 검색 페이지 헤더
     .react-datepicker__header {
       background-color: #2B3467;
     
@@ -109,9 +115,10 @@ a {
 }
 
 button {
-    // background-color: #eb455f;
+    font-family: 'Pretendard-Regular';
+    background-color: var(--primary-color);
     border: 2px solid var(--fifth-color);
-    border-bottom: 4px solid var(--fifth-color);
+    border-bottom: 6px solid var(--fifth-color);
     border-radius: 18px;
     color: white;
     font-size: 16px;
@@ -128,6 +135,29 @@ button {
     }
   }
 
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    padding: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--sixth-color);
+    border-radius: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--primary-color);
+  }
+
+  /* 수평 스크롤바 스타일링 */
+  ::-webkit-scrollbar-track {
+    height: 6px;
+    background-color: transparent;
+  }
+  ::-webkit-scrollbar-track-piece {
+    height: 6px;  
+    background-color: transparent; /* 스크롤바 트랙 배경색 설정 */
+  }
 `;
 
 export default GlobalStyle;

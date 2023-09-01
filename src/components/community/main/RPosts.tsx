@@ -131,7 +131,9 @@ const PostContainer = styled.div`
 `;
 
 const PostBox = styled.div`
+  max-width: 1920px;
   min-width: 900px;
+  width: 50%;
   height: 200px;
   background-color: #fff;
   border: 3px solid var(--fifth-color);
@@ -197,7 +199,6 @@ const Button = styled.button`
   width: 80px;
   margin-top: 5px;
   font-size: 14px;
-  font-weight: 600;
 `;
 
 const Trigger = styled.div`

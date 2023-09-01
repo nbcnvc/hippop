@@ -190,3 +190,7 @@ export interface UserMsgType {
   avatar_url?: string;
   name?: string;
 }
+
+export interface ReviewProps {
+  selectItems: PostType[];
+}

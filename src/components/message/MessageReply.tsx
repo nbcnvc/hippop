@@ -43,6 +43,7 @@ const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
 
   // 모달 닫기
   const closeReply = () => {
+    window.confirm('쪽지보내기 정말 취소하시겠어요?');
     setOpenReply(false);
   };
 

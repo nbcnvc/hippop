@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 // 라이브러리
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -18,6 +18,8 @@ interface SliderButton {
 
 const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
   const { id } = useParams<{ id: string }>();
+
+  const navigate = useNavigate();
 
   const { data: storeData, isLoading, isError } = useQuery({ queryKey: ['nearbyStoreData'], queryFn: fetchStoreData });
 
@@ -89,6 +91,11 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
   //   //     }
   //   //   }
 
+  // detail page 이동
+  const navDetail = (id: number) => {
+    navigate(`/detail/${id}`);
+  };
+
   if (isLoading) {
     return <div>로딩중입니다...</div>;
   }
@@ -97,40 +104,27 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
   }
 
   return (
-    <div>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'column',
-          marginTop: '100px',
-          fontSize: '20px',
-          fontWeight: '600'
-        }}
-      >
-        {guName}의 다른 팝업스토어는 어때요?
+    <NearbyStoreContainer>
+      <div className="nearby-store-title">
+        <h1>{guName}의 다른 팝업스토어는 어때요?</h1>
       </div>
       {filteredStore && filteredStore?.length > 3 && (
         <StyledSlider {...settings}>
           {filteredStore?.map((data) => {
             return (
               <div key={data.id}>
-                <Link to={`/detail/${data.id}`}>
-                  <div
-                    style={{
-                      width: '350px',
-                      height: '200px'
-                    }}
-                  >
-                    <img
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${data.images[0]}`}
-                      alt={`${data.title} 이미지`}
-                    />
-                  </div>
-                  <div>{data.title}</div>
-                </Link>
+                <Card key={data.id}>
+                  <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${data.images[0]}`} />
+                  <InfoBox>
+                    <div>
+                      {data.location.split(' ').slice(0, 1)} {data.location.split(' ').slice(1, 2)}
+                      <StoreName>{data.title}</StoreName>
+                      {data.period_start} ~ {data.period_end}
+                    </div>
+
+                    <DetailBtn onClick={() => navDetail(data.id)}>상세보기</DetailBtn>
+                  </InfoBox>
+                </Card>
               </div>
             );
           })}
@@ -144,7 +138,6 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
             alignItems: 'center'
           }}
         >
-          <button> ＜ </button>
           <div
             style={{
               width: '100%',
@@ -157,26 +150,21 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
             {filteredStore?.map((data) => {
               return (
                 <div key={data.id}>
-                  <Link to={`/detail/${data.id}`}>
-                    <div
-                      style={{
-                        width: '350px',
-                        height: '200px'
-                      }}
-                    >
-                      <img
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${data.images[0]}`}
-                        alt={`${data.title} 이미지`}
-                      />
-                    </div>
-                    <div>{data.title}</div>
-                  </Link>
+                  <Card key={data.id}>
+                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${data.images[0]}`} />
+                    <InfoBox>
+                      <div>
+                        {data.location.split(' ').slice(0, 1)} {data.location.split(' ').slice(1, 2)}
+                        <StoreName>{data.title}</StoreName>
+                        {data.period_start} ~ {data.period_end}
+                      </div>
+                      <DetailBtn onClick={() => navDetail(data.id)}>상세보기</DetailBtn>
+                    </InfoBox>
+                  </Card>
                 </div>
               );
             })}
           </div>
-          <button> ＞ </button>
         </div>
       )}
       {filteredStore && filteredStore?.length === 0 && (
@@ -193,11 +181,27 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
           아쉽게도 현재 운영중인 {guName}의 다른 팝업스토어는 없습니다🥲
         </div>
       )}
-    </div>
+    </NearbyStoreContainer>
   );
 };
 
 export default NearbyStore;
+
+const NearbyStoreContainer = styled.div`
+  .nearby-store-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 150px 0 40px 0;
+
+    h1 {
+      color: var(--fifth-color);
+      font-size: 30px;
+      background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+    }
+  }
+`;
 
 const StyledSlider = styled(Slider)`
   display: flex;
@@ -215,4 +219,63 @@ const StyledSlider = styled(Slider)`
     /* margin: 0 -30px; // space(여백)/-2 */
     overflow: hidden;
   }
+`;
+
+const Card = styled.div`
+  width: 380px;
+  height: 500px;
+  border-radius: 18px;
+  border: 3px solid var(--fifth-color);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+`;
+
+const InfoBox = styled.div`
+  width: 330px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+
+  margin-top: 20px;
+`;
+
+const Img = styled.img`
+  width: 340px;
+  height: 370px;
+  /* margin-top: 10px; */
+  object-fit: cover;
+  border-radius: 10px;
+
+  border: 3px solid var(--fifth-color);
+`;
+
+const StoreName = styled.div`
+  display: flex;
+  align-items: center;
+  text-align: center;
+  line-height: 1.2;
+  font-size: 20px;
+  font-weight: bold;
+
+  width: 235px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  margin: 7px 0 7px 0;
+`;
+
+const BtnBox = styled.div``;
+
+const DetailBtn = styled.button`
+  /* background-color: var(--primary-color); */
+  background-color: var(--second-color);
+  /* background-color: var(--third-color); */
+  /* color: black; */
+  color: white;
 `;
