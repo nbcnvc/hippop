@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 // 라이브러리
 import { useNavigate } from 'react-router-dom';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
+import Slider from 'react-slick';
 // 컴포넌트
 
 // api
@@ -18,6 +19,13 @@ import { styled } from 'styled-components';
 // mui
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import SearchCalendar from '../searchcalander/SearchCalendar';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+// import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
+
+interface SliderButton {
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+}
 
 const SearchList = ({ storeData }: SearchListProps) => {
   const navigate = useNavigate();
@@ -38,6 +46,9 @@ const SearchList = ({ storeData }: SearchListProps) => {
 
   // 검색결과 length state
   const [searchResultCount, setSearchResultCount] = useState<number>(0);
+
+  // 쿼리
+  const queryClient = useQueryClient();
 
   // 디바운싱
   const debouncedSearch = _debounce((value: string) => {
@@ -71,6 +82,11 @@ const SearchList = ({ storeData }: SearchListProps) => {
       }
     }
   });
+
+  // 캐싱 처리
+  const refreshData = () => {
+    queryClient.invalidateQueries(['/search', debouncedInputValue, momentStart, momentEnd]);
+  };
 
   // 인피니티 스크롤로 필터된 store
   const selectStores = useMemo(() => {
@@ -135,10 +151,10 @@ const SearchList = ({ storeData }: SearchListProps) => {
   });
 
   // 인기 팝업스토어 자르기
-  const popStores = sortedStores?.slice(0, 3);
+  const popStores = sortedStores?.slice(0, 10);
 
   // 최신 팝업스토어 자르기
-  const latStores = latestStores?.slice(0, 3);
+  const latStores = latestStores?.slice(0, 10);
 
   // onChange 핸들러
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -153,6 +169,7 @@ const SearchList = ({ storeData }: SearchListProps) => {
       alert('검색어를 입력해주세요!');
       setDebouncedInputValue('');
     }
+    refreshData();
   };
 
   // 데이터 필터링
@@ -199,18 +216,61 @@ const SearchList = ({ storeData }: SearchListProps) => {
 
       setFilteredStoreList(filteredStores);
     }
+    // refreshData();
+  };
+
+  // 검색어 칩 삭제
+  const handleInputDelete = () => {
+    setInputValue('');
+    if (startDate && endDate && (momentStart !== '0000.01.01' || momentEnd !== '9999.12.31')) {
+      setFilteredStoreList(filteredStoreList);
+    } else {
+      setFilteredStoreList(null);
+    }
+    refreshData();
+  };
+
+  // 날짜 칩 삭제
+  const handleDateDelete = () => {
+    setFilteredStoreList(null);
+    refreshData();
   };
 
   // 검색 초기화 handler
   const handleReset = () => {
     setInputValue('');
-
-    setFilteredStoreList(null);
+    refreshData();
   };
 
   // detail page 이동
   const navDetail = (id: number) => {
     navigate(`/detail/${id}`);
+  };
+
+  const PrevArrow = ({ onClick }: SliderButton) => {
+    return (
+      <SliderBtn onClick={onClick} type="button">
+        ＜
+      </SliderBtn>
+    );
+  };
+
+  const NextArrow = ({ onClick }: SliderButton) => {
+    return (
+      <SliderBtn onClick={onClick} type="button">
+        ＞
+      </SliderBtn>
+    );
+  };
+
+  // 위에서 계산한 값을 사용하여 설정 객체를 생성
+  const settings = {
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    arrows: true,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+    infinite: true
   };
 
   if (isLoading) {
@@ -238,12 +298,25 @@ const SearchList = ({ storeData }: SearchListProps) => {
             검색
           </button>
         </form>
-
-        {/* <Filter /> */}
         <Reset onClick={handleReset} />
       </SearchBox>
-      {/* <DatePicker1 /> */}
       <SearchCalendar storeData={storeData} onSearch={handleSearch} />
+      {filteredStoreList ? (
+        <ChipBoX>
+          <Stack direction="row" spacing={1}>
+            {inputValue.length > 0 && <Chip label={debouncedInputValue} onDelete={handleInputDelete} />}
+
+            {(momentStart !== '0000.01.01' || momentEnd !== '9999.12.31') && (
+              <>
+                <Chip label={momentStart} onDelete={handleDateDelete} />
+                <Chip label={momentEnd} onDelete={handleDateDelete} />
+              </>
+            )}
+          </Stack>
+        </ChipBoX>
+      ) : (
+        <ChipBoX></ChipBoX>
+      )}
       <>
         {filteredStoreList ? (
           <div>
@@ -259,7 +332,7 @@ const SearchList = ({ storeData }: SearchListProps) => {
                 </Title>
                 <GridContainer>
                   {filteredStoreList?.map((store) => (
-                    <Card key={store.id} onClick={() => navDetail(store.id)}>
+                    <Card key={store.id}>
                       <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
                       <InfoBox>
                         <div>
@@ -268,7 +341,7 @@ const SearchList = ({ storeData }: SearchListProps) => {
                           {store.period_start} ~ {store.period_end}
                         </div>
 
-                        <DetailBtn>상세보기</DetailBtn>
+                        <DetailBtn onClick={() => navDetail(store.id)}>상세보기</DetailBtn>
                       </InfoBox>
                     </Card>
                   ))}
@@ -283,42 +356,54 @@ const SearchList = ({ storeData }: SearchListProps) => {
             {' '}
             <div>
               <Title>
-                <H1Tag>인기 팝업스토어</H1Tag>
+                <H1Tag>인기 팝업스토어는 어떨까요?</H1Tag>
               </Title>
               <GridContainer>
-                {popStores?.map((store: Store) => (
-                  <Card key={store.id} onClick={() => navDetail(store.id)}>
-                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-                    <InfoBox>
-                      <div>
-                        {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
-                        <StoreName>{store.title}</StoreName>
-                        {store.period_start} ~ {store.period_end}
-                      </div>
-
-                      <DetailBtn>상세보기</DetailBtn>
-                    </InfoBox>
-                  </Card>
-                ))}
+                <StyledSlider {...settings}>
+                  {popStores?.map((store: Store, index) => (
+                    <>
+                      <Card key={store.id}>
+                        <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                        <InfoBox>
+                          <div>
+                            {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
+                            <StoreName>{store.title}</StoreName>
+                            {store.period_start} ~ {store.period_end}
+                          </div>
+                          <RankingNumber>
+                            {/* <Rank /> */}
+                            {`${index + 1} 위`}
+                          </RankingNumber>
+                          <DetailBtn onClick={() => navDetail(store.id)}>상세보기</DetailBtn>
+                        </InfoBox>
+                      </Card>
+                    </>
+                  ))}
+                </StyledSlider>
               </GridContainer>
               <Title>
-                <H1Tag>최신 팝업스토어</H1Tag>
+                <H1Tag>최신 팝업스토어를 소개합니다!</H1Tag>
               </Title>
               <GridContainer>
-                {latStores?.map((store: Store) => (
-                  <Card key={store.id} onClick={() => navDetail(store.id)}>
-                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-                    <InfoBox>
-                      <div>
-                        {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
-                        <StoreName>{store.title}</StoreName>
-                        {store.period_start} ~ {store.period_end}
-                      </div>
-
-                      <DetailBtn>상세보기</DetailBtn>
-                    </InfoBox>
-                  </Card>
-                ))}
+                <StyledSlider {...settings}>
+                  {latStores?.map((store: Store) => (
+                    <Card key={store.id}>
+                      <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                      <InfoBox>
+                        <div>
+                          {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
+                          <StoreName>{store.title}</StoreName>
+                          {store.period_start} ~ {store.period_end}
+                        </div>
+                        <RankingNumber>
+                          {/* <Rank /> */}
+                          NEW
+                        </RankingNumber>
+                        <DetailBtn onClick={() => navDetail(store.id)}>상세보기</DetailBtn>
+                      </InfoBox>
+                    </Card>
+                  ))}
+                </StyledSlider>
               </GridContainer>{' '}
             </div>
           </>
@@ -359,7 +444,7 @@ const SearchBox = styled.div`
   margin-top: 20px;
 
   .custom-btn {
-    border: 2px solid black;
+    border: 2px solid #333333;
 
     border-bottom: 3.4px solid var(--fifth-color);
     border-radius: 0 18px 18px 0;
@@ -380,7 +465,7 @@ const SearchInput = styled.input`
 
   box-shadow: 1px;
 
-  border: px solid black;
+  border: px solid #333333;
   border-right: none;
   border-radius: 18px 0px 0px 18px;
 
@@ -389,13 +474,14 @@ const SearchInput = styled.input`
   padding-left: 35px;
 `;
 
+const ChipBoX = styled.div`
+  display: flex;
+  margin-bottom: 100px;
+`;
+
 const Title = styled.div`
   font-size: 20px;
   font-weight: bold;
-
-  padding: 20px;
-
-  margin-top: 50px;
 
   display: flex;
   flex-direction: column;
@@ -406,17 +492,15 @@ const Title = styled.div`
 const H1Tag = styled.h1`
   font-size: 28px;
   color: #333333;
-  /* font-weight: bold; */
+
   background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
   padding: 4px;
 `;
 
 const SearchCountBox = styled.div`
   font-size: 16px;
-  margin: 10px 0;
-  /* color: #f24d0d; */
 
-  margin-top: 35px;
+  margin: 10px 0 35px 0;
 `;
 
 const SearchCount = styled.span`
@@ -427,27 +511,69 @@ const GridContainer = styled.div`
   margin: 0 auto; /* 가운데 정렬 */
 
   display: grid;
-
+  justify-content: center;
   grid-template-columns: repeat(3, 1fr); // 한 줄에 두 개의 열
   gap: 50px; // 열 사이의 간격 조정
 
-  max-width: 1920px; /* 그리드가 너무 넓어지는 것을 제한 */
+  max-width: 1920px; // 그리드가 너무 넓어지는 것을 제한
   width: 100%;
-
-  margin-top: 50px;
+  /* margin-top: 50px; */
 `;
 
+const StyledSlider = styled(Slider)`
+  display: flex !important;
+  /* position: relative; */
+  justify-content: center;
+  align-items: center;
+  margin: 70px 0 70px 310px;
+  width: 1300px;
+
+  .slick-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .slick-list {
+    overflow: hidden;
+  }
+`;
+
+const SliderBtn = styled.button`
+  background-color: var(--primary-color);
+`;
 const Card = styled.div`
-  width: 380px;
+  width: 370px !important ;
+
   height: 500px;
   border-radius: 18px;
   border: 3px solid var(--fifth-color);
 
-  display: flex;
+  display: flex !important;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: #ffffff;
+
+  position: relative;
+`;
+
+const RankingNumber = styled.div`
+  font-size: 18px;
+  font-weight: bold;
+  position: absolute;
+
+  bottom: 70px;
+  right: 27px;
+
+  background-color: var(--third-color);
+
+  border-radius: 18px;
+  padding: 5px 15px;
+
+  /* transform: rotate(-45deg); Rotate the ribbon */
+  transform-origin: left center;
+
+  margin-top: 3px;
 `;
 
 const InfoBox = styled.div`
@@ -462,8 +588,8 @@ const InfoBox = styled.div`
 
 const Img = styled.img`
   width: 340px;
-  height: 370px;
-  /* margin-top: 10px; */
+  height: 369px;
+
   object-fit: cover;
   border-radius: 10px;
 
@@ -483,14 +609,12 @@ const StoreName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
 
-  margin: 7px 0 7px 0;
+  margin: 13px 0 13px 0;
 `;
 
 const DetailBtn = styled.button`
-  /* background-color: var(--primary-color); */
   background-color: var(--second-color);
-  /* background-color: var(--third-color); */
-  /* color: black; */
+
   color: white;
 `;
 

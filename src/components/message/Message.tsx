@@ -38,6 +38,7 @@ const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
 
   // 모달 닫기
   const closeMsgModal = () => {
+    window.confirm('쪽지보내기 정말 취소하시겠어요?');
     setMsgModal(false);
   };
 
