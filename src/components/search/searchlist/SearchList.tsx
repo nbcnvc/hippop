@@ -18,6 +18,11 @@ import { styled } from 'styled-components';
 // mui
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import SearchCalendar from '../searchcalander/SearchCalendar';
+import Slider from 'react-slick';
+
+interface SliderButton {
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+}
 
 const SearchList = ({ storeData }: SearchListProps) => {
   const navigate = useNavigate();
@@ -135,10 +140,10 @@ const SearchList = ({ storeData }: SearchListProps) => {
   });
 
   // 인기 팝업스토어 자르기
-  const popStores = sortedStores?.slice(0, 3);
+  const popStores = sortedStores?.slice(0, 10);
 
   // 최신 팝업스토어 자르기
-  const latStores = latestStores?.slice(0, 3);
+  const latStores = latestStores?.slice(0, 10);
 
   // onChange 핸들러
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -211,6 +216,32 @@ const SearchList = ({ storeData }: SearchListProps) => {
   // detail page 이동
   const navDetail = (id: number) => {
     navigate(`/detail/${id}`);
+  };
+
+  const PrevArrow = ({ onClick }: SliderButton) => {
+    return (
+      <button onClick={onClick} type="button">
+        ＜
+      </button>
+    );
+  };
+
+  const NextArrow = ({ onClick }: SliderButton) => {
+    return (
+      <button onClick={onClick} type="button">
+        ＞
+      </button>
+    );
+  };
+
+  // 위에서 계산한 값을 사용하여 설정 객체를 생성
+  const settings = {
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    arrows: true,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+    infinite: true
   };
 
   if (isLoading) {
@@ -287,40 +318,44 @@ const SearchList = ({ storeData }: SearchListProps) => {
                 <H1Tag>인기 팝업스토어</H1Tag>
               </Title>
               <GridContainer>
-                {popStores?.map((store: Store) => (
-                  <Card key={store.id} onClick={() => navDetail(store.id)}>
-                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-                    <InfoBox>
-                      <div>
-                        {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
-                        <StoreName>{store.title}</StoreName>
-                        {store.period_start} ~ {store.period_end}
-                      </div>
+                <StyledSlider {...settings}>
+                  {popStores?.map((store: Store) => (
+                    <Card key={store.id} onClick={() => navDetail(store.id)}>
+                      <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                      <InfoBox>
+                        <div>
+                          {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
+                          <StoreName>{store.title}</StoreName>
+                          {store.period_start} ~ {store.period_end}
+                        </div>
 
-                      <DetailBtn>상세보기</DetailBtn>
-                    </InfoBox>
-                  </Card>
-                ))}
+                        <DetailBtn>상세보기</DetailBtn>
+                      </InfoBox>
+                    </Card>
+                  ))}
+                </StyledSlider>
               </GridContainer>
               <Title>
                 <H1Tag>최신 팝업스토어</H1Tag>
               </Title>
               <GridContainer>
-                {latStores?.map((store: Store) => (
-                  <Card key={store.id} onClick={() => navDetail(store.id)}>
-                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-                    <InfoBox>
-                      <div>
-                        {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
-                        <StoreName>{store.title}</StoreName>
-                        {store.period_start} ~ {store.period_end}
-                      </div>
+                <StyledSlider {...settings}>
+                  {latStores?.map((store: Store) => (
+                    <Card key={store.id} onClick={() => navDetail(store.id)}>
+                      <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                      <InfoBox>
+                        <div>
+                          {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
+                          <StoreName>{store.title}</StoreName>
+                          {store.period_start} ~ {store.period_end}
+                        </div>
 
-                      <DetailBtn>상세보기</DetailBtn>
-                    </InfoBox>
-                  </Card>
-                ))}
-              </GridContainer>{' '}
+                        <DetailBtn>상세보기</DetailBtn>
+                      </InfoBox>
+                    </Card>
+                  ))}
+                </StyledSlider>
+              </GridContainer>
             </div>
           </>
         )}
@@ -428,23 +463,43 @@ const GridContainer = styled.div`
   margin: 0 auto; /* 가운데 정렬 */
 
   display: grid;
-
+  justify-content: center;
   grid-template-columns: repeat(3, 1fr); // 한 줄에 두 개의 열
   gap: 50px; // 열 사이의 간격 조정
 
-  max-width: 1920px; /* 그리드가 너무 넓어지는 것을 제한 */
+  max-width: 1920px; // 그리드가 너무 넓어지는 것을 제한
   width: 100%;
-
   margin-top: 50px;
 `;
 
+const StyledSlider = styled(Slider)`
+  display: flex !important;
+
+  justify-content: center;
+  align-items: center;
+  margin: 70px 0 70px 160px;
+  width: 1600px;
+
+  .slick-slide {
+    /* width: 90%; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .slick-list {
+    /* margin: 0 -30px; // space(여백)/-2 */
+    overflow: hidden;
+  }
+`;
+
 const Card = styled.div`
-  width: 380px;
+  width: 380px !important ;
+
   height: 500px;
   border-radius: 18px;
   border: 3px solid var(--fifth-color);
 
-  display: flex;
+  display: flex !important;
   flex-direction: column;
   justify-content: center;
   align-items: center;
