@@ -19,11 +19,23 @@ import { styled } from 'styled-components';
 // mui
 import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import IosShareIcon from '@mui/icons-material/IosShare';
+import Menu from '@mui/material/Menu';
 
 const StoreDetail = () => {
   const { id } = useParams<{ id: string }>();
 
   const [isHovered, setIsHovered] = useState<boolean>(false);
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const {
     data: storeData,
@@ -72,8 +84,11 @@ const StoreDetail = () => {
               </Slider>
             </div>
             <div className="store-info">
-              <h1>{storeData.title}</h1>
-              {/* <BookMark storeData={storeData} /> */}
+              <TopBox>
+                <h1>{storeData.title}</h1>
+                <BookMark storeData={storeData} />
+              </TopBox>
+
               <div className="store-body">
                 <div>{storeData.body}</div>
               </div>
@@ -102,8 +117,28 @@ const StoreDetail = () => {
               <div className="button-box">
                 <button>후기 보러가기</button>
                 <button>팝업 메이트 구하기</button>
-                <button className="share-button">공유</button>
-                {/* <Share /> */}
+                <ShareBtn
+                  id="basic-button"
+                  aria-controls={open ? 'basic-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? 'true' : undefined}
+                  onClick={handleClick}
+                  // className="share-button"
+                >
+                  <IosShareIcon fontSize="small" />
+                  {/*  */}
+                </ShareBtn>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    'aria-labelledby': 'basic-button'
+                  }}
+                >
+                  <Share onClick={handleClose} />
+                </Menu>
               </div>
             </div>
             <CalendarIcon onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} />
@@ -196,17 +231,37 @@ const DetailContainer = styled.div`
 
       button {
         margin: 10px 20px 20px 0;
-        padding: 7px 25px;
+        padding: 16px 25px;
       }
 
       .button-box {
-        .share-button {
-          background-color: #fff;
-          color: var(--fifth-color);
-        }
+        /* .share-button { */
+        /* background-color: #fff; */
+        /* color: var(--fifth-color); */
+        /* font-size: 10px; */
+        /* margin-top: 16px; */
+        /* } */
+
+        display: flex;
+        align-items: center;
       }
     }
   }
+`;
+
+const TopBox = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ShareBtn = styled.button`
+  background-color: #fff;
+  color: var(--fifth-color);
+  padding: 14px 25px !important;
+
+  /* margin-top: ; */
 `;
 
 const LinkIcon = styled(InsertLinkIcon)`
