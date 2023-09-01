@@ -48,6 +48,7 @@ export interface NewPost {
   title: string;
   body: string;
 }
+
 export interface UpdatePost {
   id: number;
   title: string;

@@ -6,7 +6,6 @@ import 'react-quill/dist/quill.snow.css';
 import { EditorProps } from '../../../types/props';
 import { randomFileName } from '../../../hooks/useHandleImageName';
 import { supabase } from '../../../api/supabase';
-import { styled } from 'styled-components';
 
 // 이미지 크기 조절
 import { ImageActions } from '@xeger/quill-image-actions';
@@ -114,6 +113,8 @@ const Editor = ({ body, setBody }: EditorProps) => {
     'height',
     'width'
   ];
+
+  console.log(body);
 
   return (
     <>

@@ -20,7 +20,7 @@ const Top = styled.button`
   cursor: pointer;
   position: fixed;
   bottom: 20px;
-  z-index: 9999;
+  z-index: 1;
   right: 20%;
   transition: all 0.1s ease-in-out;
   @media (max-width: 1700px) {

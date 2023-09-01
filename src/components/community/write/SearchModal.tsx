@@ -9,6 +9,7 @@ import { fetchStoreData } from '../../../api/store';
 
 import { styled } from 'styled-components';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import ReplayRoundedIcon from '@mui/icons-material/ReplayRounded';
 
 const SearchModal = ({
   keyword,
@@ -45,6 +46,11 @@ const SearchModal = ({
     queryKey: ['storeData'],
     queryFn: () => fetchStoreData()
   });
+
+  // 검색 결과 리셋
+  const ResetResult = () => {
+    setResult(null);
+  };
 
   // 팝업스토어 선택
   const selectStore = (store: Store) => {
@@ -91,7 +97,7 @@ const SearchModal = ({
         <ModalContainer>
           <ModalBox>
             <ButtonBox>
-              <CloseRoundedIcon onClick={closeSearch} />
+              <XButton onClick={closeSearch} />
             </ButtonBox>
             {pathname === '/review' && (
               <Title>
@@ -115,6 +121,7 @@ const SearchModal = ({
                 }}
                 placeholder="팝업스토어를 검색하세요."
               />
+              <ResetButton onClick={ResetResult} />
               <button className="custom-btn" onClick={searchButton}>
                 검색
               </button>
@@ -161,7 +168,7 @@ const ModalContainer = styled.div`
   width: 100%;
   height: 100%;
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   top: 0;
   left: 0;
   backdrop-filter: blur(5px);
@@ -188,6 +195,16 @@ const ModalBox = styled.div`
     font-size: 14px;
     font-weight: 700;
   }
+`;
+
+const XButton = styled(CloseRoundedIcon)`
+  cursor: pointer;
+`;
+
+const ResetButton = styled(ReplayRoundedIcon)`
+  position: absolute;
+  margin-left: 515px;
+  cursor: pointer;
 `;
 
 const ButtonBox = styled.div`
