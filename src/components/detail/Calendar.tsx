@@ -16,34 +16,39 @@ const Calendar = ({ storeData }: CalendarProps) => {
   };
 
   return (
-    <div>
-      <StyleCalendar
-        calendarType="gregory"
-        locale="ko-KO"
-        onChange={onChangeCalendar}
-        selectRange={true}
-        value={[period[0], period[1]]}
-        formatDay={(locale, date) => moment(date).format('D')}
-      />
-    </div>
+    <StyleCalendar
+      calendarType="gregory"
+      locale="ko-KO"
+      onChange={onChangeCalendar}
+      selectRange={true}
+      value={[period[0], period[1]]}
+      formatDay={(locale, date) => moment(date).format('D')}
+    />
   );
 };
 
 export default Calendar;
 
 const StyleCalendar = styled(Calendar1)`
-  react-calendar {
-    width: 400px;
-    max-width: 100%;
+  position: absolute;
+  top: 36%;
+  right: -1%;
+  width: 330px;
+  border: 3px solid var(--fifth-color);
+  border-radius: 20px 16px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  padding: 3px;
+
+  .react-calendar {
     background-color: #fff;
-    color: #222;
-    border-radius: 8px;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-    font-family: Arial, Helvetica, sans-serif;
-    line-height: 1.125em;
+    color: var(--fifth-color);
+  }
+  .react-calendar__navigation {
+    background: var(--primary-color);
+    border-radius: 12px 12px 0 0;
   }
   .react-calendar__navigation button {
-    color: #6f48eb;
+    color: #fff;
     min-width: 44px;
     background: none;
     font-size: 16px;
@@ -69,14 +74,14 @@ const StyleCalendar = styled(Calendar1)`
     border-radius: 6px;
   }
   .react-calendar__tile--now {
-    background: #6f48eb33;
+    background: #9e91e233;
     border-radius: 6px;
     font-weight: bold;
-    color: #6f48eb;
+    color: #000000;
   }
   .react-calendar__tile--now:enabled:hover,
   .react-calendar__tile--now:enabled:focus {
-    background: #6f48eb33;
+    background: #5048eb4b;
     border-radius: 6px;
     font-weight: bold;
     color: #6f48eb;
@@ -87,7 +92,7 @@ const StyleCalendar = styled(Calendar1)`
   }
   .react-calendar__tile--active {
     background: #6f48eb;
-    border-radius: 6px;
+    border-radius: 4px;
     font-weight: bold;
     color: white;
   }
@@ -100,24 +105,24 @@ const StyleCalendar = styled(Calendar1)`
     background-color: #f8f8fa;
   }
   .react-calendar__tile--range {
-    background: #e2e2ff;
-    color: #6f48eb;
-    border-radius: 0;
+    background: #f9fdc2;
+    color: #000000;
+    /* border-bottom-left-radius: 20px; */
   }
   .react-calendar__tile--rangeStart {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
     border-top-left-radius: 6px;
     border-bottom-left-radius: 6px;
-    background: #6f48eb;
+    background: var(--third-color);
     color: white;
   }
   .react-calendar__tile--rangeEnd {
     border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+    border-bottom-left-radius: 6px;
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
-    background: #6f48eb;
+    background: var(--third-color);
     color: white;
   }
 `;

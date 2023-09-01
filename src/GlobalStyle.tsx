@@ -29,7 +29,7 @@ ${reset}
     --primary-color: #eb455f; // King Pink
     --second-color: #2B3467; // Melange Navy
     --third-color: #E2EE32; // Lemon Yellow
-    --fourth-color: #FFFDED; // Cream
+    --fourth-color: #FFFDED; // Cream 
     --fifth-color: #333333; // Deep Dark Gray
     --sixth-color: #ffb4bf; // Hover Primary color
   }
