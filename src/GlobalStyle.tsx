@@ -143,7 +143,7 @@ button {
   ::-webkit-scrollbar-thumb {
     background-color: var(--sixth-color);
     border-radius: 5px;
-
+  }
 
   ::-webkit-scrollbar-thumb:hover {
     background-color: var(--primary-color);
