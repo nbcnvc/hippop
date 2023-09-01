@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import Login from '../../pages/Login';
 import { setUserStore, useCurrentUser } from '../../store/userStore';
@@ -191,10 +191,13 @@ function Header() {
 export default Header;
 
 const HeaderTag = styled.header`
+  position: fixed;
   background-color: var(--primary-color);
   color: white;
   width: 100%;
   height: 80px;
+  top: 0;
+  z-index: 5;
   .header-wrapper {
     margin: 0 auto;
     height: 100%;
@@ -307,8 +310,8 @@ const HeaderTag = styled.header`
       }
     }
     .alarm {
-      position: relative;
-      margin-left: 15px;
+      position: absolute;
+      margin-left: 170px;
       img {
         position: absolute;
         top: -17%;

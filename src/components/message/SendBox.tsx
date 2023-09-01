@@ -118,13 +118,16 @@ const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) 
                     ) : (
                       <>{currentUser && <Img src={message.to.avatar_url} alt="User Avatar" />}</>
                     )}
-                    <div>{message.to.name}</div>
+                    <h4>{message.to.name}</h4>
                   </ProfileBox>
-                  <div> {moment(message.created_at).format('YYYY-MM-DD HH:mm:ss')}</div>
-                  <div> {message.isRead ? <div>상대방이 읽었습니다.</div> : <div>상대방이 읽지 않았습니다.</div>}</div>
+                  <p> {moment(message.created_at).format('YYYY-MM-DD HH:mm:ss')}</p>
+                  <div>
+                    {' '}
+                    {message.isRead ? <span>상대방이 읽었습니다.</span> : <span>상대방이 읽지 않았습니다.</span>}
+                  </div>
                 </div>
-                <div>{message.isRead ? <DraftsOutlinedIcon /> : <EmailOutlinedIcon />}</div>
-                <button onClick={() => handleDeleteMsg(message)} style={{ width: '50px' }}>
+                <h5>{message.isRead ? <DraftsOutlinedIcon /> : <EmailOutlinedIcon />}</h5>
+                <button className="deleBtn" onClick={() => handleDeleteMsg(message)} style={{ width: '50px' }}>
                   삭제
                 </button>
               </Wrapper>
@@ -141,16 +144,48 @@ export default SendBox;
 const Container = styled.div`
   position: relative;
   overflow-y: auto;
+  width: 100%;
 `;
 
 const Wrapper = styled.div`
-  width: 490px;
   display: flex;
   justify-content: space-between;
+  background-color: var(--fourth-color);
   align-items: center;
-
-  padding: 5px;
-  border: 1px solid black;
+  height: 50px;
+  padding-right: 8px;
+  border-radius: 14px;
+  margin: 6px 0 0;
+  color: var(--fifth-color);
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, padding-right 0.3s ease;
+  &:hover {
+    padding-right: 0px;
+    background-color: var(--sixth-color);
+  }
+  &:active {
+    transform: scale(0.988);
+  }
+  h4 {
+    margin-left: 8px;
+    width: 100px;
+    text-align: center;
+  }
+  span {
+    display: block;
+    width: 200px;
+    text-align: center;
+  }
+  .deleBtn {
+    height: 50px !important;
+    font-size: 14px;
+    border-radius: 0 14px 14px 0;
+    border-bottom: 4px solid var(--fifth-color);
+  }
+  p {
+    width: 200px;
+    text-align: center;
+  }
 `;
 
 const ProfileBox = styled.div`
@@ -160,8 +195,9 @@ const ProfileBox = styled.div`
 `;
 
 const Img = styled.img`
-  width: 30px;
-  height: 30px;
+  margin-left: 10px;
+  width: 40px;
+  height: 40px;
   object-fit: cover;
   border-radius: 50%;
 `;

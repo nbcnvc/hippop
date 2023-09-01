@@ -58,7 +58,12 @@ const Main = () => {
 
   return (
     <MainContainer>
-      <h4>당신에게 맞는 힙한 팝업스토어를 찾아보세요! xD</h4>
+      <header style={{ margin: '8rem' }}>
+        <img src="/asset/mainBanner.png" alt="Banner-img" />
+        <h4 style={{ textAlign: 'center' }}>
+          <span>당신</span>에게 맞는 <span>힙한 팝업스토어</span>를 찾아보세요! XD
+        </h4>
+      </header>
       <Masonry columns={3} spacing={2} sx={{ width: '60%', margin: '0 auto' }}>
         {allStores.map((store, index) => (
           <Link to={`detail/${store.id}`} key={store.id} ref={index === allStores.length - 1 ? observerRef : null}>
@@ -74,7 +79,33 @@ const Main = () => {
 export default Main;
 
 const MainContainer = styled.div`
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    img {
+      margin: 0 auto;
+      max-width: 1400px;
+      width: 60%;
+      transition: filter 0.3s ease;
+      &:hover {
+        filter: brightness(1.4);
+      }
+    }
+    h4 {
+      font-size: 1.1vw;
+      margin-top: 2rem;
+      transition: transform 0.3s ease;
+      &:hover {
+        transform: scale(0.98);
+      }
+    }
+    span {
+      color: var(--primary-color);
+    }
+  }
 `;

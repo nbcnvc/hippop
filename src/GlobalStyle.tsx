@@ -115,9 +115,10 @@ a {
 }
 
 button {
-    // background-color: #eb455f;
+    font-family: 'Pretendard-Regular';
+    background-color: var(--primary-color);
     border: 2px solid var(--fifth-color);
-    border-bottom: 4px solid var(--fifth-color);
+    border-bottom: 6px solid var(--fifth-color);
     border-radius: 18px;
     color: white;
     font-size: 16px;
@@ -134,6 +135,29 @@ button {
     }
   }
 
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    padding: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--sixth-color);
+    border-radius: 5px;
+
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--primary-color);
+  }
+
+  /* 수평 스크롤바 스타일링 */
+  ::-webkit-scrollbar-track {
+    height: 6px;
+    background-color: transparent;
+  }
+  ::-webkit-scrollbar-track-piece {
+    height: 6px;  
+    background-color: transparent; /* 스크롤바 트랙 배경색 설정 */
+  }
 `;
 
 export default GlobalStyle;

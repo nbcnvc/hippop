@@ -281,7 +281,6 @@ const SearchList = ({ storeData }: SearchListProps) => {
   }
   return (
     <Container>
-      {' '}
       <TagBox>
         <TagTitle>검색 Tip</TagTitle>
         <Tag> "성수" or "제목 또는 내용" </Tag>
@@ -421,7 +420,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-top: 70px;
+  margin-top: 7rem;
 `;
 
 const TagBox = styled.div`

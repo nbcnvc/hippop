@@ -1,15 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@500&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@500&display=swap');
 * {
   font-family: 'Fira Sans', sans-serif;
-}
+} */
 .App-header {
   background-color: #f8aa7d;
 
   color: white;
 }
 
-button {
-  background-color: #eb455f;
+/* button {
+  background-color: #ffb4bf;
   border: 3px solid var(--fourth-color);
   border-radius: 4px;
   color: white;
@@ -25,4 +25,4 @@ button {
   &:active {
     transform: scale(0.95);
   }
-}
+} */
