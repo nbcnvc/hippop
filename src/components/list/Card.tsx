@@ -85,6 +85,7 @@ const CardContainer = styled.div`
   position: relative;
   border-radius: 7px;
   overflow: hidden;
+  border-radius: 18px;
 
   img {
     object-fit: cover;
@@ -106,9 +107,11 @@ const StoreInfo = styled.div`
 
 const Arrow = (props: { disabled: boolean; left?: boolean; onClick: (e: any) => void }) => {
   const disabeld = props.disabled ? ' arrow--disabled' : '';
+  const zIndex = 4;
   return (
     <svg
       onClick={props.onClick}
+      style={{ zIndex }}
       className={`arrow ${props.left ? 'arrow--left' : 'arrow--right'} ${disabeld}`}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
