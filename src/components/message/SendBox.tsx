@@ -153,14 +153,14 @@ const Wrapper = styled.div`
   background-color: var(--fourth-color);
   align-items: center;
   height: 50px;
-  // padding: 5px;
-  // border: 2px solid black;
+  padding-right: 8px;
   border-radius: 14px;
   margin: 6px 0 0;
   color: var(--fifth-color);
   cursor: pointer;
-  transition: filter 0.3s, transform 0.3s;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, padding-right 0.3s ease;
   &:hover {
+    padding-right: 0px;
     background-color: var(--sixth-color);
   }
   &:active {
@@ -168,17 +168,23 @@ const Wrapper = styled.div`
   }
   h4 {
     margin-left: 8px;
-    width: 65px;
+    width: 100px;
+    text-align: center;
   }
   span {
     display: block;
-    width: 155px;
+    width: 200px;
+    text-align: center;
   }
   .deleBtn {
     height: 50px !important;
     font-size: 14px;
     border-radius: 0 14px 14px 0;
     border-bottom: 4px solid var(--fifth-color);
+  }
+  p {
+    width: 200px;
+    text-align: center;
   }
 `;
 

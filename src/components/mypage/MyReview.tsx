@@ -43,7 +43,7 @@ const MyReview = ({ selectItems }: ReviewProps) => {
                   </div>
                 ) : (
                   <div>
-                    <img src="/asset/defaultImg.jpg" alt="Default Image" width={250} />
+                    <img src="/asset/defaultImg.png" alt="Default Image" width={250} />
                   </div>
                 )}
                 <div className="info-box">

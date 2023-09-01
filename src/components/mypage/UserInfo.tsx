@@ -11,8 +11,6 @@ import { randomFileName } from '../../hooks/useHandleImageName';
 //스타일
 import PartyModeIcon from '@mui/icons-material/PartyMode';
 //메세지
-import MyReview from '../../components/mypage/MyReview';
-import MyBookmark from '../../components/mypage/MyBookmark';
 import { useQuery } from '@tanstack/react-query';
 const UserInfo = () => {
   const navigate = useNavigate();

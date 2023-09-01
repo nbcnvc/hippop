@@ -82,17 +82,21 @@ const Container = styled.div`
 
   .boxBtn-wrapper {
     display: flex;
+
     span {
       display: flex;
-      align-items: flex-end;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-top: auto;
+      margin-left: 40px;
     }
   }
   button {
     border-radius: 20px;
     padding: 10px 0px 30px;
 
-    &:first-child {
-      margin: 0 8px;
+    &:last-child {
+      margin: 8px 0 0;
     }
   }
 `;
@@ -124,7 +128,7 @@ const BodyBox = styled.div`
   background-color: var(--fourth-color);
   border-radius: 14px;
   padding: 10px;
-  width: 370px;
+  width: 620px;
   height: 143px;
   margin-top: 10px;
 `;

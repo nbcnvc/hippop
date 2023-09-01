@@ -305,6 +305,26 @@ const MyPage = () => {
         {/* user Info tab */}
         <div className="info-wrapper">
           <div className="info-main">
+            <div className="info-inner">
+              <p>
+                <span>Welcome,</span>
+                <br />
+                {editingName ? (
+                  <input
+                    type="text"
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    style={{ width: '20%' }}
+                  />
+                ) : (
+                  currentUser?.name
+                )}
+                님의 My Page
+              </p>
+              <span>
+                <div className="user-sub-info">{currentUser?.email}</div>
+              </span>
+            </div>
             {currentUser?.avatar_url && (
               <div className="avatar-container">
                 {selectedImage ? (
@@ -339,25 +359,6 @@ const MyPage = () => {
                 )}
               </div>
             )}
-            <div className="info-inner">
-              <p>
-                Welcome,&nbsp;&nbsp;
-                {editingName ? (
-                  <input
-                    type="text"
-                    value={newName}
-                    onChange={(e) => setNewName(e.target.value)}
-                    style={{ width: '20%' }}
-                  />
-                ) : (
-                  currentUser?.name
-                )}
-                님의 My Page
-              </p>
-              <span>
-                <div className="user-sub-info">{currentUser?.email}</div>
-              </span>
-            </div>
           </div>
           <div className="btn-mother">
             {sublistData && (
@@ -391,12 +392,14 @@ const MyPage = () => {
         </div>
         {/* message tab */}
         <div className="alram-mother">
-          <button name="받은 쪽지함" onClick={ClickToggleBox}>
-            받은 쪽지함
-          </button>
-          <button className="send-btn" name="보낸 쪽지함" onClick={ClickToggleBox}>
-            보낸 쪽지함
-          </button>
+          <div className="btn-wrapper">
+            <button name="받은 쪽지함" onClick={ClickToggleBox}>
+              받은 쪽지함
+            </button>
+            <button className="send-btn" name="보낸 쪽지함" onClick={ClickToggleBox}>
+              보낸 쪽지함
+            </button>
+          </div>
           <div className="alram-wrapper">
             {toggleMsgBox === '받은 쪽지함' ? (
               <ReceiveBox toggleMsgBox={toggleMsgBox} setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
@@ -420,20 +423,22 @@ const MyPage = () => {
             </p>
           )}
         </h3>
-        <button
-          data-section="myReview"
-          onClick={handleSectionChange}
-          className={activeSection === 'myReview' ? 'active' : ''}
-        >
-          나의 게시글
-        </button>
-        <button
-          data-section="myBookmark"
-          onClick={handleSectionChange}
-          className={activeSection === 'myBookmark' ? 'active' : ''}
-        >
-          나의 북마크
-        </button>
+        <div className="btns-wrapper">
+          <button
+            data-section="myReview"
+            onClick={handleSectionChange}
+            className={activeSection === 'myReview' ? 'active' : ''}
+          >
+            나의 게시글
+          </button>
+          <button
+            data-section="myBookmark"
+            onClick={handleSectionChange}
+            className={activeSection === 'myBookmark' ? 'active' : ''}
+          >
+            나의 북마크
+          </button>
+        </div>
         {/* Review tab */}
         {activeSection === 'myReview' && <MyReview selectItems={selectItems || []} />}
         {/* Bookmark tab */}
@@ -480,19 +485,25 @@ const MyPage = () => {
 export default MyPage;
 const MypageTag = styled.div`
   max-width: 1920px;
+  min-width: 800px;
   margin: 0 auto;
-  margin-top: 1rem;
+  margin-top: 10rem;
   width: 50%;
   header {
     margin-top: 4rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 20px;
 
     .avatar-container {
       position: relative;
-      width: 25%;
-      margin-top: 2rem;
+      margin: 0 auto;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 0.5rem;
       .circle-bg {
         background-color: white;
       }
@@ -509,7 +520,16 @@ const MypageTag = styled.div`
         width: 250px;
         position: absolute;
         display: flex;
-
+        // input {
+        //   position: relative;
+        //   left: -10px;
+        // }
+        .confirm {
+          position: absolute;
+          left: 85px;
+          top: 60px;
+          padding: 0 0;
+        }
         button {
           border-radius: 12px;
           width: 80px;
@@ -534,15 +554,16 @@ const MypageTag = styled.div`
       width: 100px;
       background: white;
       // left: 400px;
-      margin-left: 156px;
-      top: 280px;
+      margin-left: -80px;
+      top: 60px;
       border-radius: 8px;
+      box-shadow: 4px 4px 10px rgb(87, 87, 87);
     }
     li {
       padding: 5px 10px;
       &:hover {
         border-radius: 8px;
-        background-color: #f1f1f1;
+        background-color: var(--sixth-color);
       }
     }
     h5 {
@@ -589,7 +610,7 @@ const MypageTag = styled.div`
       transform: scale(0.9);
     }
     .info-wrapper {
-      width: 35%;
+      width: 25%;
       height: 300px;
       padding: 1rem 2rem;
       border: 3px solid var(--fifth-color);
@@ -598,19 +619,20 @@ const MypageTag = styled.div`
       .info-main {
         margin: 1rem 0;
         display: flex;
-        justify-content: flex-start;
+        flex-direction: column;
+        // justify-content: flex-start;
         align-items: flex-end;
       }
       .info-inner {
         width: 100%;
         display: flex;
         flex-direction: column;
-        margin-left: 30px;
-        margin-bottom: 6px;
+        justify-content: center;
+        align-items: center;
         p {
           font-size: 20px;
           font-weight: bold;
-          text-align: left;
+          text-align: center;
         }
         span {
           font-size: 18px;
@@ -625,7 +647,12 @@ const MypageTag = styled.div`
         }
       }
       .btn-mother {
-        margin-top: 4.5rem;
+        margin-top: 0.5rem;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        position: relative;
+
         button {
           border-radius: 22px;
           padding: 14px 20px;
@@ -640,12 +667,17 @@ const MypageTag = styled.div`
         }
       }
     }
+    .btn-wrapper {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
     .alram-mother {
       padding: 1rem 2rem;
       border: 3px solid var(--fifth-color);
       border-radius: 18px;
       background-color: white;
-      width: 50%;
+      width: 65%;
       height: 300px;
 
       .alram-wrapper {
@@ -678,12 +710,15 @@ const MypageTag = styled.div`
 
     margin-right: 10px;
   }
+  .btns-wrapper {
+    width: 100%;
+  }
   button.active {
     background-color: var(--primary-color);
   }
   h3 {
     text-align: center;
-    margin: 4rem 0;
+    margin: 5rem 0;
     font-size: 28px;
 
     p {
@@ -728,7 +763,7 @@ const MypageTag = styled.div`
         border: 6px solid var(--primary-color);
       }
       &:active {
-        background-color: var(--sixth-color);
+        background-color: rgb(179, 179, 190);
         transform: scale(0.98);
       }
       img {
@@ -739,7 +774,8 @@ const MypageTag = styled.div`
         border: 3px solid var(--fifth-color);
       }
       .info-box {
-        width: 330px;
+        width: 95%;
+        margin: 0 auto;
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
@@ -748,6 +784,7 @@ const MypageTag = styled.div`
       button {
         background-color: var(--second-color);
         color: white;
+        margin-right: 0;
       }
     }
   }

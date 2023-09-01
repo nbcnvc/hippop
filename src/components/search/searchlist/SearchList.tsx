@@ -4,19 +4,20 @@ import { useNavigate } from 'react-router-dom';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 // 컴포넌트
-import SearchCalendar from './SearchCalendar';
+
 // api
-import { fetchStoreIdCount } from '../../api/bookmark';
-import { getSearchStore } from '../../api/store';
+import { fetchStoreIdCount } from '../../../api/bookmark';
+import { getSearchStore } from '../../../api/store';
 // 라이브러리
 import moment from 'moment';
 import _debounce from 'lodash/debounce';
 // 타입
-import { FetchsStore, SearchListProps, Store } from '../../types/types';
+import { FetchsStore, SearchListProps, Store } from '../../../types/types';
 //스타일
 import { styled } from 'styled-components';
 // mui
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import SearchCalendar from '../searchcalander/SearchCalendar';
 
 const SearchList = ({ storeData }: SearchListProps) => {
   const navigate = useNavigate();
@@ -220,7 +221,6 @@ const SearchList = ({ storeData }: SearchListProps) => {
   }
   return (
     <Container>
-      {' '}
       <TagBox>
         <TagTitle>검색 Tip</TagTitle>
         <Tag> "성수" or "제목 또는 내용" </Tag>
@@ -330,13 +330,12 @@ const SearchList = ({ storeData }: SearchListProps) => {
 };
 
 export default SearchList;
-
 const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  margin-top: 70px;
+  margin-top: 7rem;
 `;
 
 const TagBox = styled.div`
