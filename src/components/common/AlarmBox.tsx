@@ -71,7 +71,7 @@ const AlarmBox = ({ alarms }: AlarmBoxProps) => {
     }
     // 쪽지
     if (alarm.ctg_index === 3) {
-      return navigate(`/mypage/${alarm.targetUserId}`);
+      return navigate(`/yourpage/${alarm.targetUserId}`);
     }
   };
 
