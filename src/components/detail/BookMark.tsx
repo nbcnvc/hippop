@@ -3,6 +3,8 @@ import React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 // api
 import { fetchAllBookMark, toggleBookMark } from '../../api/bookmark';
+//store
+import { useCurrentUser } from '../../store/userStore';
 // 타입
 import { Bookmark } from '../../types/types';
 // props타입
@@ -10,10 +12,9 @@ import { CalendarProps } from '../../types/props';
 // 스타일
 import { styled } from 'styled-components';
 // 이미지
-import oBookMark from '../../images/obookmark.png';
-import xBookMark from '../../images/xbookmark.png';
-import { useCurrentUser } from '../../store/userStore';
 
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 const BookMark = ({ storeData }: CalendarProps) => {
   // 북마크 전체 조회
   const { data: bookMark, isLoading, isError } = useQuery(['bookMark'], () => fetchAllBookMark());
@@ -67,14 +68,14 @@ const BookMark = ({ storeData }: CalendarProps) => {
     <>
       {CountMyBookMark !== undefined && (
         <>
-          {CountTotalBookMark} /
+          {/* {CountTotalBookMark} / */}
           {CountMyBookMark > 0 ? (
             <BookMarkBtn onClick={onClickToggle}>
-              <Img src={oBookMark} alt="o" />
+              <BookMarkOn sx={{ fontSize: 50 }} />
             </BookMarkBtn>
           ) : (
             <BookMarkBtn onClick={onClickToggle}>
-              <Img src={xBookMark} alt="x" />
+              <BookMarkOff sx={{ fontSize: 50 }} />
             </BookMarkBtn>
           )}
         </>
@@ -85,13 +86,16 @@ const BookMark = ({ storeData }: CalendarProps) => {
 
 export default BookMark;
 
-const Img = styled.img`
-  width: 30px;
-  height: 30px;
+const BookMarkBtn = styled.div`
+  color: #2b3467;
 `;
-const BookMarkBtn = styled.button`
-  padding: 0;
-  margin: 0;
-  border: none;
-  background: none;
+
+const BookMarkOn = styled(BookmarkIcon)`
+  font-size: large;
+  cursor: pointer;
+`;
+
+const BookMarkOff = styled(TurnedInNotIcon)`
+  font-size: large;
+  cursor: pointer;
 `;
