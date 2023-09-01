@@ -138,7 +138,7 @@ const StoreName = styled.div`
   text-align: center;
   line-height: 1.2;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 500;
   height: 30px;
   margin: 10px 15px;
 `;

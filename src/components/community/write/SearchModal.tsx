@@ -50,6 +50,7 @@ const SearchModal = ({
   // 검색 결과 리셋
   const ResetResult = () => {
     setResult(null);
+    setKeyword('');
   };
 
   // 팝업스토어 선택
@@ -168,7 +169,7 @@ const ModalContainer = styled.div`
   width: 100%;
   height: 100%;
   position: fixed;
-  z-index: 2;
+  z-index: 9;
   top: 0;
   left: 0;
   backdrop-filter: blur(5px);
