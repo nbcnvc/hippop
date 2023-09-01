@@ -125,7 +125,7 @@ body {
 
     .react-datepicker__day--outside-month {
     cursor: default;
-    color: gray; // 해당 달이 아니면 날짜 색상 변경해서 구분해주었다
+    color: gray; // 해당 달이 아니면 날짜 색상 변경해서 구분해
   }
   }
 }
