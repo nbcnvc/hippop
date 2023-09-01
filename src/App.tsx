@@ -11,6 +11,7 @@ const queryClient = new QueryClient();
 
 function App() {
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
+
   const currentUser = useCurrentUser();
   useEffect(() => {
     supabase.auth.onAuthStateChange(async (event, session) => {

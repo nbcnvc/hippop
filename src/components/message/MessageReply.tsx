@@ -8,6 +8,8 @@ import { MessageType } from '../../types/types';
 import { MessageReplyProps } from '../../types/props';
 // 스타일
 import { styled } from 'styled-components';
+// mui
+import SendSharpIcon from '@mui/icons-material/SendSharp';
 
 const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
   const [body, setBody] = useState<string>('');
@@ -41,35 +43,48 @@ const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
 
   // 모달 닫기
   const closeReply = () => {
+    window.confirm('쪽지보내기 정말 취소하시겠어요?');
     setOpenReply(false);
   };
 
   return (
     <Container>
       <Wrapper>
-        <button onClick={closeReply}>창닫기</button>
-        <ProfileBox>
-          발신자:
-          {currentUser?.avatar_url && currentUser.avatar_url.startsWith('profile/') ? (
-            <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser?.avatar_url}`} alt="User Avatar" />
-          ) : (
-            <>{currentUser && <Img src={currentUser?.avatar_url} alt="User Avatar" />}</>
-          )}
-          <div>{currentUser?.name}</div>
-        </ProfileBox>
-        <ProfileBox>
-          수신자:
-          {sendMsgUser?.to.avatar_url && sendMsgUser?.to.avatar_url.startsWith('profile/') ? (
-            <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${sendMsgUser?.to.avatar_url}`} alt="User Avatar" />
-          ) : (
-            <>{currentUser && <Img src={sendMsgUser?.to.avatar_url} alt="User Avatar" />}</>
-          )}
-          <div>{sendMsgUser?.to.name}</div>
-        </ProfileBox>
-        <form onSubmit={() => handleSendMessage()}>
-          <Input value={body} onChange={handleBodyChange} placeholder="전달할 내용을 입력해주세요" />
-          <button>쪽지 보내기</button>
-        </form>
+        <TopTitle>팝업메이트에게 답장하는 중...</TopTitle>
+        <UserInfo>
+          <SenderInfoBox>
+            {currentUser?.avatar_url && currentUser.avatar_url.startsWith('profile/') ? (
+              <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser?.avatar_url}`} alt="User Avatar" />
+            ) : (
+              <>{currentUser && <Img src={currentUser?.avatar_url} alt="User Avatar" />}</>
+            )}
+            <Name>{currentUser?.name}</Name>
+          </SenderInfoBox>
+
+          <SendIconBox>
+            <SendSharpIcon />
+          </SendIconBox>
+          <RecieverInfoBox>
+            {sendMsgUser?.to.avatar_url && sendMsgUser?.to.avatar_url.startsWith('profile/') ? (
+              <Img
+                src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${sendMsgUser?.to.avatar_url}`}
+                alt="User Avatar"
+              />
+            ) : (
+              <>{currentUser && <Img src={sendMsgUser?.to.avatar_url} alt="User Avatar" />}</>
+            )}
+            <Name>{sendMsgUser?.to.name}</Name>
+          </RecieverInfoBox>
+        </UserInfo>
+        <>
+          <Form onSubmit={() => handleSendMessage()}>
+            <Textarea value={body} onChange={handleBodyChange} placeholder="전달할 내용을 입력해주세요" />
+            <ButtonBox>
+              <SendBtn>보내기</SendBtn>
+              <CancelBtn onClick={closeReply}>취소</CancelBtn>
+            </ButtonBox>
+          </Form>
+        </>
       </Wrapper>
     </Container>
   );
@@ -78,8 +93,8 @@ const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
 export default MessageReply;
 
 const Container = styled.div`
-  position: fixed;
-  z-index: 1;
+  position: absolute;
+  z-index: 0;
   top: 0;
   left: 0;
   width: 100%;
@@ -92,34 +107,132 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
-  background-color: #fff;
-  padding: 20px;
-  width: 500px;
-  height: 300px;
-  border-radius: 10px;
   position: relative;
-  overflow: auto;
+  background-color: white;
+  width: 500px;
+  height: 530px;
+
+  border: 3px solid black;
+  border-radius: 18px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+const TopTitle = styled.span`
+  margin-bottom: 30px;
+
+  font-size: 20px;
+  font-weight: bold;
 `;
 
-const ProfileBox = styled.div`
+const UserInfo = styled.div`
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  border: 1px solid black;
-  width: 472px;
+  margin-bottom: 30px;
+  width: 400px;
+`;
 
-  margin-top: 6px;
+const SenderInfoBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const SendIconBox = styled.div`
+  position: absolute;
+  top: 20.2%;
+  left: 40%;
+  width: 100px;
+  height: 50px;
+  margin-left: -50px;
+  /* background-color: #000; */
+  color: #333333;
+  /* 애니메이션 이름 */
+  animation-name: moveRightToLeft; /* 변경된 애니메이션 이름 적용 */
+  animation-duration: 2s;
+  animation-iteration-count: infinite; /* 무한 반복 */
+  animation-direction: alternate;
+  animation-fill-mode: forwards;
+
+  @-webkit-keyframes moveRightToLeft {
+    0% {
+      left: 45%;
+    }
+    100% {
+      left: 65%;
+    }
+  }
+`;
+
+const RecieverInfoBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Form = styled.form`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  margin-top: 10px;
+`;
+
+const Textarea = styled.textarea`
+  width: 400px;
+  height: 200px;
+
+  border: 2px solid black;
+  border-radius: 18px;
+
+  padding: 10px;
 `;
 
 const Img = styled.img`
-  width: 30px;
-  height: 30px;
+  width: 50px;
+  height: 50px;
   object-fit: cover;
   border-radius: 50%;
+  border: 2px solid black;
 `;
 
-const Input = styled.textarea`
-  width: 470px;
-  height: 200px;
-  border: 1px solid black;
-  margin-top: 6px;
+const Name = styled.span`
+  font-weight: bold;
+  font-size: 20px;
+
+  margin-left: 15px;
+`;
+
+const ButtonBox = styled.div`
+  margin-top: 35px;
+  display: flex;
+`;
+
+const SendBtn = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 144px;
+  height: 42px;
+  padding: 10px 20px;
+  margin-right: 20px;
+`;
+
+const CancelBtn = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 144px;
+  height: 42px;
+  padding: 10px 20px;
+  background-color: white;
+  color: black;
+
+  margin-left: 20px;
 `;

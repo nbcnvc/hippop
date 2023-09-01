@@ -38,6 +38,7 @@ export interface PostType {
   title: string;
   body: any;
   isDeleted: boolean;
+  store: { title: string };
 }
 
 export interface NewPost {
@@ -187,4 +188,8 @@ export interface MessageType {
 export interface UserMsgType {
   avatar_url?: string;
   name?: string;
+}
+
+export interface ReviewProps {
+  selectItems: PostType[];
 }

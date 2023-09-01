@@ -1,11 +1,14 @@
-import { styled } from 'styled-components';
+import SearchDefault from './SearchDefault';
+
 import { useQuery } from '@tanstack/react-query';
+import { useLocation } from 'react-router-dom';
 
 import { SearchModalProps } from '../../../types/props';
 import { Store } from '../../../types/types';
 import { fetchStoreData } from '../../../api/store';
-import SearchDefault from './SearchDefault';
-import { useEffect } from 'react';
+
+import { styled } from 'styled-components';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 const SearchModal = ({
   keyword,
@@ -18,6 +21,7 @@ const SearchModal = ({
   result,
   setResult
 }: SearchModalProps) => {
+  const { pathname } = useLocation();
   const onChangeKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
   };
@@ -86,12 +90,22 @@ const SearchModal = ({
       {searchModal && (
         <ModalContainer>
           <ModalBox>
-            <h1>팝업스토어 검색 모달입니다.</h1>
-            <button onClick={closeSearch}>닫기</button>
+            <ButtonBox>
+              <CloseRoundedIcon onClick={closeSearch} />
+            </ButtonBox>
+            {pathname === '/review' && (
+              <Title>
+                <TitleLine>리뷰 남기기 :)</TitleLine> - 어떤 팝업스토어를 다녀오셨나요?
+              </Title>
+            )}
+            {pathname === '/mate' && (
+              <Title>
+                <TitleLine>팝업메이트 구하기 :)</TitleLine> - 어떤 팝업스토어에 가실 예정인가요?
+              </Title>
+            )}
             {/* 검색 입력창 */}
-            <div style={{ width: '95%', border: '1px solid black', padding: '20px' }}>
-              <div>어떤 팝업스토어를 찾으시나요?</div>
-              <input
+            <SearchBox>
+              <Input
                 value={keyword}
                 onChange={onChangeKeyword}
                 onKeyPress={(e) => {
@@ -100,31 +114,32 @@ const SearchModal = ({
                   }
                 }}
                 placeholder="팝업스토어를 검색하세요."
-                style={{ width: '30%' }}
               />
               <button className="custom-btn" onClick={searchButton}>
                 검색
               </button>
-            </div>
+            </SearchBox>
             {/* 검색 결과창 */}
             {result ? (
-              <div style={{ width: '95%', border: '1px solid black', padding: '20px' }}>
-                <h1>검색 결과입니다.</h1>
+              <ResultBox>
                 {result.length > 0 ? (
-                  <GridContainer>
-                    {result?.map((store) => {
-                      return (
-                        <div key={store.id} onClick={() => selectStore(store)}>
-                          <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-                          <div>{store.title}</div>
-                        </div>
-                      );
-                    })}
-                  </GridContainer>
+                  <>
+                    <Comment>{result.length}개의 검색 결과가 있습니다.</Comment>
+                    <GridContainer>
+                      {result?.map((store) => {
+                        return (
+                          <Card key={store.id} onClick={() => selectStore(store)}>
+                            <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                            <StoreName>{store.title}</StoreName>
+                          </Card>
+                        );
+                      })}
+                    </GridContainer>
+                  </>
                 ) : (
-                  <div>검색 결과가 없습니다.</div>
+                  <Comment>검색 결과가 없습니다.</Comment>
                 )}
-              </div>
+              </ResultBox>
             ) : (
               <SearchDefault
                 setId={setId}
@@ -143,45 +158,114 @@ const SearchModal = ({
 export default SearchModal;
 
 const ModalContainer = styled.div`
+  width: 100%;
+  height: 100%;
   position: fixed;
   z-index: 1;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  backdrop-filter: blur(5px);
   background-color: rgb(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(8px);
 `;
 
 const ModalBox = styled.div`
-  background-color: #fff;
-  padding: 20px;
   width: 800px;
-  height: 800px;
-  border-radius: 10px;
+  height: 720px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 18px;
+  border: 3px solid var(--fifth-color);
   position: relative;
 
   .custom-btn {
+    width: 100px;
     background-color: var(--second-color);
     border-radius: 0 18px 18px 0;
-    padding: 4px 16px;
-    font-size: 12px;
+    padding: 8.5px 16px;
+    font-size: 14px;
+    font-weight: 700;
   }
+`;
+
+const ButtonBox = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const Title = styled.div`
+  font-size: 18px;
+  font-weight: 700;
+  margin: 20px 25px 25px 25px;
+`;
+
+const TitleLine = styled.span`
+  padding: 2px;
+  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+`;
+
+const SearchBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 10px;
+`;
+
+const Input = styled.input`
+  width: 630px;
+  height: 32px;
+  padding: 2px 15px;
+  outline: none;
+  border-radius: 18px 0 0 18px;
+  border: 2px solid var(--fifth-color);
+`;
+
+const ResultBox = styled.div`
+  height: 550px;
+  margin: 20px;
+  overflow: scroll;
+`;
+
+const Comment = styled.div`
+  font-weight: 600;
+  margin: 10px;
 `;
 
 const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 한 줄에 두 개의 열 */
-  gap: 10px; /* 열 사이의 간격 조정 */
+  grid-template-columns: repeat(3, 1fr); /* 한 줄에 두 개의 열 */
+  gap: 15px; /* 열 사이의 간격 조정 */
   max-width: 800px; /* 그리드가 너무 넓어지는 것을 제한 */
   margin: 0 auto; /* 가운데 정렬 */
 `;
 
+const Card = styled.div`
+  width: 230px;
+  border-radius: 18px;
+  border: 2px solid var(--fifth-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Img = styled.img`
-  width: 180px;
-  height: 220px;
+  width: 210px;
+  height: 175px;
+  margin-top: 10px;
   object-fit: cover;
+  border-radius: 10px;
+`;
+
+const StoreName = styled.div`
+  display: flex;
+  align-items: center;
+  text-align: center;
+  line-height: 1.2;
+  font-size: 14px;
+  font-weight: 500;
+  height: 30px;
+  padding: 10px 15px;
 `;

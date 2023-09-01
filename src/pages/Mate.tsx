@@ -7,6 +7,8 @@ import { useState } from 'react';
 import { Store } from '../types/types';
 import { useCurrentUser } from '../store/userStore';
 
+import { styled } from 'styled-components';
+
 const Mate = () => {
   const [writeModal, setWriteModal] = useState<boolean>(false);
   const [searchModal, setSearchModal] = useState<boolean>(false);
@@ -25,13 +27,13 @@ const Mate = () => {
   };
 
   return (
-    <>
-      <div style={{ fontSize: '30px', fontWeight: 'bold', textAlign: 'center', padding: '20px' }}>Mate</div>
-      <div style={{ margin: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <button onClick={searcButton} style={{ float: 'left' }}>
-          글 작성
-        </button>
-      </div>
+    <Layout>
+      <TitleBox>
+        <Title>같이 팝업스토어 가실 분! XD</Title>
+      </TitleBox>
+      <ButtonBox>
+        <Button onClick={searcButton}>팝업메이트 찾기</Button>
+      </ButtonBox>
       <SearchModal
         keyword={keyword}
         setKeyword={setKeyword}
@@ -53,8 +55,44 @@ const Mate = () => {
         setResult={setResult}
       />
       <Posts />
-    </>
+    </Layout>
   );
 };
 
 export default Mate;
+
+const Layout = styled.div`
+  min-width: 900px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const TitleBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Title = styled.h1`
+  color: var(--fifth-color);
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 400;
+  margin: 70px;
+  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+`;
+
+const ButtonBox = styled.div`
+  min-width: 900px;
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const Button = styled.button`
+  width: 150px;
+  height: 40px;
+  font-weight: 700;
+  margin-bottom: 5px;
+`;

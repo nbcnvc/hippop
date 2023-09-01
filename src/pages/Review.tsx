@@ -7,6 +7,8 @@ import { useState } from 'react';
 import { Store } from '../types/types';
 import { useCurrentUser } from '../store/userStore';
 
+import { styled } from 'styled-components';
+
 const Review = () => {
   const [writeModal, setWriteModal] = useState<boolean>(false);
   const [searchModal, setSearchModal] = useState<boolean>(false);
@@ -26,11 +28,13 @@ const Review = () => {
   };
 
   return (
-    <>
-      <h1 style={{ fontSize: '30px', textAlign: 'center', padding: '20px' }}>Review</h1>
-      <div style={{ margin: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <button onClick={searcButton}>글 작성</button>
-      </div>
+    <Layout>
+      <TitleBox>
+        <Title>힙팝메이트들의 생생한 리뷰들 :)</Title>
+      </TitleBox>
+      <ButtonBox>
+        <Button onClick={searcButton}>후기 작성하기</Button>
+      </ButtonBox>
       <SearchModal
         keyword={keyword}
         setKeyword={setKeyword}
@@ -52,8 +56,45 @@ const Review = () => {
         setResult={setResult}
       />
       <Posts />
-    </>
+    </Layout>
   );
 };
 
 export default Review;
+
+const Layout = styled.div`
+  min-width: 900px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const TitleBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Title = styled.h1`
+  color: var(--fifth-color);
+  font-size: 28px;
+  font-style: normal;
+  font-weight: 400;
+  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+  margin: 70px;
+  padding-bottom: 5px;
+`;
+
+const ButtonBox = styled.div`
+  min-width: 900px;
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const Button = styled.button`
+  width: 150px;
+  height: 40px;
+  font-weight: 700;
+  margin-bottom: 5px;
+`;

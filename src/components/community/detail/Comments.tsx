@@ -75,6 +75,9 @@ const Comments = ({ postId }: CommentProps) => {
     if (!body) {
       return alert('댓글을 입력해주세요.');
     }
+    if (body.length > 50) {
+      return alert('댓글은 50글자 미만으로 입력해주세요.');
+    }
     // 새로운 댓글 객체 선언
     const newComment = {
       user_id: currentUser?.id,
@@ -135,11 +138,11 @@ const Comments = ({ postId }: CommentProps) => {
     return <div>오류가 발생했습니다.</div>;
   }
   return (
-    <>
+    <Layout>
       {/* 댓글 입력창 */}
-      <div style={{ width: '1000px', border: '1px solid black', padding: '10px', margin: '10px' }}>
-        댓글 :{' '}
-        <input
+      <CommentWrite>
+        <Title>댓글</Title>
+        <Input
           value={body}
           onChange={onChangeBody}
           onKeyPress={(e) => {
@@ -148,46 +151,164 @@ const Comments = ({ postId }: CommentProps) => {
             }
           }}
           placeholder="댓글을 입력해주세요."
-          style={{ width: '50%' }}
         />
-        <button onClick={createButton}>등록</button>
-      </div>
+        <button className="custom-btn" onClick={createButton}>
+          등록
+        </button>
+      </CommentWrite>
       {/* 댓글 목록 */}
-      {selectComments?.map((comment) => {
-        return (
-          <div key={comment.id} style={{ width: '1000px', border: '1px solid black', padding: '10px', margin: '10px' }}>
-            {comment.user.avatar_url.startsWith('profile/') ? (
-              <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${comment.user.avatar_url}`} alt="User Avatar" />
-            ) : (
-              <Img src={comment.user.avatar_url} alt="User Avatar" />
-            )}
-            <span>{comment.user.name}</span>
-            <div>작성일자: {moment(comment.created_at).format('YYYY.MM.DD HH:mm')}</div>
-            {isEditId === comment.id ? (
-              <input value={edit} onChange={onChangeEdit} style={{ width: '50%' }} />
-            ) : (
-              <div style={{ width: '50%' }}>{comment.body}</div>
-            )}
-            {currentUser?.id === comment.user_id && (
-              <>
-                <button onClick={() => deleteButton(comment.id)}>삭제</button>
-                <button onClick={() => editButton(comment)}>{isEditId ? '저장' : '수정'}</button>
-              </>
-            )}
-          </div>
-        );
-      })}
+      <CommentContainer>
+        {selectComments?.map((comment) => {
+          return (
+            <>
+              {currentUser?.id === comment.user_id && (
+                <ButtonBox>
+                  <Button onClick={() => deleteButton(comment.id)}>삭제</Button>
+                  <Button onClick={() => editButton(comment)}>{isEditId ? '저장' : '수정'}</Button>
+                </ButtonBox>
+              )}
+              <CommentBox>
+                <DateBox>
+                  <Date>{moment(comment.created_at).format('YYYY.MM.DD HH:mm')}</Date>
+                </DateBox>
+                <ProfileBox>
+                  {comment.user.avatar_url.startsWith('profile/') ? (
+                    <Img
+                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${comment.user.avatar_url}`}
+                      alt="User Avatar"
+                    />
+                  ) : (
+                    <Img src={comment.user.avatar_url} alt="User Avatar" />
+                  )}
+                  <Name>{comment.user.name}</Name>
+                </ProfileBox>
+                {isEditId === comment.id ? (
+                  <input value={edit} onChange={onChangeEdit} style={{ width: '50%' }} />
+                ) : (
+                  <Content>{comment.body}</Content>
+                )}
+              </CommentBox>
+            </>
+          );
+        })}
+      </CommentContainer>
       {/* 더보기 버튼 */}
-      {showButton && hasNextPage && <button onClick={fetchMore}>더보기</button>}
-    </>
+      {showButton && hasNextPage && <MoreButton onClick={fetchMore}>더보기</MoreButton>}
+    </Layout>
   );
 };
 
 export default Comments;
+
+const Layout = styled.div`
+  min-width: 900px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .custom-btn {
+    width: 120px;
+    background-color: var(--second-color);
+    border-radius: 0 18px 18px 0;
+    padding: 10px 16px;
+    font-size: 18px;
+    font-weight: 700;
+  }
+`;
+
+const CommentWrite = styled.div`
+  width: 900px;
+  padding: 20px 0;
+`;
+
+const Title = styled.div`
+  font-size: 18px;
+  font-weight: 700;
+  padding: 10px;
+`;
+
+const Input = styled.input`
+  width: 744px;
+  height: 40px;
+  padding: 2px 15px;
+  outline: none;
+  border-radius: 20px 0 0 20px;
+  border: 2px solid var(--fifth-color);
+`;
+
+const CommentContainer = styled.div`
+  margin-bottom: 20px;
+`;
+
+const ButtonBox = styled.div`
+  width: 900px;
+  display: flex;
+  justify-content: right;
+  margin: 5px 0px;
+`;
+
+const Button = styled.button`
+  width: 60px;
+  height: 32px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--second-color);
+  background-color: var(--third-color);
+  margin-right: 5px;
+`;
+
+const CommentBox = styled.div`
+  width: 880px;
+  padding: 10px;
+  margin: 5px 0;
+  background-color: #fff;
+  border-radius: 18px;
+  border: 2px solid var(--fifth-color);
+`;
+
+const DateBox = styled.div`
+  display: flex;
+  float: right;
+  align-items: center;
+  padding: 0 10px;
+`;
+
+const Date = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 14px 0;
+  font-size: 14px;
+`;
+
+const ProfileBox = styled.div`
+  width: 150px;
+  display: flex;
+  float: left;
+  align-items: center;
+  padding: 0 20px;
+`;
 
 const Img = styled.img`
   width: 40px;
   height: 40px;
   object-fit: cover;
   border-radius: 50%;
+`;
+
+const Name = styled.div`
+  font-weight: 600;
+  padding: 0 20px;
+`;
+
+const Content = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+`;
+
+const MoreButton = styled.button`
+  width: 100px;
+  font-weight: 600;
+  margin: 10px 0 20px 0;
 `;

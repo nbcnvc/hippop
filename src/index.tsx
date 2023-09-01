@@ -9,6 +9,7 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 document.cookie = 'crossCookie=bar; SameSite=None; Secure';
 root.render(
   // <React.StrictMode>
+  // <Context.Provider></Context.Provider>
   <DatePickerProvider>
     <App />
   </DatePickerProvider>

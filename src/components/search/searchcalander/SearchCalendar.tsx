@@ -5,7 +5,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
 import { getMonth, getYear } from 'date-fns';
 // 타입
-import { SearchCalendarProps } from '../../types/props';
+import { SearchCalendarProps } from '../../../types/props';
 // 스타일
 import { styled } from 'styled-components';
 // mui
@@ -154,7 +154,7 @@ const Container = styled.div`
 
   padding: 25px;
 
-  margin-bottom: 160px;
+  /* margin-bottom: 80px; */
 `;
 
 const StartDateBox = styled.div`

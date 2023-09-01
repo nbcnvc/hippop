@@ -10,6 +10,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCurrentUser } from '../store/userStore';
 import { deletePost, getPost } from '../api/post';
 
+import { styled } from 'styled-components';
+
 const MDetail = () => {
   const { id } = useParams();
   const postId = Number(id);
@@ -57,11 +59,22 @@ const MDetail = () => {
     return <div>오류가 발생했습니다.</div>;
   }
   return (
-    <>
+    <Layout>
+      <CategoryBox>
+        <Category>
+          <TitleLine>Mate</TitleLine>
+        </Category>
+        {currentUser?.id === post.user_id && (
+          <ButtonBox>
+            <Button onClick={() => deleteButton(post.id)} style={{ marginRight: '10px' }}>
+              삭제
+            </Button>
+            <Button onClick={editButton}>수정</Button>
+          </ButtonBox>
+        )}
+      </CategoryBox>
       {post && (
         <>
-          {/* 작성자 */}
-          {isEdit ? <></> : <Writer writer={post.user} postId={postId} />}
           {/* 글 내용 */}
           <div>
             {isEdit ? (
@@ -74,31 +87,97 @@ const MDetail = () => {
               />
             ) : (
               <>
-                {currentUser?.id === post.user_id && (
-                  <>
-                    <button onClick={() => deleteButton(post.id)}>삭제</button>
-                    <button onClick={editButton}>수정</button>
-                  </>
-                )}
-                <div
-                  className="ql-snow"
-                  style={{ width: '1000px', border: '1px solid black', padding: '10px', margin: '10px' }}
-                >
-                  <div>카테고리 : {(post.ctg_index === 1 && '팝업후기') || (post.ctg_index === 2 && '팝업메이트')}</div>
-                  <div>어떤 팝업? {post.store.title}</div>
-                  <div>작성일자 : {formatDate}</div>
-                  <div>제목 : {post.title}</div>
-                  <div className="ql-editor" dangerouslySetInnerHTML={{ __html: post.body }} />
+                <div className="ql-snow">
+                  <HeadContainer>
+                    <TextBox>
+                      <Text>{post.store.title}</Text>
+                      <Text>{formatDate}</Text>
+                    </TextBox>
+                    <Title>제목 : {post.title}</Title>
+                  </HeadContainer>
+                  <Body className="ql-editor" dangerouslySetInnerHTML={{ __html: post.body }} />
                 </div>
               </>
             )}
           </div>
+          {/* 작성자 */}
+          {isEdit ? <></> : <Writer writer={post.user} postId={postId} />}
           {/* 댓글 */}
           {isEdit ? <></> : <Comments postId={post.id} />}
         </>
       )}
-    </>
+    </Layout>
   );
 };
 
 export default MDetail;
+
+const Layout = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const CategoryBox = styled.div`
+  width: 900px;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Category = styled.h1`
+  color: var(--fifth-color);
+  margin: 30px 0 10px 0;
+  padding-bottom: 5px;
+  font-size: 24px;
+  float: left;
+  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+`;
+
+const TitleLine = styled.span`
+  padding: 2px;
+  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+`;
+
+const ButtonBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0px;
+`;
+
+const Button = styled.button`
+  width: 80px;
+  height: 35px;
+  font-weight: 600;
+  color: var(--second-color);
+  background-color: var(--third-color);
+`;
+
+const HeadContainer = styled.div`
+  width: 900px;
+`;
+
+const TextBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 30px 0 10px 0;
+  border-bottom: 2px dashed var(--fifth-color);
+`;
+
+const Text = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+`;
+
+const Title = styled.div`
+  font-size: 26px;
+  font-weight: 600;
+  float: left;
+  padding: 10px 0 30px 0;
+`;
+
+const Body = styled.div`
+  width: 900px;
+  margin: 20px 0;
+`;
