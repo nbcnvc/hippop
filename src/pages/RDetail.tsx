@@ -9,7 +9,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentUser } from '../store/userStore';
 import { deletePost, getPost } from '../api/post';
+
 import { styled } from 'styled-components';
+import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 
 const RDetail = () => {
   const { id } = useParams();
@@ -84,7 +86,10 @@ const RDetail = () => {
               <div className="ql-snow">
                 <HeadContainer>
                   <TextBox>
-                    <Text>{post.store.title}</Text>
+                    <StoreBox>
+                      <RoomRoundedIcon /> &nbsp;
+                      <Text>{post.store.title}</Text>
+                    </StoreBox>
                     <Text>{formatDate}</Text>
                   </TextBox>
                   <Title>{post.title}</Title>
@@ -148,6 +153,12 @@ const Button = styled.button`
 
 const HeadContainer = styled.div`
   width: 900px;
+`;
+
+const StoreBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const TextBox = styled.div`

@@ -1,19 +1,16 @@
-import CommentCount from './CommentCount';
-
 import moment from 'moment';
 import { useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { FetchPost, PostType } from '../../../types/types';
+import { FetchPost } from '../../../types/types';
 import { getPosts } from '../../../api/post';
 
 import { styled } from 'styled-components';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
-import NotesRoundedIcon from '@mui/icons-material/NotesRounded';
 
-const RPosts = () => {
+const MPosts = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
@@ -55,22 +52,14 @@ const RPosts = () => {
     }
   });
 
-  // 대표이미지
-  const extractImageTags = (html: string) => {
-    const imageTags = [];
-    const pattern = /<img.*?src=["'](.*?)["'].*?>/g;
-    let match;
-
-    while ((match = pattern.exec(html)) !== null) {
-      imageTags.push(match[1]);
-    }
-
-    return imageTags;
+  // 상세페이지로 넘어가기
+  const naviDetail = (post: any) => {
+    navigate(`/mdetail/${post.id}`);
   };
 
-  // 상세페이지로 넘어가기
-  const naviDetail = (post: PostType) => {
-    navigate(`/rdetail/${post.id}`);
+  // 프로필로 넘어가기
+  const naviProfile = (userId: string) => {
+    navigate(`/yourpage/${userId}`);
   };
 
   if (isLoading) {
@@ -82,37 +71,35 @@ const RPosts = () => {
   return (
     <PostContainer>
       {selectPosts?.map((post) => {
-        const imageTags = extractImageTags(post.body);
         const postText = post.body.replace(/<img.*?>/g, '');
         return (
           <PostBox key={post.id}>
-            {imageTags.length > 0 ? (
-              <div>
-                <ImageBox src={imageTags[0]} />
-              </div>
-            ) : (
-              <div>
-                <ImageBox src="/asset/defaultImg.png" alt="Default Image" width={250} height={140} />
-              </div>
-            )}
             <ContentBox>
               <Between>
                 <Between>
                   <RoomRoundedIcon /> &nbsp;
                   <Store>{post.store.title}</Store>
                 </Between>
-                <Between>
-                  <NotesRoundedIcon /> &nbsp;
-                  <CommentCount postId={post.id} />
-                </Between>
+                <Date>{moment(post?.created_at).format('YYYY.MM.DD HH:mm')}</Date>
               </Between>
               &nbsp;<Title>{post.title}</Title>
-              <Body dangerouslySetInnerHTML={{ __html: postText }} />
               <Between>
-                <Date>{moment(post?.created_at).format('YYYY.MM.DD HH:mm')}</Date>
+                <Body dangerouslySetInnerHTML={{ __html: postText }} />
                 <Button onClick={() => naviDetail(post)}>상세보기</Button>
               </Between>
             </ContentBox>
+            <ProfileBox>
+              <Between>
+                <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${post.user.avatar_url}`} alt="User Avatar" />
+                <div>
+                  <Name style={{ marginBottom: '5px' }}>
+                    <NameLine>{post.user.name}</NameLine>
+                  </Name>
+                  <Name>님과 함께 하기</Name>
+                </div>
+              </Between>
+              <ProfileButton onClick={() => naviProfile(post.user.id)}>프로필</ProfileButton>
+            </ProfileBox>
           </PostBox>
         );
       })}
@@ -121,7 +108,7 @@ const RPosts = () => {
   );
 };
 
-export default RPosts;
+export default MPosts;
 
 const PostContainer = styled.div`
   display: flex;
@@ -133,8 +120,7 @@ const PostContainer = styled.div`
 const PostBox = styled.div`
   max-width: 1920px;
   min-width: 900px;
-  width: 50%;
-  height: 200px;
+  height: 160px;
   background-color: #fff;
   border: 3px solid var(--fifth-color);
   border-radius: 18px;
@@ -144,17 +130,9 @@ const PostBox = styled.div`
 `;
 
 const ContentBox = styled.div`
-  width: 535px;
+  width: 600px;
   padding: 10px 20px;
-`;
-
-const ImageBox = styled.img`
-  width: 320px;
-  height: 190px;
-  border: 2px solid var(--fifth-color);
-  border-radius: 10px;
-  margin: 5px 0 5px 3px;
-  object-fit: cover;
+  border-right: 2px dashed var(--fifth-color);
 `;
 
 const Between = styled.div`
@@ -165,7 +143,7 @@ const Between = styled.div`
 
 const Store = styled.div`
   font-weight: 600;
-  padding: 15px 0;
+  padding: 10px 0;
 `;
 
 const Title = styled.span`
@@ -181,7 +159,7 @@ const Body = styled.div`
   font-size: 14px;
   line-height: 1.5;
   max-height: 85px;
-  padding: 10px 0 0 5px;
+  padding: 20px 0 0 5px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -198,9 +176,43 @@ const Date = styled.div`
 const Button = styled.button`
   width: 80px;
   font-size: 14px;
+  margin-top: 45px;
+`;
+
+const ProfileBox = styled.div`
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Name = styled.div`
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 0 25px;
+`;
+
+const NameLine = styled.span`
+  padding: 2px;
+  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+`;
+
+const Img = styled.img`
+  width: 70px;
+  height: 70px;
+  margin: 10px 0 10px 20px;
+  object-fit: cover;
+  border-radius: 50%;
 `;
 
 const Trigger = styled.div`
   width: 100%;
   align-items: center;
+`;
+
+const ProfileButton = styled.button`
+  width: 80px;
+  font-size: 14px;
+  margin: 13px 0 0 150px;
 `;

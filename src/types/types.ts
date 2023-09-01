@@ -92,7 +92,7 @@ export interface FetchsStore {
 }
 
 export interface FetchPost {
-  posts: PostType[];
+  posts: any;
   page: number;
   totalPages: number;
   count: number | null;
