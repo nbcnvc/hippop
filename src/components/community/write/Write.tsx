@@ -35,11 +35,12 @@ const Write = ({
 
   // 닫기: 글 작성 모달창 && 검색 모달창 닫기
   const closeButton = () => {
-    const confirm = window.confirm(`작성 중인 내용이 사라집니다. 작성을 취소하시겠습니까?`);
+    const confirm = window.confirm(`작성중인 내용이 사라집니다. 작성을 취소하시겠습니까?`);
     if (confirm) {
       setSearchModal(false);
       setWriteModal(false);
       setKeyword('');
+      document.body.style.overflow = 'auto';
     }
   };
 
@@ -102,6 +103,7 @@ const Write = ({
 
     // 글 작성 모달 닫기
     setWriteModal(false);
+    document.body.style.overflow = 'auto';
   };
 
   return (

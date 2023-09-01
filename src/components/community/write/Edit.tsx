@@ -20,9 +20,10 @@ const Edit = ({ postId, postTitle, postBody, isEdit, setIsEdit }: EditProps) => 
 
   // 취소 버튼
   const cancelButton = () => {
-    const confirm = window.confirm(`수정 중인 내용이 사라집니다. 수정을 취소하시겠습니까?`);
+    const confirm = window.confirm(`수정중인 내용이 사라집니다. 수정을 취소하시겠습니까?`);
     if (confirm) {
       setIsEdit(!isEdit);
+      document.body.style.overflow = 'auto';
     }
   };
 
@@ -59,6 +60,7 @@ const Edit = ({ postId, postTitle, postBody, isEdit, setIsEdit }: EditProps) => 
 
     // 수정 여부
     setIsEdit(!isEdit);
+    document.body.style.overflow = 'auto';
   };
 
   return (
@@ -85,7 +87,7 @@ const ModalContainer = styled.div`
   width: 100%;
   height: 100%;
   position: fixed;
-  z-index: 1;
+  z-index: 2;
   top: 0;
   left: 0;
   backdrop-filter: blur(5px);
