@@ -148,18 +148,20 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   display: flex;
+  margin: 0 auto;
   justify-content: space-between;
   background-color: var(--fourth-color);
   align-items: center;
+  width: 99%;
   height: 50px;
-  padding-right: 8px;
+  // padding-right: 8px;
   border-radius: 14px;
   margin: 6px 0 0;
   color: var(--fifth-color);
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, padding-right 0.3s ease;
   &:hover {
-    padding-right: 0px;
+    // padding-right: 0px;
     background-color: var(--sixth-color);
   }
   &:active {
@@ -172,17 +174,18 @@ const Wrapper = styled.div`
   }
   span {
     display: block;
-    width: 200px;
+    width: 180px;
     text-align: center;
   }
   .deletBtn {
+    width: 60px;
     height: 50px !important;
     font-size: 14px;
     border-radius: 0 14px 14px 0;
     border-bottom: 4px solid var(--fifth-color);
   }
   p {
-    width: 200px;
+    width: 160px;
     text-align: center;
   }
 `;

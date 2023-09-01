@@ -26,7 +26,7 @@ const MessageDetail = ({ selectedMessage, setIsClicked, setReplyModal, toggleMsg
       <div className="header-wrapper">
         {toggleMsgBox === '받은 쪽지함' ? (
           <ProfileBox>
-            {toggleMsgBox === '받은 쪽지함' ? '' : '수신자'}
+            {toggleMsgBox === '받은 쪽지함' ? '' : ''}
             {selectedMessage?.to.avatar_url && selectedMessage.to.avatar_url.startsWith('profile/') ? (
               <Img
                 src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${selectedMessage.to.avatar_url}`}
@@ -39,7 +39,7 @@ const MessageDetail = ({ selectedMessage, setIsClicked, setReplyModal, toggleMsg
           </ProfileBox>
         ) : (
           <ProfileBox>
-            {toggleMsgBox === '받은 쪽지함' ? '발신자' : '수신자'}
+            {toggleMsgBox === '받은 쪽지함' ? '' : '수신자'}
             {selectedMessage?.to.avatar_url && selectedMessage.to.avatar_url.startsWith('profile/') ? (
               <Img
                 src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${selectedMessage.to.avatar_url}`}
@@ -70,6 +70,9 @@ export default MessageDetail;
 const Container = styled.div`
   overflow-y: hidden;
   position: relative;
+  width: 98.6%;
+  margin: 0 auto;
+
   .header-wrapper {
     padding: 10px;
     display: flex;

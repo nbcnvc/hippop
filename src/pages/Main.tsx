@@ -58,13 +58,13 @@ const Main = () => {
 
   return (
     <MainContainer>
-      <header style={{ margin: '8rem' }}>
+      <header>
         <img src="/asset/mainBanner.png" alt="Banner-img" />
         <h4 style={{ textAlign: 'center' }}>
           <span>당신</span>에게 맞는 <span>힙한 팝업스토어</span>를 찾아보세요! XD
         </h4>
       </header>
-      <Masonry columns={3} spacing={2} sx={{ width: '60%', margin: '0 auto' }}>
+      <Masonry columns={3} spacing={2} sx={{ maxWidth: '1920px', width: '50%', margin: '0 auto' }}>
         {allStores.map((store, index) => (
           <Link to={`detail/${store.id}`} key={store.id} ref={index === allStores.length - 1 ? observerRef : null}>
             <Card store={store} />
@@ -84,6 +84,7 @@ const MainContainer = styled.div`
   flex-direction: column;
   align-items: center;
   header {
+    margin: 8rem 8rem 12rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
