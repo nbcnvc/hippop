@@ -22,6 +22,8 @@ import { MessageType } from '../types/types';
 import ReceiveBox from '../components/message/ReceiveBox';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
+import MyReview from '../components/mypage/MyReview';
+import MyBookmark from '../components/mypage/MyBookmark';
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -135,7 +137,6 @@ const MyPage = () => {
       return null;
     }
   });
-  // console.log(posts);
 
   // 인피니티 스크롤로 필터된 post
   const selectItems = useMemo(() => {
@@ -145,8 +146,6 @@ const MyPage = () => {
       })
       .flat();
   }, [items]);
-  // console.log(selectPosts);
-  // console.log(posts);
 
   // 언제 다음 페이지를 가져올 것
   const { ref } = useInView({
@@ -205,35 +204,6 @@ const MyPage = () => {
 
     Subs();
   }, [currentUser]);
-
-  // 작성 날짜 잘라내기
-  function formatDate(dateTimeString: string) {
-    const options: Intl.DateTimeFormatOptions = {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    };
-    const formattedDate = new Date(dateTimeString).toLocaleString('en-US', options);
-
-    const [month, day, year] = formattedDate.split('/'); // 날짜를 월, 일, 년 순서로 분리
-    return `${year}. ${month}. ${day}`; // 'YYYY-MM-DD' 형식으로 재조합하여 반환
-    // return new Date(dateTimeString).toLocaleString('en-US', options); // 기본 년월일
-  }
-
-  function extractImageTags(html: string) {
-    const imageTags = [];
-    const pattern = /<img.*?src=["'](.*?)["'].*?>/g;
-    let match;
-
-    while ((match = pattern.exec(html)) !== null) {
-      imageTags.push(match[1]);
-    }
-
-    return imageTags;
-  }
-
-  // post.body에서 이미지 태그 추출
-  // const imageTags = fetchUserPost.map((post) => extractImageTags(post.body)).flat();
 
   // 닉네임 수정 handler
   const handleNameEdit = () => {
@@ -317,10 +287,6 @@ const MyPage = () => {
     }
   };
 
-  const handleMenuToggle = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
-
   if (isLoading) {
     return <div>로딩중입니다.</div>;
   }
@@ -333,114 +299,107 @@ const MyPage = () => {
     setToggleMsgBox(name);
   };
 
-  // console.log(sublistData);
-  // console.log(sublistData[0] ?? null.subscribe_to);
-  // console.log(currentUser.id);
-  // console.log(id);
-  // console.log(subscriberData.subscribe_to);
-
   return (
     <MypageTag>
       <header>
         {/* user Info tab */}
         <div className="info-wrapper">
-          {currentUser?.avatar_url && (
-            <div className="avatar-container">
-              {selectedImage ? (
-                <img
-                  src={URL.createObjectURL(selectedImage)} // 선택한 이미지 파일을 미리보기로 보여줌
-                  alt="Selected Image"
-                  width={120}
-                  height={120}
-                />
-              ) : (
-                <div className="avatar">
-                  {currentUser.avatar_url.startsWith('profile/') ? (
-                    <img
-                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser.avatar_url}`}
-                      alt="User Avatar"
-                    />
-                  ) : (
-                    <img src={currentUser.avatar_url} alt="User Avatar" />
-                  )}
-                </div>
-              )}
-              <div className="circle-bg">
-                <PartyModeIcon className="party-icon" onClick={handleImageUpload} />
-              </div>
-              {imageUploadVisible && (
-                <div className="img-uploader">
-                  <input type="file" ref={imageInputRef} onChange={handleImageInputChange} />
-                  <button className="confirm" onClick={handleImageConfirm}>
-                    저장
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-          <div className="info-inner">
-            <p>
-              Welcome,&nbsp;&nbsp;
-              {editingName ? (
-                <input
-                  type="text"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  style={{ width: '20%' }}
-                />
-              ) : (
-                currentUser?.name
-              )}
-              님의 My Page
-            </p>
-
-            <span>
-              <Link to="/yourpage/c3c3e2b7-ea91-4932-aa3f-6e6238e5399f">
-                <button>링쿠트?</button>
-              </Link>
-              <div className="user-sub-info">
-                {currentUser?.email}
-                {sublistData && <h5>&nbsp;구독한 사람: {subscribers.length}</h5>}
-                <button onClick={() => setIsMenuOpen((isMenuOpen) => !isMenuOpen)}>이거</button>
-                {isMenuOpen && (
-                  <ul>
-                    {sublistData?.map((subscriberData, index) => (
-                      <li
-                        key={index}
-                        onClick={() => {
-                          navigate(`/yourpage/${subscriberData.subscribe_to}`);
-                        }}
-                      >
-                        Subscriber {index + 1}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-
-                {/* <Link to="/yourpage/c3c3e2b7-ea91-4932-aa3f-6e6238e5399f"> */}
-                {/* </Link> */}
-              </div>
-              <div>
+          <div className="info-main">
+            <div className="info-inner">
+              <p>
+                <span>Welcome,</span>
+                <br />
                 {editingName ? (
-                  <>
-                    <button onClick={handleNameSave}>저장</button>
-                    <button onClick={handleNameCancel}>취소</button>
-                  </>
+                  <input
+                    type="text"
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    style={{ width: '20%' }}
+                  />
                 ) : (
-                  currentUser?.id === id && <button onClick={handleNameEdit}>수정</button>
+                  currentUser?.name
+                )}
+                님의 My Page
+              </p>
+              <span>
+                <div className="user-sub-info">{currentUser?.email}</div>
+              </span>
+            </div>
+            {currentUser?.avatar_url && (
+              <div className="avatar-container">
+                {selectedImage ? (
+                  <img
+                    src={URL.createObjectURL(selectedImage)} // 선택한 이미지 파일을 미리보기로 보여줌
+                    alt="Selected Image"
+                    width={120}
+                    height={120}
+                  />
+                ) : (
+                  <div className="avatar">
+                    {currentUser.avatar_url.startsWith('profile/') ? (
+                      <img
+                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser.avatar_url}`}
+                        alt="User Avatar"
+                      />
+                    ) : (
+                      <img src={currentUser.avatar_url} alt="User Avatar" />
+                    )}
+                  </div>
+                )}
+                <div className="circle-bg">
+                  <PartyModeIcon className="party-icon" onClick={handleImageUpload} />
+                </div>
+                {imageUploadVisible && (
+                  <div className="img-uploader">
+                    <input type="file" ref={imageInputRef} onChange={handleImageInputChange} />
+                    <button className="confirm" onClick={handleImageConfirm}>
+                      저장
+                    </button>
+                  </div>
                 )}
               </div>
-            </span>
+            )}
+          </div>
+          <div className="btn-mother">
+            {sublistData && (
+              <button onClick={() => setIsMenuOpen((isMenuOpen) => !isMenuOpen)}>
+                구독한 유저 {subscribers.length}
+              </button>
+            )}
+            {isMenuOpen && (
+              <ul>
+                {sublistData?.map((subscriberData, index) => (
+                  <li
+                    key={index}
+                    onClick={() => {
+                      navigate(`/yourpage/${subscriberData.subscribe_to}`);
+                    }}
+                  >
+                    Subscriber {index + 1}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {editingName ? (
+              <>
+                <button onClick={handleNameSave}>저장</button>
+                <button onClick={handleNameCancel}>취소</button>
+              </>
+            ) : (
+              currentUser?.id === id && <button onClick={handleNameEdit}>수정</button>
+            )}
           </div>
         </div>
         {/* message tab */}
-        <div>
-          <button name="받은 쪽지함" onClick={ClickToggleBox}>
-            받은 쪽지함
-          </button>
-          <button name="보낸 쪽지함" onClick={ClickToggleBox}>
-            보낸 쪽지함
-          </button>
+        <div className="alram-mother">
+          <div className="btn-wrapper">
+            <button name="받은 쪽지함" onClick={ClickToggleBox}>
+              받은 쪽지함
+            </button>
+            <button className="send-btn" name="보낸 쪽지함" onClick={ClickToggleBox}>
+              보낸 쪽지함
+            </button>
+          </div>
           <div className="alram-wrapper">
             {toggleMsgBox === '받은 쪽지함' ? (
               <ReceiveBox toggleMsgBox={toggleMsgBox} setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
@@ -448,47 +407,43 @@ const MyPage = () => {
               <SendBox toggleMsgBox={toggleMsgBox} setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
             )}
           </div>
-          {/* <img src="/asset/myPage.png" alt="test image" /> */}
           {replyModal && <MessageReply sendMsgUser={sendMsgUser} setOpenReply={setReplyModal} />}
         </div>
       </header>
       {/* Toggle tab */}
-      <div>
-        <button data-section="myReview" onClick={handleSectionChange}>
-          나의 게시글
-        </button>
-        <button data-section="myBookmark" onClick={handleSectionChange}>
-          나의 북마크
-        </button>
+      <div className="toggle-wrapper">
+        <h3>
+          {activeSection === 'myReview' ? (
+            <p>
+              <span>내가 찜한</span> 팝업스토어 :D
+            </p>
+          ) : (
+            <p>
+              <span>나만의</span> 북마크-리스트 :)
+            </p>
+          )}
+        </h3>
+        <div className="btns-wrapper">
+          <button
+            data-section="myReview"
+            onClick={handleSectionChange}
+            className={activeSection === 'myReview' ? 'active' : ''}
+          >
+            나의 게시글
+          </button>
+          <button
+            data-section="myBookmark"
+            onClick={handleSectionChange}
+            className={activeSection === 'myBookmark' ? 'active' : ''}
+          >
+            나의 북마크
+          </button>
+        </div>
         {/* Review tab */}
-        {activeSection === 'myReview' && (
-          <div>
-            <h3>My Review</h3>
-            <div className="post-wrapper">
-              {selectItems?.map((post: PostType) => {
-                console.log(post);
-                const imageTags = extractImageTags(post.body);
-                return (
-                  <Link to={`/rdetail/${post.id}`} key={post.id}>
-                    {imageTags.length > 0 ? (
-                      <div>
-                        <img src={imageTags[0]} alt={`Image 0`} width={250} />
-                      </div>
-                    ) : (
-                      <div>
-                        <img src="/asset/defaultImg.jpg" alt="Default Image" width={250} />
-                      </div>
-                    )}
-                    <h2>{post.title}</h2>
-                    <p>{formatDate(post.created_at)}</p>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        )}
+        {activeSection === 'myReview' && <MyReview selectItems={selectItems || []} />}
         {/* Bookmark tab */}
-        {activeSection === 'myBookmark' && (
+        {activeSection === 'myBookmark' && <MyBookmark items={items} />}
+        {/* {activeSection === 'myBookmark' && (
           <div>
             <h2>My Bookmark</h2>
             <div className="subs-wrapper">
@@ -511,19 +466,17 @@ const MyPage = () => {
               ))}
             </div>
           </div>
-        )}
+        )} */}
         <div
           style={{
-            backgroundColor: 'yellow',
+            backgroundColor: 'transparent',
             width: '90%',
-            border: '1px solid black',
+            border: 'none',
             padding: '20px',
             margin: '10px'
           }}
           ref={ref}
-        >
-          Trigger to Fetch Here
-        </div>
+        />
       </div>
     </MypageTag>
   );
@@ -531,17 +484,26 @@ const MyPage = () => {
 
 export default MyPage;
 const MypageTag = styled.div`
-  max-width: 1200px;
-  width: 90%;
+  max-width: 1920px;
+  min-width: 800px;
   margin: 0 auto;
-  margin-top: 1rem;
+  margin-top: 10rem;
+  width: 50%;
   header {
+    margin-top: 4rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 20px;
+
     .avatar-container {
       position: relative;
-      width: 25%;
+      margin: 0 auto;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 0.5rem;
       .circle-bg {
         background-color: white;
       }
@@ -549,48 +511,65 @@ const MypageTag = styled.div`
         margin: 0;
         padding: 0;
         margin-left: 0;
-        max-width: 100%;
-        width: 100%;
+        width: 120px;
         height: 120px;
         object-fit: cover;
-        border-radius: 10px;
+        border-radius: 50%;
       }
       .img-uploader {
-        width: 225px;
+        width: 250px;
         position: absolute;
         display: flex;
-
+        // input {
+        //   position: relative;
+        //   left: -10px;
+        // }
+        .confirm {
+          position: absolute;
+          left: 85px;
+          top: 60px;
+          padding: 0 0;
+        }
         button {
-          width: 60px;
+          border-radius: 12px;
+          width: 80px;
         }
         .user-sub-info {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          h5 {
-            margin-top: 6px;
-            font-size: 10px;
-          }
-          .dropdown-content {
-            position: relative;
-            ul {
-              position: absolute;
-              width: 100px;
-              background: white;
-              left: -64px;
-              top: 14px;
-              border-radius: 8px;
-            }
-            li {
-              padding: 5px 10px;
-              &:hover {
-                border-radius: 8px;
-                background-color: #f1f1f1;
-              }
-            }
-          }
+          position: relative;
+        }
+        .btn-wrapper {
+          margin-top: 2rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          position: relative;
         }
       }
+    }
+    ul {
+      position: absolute;
+      width: 100px;
+      background: white;
+      // left: 400px;
+      margin-left: -80px;
+      top: 60px;
+      border-radius: 8px;
+      box-shadow: 4px 4px 10px rgb(87, 87, 87);
+    }
+    li {
+      padding: 5px 10px;
+      &:hover {
+        border-radius: 8px;
+        background-color: var(--sixth-color);
+      }
+    }
+    h5 {
+      margin-top: 4px;
+      font-size: 12px;
+      cursor: pointer;
     }
     .dropdown-content {
       position: relative;
@@ -617,7 +596,7 @@ const MypageTag = styled.div`
       right: 0;
       margin-bottom: 5px;
       // margin-right: 5px;
-      color: #f24d0d; //rgb(103, 243, 201);
+      color: var(--primary-color);
       background-color: white;
       padding: 4px;
       border-radius: 50%;
@@ -631,64 +610,233 @@ const MypageTag = styled.div`
       transform: scale(0.9);
     }
     .info-wrapper {
-      width: 50%;
-      border: 1px dotted gray;
-      display: flex;
-      justify-content: flex-start;
-      align-items: flex-end;
+      width: 25%;
+      height: 300px;
+      padding: 1rem 2rem;
+      border: 3px solid var(--fifth-color);
+      border-radius: 18px;
+      background-color: white;
+      .info-main {
+        margin: 1rem 0;
+        display: flex;
+        flex-direction: column;
+        // justify-content: flex-start;
+        align-items: flex-end;
+      }
       .info-inner {
         width: 100%;
         display: flex;
         flex-direction: column;
-        margin-bottom: 0;
-        margin-left: 10px;
+        justify-content: center;
+        align-items: center;
         p {
-          font-size: 1.2rem;
-          text-align: left;
+          font-size: 20px;
+          font-weight: bold;
+          text-align: center;
         }
         span {
+          font-size: 18px;
           text-align: left;
           margin: 10px 0 0;
           color: gray;
-          display: flex;
+          // display: flex;
           justify-content: space-between;
           .user-sub-info {
             display: flex;
           }
         }
       }
+      .btn-mother {
+        margin-top: 0.5rem;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        position: relative;
+
+        button {
+          border-radius: 22px;
+          padding: 14px 20px;
+        }
+        button:first-child {
+          margin-right: 10px;
+        }
+        button:last-child {
+          font-weight: 600;
+          background-color: var(--sixth-color);
+          color: var(--fifth-color);
+        }
+      }
     }
-    .alram-wrapper {
-      width: 520px;
-      height: 200px;
-      border: 1px dotted gray;
+    .btn-wrapper {
       display: flex;
       justify-content: flex-end;
-      button {
-        width: 120px;
-        height: 22px;
-      }
-      li {
-        text-align: center;
-        padding: 2px 20px;
-        margin: 4px 0;
-        background-color: gray;
-        border-radius: 4px;
+      align-items: center;
+    }
+    .alram-mother {
+      padding: 1rem 2rem;
+      border: 3px solid var(--fifth-color);
+      border-radius: 18px;
+      background-color: white;
+      width: 65%;
+      height: 300px;
+
+      .alram-wrapper {
+        width: 100%;
+        height: 240px;
+        margin-top: 14px;
+        // border: 1px dotted gray;
+        display: flex;
+        justify-content: flex-end;
+        button {
+          width: 120px;
+          height: 22px;
+        }
+        li {
+          width: 100%;
+          text-align: center;
+          padding: 2px 20px;
+          margin: 4px 0;
+          background-color: gray;
+          border-radius: 4px;
+        }
       }
     }
   }
+  .toggle-wrapper button {
+    background-color: white; /* 비활성 버튼 배경색 */
+    color: black; /* 버튼 텍스트 색상 */
+    padding: 10px 20px;
+    cursor: pointer;
+
+    margin-right: 10px;
+  }
+  .btns-wrapper {
+    width: 100%;
+  }
+  button.active {
+    background-color: var(--primary-color);
+  }
+  h3 {
+    text-align: center;
+    margin: 5rem 0;
+    font-size: 28px;
+
+    p {
+      span {
+        padding: 2px;
+        background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+      }
+    }
+  }
+  .send-btn {
+    margin-left: 10px;
+    background-color: var(--sixth-color);
+    color: var(--fifth-color);
+    font-weight: 600;
+  }
   .post-wrapper {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    max-width: 900px;
     margin: 0 auto;
+    padding: 0;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 50px;
+    max-width: 1920px;
+    width: 100%;
+    margin-top: 50px;
+
+    .fid {
+      margin: 0 auto;
+      width: 380px;
+      height: 500px;
+      border-radius: 18px;
+      border: 3px solid var(--fifth-color);
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #ffffff;
+      transition: color 0.3s ease, transform 0.3s ease;
+      &:hover {
+        border: 6px solid var(--primary-color);
+      }
+      &:active {
+        background-color: rgb(179, 179, 190);
+        transform: scale(0.98);
+      }
+      img {
+        width: 340px;
+        height: 370px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 3px solid var(--fifth-color);
+      }
+      .info-box {
+        width: 95%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-top: 20px;
+      }
+      button {
+        background-color: var(--second-color);
+        color: white;
+        margin-right: 0;
+      }
+    }
   }
   .subs-wrapper {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    max-width: 900px;
     margin: 0 auto;
+    padding: 0;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 50px;
+    max-width: 1920px;
+    width: 100%;
+    margin-top: 50px;
+
+    // .fids {
+    //   margin: 0 auto;
+    //   width: 380px;
+    //   height: 500px;
+    //   border-radius: 18px;
+    //   border: 3px solid var(--fifth-color);
+    //   box-sizing: border-box;
+    //   display: flex;
+    //   flex-direction: column;
+    //   align-items: center;
+    //   background-color: #ffffff;
+    //   transition: color 0.3s ease, transform 0.3s ease;
+    //   &:hover {
+    //     border: 6px solid var(--primary-color);
+    //   }
+    //   &:active {
+    //     background-color: var(--sixth-color);
+    //     transform: scale(0.98);
+
+    //   img {
+    //     width: 340px;
+    //     height: 370px;
+    //     object-fit: cover;
+    //     border-radius: 10px;
+    //     border: 3px solid var(--fifth-color);
+    //   }
+    //   .info-wrap {
+    //     width: 330px;
+    //     display: flex;
+    //     justify-content: space-between;
+    //     align-items: flex-end;
+    //     margin-top: 20px;
+    //   }
+    //   button {
+    //     background-color: var(--second-color);
+    //     color: white;
+    //   }
+    // }
   }
 `;
