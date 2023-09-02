@@ -1,23 +1,42 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useLocation, useParams, Link } from 'react-router-dom';
+// 라이브러리
+import { useLocation, useParams, Link, useNavigate } from 'react-router-dom';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
-import { getProfileImg, getUser } from '../api/user'; // 사용자 정보를 가져오는 함수
-import { UserInfo, Store, PostType } from '../types/types';
-import { getMyItems } from '../api/post'; // 게시글 가져오는 함수
-import { getMyStores } from '../api/store'; // 북마크 가져오는 함수
-import { styled } from 'styled-components';
-import { useInView } from 'react-intersection-observer';
 import format from 'date-fns/format';
-import { Parser } from 'htmlparser2';
+import { Parser } from 'htmlparser2'; // 문서를 분석해주는 (div, p tag) 라이브러리
+import { useInView } from 'react-intersection-observer';
+import { styled } from 'styled-components';
+// api
+import { getProfileImg, getUser } from '../api/user'; // 사용자 정보를 가져오는 함수
+import { getMyItems, getYourItems } from '../api/post'; // 게시글 가져오는 함수
+import { getMyStores } from '../api/store'; // 북마크 가져오는 함수
+import { fetchBookMarkStore } from '../api/bookmark';
+// 타입
+import { UserInfo, Store, PostType } from '../types/types';
+
+// mui
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
+import Review from './Review';
+
+import DefaultImg from '../images/defaultImg.png';
 
 const YourPage = () => {
   const { id } = useParams();
   const userId: string = id as string;
   const [userData, setUserData] = useState<UserInfo | null>(null);
   const [activeSection, setActiveSection] = useState('myReview'); // 기본값 설정
-
+  const navigate = useNavigate();
   const { data: user, isLoading: isUserLoading, isError: isUserError } = useQuery(['user', id], () => getUser(userId));
   console.log(user);
+
+  const {
+    data: bookMarkStore,
+    isLoading: isBookMarkLoading,
+    isError: isBookMarkError
+  } = useQuery(['BookMarkStore', userId], () => fetchBookMarkStore(userId));
+
+  console.log('bookMarkStore', bookMarkStore);
   const handleSectionChange = (e: React.MouseEvent<HTMLButtonElement>) => {
     const button = e.target as HTMLButtonElement;
     const section = button.getAttribute('data-section');
@@ -41,9 +60,7 @@ const YourPage = () => {
     const userIdToUse = userId || '';
 
     if (activeSection === 'myReview') {
-      return getMyItems(userIdToUse, 'posts', pageParam);
-    } else if (activeSection === 'myBookmark') {
-      return getMyStores(userIdToUse, pageParam);
+      return getYourItems(userIdToUse, 'posts', pageParam);
     }
     return null;
   };
@@ -86,11 +103,15 @@ const YourPage = () => {
       const profileImgData = await getProfileImg(userData.id);
       console.log('Profile Image Data:', profileImgData);
 
-      if (profileImgData && profileImgData.avatar_url) {
-        // avatar_url이 존재하면 해당 URL을 사용하여 이미지를 렌더링
-        `${process.env.REACT_APP_SUPABASE_STORAGE_URL}${profileImgData.avatar_url}`;
-      }
+      // if (profileImgData && profileImgData.avatar_url) {
+      //   // avatar_url이 존재하면 해당 URL을 사용하여 이미지를 렌더링
+      //   `${process.env.REACT_APP_SUPABASE_STORAGE_URL}${profileImgData.avatar_url}`;
+      // }
     }
+  };
+
+  const PostDetail = (postId: number) => {
+    navigate(`/rdetail/${postId}`);
   };
 
   useEffect(() => {
@@ -99,280 +120,355 @@ const YourPage = () => {
     }
   }, [userData]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (isError) {
-    return <div>Error occurred while fetching user data.</div>;
-  }
-  console.log(selectItems);
-
-  if (isUserLoading) {
+  if (isLoading || isUserLoading || isBookMarkLoading) {
     return <div>Loading user data...</div>;
   }
 
-  if (isUserError) {
+  if (isError || isUserError || isBookMarkError) {
     return <div>Error occurred while fetching user data.</div>;
   }
 
   return (
-    <div>
-      {/* 유저 정보 표시 */}
-      <div>
-        <h2>User Information</h2>
-        {/* <img src={user?.avatar_url} alt="User Avatar" /> */}
-        <img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${user?.avatar_url}`} alt="User Avatar" width={200} />
-        <p>{user?.name}</p>
-        <p>{user?.email}</p>
-      </div>
-
-      <button data-section="myReview" onClick={handleSectionChange}>
-        나의 게시글
-      </button>
-      <button data-section="myBookmark" onClick={handleSectionChange}>
-        나의 북마크
-      </button>
-      <div className="content-wrapper">
-        {activeSection === 'myReview' ? (
-          // Render 게시글 컨텐츠
-          <div>
-            <h3>My Review</h3>
-            <div className="post-wrapper">
-              {selectItems?.map((post: PostType) => {
-                const imageTags: string[] = [];
-                const parser = new Parser({
-                  onopentag(name, attribs) {
-                    if (name === 'img' && attribs.src) {
-                      imageTags.push(attribs.src);
-                    }
-                  }
-                });
-
-                parser.write(post.body);
-                parser.end();
-
+    <>
+      <Container>
+        <UserWrapper>
+          <UserBox>
+            <Htag>
+              <HomeRoundedIcon />
+              <HtagLine>{user?.name} </HtagLine>님의 프로필
+            </Htag>
+            <BoxLine></BoxLine>
+            <UserProfile>
+              <div>
+                {user?.avatar_url?.startsWith('profile/') ? (
+                  <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${user?.avatar_url}`} alt="User Avatar" />
+                ) : (
+                  <Img src={user?.avatar_url} alt="User Avatar" />
+                )}
+              </div>
+              <div>
+                <Ptag>힙팝메이트</Ptag>
+                <Ptag>
+                  <SpanLine>{user?.name}</SpanLine>님
+                </Ptag>
+                {/* <Ptage>{user?.email}</Ptage> */}
+              </div>
+            </UserProfile>
+          </UserBox>
+          <div></div>
+          <StoreListBox>
+            <Htag>
+              <HtagLine>북마크한 팝업스토어</HtagLine>
+            </Htag>
+            <BookMarkList>
+              {bookMarkStore?.map((bookMark) => {
                 return (
-                  <Link to={`/rdetail/${post.id}`} key={post.id}>
-                    {imageTags.length > 0 ? (
+                  <BookMarkWraaper>
+                    <BookMarkBox>
                       <div>
-                        <img src={imageTags[0]} alt={`Image`} width={250} />
+                        <StoreList>
+                          <p>
+                            <RoomRoundedIcon fontSize="large" />
+                          </p>
+                          <StoreInfo>
+                            <div>
+                              <Location>
+                                {bookMark.store?.location.split(' ').slice(0, 1)}{' '}
+                                {bookMark.store?.location.split(' ').slice(1, 2)}
+                              </Location>
+                            </div>
+                            <div>
+                              <StoreTitle>{bookMark.store?.title}</StoreTitle>
+                            </div>
+                          </StoreInfo>
+                        </StoreList>
                       </div>
-                    ) : (
-                      <div>
-                        <img src="/asset/defaultImg.jpg" alt="Default Image" width={250} />
-                      </div>
-                    )}
-                    <h2>{post.title}</h2>
-                    <p>{format(new Date(post.created_at), 'yyyy-MM-dd')}</p>
-                  </Link>
+                    </BookMarkBox>
+                    <Line></Line>
+                  </BookMarkWraaper>
                 );
               })}
-            </div>
-          </div>
-        ) : (
-          // Render 북마크 컨텐츠
-          <div>
-            <h2>My Bookmark</h2>
-            <div className="subs-wrapper">
-              {items?.pages.map((page) => (
-                <React.Fragment key={page.page}>
-                  {page.stores.slice(0, 3).map((store: Store) => (
-                    <Link to={`/detail/${store.id}`} key={store.id} className="user-subs">
-                      <img
-                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`}
-                        alt={`Store Image`}
-                        width={200}
-                      />
-                      <h2>{store.title}</h2>
-                      <p>
-                        {store.period_start} ~ {store.period_end}
-                      </p>
-                    </Link>
-                  ))}
-                </React.Fragment>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-      <div
-        style={{
-          backgroundColor: 'yellow',
-          width: '90%',
-          border: '1px solid black',
-          padding: '20px',
-          margin: '10px'
-        }}
-        ref={ref}
-      >
-        Trigger to Fetch Here
-      </div>
-    </div>
+            </BookMarkList>
+          </StoreListBox>
+        </UserWrapper>
+
+        <ReviewWrapper>
+          <Htag2>
+            <HtagLine>작성한 게시글</HtagLine>
+          </Htag2>
+          <GridContainer>
+            {selectItems?.map((post: PostType) => {
+              const imageTags: string[] = [];
+              const parser = new Parser({
+                onopentag(name, attribs) {
+                  if (name === 'img' && attribs.src) {
+                    imageTags.push(attribs.src);
+                  }
+                }
+              });
+
+              parser.write(post.body);
+              parser.end();
+
+              return (
+                <Card>
+                  {' '}
+                  <div key={post.id}>
+                    {imageTags.length > 0 ? <PostImg src={imageTags[0]} alt={`Image`} /> : <PostImg src={DefaultImg} />}
+                    <HtagTttle>{post.store?.title}</HtagTttle>
+                    <CardInfo>
+                      <div>
+                        <PtagDate>{format(new Date(post.created_at), 'yyyy-MM-dd')}</PtagDate>
+                      </div>
+                      <BtnBox>
+                        <DetailBtn
+                          onClick={() => {
+                            PostDetail(post.id);
+                          }}
+                        >
+                          상세보기
+                        </DetailBtn>
+                      </BtnBox>
+                    </CardInfo>
+                  </div>
+                </Card>
+              );
+            })}
+          </GridContainer>
+        </ReviewWrapper>
+      </Container>
+      <div ref={ref}></div>
+    </>
   );
 };
 
 export default YourPage;
 
-const MypageTag = styled.div`
-  max-width: 1200px;
-  width: 90%;
-  margin: 0 auto;
-  margin-top: 1rem;
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .avatar-container {
-      position: relative;
-      width: 25%;
-      .circle-bg {
-        background-color: white;
-      }
-      img {
-        margin: 0;
-        padding: 0;
-        margin-left: 0;
-        max-width: 100%;
-        width: 100%;
-        height: 120px;
-        object-fit: cover;
-        border-radius: 10px;
-      }
-      .img-uploader {
-        width: 250px;
-        position: absolute;
-        display: flex;
+const Container = styled.div`
+  display: flex;
 
-        button {
-          border-radius: 12px;
-          width: 80px;
-        }
-        .user-sub-info {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          position: relative;
-        }
-      }
-    }
-    ul {
-      position: absolute;
-      width: 100px;
-      background: white;
-      left: 318px;
-      top: 280px;
-      border-radius: 8px;
-    }
-    li {
-      padding: 5px 10px;
-      &:hover {
-        border-radius: 8px;
-        background-color: #f1f1f1;
-      }
-    }
-    h5 {
-      margin-top: 4px;
-      font-size: 12px;
-      cursor: pointer;
-    }
-    .dropdown-content {
-      position: relative;
-      ul {
-        position: absolute;
-        width: 100px;
-        background: white;
-        left: -104px;
-        top: 20px;
-        border-radius: 8px;
-      }
-      li {
-        padding: 5px 10px;
-        cursor: pointer;
-        &:hover {
-          border-radius: 8px;
-          background-color: #f1f1f1;
-        }
-      }
-    }
-    .avatar-container .party-icon {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      margin-bottom: 5px;
-      // margin-right: 5px;
-      color: #f24d0d; //rgb(103, 243, 201);
-      background-color: white;
-      padding: 4px;
-      border-radius: 50%;
-      transition: color 0.3s ease, transform 0.3s ease;
-      cursor: pointer;
-    }
-    .party-icon:hover {
-      color: gray;
-    }
-    .party-icon:active {
-      transform: scale(0.9);
-    }
-    .info-wrapper {
-      width: 50%;
-      border: 1px dotted gray;
-      display: flex;
-      justify-content: flex-start;
-      align-items: flex-end;
-      .info-inner {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 0;
-        margin-left: 10px;
-        p {
-          font-size: 1.2rem;
-          text-align: left;
-        }
-        span {
-          text-align: left;
-          margin: 10px 0 0;
-          color: gray;
-          display: flex;
-          justify-content: space-between;
-          .user-sub-info {
-            display: flex;
-          }
-        }
-      }
-    }
-    .alram-wrapper {
-      width: 520px;
-      height: 200px;
-      border: 1px dotted gray;
-      display: flex;
-      justify-content: flex-end;
-      button {
-        width: 120px;
-        height: 22px;
-      }
-      li {
-        text-align: center;
-        padding: 2px 20px;
-        margin: 4px 0;
-        background-color: gray;
-        border-radius: 4px;
-      }
-    }
-  }
-  .post-wrapper {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    max-width: 900px;
-    margin: 0 auto;
-  }
-  .subs-wrapper {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    max-width: 900px;
-    margin: 0 auto;
-  }
+  max-width: 1920px;
+  width: 50%;
+  height: 100%;
+  margin: 0 auto;
+
+  margin-top: 50px;
+  margin-bottom: 100px;
+`;
+
+const UserWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
+  width: 250px;
+  position: fixed; /* 화면에 고정 */
+  /* top: 0; 상단에 고정 */
+  overflow-y: auto;
+`;
+
+const UserBox = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  border: 3px solid #333333;
+  border-radius: 18px;
+`;
+
+const Htag = styled.h2`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-top: 20px;
+`;
+
+const HtagLine = styled.h2`
+  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+`;
+const BoxLine = styled.div`
+  border-bottom: 2px dashed #333333;
+
+  margin: 15px 10px 15px 10px;
+`;
+
+const UserProfile = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-bottom: 20px;
+`;
+
+const Img = styled.img`
+  width: 55px;
+  height: 55px;
+  object-fit: cover;
+  border-radius: 50%;
+`;
+
+const Ptag = styled.p`
+  font-size: 15px;
+  color: #333333;
+
+  padding: 5px;
+`;
+
+const SpanLine = styled.span`
+  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+`;
+
+const StoreListBox = styled.div`
+  /* display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; */
+  background-color: var(--fourth-color);
+  margin-top: 30px;
+
+  border: 3px solid #333333;
+  border-radius: 18px;
+
+  height: 560px;
+  /* height: 100%; */
+  /* overflow: hidden; */
+  overflow-y: scroll;
+
+  padding: 5px;
+`;
+
+const BookMarkList = styled.div`
+  margin-top: 24px;
+  max-height: inherit;
+`;
+
+const BookMarkWraaper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const BookMarkBox = styled.div`
+  display: flex;
+
+  padding: 5px;
+`;
+
+const StoreList = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const StoreInfo = styled.div`
+  margin-bottom: 6px;
+`;
+
+const Location = styled.span`
+  font-size: 10px;
+`;
+
+const StoreTitle = styled.span`
+  font-size: 15px;
+`;
+
+const Line = styled.div`
+  width: 86%;
+  margin: 5px 15px;
+  border-bottom: 1px dashed #333333;
+`;
+
+const ReviewWrapper = styled.div`
+  margin: 50px 0 0 280px;
+`;
+
+const Htag2 = styled.h2`
+  /* margin-top: 20px; */
+  display: flex;
+  align-items: flex-start;
+`;
+
+const GridContainer = styled.div`
+  margin: 0 auto;
+
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(2, 1fr); // 한 줄에 두 개의 열
+  gap: 30px;
+
+  /* max-width: 500px; // 그리드가 너무 넓어지는 것을 제한 */
+  width: 50%;
+
+  margin-top: 28px;
+  /* margin-left: 160px; */
+  /* margin-top: 50px; */
+`;
+
+const Card = styled.div`
+  width: 260px !important ;
+
+  height: 340px;
+  border-radius: 18px;
+  border: 3px solid var(--fifth-color);
+
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+
+  position: relative;
+`;
+
+const PostImg = styled.img`
+  border: 2px solid black;
+  border-radius: 18px;
+  object-fit: cover;
+
+  width: 225px;
+  height: 250px;
+`;
+
+const CardInfo = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: ceoter;
+
+  width: 225px;
+`;
+
+const HtagTttle = styled.h3`
+  /* padding: 5px; */
+  margin-top: 10px;
+  margin-left: 5px;
+  font-size: 15px;
+  width: 225px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const PtagDate = styled.p`
+  margin-top: 12px;
+  /* padding: 5px; */
+  margin-left: 5px;
+  width: 100px;
+  display: flex;
+  justify-content: flex-start;
+`;
+
+const BtnBox = styled.div`
+  display: flex;
+  align-items: flex-end;
+`;
+
+const DetailBtn = styled.button`
+  margin-top: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 25px;
+
+  font-size: 15px;
+
+  background-color: var(--second-color);
 `;

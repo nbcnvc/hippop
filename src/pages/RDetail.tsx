@@ -171,13 +171,14 @@ const TextBox = styled.div`
 const Text = styled.div`
   font-size: 16px;
   font-weight: 600;
+  padding-right: 5px;
 `;
 
 const Title = styled.div`
   font-size: 26px;
   font-weight: 600;
   float: left;
-  padding: 10px 0px 30px 0;
+  padding: 10px 0px 30px 10px;
 `;
 
 const Body = styled.div`
