@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // 라이브러리
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -23,20 +23,28 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 const StoreDetail = () => {
   const { id } = useParams<{ id: string }>();
 
-  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const [isClicked, setIsClicked] = useState<boolean>(false);
 
   const {
     data: storeData,
     isLoading,
-    isError
-  } = useQuery<Store | null>({ queryKey: ['detailData', Number(id)], queryFn: () => fetchDetailData(Number(id)) });
+    isError,
+    refetch
+  } = useQuery<Store | null>({
+    queryKey: ['detailData', Number(id)],
+    queryFn: () => fetchDetailData(Number(id)),
+    refetchOnWindowFocus: false
+  });
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const handleopenlink = (link: string) => {
     window.open(link, '_blank');
   };
 
-  const handleMouseEnter = () => setIsHovered(true);
-  const handleMouseLeave = () => setIsHovered(false);
+  const handleMouseEnter = () => setIsClicked((isClicked) => !isClicked);
 
   const settings = {
     slidesToShow: 1,
@@ -90,24 +98,31 @@ const StoreDetail = () => {
                 <div>
                   <span>예약 여부</span>
                 </div>
-                <div>
-                  <span>링크 </span>
-                  <LinkIcon
-                    onClick={() => {
-                      handleopenlink(storeData.link);
-                    }}
-                  />
+                <div className="link-url">
+                  <div>
+                    <span>링크 </span>
+                    <LinkIcon
+                      onClick={() => {
+                        handleopenlink(storeData.link);
+                      }}
+                    />
+                  </div>
+                  <div> {storeData.link}</div>
                 </div>
               </div>
               <div className="button-box">
-                <button>후기 보러가기</button>
-                <button>팝업 메이트 구하기</button>
+                <Link to="/review">
+                  <button>후기 보러가기</button>
+                </Link>
+                <Link to="/mate">
+                  <button>팝업 메이트 구하기</button>
+                </Link>
                 <button className="share-button">공유</button>
                 {/* <Share /> */}
               </div>
             </div>
-            <CalendarIcon onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} />
-            {isHovered && <Calendar storeData={storeData} />}
+            <CalendarIcon onClick={handleMouseEnter} />
+            {isClicked && <Calendar storeData={storeData} />}
           </div>
           <StoreMap storeLocation={storeData.location} title={storeData.title} />
         </>
@@ -121,7 +136,7 @@ export default StoreDetail;
 const DetailContainer = styled.div`
   max-width: 1920px;
   min-width: 900px;
-  width: 60%;
+  width: 50%;
   height: 100%;
   margin: 90px auto;
 
@@ -177,13 +192,22 @@ const DetailContainer = styled.div`
 
       .store-text {
         display: flex;
+        justify-content: center;
         flex-direction: column;
-        justify-content: space-between;
-        padding-left: 5px;
 
+        .link-url {
+          display: flex;
+          justify-content: flex-start;
+          span {
+            width: 35px;
+          }
+          div {
+            font-size: 12px;
+            align-items: center;
+          }
+        }
         div {
           display: flex;
-          align-items: center;
           font-size: 18px;
           margin: 15px 0;
         }
@@ -210,6 +234,7 @@ const DetailContainer = styled.div`
 `;
 
 const LinkIcon = styled(InsertLinkIcon)`
+  margin-right: 20px;
   cursor: pointer;
 
   &:hover {
@@ -222,8 +247,8 @@ const CalendarIcon = styled(CalendarMonthIcon)`
   position: absolute;
   /* bottom: 203px; */
   /* right: 375px; */
-  margin-left: 921px;
-  margin-top: 299px;
+  margin-left: 925px;
+  margin-top: 288px;
   cursor: pointer;
 
   &:hover {
