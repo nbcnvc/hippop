@@ -19,7 +19,6 @@ import { AlarmBoxProps } from '../../types/props';
 const AlarmBox = ({ alarms }: AlarmBoxProps) => {
   const navigate = useNavigate();
   const currentUser = useCurrentUser();
-  const currentUserId = currentUser?.id;
 
   // 알람은 무조건 5개만
   const AlarmList = alarms?.slice(0, 5);
@@ -67,11 +66,11 @@ const AlarmBox = ({ alarms }: AlarmBoxProps) => {
     }
     // 구독
     if (alarm.ctg_index === 2) {
-      return navigate(`/mypage/${alarm.sub_from}`);
+      return navigate(`/yourpage/${alarm.sub_from}`);
     }
     // 쪽지
     if (alarm.ctg_index === 3) {
-      return navigate(`/yourpage/${alarm.targetUserId}`);
+      return navigate(`/mypage/${alarm.targetUserId}`);
     }
   };
 

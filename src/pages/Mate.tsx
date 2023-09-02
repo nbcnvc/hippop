@@ -63,7 +63,7 @@ const Mate = () => {
 export default Mate;
 
 const Layout = styled.div`
-  min-width: 900px;
+  min-width: 870px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -82,19 +82,19 @@ const Title = styled.h1`
   font-style: normal;
   font-weight: 400;
   background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
-  margin: 70px;
+  margin: 70px 0 20px 0;
   padding-bottom: 5px;
 `;
 
 const ButtonBox = styled.div`
   min-width: 900px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
 `;
 
 const Button = styled.button`
   width: 150px;
   height: 40px;
   font-weight: 700;
-  margin-bottom: 5px;
+  margin-bottom: 80px;
 `;

@@ -1,14 +1,19 @@
+import CommentCount from './CommentCount';
+
+import moment from 'moment';
 import { useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { FetchPost, PostType } from '../../../types/types';
-import { getPosts } from '../../../api/post';
+import { getPopularPosts } from '../../../api/post';
 
 import { styled } from 'styled-components';
+import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
+import NotesRoundedIcon from '@mui/icons-material/NotesRounded';
 
-const Posts = () => {
+const RPopularPosts = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
@@ -20,8 +25,8 @@ const Posts = () => {
     fetchNextPage,
     isFetchingNextPage
   } = useInfiniteQuery<FetchPost>({
-    queryKey: [`${queryKey}`, pathname],
-    queryFn: ({ pageParam }) => getPosts(pageParam, pathname),
+    queryKey: [`popular${queryKey}`, pathname],
+    queryFn: ({ pageParam }) => getPopularPosts(pageParam, pathname),
     getNextPageParam: (lastPage) => {
       // 전체 페이지 개수보다 작을 때
       if (lastPage.page < lastPage.totalPages) {
@@ -50,6 +55,8 @@ const Posts = () => {
     }
   });
 
+  console.log(selectPosts);
+
   // 대표이미지
   const extractImageTags = (html: string) => {
     const imageTags = [];
@@ -62,13 +69,10 @@ const Posts = () => {
 
     return imageTags;
   };
-  const imageTags = selectPosts?.map((post) => extractImageTags(post.body)).flat();
 
   // 상세페이지로 넘어가기
   const naviDetail = (post: PostType) => {
-    if (pathname === '/review') {
-      navigate(`/rdetail/${post.id}`);
-    } else navigate(`/mdetail/${post.id}`);
+    navigate(`/rdetail/${post.id}`);
   };
 
   if (isLoading) {
@@ -83,7 +87,7 @@ const Posts = () => {
         const imageTags = extractImageTags(post.body);
         const postText = post.body.replace(/<img.*?>/g, '');
         return (
-          <PostBox key={post.id} onClick={() => naviDetail(post)}>
+          <PostBox key={post.id}>
             {imageTags.length > 0 ? (
               <div>
                 <ImageBox src={imageTags[0]} />
@@ -94,9 +98,22 @@ const Posts = () => {
               </div>
             )}
             <ContentBox>
-              <Store>{post.store.title}</Store>
-              <Title>{post.title}</Title>
+              <Between>
+                <Between>
+                  <RoomRoundedIcon /> &nbsp;
+                  <Store>{post.store.title}</Store>
+                </Between>
+                <Between>
+                  <NotesRoundedIcon /> &nbsp;
+                  <CommentCount postId={post.id} />
+                </Between>
+              </Between>
+              &nbsp;<Title>{post.title}</Title>
               <Body dangerouslySetInnerHTML={{ __html: postText }} />
+              <Between>
+                <Date>{moment(post?.created_at).format('YYYY.MM.DD HH:mm')}</Date>
+                <Button onClick={() => naviDetail(post)}>상세보기</Button>
+              </Between>
             </ContentBox>
           </PostBox>
         );
@@ -106,7 +123,7 @@ const Posts = () => {
   );
 };
 
-export default Posts;
+export default RPopularPosts;
 
 const PostContainer = styled.div`
   display: flex;
@@ -116,7 +133,7 @@ const PostContainer = styled.div`
 `;
 
 const PostBox = styled.div`
-  width: 900px;
+  width: 870px;
   height: 200px;
   background-color: #fff;
   border: 3px solid var(--fifth-color);
@@ -126,42 +143,61 @@ const PostBox = styled.div`
   display: flex;
 `;
 
-const ImageBox = styled.img`
-  width: 340px;
-  height: 190px;
-  border: 2px solid var(--fifth-color);
-  border-radius: 10px;
-  margin: 3px 5px 0 5px;
-  object-fit: cover;
-`;
-
 const ContentBox = styled.div`
-  width: 505px;
+  width: 515px;
   padding: 10px 20px;
 `;
 
-const Store = styled.div`
-  font-weight: 400;
-  padding: 10px 0;
+const ImageBox = styled.img`
+  width: 310px;
+  height: 190px;
+  border: 2px solid var(--fifth-color);
+  border-radius: 10px;
+  margin: 5px 0 5px 3px;
+  object-fit: cover;
 `;
 
-const Title = styled.div`
-  font-size: 18px;
+const Between = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const Store = styled.div`
+  font-weight: 600;
+  padding: 15px 0;
+`;
+
+const Title = styled.span`
+  font-size: 20px;
   font-weight: 700;
-  padding: 10px 0;
+  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
 `;
 
 const Body = styled.div`
+  height: 65px;
+  width: 420px;
   color: black;
   font-size: 14px;
   line-height: 1.5;
   max-height: 85px;
-  padding-top: 10px;
+  padding: 10px 0 0 5px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 4; /* 표시할 줄 수 설정 */
+  -webkit-line-clamp: 3; /* 표시할 줄 수 설정 */
   -webkit-box-orient: vertical; /* 텍스트의 방향 설정 */
+`;
+
+const Date = styled.div`
+  margin: 0 0 0 5px;
+  font-size: 14px;
+  font-weight: 400;
+`;
+
+const Button = styled.button`
+  width: 80px;
+  font-size: 14px;
 `;
 
 const Trigger = styled.div`
