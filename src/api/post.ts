@@ -119,6 +119,27 @@ export const getMyItems = async (userId: string, itemType: 'posts' | 'stores', p
   return { items, page: pageParam, totalPages, count };
 };
 
+//yourPage - pageParam
+export const getYourItems = async (
+  userId: string,
+  itemType: 'posts' | 'stores',
+  pageParam: number = 1
+): Promise<any> => {
+  const PAGE_SIZE = 4; // 페이지당 아이템 개수
+  const resource = itemType === 'posts' ? 'post' : 'store';
+  const { data: items } = await supabase
+    .from(resource)
+    .select(`*, store( title )`)
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .range((pageParam - 1) * PAGE_SIZE, pageParam * PAGE_SIZE - 1);
+  const { count } = await supabase.from(resource).select('count', { count: 'exact' });
+
+  const totalPages = count ? Math.ceil(count / PAGE_SIZE) : 1;
+
+  return { items, page: pageParam, totalPages, count };
+};
+
 // Post 상세 조회
 export const getPost = async (id: number): Promise<any> => {
   const { data } = await supabase.from('post').select(`*, user( * ), store( title )`).eq('id', id).single();

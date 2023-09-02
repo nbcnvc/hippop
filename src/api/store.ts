@@ -47,14 +47,9 @@ export const getSearchStore = async (
     query = query.or(`title.ilike.%${inputValue}%,body.ilike.%${inputValue}%,location.ilike.%${inputValue}%`);
   }
 
-  console.log('startDate ====>', startDate);
-  console.log('endDate ====>', endDate);
-
   const { data: stores } = await query;
 
   data = stores;
-
-  console.log('stores ===> ', stores);
 
   const { count: storeCount } = await supabase.from('store').select('count', { count: 'exact' });
   count = storeCount;
