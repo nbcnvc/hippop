@@ -75,8 +75,8 @@ const Comments = ({ postId }: CommentProps) => {
     if (!body) {
       return alert('댓글을 입력해주세요.');
     }
-    if (body.length > 50) {
-      return alert('댓글은 50글자 미만으로 입력해주세요.');
+    if (body.length > 35) {
+      return alert('댓글은 35글자 미만으로 입력해주세요.');
     }
     // 새로운 댓글 객체 선언
     const newComment = {
