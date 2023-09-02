@@ -26,8 +26,8 @@ const Comments = ({ postId }: CommentProps) => {
   // Comment 조회
   const {
     data: comments,
-    isLoading: isLoading1,
-    isError: isError1,
+    isLoading,
+    isError,
     hasNextPage,
     fetchNextPage
   } = useInfiniteQuery({
@@ -59,9 +59,6 @@ const Comments = ({ postId }: CommentProps) => {
     fetchNextPage();
   };
 
-  // Comment 전체 개수
-  const { data: count, isLoading: isLoading2, isError: isError2 } = useQuery(['count'], () => getCommentCount(postId));
-
   // Comment 추가
   const createMutation = useMutation(createComment, {
     onSuccess: () => {
@@ -78,8 +75,8 @@ const Comments = ({ postId }: CommentProps) => {
     if (!body) {
       return alert('댓글을 입력해주세요.');
     }
-    if (body.length > 50) {
-      return alert('댓글은 50글자 미만으로 입력해주세요.');
+    if (body.length > 35) {
+      return alert('댓글은 35글자 미만으로 입력해주세요.');
     }
     // 새로운 댓글 객체 선언
     const newComment = {
@@ -134,10 +131,10 @@ const Comments = ({ postId }: CommentProps) => {
     }
   };
 
-  if (isLoading1 || isLoading2) {
+  if (isLoading) {
     return <div>로딩중입니다.</div>;
   }
-  if (isError1 || isError2) {
+  if (isError) {
     return <div>오류가 발생했습니다.</div>;
   }
   return (
@@ -204,7 +201,7 @@ const Comments = ({ postId }: CommentProps) => {
 export default Comments;
 
 const Layout = styled.div`
-  min-width: 900px;
+  min-width: 870px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -214,14 +211,14 @@ const Layout = styled.div`
     width: 120px;
     background-color: var(--second-color);
     border-radius: 0 18px 18px 0;
-    padding: 10px 16px;
+    padding: 8px 16px 10.5px 16px;
     font-size: 18px;
     font-weight: 700;
   }
 `;
 
 const CommentWrite = styled.div`
-  width: 900px;
+  width: 890px;
   padding: 20px 0;
 `;
 
@@ -232,8 +229,8 @@ const Title = styled.div`
 `;
 
 const Input = styled.input`
-  width: 744px;
-  height: 40px;
+  width: 734px;
+  height: 38px;
   padding: 2px 15px;
   outline: none;
   border-radius: 20px 0 0 20px;
@@ -245,7 +242,7 @@ const CommentContainer = styled.div`
 `;
 
 const ButtonBox = styled.div`
-  width: 900px;
+  width: 890px;
   display: flex;
   justify-content: right;
   margin: 5px 0px;
@@ -262,7 +259,7 @@ const Button = styled.button`
 `;
 
 const CommentBox = styled.div`
-  width: 880px;
+  width: 870px;
   padding: 10px;
   margin: 5px 0;
   background-color: #fff;

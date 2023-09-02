@@ -37,7 +37,7 @@ export interface PostType {
   ctg_index: number;
   title: string;
   body: any;
-  isDeleted: boolean;
+  isdeleted: boolean;
   store: { title: string };
 }
 
