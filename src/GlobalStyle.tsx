@@ -72,7 +72,12 @@ body {
 
     /* padding-bottom: 8px; */
     /* outline: 0; */
-}
+
+  }
+  // input[type="file"]::-webkit-file-upload-button {
+  //   /* Chrome 및 Safari에서 동작 */
+  //   opacity: 10;
+  // }
 
 
     // 검색 페이지 달력 삼각형 
@@ -128,6 +133,7 @@ body {
     color: gray; // 해당 달이 아니면 날짜 색상 변경해서 구분해
   }
   }
+  
 }
 a {
     text-decoration:none;
