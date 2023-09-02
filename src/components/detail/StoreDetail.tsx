@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 // 라이브러리
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -26,6 +26,7 @@ import Menu from '@mui/material/Menu';
 
 const StoreDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const calendarRef = useRef<HTMLDivElement | null>(null);
 
   const [isClicked, setIsClicked] = useState<boolean>(false);
@@ -177,9 +178,7 @@ const StoreDetail = () => {
                 </div>
               </div>
               <div className="button-box">
-                <Link to="/review">
-                  <button>후기 보러가기</button>
-                </Link>
+                <button onClick={() => navigate('/review', { state: { postId: id } })}>후기 보러가기</button>
                 <Link to="/mate">
                   <button>팝업 메이트 구하기</button>
                 </Link>

@@ -16,6 +16,10 @@ import NotesRoundedIcon from '@mui/icons-material/NotesRounded';
 const RPosts = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const location = useLocation();
+
+  console.log('  location.state?.postId', location.state?.postId);
+
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
   const {
     data: posts,
