@@ -43,12 +43,12 @@ const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) 
     }
   });
 
-  // 메세지 삭제 mutation
-  const deleteMessageMutation = useMutation((messageId: number) => deleteMessage(messageId), {
-    onSuccess: () => {
-      queryClient.invalidateQueries(['receiveMessage']);
-    }
-  });
+  // // 메세지 삭제 mutation
+  // const deleteMessageMutation = useMutation((messageId: number) => deleteMessage(messageId), {
+  //   onSuccess: () => {
+  //     queryClient.invalidateQueries(['receiveMessage']);
+  //   }
+  // });
 
   // 메세지 isRead 업데이트 handler
   const handleClickMsg = (message: MessageType) => {
@@ -64,14 +64,15 @@ const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) 
     setIsClicked(true);
   };
 
-  // 메세지 삭제 handler
-  const handleDeleteMsg = (message: MessageType) => {
-    if (window.confirm('받은 쪽지를 삭제하시겠습니까?')) {
-      deleteMessageMutation.mutate(message.id ?? 0);
-    } else {
-      alert('삭제를 취소하겠습니다.');
-    }
-  };
+  // // 메세지 삭제 handler
+  // const handleDeleteMsg = (message: MessageType) => {
+  //   if (window.confirm('보낸 쪽지를 삭제하시겠습니까?')) {
+  //     deleteMessageMutation.mutate(message.id ?? 0);
+  //   } else {
+  //     alert('삭제를 취소하겠습니다.');
+  //   }
+  //   return <div>null</div>;
+  // };
 
   // 메세지 최신순 정렬과 안읽은 메세지 우선 정렬
   const sortedMessages = sendMessages?.sort((a, b) => {
@@ -123,13 +124,15 @@ const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) 
                   <p> {moment(message.created_at).format('YYYY-MM-DD HH:mm:ss')}</p>
                   <div>
                     {' '}
-                    {message.isRead ? <span>상대방이 읽었습니다.</span> : <span>상대방이 읽지 않았습니다.</span>}
+                    <Body>
+                      <span>{message.body}</span>
+                    </Body>
                   </div>
                 </div>
                 <h5>{message.isRead ? <DraftsOutlinedIcon /> : <EmailOutlinedIcon />}</h5>
-                <button className="deleBtn" onClick={() => handleDeleteMsg(message)} style={{ width: '50px' }}>
+                {/* <button className="deleBtn" onClick={() => handleDeleteMsg(message)} style={{ width: '50px' }}>
                   삭제
-                </button>
+                </button> */}
               </Wrapper>
             );
           })}
@@ -203,4 +206,24 @@ const Img = styled.img`
   height: 40px;
   object-fit: cover;
   border-radius: 50%;
+`;
+const Body = styled.div`
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+
+  span {
+    display: inline-block;
+    animation: marquee 7s linear infinite;
+  }
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
 `;
