@@ -118,8 +118,7 @@ const PostContainer = styled.div`
 `;
 
 const PostBox = styled.div`
-  max-width: 1920px;
-  min-width: 900px;
+  width: 870px;
   height: 160px;
   background-color: #fff;
   border: 3px solid var(--fifth-color);
@@ -130,8 +129,8 @@ const PostBox = styled.div`
 `;
 
 const ContentBox = styled.div`
-  width: 600px;
-  padding: 10px 20px;
+  width: 590px;
+  padding: 10px 25px 10px 20px;
   border-right: 2px dashed var(--fifth-color);
 `;
 
@@ -153,17 +152,16 @@ const Title = styled.span`
 `;
 
 const Body = styled.div`
-  height: 65px;
+  height: 45px;
   width: 430px;
   color: black;
   font-size: 14px;
   line-height: 1.5;
-  max-height: 85px;
-  padding: 20px 0 0 5px;
+  padding: 15px 0 0 5px;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 3; /* 표시할 줄 수 설정 */
+  -webkit-line-clamp: 2; /* 표시할 줄 수 설정 */
   -webkit-box-orient: vertical; /* 텍스트의 방향 설정 */
 `;
 
@@ -180,7 +178,7 @@ const Button = styled.button`
 `;
 
 const ProfileBox = styled.div`
-  width: 250px;
+  width: 230px;
   display: flex;
   flex-direction: column;
   justify-content: center;

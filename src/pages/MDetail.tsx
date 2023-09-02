@@ -11,6 +11,7 @@ import { useCurrentUser } from '../store/userStore';
 import { deletePost, getPost } from '../api/post';
 
 import { styled } from 'styled-components';
+import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 
 const MDetail = () => {
   const { id } = useParams();
@@ -85,7 +86,10 @@ const MDetail = () => {
               <div className="ql-snow">
                 <HeadContainer>
                   <TextBox>
-                    <Text>{post.store.title}</Text>
+                    <StoreBox>
+                      <RoomRoundedIcon /> &nbsp;
+                      <Text>{post.store.title}</Text>
+                    </StoreBox>
                     <Text>{formatDate}</Text>
                   </TextBox>
                   <Title>제목 : {post.title}</Title>
@@ -153,6 +157,12 @@ const HeadContainer = styled.div`
   width: 900px;
 `;
 
+const StoreBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const TextBox = styled.div`
   display: flex;
   justify-content: space-between;
@@ -163,13 +173,14 @@ const TextBox = styled.div`
 const Text = styled.div`
   font-size: 16px;
   font-weight: 600;
+  padding-right: 5px;
 `;
 
 const Title = styled.div`
   font-size: 26px;
   font-weight: 600;
   float: left;
-  padding: 10px 0 30px 0;
+  padding: 10px 0 30px 10px;
 `;
 
 const Body = styled.div`

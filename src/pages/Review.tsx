@@ -63,7 +63,7 @@ const Review = () => {
 export default Review;
 
 const Layout = styled.div`
-  min-width: 900px;
+  min-width: 870px;
   display: flex;
   flex-direction: column;
   justify-content: center;

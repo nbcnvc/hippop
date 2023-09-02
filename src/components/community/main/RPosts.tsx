@@ -131,9 +131,7 @@ const PostContainer = styled.div`
 `;
 
 const PostBox = styled.div`
-  max-width: 1920px;
-  min-width: 900px;
-  width: 50%;
+  width: 870px;
   height: 200px;
   background-color: #fff;
   border: 3px solid var(--fifth-color);
@@ -144,12 +142,12 @@ const PostBox = styled.div`
 `;
 
 const ContentBox = styled.div`
-  width: 535px;
+  width: 515px;
   padding: 10px 20px;
 `;
 
 const ImageBox = styled.img`
-  width: 320px;
+  width: 310px;
   height: 190px;
   border: 2px solid var(--fifth-color);
   border-radius: 10px;
@@ -176,7 +174,7 @@ const Title = styled.span`
 
 const Body = styled.div`
   height: 65px;
-  width: 430px;
+  width: 420px;
   color: black;
   font-size: 14px;
   line-height: 1.5;
