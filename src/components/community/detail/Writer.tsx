@@ -51,7 +51,7 @@ const Writer = ({ writer, postId }: WriterProps) => {
 export default Writer;
 
 const WriterContainer = styled.div`
-  width: 900px;
+  width: 870px;
   display: flex;
   justify-content: space-between;
   border: 2px solid var(--fifth-color);

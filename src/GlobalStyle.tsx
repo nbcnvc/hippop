@@ -138,7 +138,7 @@ button {
     font-family: 'Pretendard-Regular';
     background-color: var(--primary-color);
     border: 2px solid var(--fifth-color);
-    border-bottom: 6px solid var(--fifth-color);
+    border-bottom: 4px solid var(--fifth-color);
     border-radius: 18px;
     color: white;
     font-size: 16px;

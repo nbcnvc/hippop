@@ -178,10 +178,8 @@ const StoreDetail = () => {
                 </div>
               </div>
               <div className="button-box">
-                <button onClick={() => navigate('/review', { state: { postId: id } })}>후기 보러가기</button>
-                <Link to="/mate">
-                  <button>팝업 메이트 구하기</button>
-                </Link>
+                <button onClick={() => navigate('/review', { state: { storeId: id } })}>후기 보러가기</button>
+                <button onClick={() => navigate('/mate', { state: { storeId: id } })}>팝업 메이트 구하기</button>
                 <ShareBtn
                   id="basic-button"
                   aria-controls={open ? 'basic-menu' : undefined}
