@@ -1,4 +1,4 @@
-import Posts from '../components/community/main/Posts';
+import MPosts from '../components/community/main/MPosts';
 import Write from '../components/community/write/Write';
 import SearchModal from '../components/community/write/SearchModal';
 
@@ -24,6 +24,7 @@ const Mate = () => {
       return alert('로그인 해주세요.');
     }
     setSearchModal(true);
+    document.body.style.overflow = 'hidden';
   };
 
   return (
@@ -54,7 +55,7 @@ const Mate = () => {
         storeTitle={storeTitle}
         setResult={setResult}
       />
-      <Posts />
+      <MPosts />
     </Layout>
   );
 };
@@ -80,8 +81,9 @@ const Title = styled.h1`
   font-size: 28px;
   font-style: normal;
   font-weight: 400;
-  margin: 70px;
   background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+  margin: 70px;
+  padding-bottom: 5px;
 `;
 
 const ButtonBox = styled.div`

@@ -9,7 +9,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { useCurrentUser } from '../store/userStore';
 import { deletePost, getPost } from '../api/post';
+
 import { styled } from 'styled-components';
+import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 
 const RDetail = () => {
   const { id } = useParams();
@@ -49,6 +51,7 @@ const RDetail = () => {
   // Post 수정
   const editButton = () => {
     setIsEdit(!isEdit);
+    document.body.style.overflow = 'hidden';
   };
 
   if (isLoading) {
@@ -58,54 +61,50 @@ const RDetail = () => {
     return <div>오류가 발생했습니다.</div>;
   }
   return (
-    <Layout>
-      <CategoryBox>
-        <Category>
-          <TitleLine>Review</TitleLine>
-        </Category>
-        {currentUser?.id === post.user_id && (
-          <ButtonBox>
-            <Button onClick={() => deleteButton(post.id)} style={{ marginRight: '10px' }}>
-              삭제
-            </Button>
-            <Button onClick={editButton}>수정</Button>
-          </ButtonBox>
-        )}
-      </CategoryBox>
-      {post && (
-        <>
-          {/* 글 내용 */}
-          <div>
-            {isEdit ? (
-              <Edit
-                postId={post.id}
-                postTitle={post.title}
-                postBody={post.body}
-                isEdit={isEdit}
-                setIsEdit={setIsEdit}
-              />
-            ) : (
-              <>
-                <div className="ql-snow">
-                  <HeadContainer>
-                    <TextBox>
-                      <Text>{post.store.title}</Text>
-                      <Text>{formatDate}</Text>
-                    </TextBox>
-                    <Title>{post.title}</Title>
-                  </HeadContainer>
-                  <Body className="ql-editor" dangerouslySetInnerHTML={{ __html: post.body }} />
-                </div>
-              </>
-            )}
-          </div>
-          {/* 작성자 */}
-          {isEdit ? <></> : <Writer writer={post.user} postId={postId} />}
-          {/* 댓글 */}
-          {isEdit ? <></> : <Comments postId={post.id} />}
-        </>
+    <>
+      {isEdit && (
+        <Edit postId={post.id} postTitle={post.title} postBody={post.body} isEdit={isEdit} setIsEdit={setIsEdit} />
       )}
-    </Layout>
+      <Layout>
+        <CategoryBox>
+          <Category>
+            <TitleLine>Review</TitleLine>
+          </Category>
+          {currentUser?.id === post.user_id && (
+            <ButtonBox>
+              <Button onClick={() => deleteButton(post.id)} style={{ marginRight: '10px' }}>
+                삭제
+              </Button>
+              <Button onClick={editButton}>수정</Button>
+            </ButtonBox>
+          )}
+        </CategoryBox>
+        {post && (
+          <>
+            {/* 글 내용 */}
+            <div>
+              <div className="ql-snow">
+                <HeadContainer>
+                  <TextBox>
+                    <StoreBox>
+                      <RoomRoundedIcon /> &nbsp;
+                      <Text>{post.store.title}</Text>
+                    </StoreBox>
+                    <Text>{formatDate}</Text>
+                  </TextBox>
+                  <Title>{post.title}</Title>
+                </HeadContainer>
+                <Body className="ql-editor" dangerouslySetInnerHTML={{ __html: post.body }} />
+              </div>
+            </div>
+            {/* 작성자 */}
+            <></> : <Writer writer={post.user} postId={postId} />
+            {/* 댓글 */}
+            <Comments postId={post.id} />
+          </>
+        )}
+      </Layout>
+    </>
   );
 };
 
@@ -140,12 +139,13 @@ const ButtonBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 20px 0px;
+  margin: 30px 0px;
 `;
 
 const Button = styled.button`
-  width: 80px;
-  height: 35px;
+  width: 60px;
+  height: 32px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--second-color);
   background-color: var(--third-color);
@@ -153,6 +153,12 @@ const Button = styled.button`
 
 const HeadContainer = styled.div`
   width: 900px;
+`;
+
+const StoreBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const TextBox = styled.div`

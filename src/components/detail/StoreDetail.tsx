@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 // 라이브러리
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import CopyToClipboard from 'react-copy-to-clipboard';
 // 타입
 import { Store } from '../../types/types';
 // api
@@ -19,11 +20,16 @@ import { styled } from 'styled-components';
 // mui
 import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import IosShareIcon from '@mui/icons-material/IosShare';
+import Menu from '@mui/material/Menu';
 
 const StoreDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const calendarRef = useRef<HTMLDivElement | null>(null);
 
   const [isClicked, setIsClicked] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const {
     data: storeData,
@@ -32,19 +38,56 @@ const StoreDetail = () => {
     refetch
   } = useQuery<Store | null>({
     queryKey: ['detailData', Number(id)],
-    queryFn: () => fetchDetailData(Number(id)),
-    refetchOnWindowFocus: false
+    queryFn: () => fetchDetailData(Number(id))
+    // refetchOnWindowFocus: true
   });
 
   useEffect(() => {
+    // 컴포넌트가 마운트될 때 실행되는 부분
     refetch();
-  }, []);
+    setIsClicked(false);
+
+    // 컴포넌트가 언마운트될 때 실행되는 부분
+    return () => {
+      setIsClicked(false);
+    };
+  }, [storeData]);
+
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleopenlink = (link: string) => {
     window.open(link, '_blank');
   };
 
-  const handleMouseEnter = () => setIsClicked((isClicked) => !isClicked);
+  const handleMouseEnter = () => setIsClicked(!isClicked);
+  console.log('isClicked', isClicked);
+
+  // useEffect(() => {
+  //   const handleOutsideClick = (event: MouseEvent) => {
+  //     if (isClicked && calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
+  //       setIsClicked(false);
+  //     }
+  //   };
+
+  //   // Attach the event listener to the document when the calendar is open
+  //   if (isClicked) {
+  //     document.addEventListener('click', handleOutsideClick);
+  //   } else {
+  //     // Remove the event listener when the calendar is closed
+  //     document.removeEventListener('click', handleOutsideClick);
+  //   }
+
+  //   // Cleanup the event listener when the component unmounts
+  //   return () => {
+  //     document.removeEventListener('click', handleOutsideClick);
+  //   };
+  // }, [isClicked]);
 
   const settings = {
     slidesToShow: 1,
@@ -57,12 +100,12 @@ const StoreDetail = () => {
     pauseOnFocus: true
   };
 
-  if (isError) {
-    return <div>데이터를 가져오는 도중 오류가 발생했습니다.</div>;
-  }
-
   if (isLoading) {
     return <div>데이터를 로딩 중입니다.</div>;
+  }
+
+  if (isError) {
+    return <div>데이터를 가져오는 도중 오류가 발생했습니다.</div>;
   }
 
   return (
@@ -80,8 +123,10 @@ const StoreDetail = () => {
               </Slider>
             </div>
             <div className="store-info">
-              <h1>{storeData.title}</h1>
-              {/* <BookMark storeData={storeData} /> */}
+              <TopBox>
+                <h1>{storeData.title}</h1>
+                <BookMark storeData={storeData} />
+              </TopBox>
               <div className="store-body">
                 <div>{storeData.body}</div>
               </div>
@@ -91,6 +136,9 @@ const StoreDetail = () => {
                 </div>
                 <div>
                   <span>기간</span> {storeData.period_start} ~ {storeData.period_end}
+                  <div ref={calendarRef}>
+                    <CalendarIcon onClick={handleMouseEnter} />
+                  </div>
                 </div>
                 <div>
                   <span>운영 시간</span> {storeData.opening}
@@ -98,16 +146,34 @@ const StoreDetail = () => {
                 <div>
                   <span>예약 여부</span>
                 </div>
-                <div className="link-url">
+                {/* <div className="link-url">
                   <div>
                     <span>링크 </span>
-                    <LinkIcon
-                      onClick={() => {
-                        handleopenlink(storeData.link);
-                      }}
-                    />
+                    <p>{storeData.link}</p>
                   </div>
-                  <div> {storeData.link}</div>
+                  <LinkIcon
+                    onClick={() => {
+                      handleopenlink(storeData.link);
+                    }}
+                  />
+                </div> */}
+                <div>
+                  <span>링크 </span>
+                  <p
+                    onClick={() => {
+                      handleopenlink(storeData.link);
+                    }}
+                  >
+                    Visit the official page
+                  </p>
+                  <CopyToClipboard
+                    text={storeData.link}
+                    onCopy={() =>
+                      alert('주소가 복사되었습니다. 공식 페이지에서 더 자세한 정보를 확인하실 수 있습니다!')
+                    }
+                  >
+                    <LinkIcon />
+                  </CopyToClipboard>
                 </div>
               </div>
               <div className="button-box">
@@ -117,12 +183,30 @@ const StoreDetail = () => {
                 <Link to="/mate">
                   <button>팝업 메이트 구하기</button>
                 </Link>
-                <button className="share-button">공유</button>
-                {/* <Share /> */}
+                <ShareBtn
+                  id="basic-button"
+                  aria-controls={open ? 'basic-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? 'true' : undefined}
+                  onClick={handleClick}
+                >
+                  <IosShareIcon fontSize="small" />
+                </ShareBtn>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    'aria-labelledby': 'basic-button'
+                  }}
+                >
+                  <Share onClick={handleClose} />
+                </Menu>
               </div>
             </div>
-            <CalendarIcon onClick={handleMouseEnter} />
             {isClicked && <Calendar storeData={storeData} />}
+            {/* {isClicked && <Calendar storeData={storeData} />} */}
           </div>
           <StoreMap storeLocation={storeData.location} title={storeData.title} />
         </>
@@ -165,6 +249,7 @@ const DetailContainer = styled.div`
     }
 
     .store-info {
+      width: 100%;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -178,10 +263,12 @@ const DetailContainer = styled.div`
       }
 
       .store-body {
+        width: 100%;
         border-bottom: 2px dashed #65656587;
+        margin-bottom: 10px;
 
         div {
-          height: 124px;
+          height: 100px;
           font-size: 18px;
           line-height: 26px;
           overflow: auto;
@@ -194,20 +281,24 @@ const DetailContainer = styled.div`
         display: flex;
         justify-content: center;
         flex-direction: column;
+        /* align-items: center; */
 
-        .link-url {
+        /* .link-url {
           display: flex;
-          justify-content: flex-start;
+          align-items: center;
+
           span {
-            width: 35px;
+            width: 40px;
           }
-          div {
+          p {
+            text-align: left;
             font-size: 12px;
-            align-items: center;
           }
-        }
+        } */
+
         div {
           display: flex;
+          align-items: center;
           font-size: 18px;
           margin: 15px 0;
         }
@@ -216,21 +307,49 @@ const DetailContainer = styled.div`
           font-weight: 600;
           margin-right: 15px;
         }
+        p {
+          text-decoration: underline;
+          cursor: pointer;
+          margin-right: 15px;
+          &:hover {
+            color: var(--primary-color);
+          }
+        }
       }
 
       button {
         margin: 10px 20px 20px 0;
-        padding: 7px 25px;
+        padding: 16px 25px;
       }
 
       .button-box {
-        .share-button {
-          background-color: #fff;
-          color: var(--fifth-color);
-        }
+        /* .share-button { */
+        /* background-color: #fff; */
+        /* color: var(--fifth-color); */
+        /* font-size: 10px; */
+        /* margin-top: 16px; */
+        /* } */
+
+        display: flex;
+        align-items: center;
       }
     }
   }
+`;
+
+const TopBox = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ShareBtn = styled.button`
+  background-color: #fff;
+  color: var(--fifth-color);
+  padding: 14px 25px !important;
+
+  /* margin-top: ; */
 `;
 
 const LinkIcon = styled(InsertLinkIcon)`
@@ -238,21 +357,22 @@ const LinkIcon = styled(InsertLinkIcon)`
   cursor: pointer;
 
   &:hover {
-    color: var(--sixth-color);
+    color: var(--primary-color);
     transform: scale(1.1);
   }
 `;
 
 const CalendarIcon = styled(CalendarMonthIcon)`
-  position: absolute;
+  /* position: absolute; */
   /* bottom: 203px; */
   /* right: 375px; */
-  margin-left: 925px;
-  margin-top: 288px;
+  /* margin-left: -510px; */
+  /* margin-top: 291px; */
+  margin-left: 15px;
   cursor: pointer;
 
   &:hover {
-    color: var(--sixth-color);
+    color: var(--primary-color);
     transform: scale(1.1);
   }
 `;

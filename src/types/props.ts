@@ -128,3 +128,7 @@ export interface MessageReplyProps {
 export interface AlarmBoxProps {
   alarms: AlarmType[];
 }
+
+export interface CommentCountProps {
+  postId: number;
+}

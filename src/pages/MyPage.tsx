@@ -307,19 +307,21 @@ const MyPage = () => {
           <div className="info-main">
             <div className="info-inner">
               <p>
-                <span>Welcome,</span>
+                Welcome,
                 <br />
-                {editingName ? (
-                  <input
-                    type="text"
-                    value={newName}
-                    onChange={(e) => setNewName(e.target.value)}
-                    style={{ width: '20%' }}
-                  />
-                ) : (
-                  currentUser?.name
-                )}
-                님의 My Page
+                <span>
+                  {editingName ? (
+                    <input
+                      type="text"
+                      value={newName}
+                      onChange={(e) => setNewName(e.target.value)}
+                      style={{ width: '20%' }}
+                    />
+                  ) : (
+                    currentUser?.name
+                  )}
+                  님의 My Page
+                </span>
               </p>
               <span>
                 <div className="user-sub-info">{currentUser?.email}</div>
@@ -375,7 +377,7 @@ const MyPage = () => {
                       navigate(`/yourpage/${subscriberData.subscribe_to}`);
                     }}
                   >
-                    Subscriber {index + 1}
+                    {subscribers}
                   </li>
                 ))}
               </ul>
@@ -520,10 +522,7 @@ const MypageTag = styled.div`
         width: 250px;
         position: absolute;
         display: flex;
-        // input {
-        //   position: relative;
-        //   left: -10px;
-        // }
+      }
         .confirm {
           position: absolute;
           left: 85px;
@@ -553,8 +552,7 @@ const MypageTag = styled.div`
       position: absolute;
       width: 100px;
       background: white;
-      // left: 400px;
-      margin-left: -80px;
+      margin-left: -78px;
       top: 60px;
       border-radius: 8px;
       box-shadow: 4px 4px 10px rgb(87, 87, 87);
@@ -595,7 +593,6 @@ const MypageTag = styled.div`
       bottom: 0;
       right: 0;
       margin-bottom: 5px;
-      // margin-right: 5px;
       color: var(--primary-color);
       background-color: white;
       padding: 4px;
@@ -612,7 +609,7 @@ const MypageTag = styled.div`
     .info-wrapper {
       width: 25%;
       height: 300px;
-      padding: 1rem 2rem;
+      padding: 10px 20px;
       border: 3px solid var(--fifth-color);
       border-radius: 18px;
       background-color: white;
@@ -630,32 +627,46 @@ const MypageTag = styled.div`
         justify-content: center;
         align-items: center;
         p {
-          font-size: 20px;
+          font-size: 18px;
           font-weight: bold;
           text-align: center;
+          color: gray;
+          span{
+            color: var(--primary-color);
+          font-size: 20px !important;
+          }
         }
         span {
-          font-size: 18px;
+          font-size: 16px;
           text-align: left;
           margin: 10px 0 0;
           color: gray;
-          // display: flex;
-          justify-content: space-between;
+          display: flex;
+          justify-content: center;
+          align-items: center;
           .user-sub-info {
             display: flex;
           }
         }
+        input {
+          width:60px !important;
+          height: 16px;
+          border: 2px solid var(--primary-color);
+          border-radius: 6px;
+        }
       }
       .btn-mother {
-        margin-top: 0.5rem;
         margin: 0 auto;
+        padding: 0;
+        width: 210px;
+        margin-top: 0.5rem;
         display: flex;
         justify-content: center;
         position: relative;
 
         button {
           border-radius: 22px;
-          padding: 14px 20px;
+          padding: 12px 20px;
         }
         button:first-child {
           margin-right: 10px;
@@ -669,11 +680,11 @@ const MypageTag = styled.div`
     }
     .btn-wrapper {
       display: flex;
-      justify-content: flex-end;
       align-items: center;
+      justify-content: flex-end;
     }
     .alram-mother {
-      padding: 1rem 2rem;
+      padding: 10px 20px;
       border: 3px solid var(--fifth-color);
       border-radius: 18px;
       background-color: white;
@@ -704,10 +715,10 @@ const MypageTag = styled.div`
   }
   .toggle-wrapper button {
     background-color: white; /* 비활성 버튼 배경색 */
-    color: black; /* 버튼 텍스트 색상 */
+    color: var(--fifth-color);
     padding: 10px 20px;
     cursor: pointer;
-
+    font-weight: 600;
     margin-right: 10px;
   }
   .btns-wrapper {
@@ -715,11 +726,12 @@ const MypageTag = styled.div`
   }
   button.active {
     background-color: var(--primary-color);
+    color: white;
   }
   h3 {
-    text-align: center;
-    margin: 5rem 0;
-    font-size: 28px;
+    text-align: center !important;
+    margin: 6rem 0 4rem !important;
+    font-size: 28px !important;
 
     p {
       span {
@@ -743,12 +755,12 @@ const MypageTag = styled.div`
     grid-template-columns: repeat(3, 1fr);
     gap: 50px;
     max-width: 1920px;
-    width: 100%;
+    width: 99%;
     margin-top: 50px;
 
     .fid {
       margin: 0 auto;
-      width: 380px;
+      width: 100%;
       height: 500px;
       border-radius: 18px;
       border: 3px solid var(--fifth-color);
@@ -767,28 +779,40 @@ const MypageTag = styled.div`
         transform: scale(0.98);
       }
       img {
-        width: 340px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        width: 90%;
         height: 370px;
         object-fit: cover;
         border-radius: 10px;
         border: 3px solid var(--fifth-color);
       }
       .info-box {
-        width: 95%;
+        width: 90%;
         margin: 0 auto;
         display: flex;
         justify-content: space-between;
         align-items: flex-end;
         margin-top: 20px;
-      }
-      button {
-        background-color: var(--second-color);
-        color: white;
-        margin-right: 0;
+        &:first-child {
+          width: 80%;
+        }
+        h2 {
+          height: 16px;
+          overflow: hidden;
+        }
+        button {
+          width: 130px;
+          padding: 10px 14px;
+          background-color: var(--second-color);
+          color: white;
+          margin-right: 0;
+        }
       }
     }
   }
-  .subs-wrapper {
+  .fids {
     margin: 0 auto;
     padding: 0;
     display: grid;
@@ -797,46 +821,61 @@ const MypageTag = styled.div`
     grid-template-columns: repeat(3, 1fr);
     gap: 50px;
     max-width: 1920px;
-    width: 100%;
+    width: 99%;
     margin-top: 50px;
 
-    // .fids {
-    //   margin: 0 auto;
-    //   width: 380px;
-    //   height: 500px;
-    //   border-radius: 18px;
-    //   border: 3px solid var(--fifth-color);
-    //   box-sizing: border-box;
-    //   display: flex;
-    //   flex-direction: column;
-    //   align-items: center;
-    //   background-color: #ffffff;
-    //   transition: color 0.3s ease, transform 0.3s ease;
-    //   &:hover {
-    //     border: 6px solid var(--primary-color);
-    //   }
-    //   &:active {
-    //     background-color: var(--sixth-color);
-    //     transform: scale(0.98);
-
-    //   img {
-    //     width: 340px;
-    //     height: 370px;
-    //     object-fit: cover;
-    //     border-radius: 10px;
-    //     border: 3px solid var(--fifth-color);
-    //   }
-    //   .info-wrap {
-    //     width: 330px;
-    //     display: flex;
-    //     justify-content: space-between;
-    //     align-items: flex-end;
-    //     margin-top: 20px;
-    //   }
-    //   button {
-    //     background-color: var(--second-color);
-    //     color: white;
-    //   }
-    // }
+    .user-subs {
+      margin: 0 auto;
+      width: 100%;
+      height: 500px;
+      border-radius: 18px;
+      border: 3px solid var(--fifth-color);
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #ffffff;
+      transition: color 0.3s ease, transform 0.3s ease;
+      &:hover {
+        border: 6px solid var(--primary-color);
+      }
+      &:active {
+        background-color: rgb(179, 179, 190);
+        transform: scale(0.98);
+      }
+      img {
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        width: 90%;
+        height: 370px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 3px solid var(--fifth-color);
+      }
+      .info-box {
+        width: 90%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-top: 20px;
+        &:first-child {
+          width: 80%;
+        }
+        h2 {
+          height: 16px;
+          overflow: hidden;
+        }
+        button {
+          width: 130px;
+          padding: 10px 14px;
+          background-color: var(--second-color);
+          color: white;
+          margin-right: 0;
+        }
+      }
+    }
   }
 `;

@@ -457,6 +457,7 @@ const Reset = styled(RestartAltIcon)`
 
   top: 25%;
   right: 15%;
+  cursor: pointer;
 `;
 
 const SearchInput = styled.input`

@@ -55,6 +55,26 @@ body {
     margin: 0 auto;
     background-color:var(--fourth-color);
 
+
+    .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
+      /* border: 2px solid #333333; */
+    border-radius: 18px;
+    padding: 20px 40px;
+    margin-top: 15px;
+    }
+
+    .css-6hp17o-MuiList-root-MuiMenu-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+
+
+    /* padding-bottom: 8px; */
+    /* outline: 0; */
+}
+
+
     // 검색 페이지 달력 삼각형 
     .react-datepicker__triangle  {
       &:after{
@@ -105,7 +125,7 @@ body {
 
     .react-datepicker__day--outside-month {
     cursor: default;
-    color: gray; // 해당 달이 아니면 날짜 색상 변경해서 구분해주었다
+    color: gray; // 해당 달이 아니면 날짜 색상 변경해서 구분해
   }
   }
 }

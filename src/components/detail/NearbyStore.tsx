@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 // 라이브러리
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -93,6 +93,7 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
 
   // detail page 이동
   const navDetail = (id: number) => {
+    // window.location.reload();
     navigate(`/detail/${id}`);
   };
 
@@ -122,7 +123,6 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
                         <StoreName>{data.title}</StoreName>
                         {data.period_start} ~ {data.period_end}
                       </div>
-
                       <DetailBtn onClick={() => navDetail(data.id)}>상세보기</DetailBtn>
                     </InfoBox>
                   </Card>
