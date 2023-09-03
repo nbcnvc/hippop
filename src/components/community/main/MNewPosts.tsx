@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -10,21 +10,25 @@ import { getPosts } from '../../../api/post';
 import { styled } from 'styled-components';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import shortid from 'shortid';
 
 const MNewPosts = () => {
   const navigate = useNavigate();
+
   const { pathname } = useLocation();
+  const queryKey = pathname === '/review' ? 'reviews' : 'mates';
+
   const { state } = useLocation();
   const storeId: number = state?.storeId || 0; // state가 존재하지 않을 때 기본값으로 0 사용
 
-  const queryKey = pathname === '/review' ? 'reviews' : 'mates';
   const {
     data: posts,
     isLoading,
     isError,
     hasNextPage,
     fetchNextPage,
-    isFetchingNextPage
+    isFetchingNextPage,
+    refetch
   } = useInfiniteQuery<FetchPost>({
     queryKey: [`${queryKey}`, pathname],
     queryFn: ({ pageParam }) => getPosts(pageParam, storeId, pathname),
@@ -37,6 +41,10 @@ const MNewPosts = () => {
       return null; // 마지막 페이지인 경우
     }
   });
+
+  useEffect(() => {
+    refetch();
+  }, [storeId]);
 
   const selectPosts = useMemo(() => {
     return posts?.pages
@@ -63,7 +71,8 @@ const MNewPosts = () => {
 
   // 프로필로 넘어가기
   const naviProfile = (userId: string) => {
-    navigate(`/yourpage/${userId}`);
+    // navigate(`/yourpage/${userId}`);
+    navigate(`/yourpage/${shortid.generate()}`, { state: { userId: userId } });
   };
 
   if (isLoading) {

@@ -1,11 +1,14 @@
 import MNewPosts from './MNewPosts';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { styled } from 'styled-components';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import { useNavigate } from 'react-router-dom';
 
 const MPosts = () => {
+  const navigate = useNavigate();
+
   const [sortName, setSortName] = useState<string>('전체보기');
   const toggleSortButton = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = (e.target as HTMLButtonElement).name;
