@@ -208,32 +208,7 @@ const MyPage = () => {
     Subs();
   }, [currentUser]);
 
-  // 닉네임 수정 handler
-  const handleNameEdit = () => {
-    setEditingName(true);
-    setNewName(currentUser?.name || '');
-    setSelectedImage(null);
-    setImageUploadVisible(!imageUploadVisible);
-  };
-  // 닉네임 저장
-  // 수정 모드 해제
-  const handleNameCancel = () => {
-    setEditingName(false);
-    setSelectedImage(null);
-    setImageUploadVisible(!imageUploadVisible);
-  };
-
-  const handleImageInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      setSelectedImage(files[0]);
-      setImageUploadVisible(true);
-    } else {
-      setSelectedImage(null); // 이미지를 선택하지 않은 경우에 null로 설정
-      setImageUploadVisible(false);
-    }
-  };
-
+  // 프로필 수정 저장
   const handleSaveChanges = async () => {
     let nameChanged = false;
     let imageChanged = false;
@@ -286,7 +261,31 @@ const MyPage = () => {
       alert('변경된 부분이 없어요 :( [취소] 버튼을 눌러주세요 !');
     }
   };
-
+  // 닉네임 수정 handler
+  const handleNameEdit = () => {
+    setEditingName(true);
+    setNewName(currentUser?.name || '');
+    setSelectedImage(null);
+    setImageUploadVisible(!imageUploadVisible);
+  };
+  // 수정 모드 해제
+  const handleNameCancel = () => {
+    setEditingName(false);
+    setSelectedImage(null);
+    setImageUploadVisible(!imageUploadVisible);
+  };
+  // 프로필 이미지 변경
+  const handleImageInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      setSelectedImage(files[0]);
+      setImageUploadVisible(true);
+    } else {
+      setSelectedImage(null); // 이미지를 선택하지 않은 경우에 null로 설정
+      setImageUploadVisible(false);
+    }
+  };
+  // 프로필 이미지 선택-미리보여주기
   const handleSectionChange = (e: React.MouseEvent<HTMLButtonElement>) => {
     const button = e.target as HTMLButtonElement;
     const section = button.getAttribute('data-section');
@@ -377,18 +376,25 @@ const MyPage = () => {
           <div className="btn-mother">
             {isMenuOpen && (
               <ul>
-                {sublistData?.map((subscriberData, index) => (
-                  <li
-                    key={index}
-                    onClick={() => {
-                      navigate(`/yourpage/${subscriberData.subscribe_to}`);
-                    }}
-                  >
-                    {subscribers}
-                  </li>
-                ))}
+                {sublistData?.map((subscriberData, index) => {
+                  const subscriberIndex = subscriberData.subscribe_to;
+                  const subscriberName = subscribers[index];
+                  return (
+                    <li
+                      key={index}
+                      onClick={() => {
+                        if (subscribers) {
+                          navigate(`/yourpage/${subscriberIndex}`);
+                        }
+                      }}
+                    >
+                      {subscriberName !== undefined ? subscriberName : ''}
+                    </li>
+                  );
+                })}
               </ul>
             )}
+
             {editingName ? (
               <div className="name-btn">
                 <button onClick={handleNameCancel}>취소</button>
@@ -566,11 +572,22 @@ const MypageTag = styled.div`
       box-shadow: 4px 4px 10px rgb(87, 87, 87);
     }
     li {
-      padding: 5px 10px;
+      text-align: center;
+      padding: 8px 10px;
+      
       &:hover {
-        border-radius: 8px;
         background-color: var(--sixth-color);
+        font-weight: 600;
       }
+      
+      &:first-child {
+        border-radius: 6px 6px 0 0;
+      }
+      
+      &:last-child {
+        border-radius: 0 0 6px 6px;
+      }
+    }
     }
     h5 {
       margin-top: 4px;
@@ -734,9 +751,9 @@ const MypageTag = styled.div`
         width: 100%;
         height: 240px;
         margin-top: 14px;
-        // border: 1px dotted gray;
         display: flex;
         justify-content: flex-end;
+        
         button {
           width: 120px;
           height: 22px;
