@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 import 'keen-slider/keen-slider.min.css';
 import { useKeenSlider } from 'keen-slider/react';
@@ -18,7 +18,6 @@ function getRandomElement(arr: number[]) {
 const Card = (props: CardProps) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [loaded, setLoaded] = useState(false);
-  const observerRef = useRef(null);
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
     initial: 0,
     slideChanged(slider) {
@@ -59,16 +58,14 @@ const Card = (props: CardProps) => {
         <>
           <Arrow
             left
-            onClick={(e: any) => {
-              e.stopPropagation();
+            onClick={() => {
               instanceRef.current?.prev();
             }}
             disabled={currentSlide === 0}
           />
 
           <Arrow
-            onClick={(e: any) => {
-              e.stopPropagation();
+            onClick={() => {
               instanceRef.current?.next();
             }}
             disabled={currentSlide === instanceRef.current.track.details.slides.length - 1}
@@ -108,9 +105,15 @@ const StoreInfo = styled.div`
 const Arrow = (props: { disabled: boolean; left?: boolean; onClick: (e: any) => void }) => {
   const disabeld = props.disabled ? ' arrow--disabled' : '';
   const zIndex = 4;
+
+  const handleClick = (e: any) => {
+    e.preventDefault();
+    props.onClick(e);
+  };
+
   return (
     <svg
-      onClick={props.onClick}
+      onClick={handleClick}
       style={{ zIndex }}
       className={`arrow ${props.left ? 'arrow--left' : 'arrow--right'} ${disabeld}`}
       xmlns="http://www.w3.org/2000/svg"
