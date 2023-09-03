@@ -154,14 +154,12 @@ const Wrapper = styled.div`
   align-items: center;
   width: 99%;
   height: 50px;
-  // padding-right: 8px;
   border-radius: 14px;
   margin: 6px 0 0;
   color: var(--fifth-color);
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, padding-right 0.3s ease;
   &:hover {
-    // padding-right: 0px;
     background-color: var(--sixth-color);
   }
   &:active {
