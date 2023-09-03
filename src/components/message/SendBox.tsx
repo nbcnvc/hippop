@@ -211,7 +211,7 @@ const Body = styled.div`
   width: 100%;
   white-space: nowrap;
   overflow: hidden;
-  position: relative;
+  text-overflow: ellipsis;
 
   span {
     display: inline-block;

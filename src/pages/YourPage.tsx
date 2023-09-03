@@ -177,9 +177,9 @@ const YourPage = () => {
                                 {bookMark.store?.location.split(' ').slice(1, 2)}
                               </Location>
                             </div>
-                            <div>
+                            <TitleBox>
                               <StoreTitle>{bookMark.store?.title}</StoreTitle>
-                            </div>
+                            </TitleBox>
                           </StoreInfo>
                         </StoreList>
                       </div>
@@ -252,7 +252,7 @@ const Container = styled.div`
   height: 100%;
   margin: 0 auto;
 
-  margin-top: 50px;
+  margin-top: 120px;
   margin-bottom: 100px;
 `;
 
@@ -260,7 +260,8 @@ const UserWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 50px;
-  width: 250px;
+  width: 300px;
+
   position: fixed; /* 화면에 고정 */
   /* top: 0; 상단에 고정 */
   overflow-y: auto;
@@ -269,6 +270,8 @@ const UserWrapper = styled.div`
 const UserBox = styled.div`
   display: flex;
   flex-direction: column;
+
+  height: 250px;
 
   border: 3px solid #333333;
   border-radius: 18px;
@@ -279,7 +282,9 @@ const Htag = styled.h2`
   justify-content: center;
   align-items: center;
 
-  margin-top: 20px;
+  margin-top: 30px;
+
+  font-size: 22px;
 `;
 
 const HtagLine = styled.h2`
@@ -288,7 +293,7 @@ const HtagLine = styled.h2`
 const BoxLine = styled.div`
   border-bottom: 2px dashed #333333;
 
-  margin: 15px 10px 15px 10px;
+  margin: 25px 10px 40px 10px;
 `;
 
 const UserProfile = styled.div`
@@ -300,17 +305,19 @@ const UserProfile = styled.div`
 `;
 
 const Img = styled.img`
-  width: 55px;
-  height: 55px;
+  width: 80px;
+  height: 80px;
   object-fit: cover;
   border-radius: 50%;
 `;
 
 const Ptag = styled.p`
-  font-size: 15px;
+  font-size: 20px;
   color: #333333;
 
   padding: 5px;
+
+  margin-left: 15px;
 `;
 
 const SpanLine = styled.span`
@@ -318,17 +325,13 @@ const SpanLine = styled.span`
 `;
 
 const StoreListBox = styled.div`
-  /* display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column; */
   background-color: var(--fourth-color);
-  margin-top: 30px;
+  margin-top: 80px;
 
   border: 3px solid #333333;
   border-radius: 18px;
 
-  height: 560px;
+  height: 720px;
   /* height: 100%; */
   /* overflow: hidden; */
   overflow-y: scroll;
@@ -363,7 +366,14 @@ const StoreInfo = styled.div`
 `;
 
 const Location = styled.span`
-  font-size: 10px;
+  font-size: 12px;
+`;
+
+const TitleBox = styled.div`
+  max-width: 240px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const StoreTitle = styled.span`
@@ -371,19 +381,20 @@ const StoreTitle = styled.span`
 `;
 
 const Line = styled.div`
-  width: 86%;
+  width: 92%;
   margin: 5px 15px;
   border-bottom: 1px dashed #333333;
 `;
 
 const ReviewWrapper = styled.div`
-  margin: 50px 0 0 280px;
+  margin: 50px 0 0 390px;
 `;
 
 const Htag2 = styled.h2`
-  /* margin-top: 20px; */
+  margin-bottom: 55px;
   display: flex;
   align-items: flex-start;
+  font-size: 25px;
 `;
 
 const GridContainer = styled.div`
@@ -392,7 +403,7 @@ const GridContainer = styled.div`
   display: grid;
   justify-content: center;
   grid-template-columns: repeat(2, 1fr); // 한 줄에 두 개의 열
-  gap: 30px;
+  gap: 60px;
 
   /* max-width: 500px; // 그리드가 너무 넓어지는 것을 제한 */
   width: 50%;
@@ -403,9 +414,9 @@ const GridContainer = styled.div`
 `;
 
 const Card = styled.div`
-  width: 260px !important ;
+  width: 400px !important ;
 
-  height: 340px;
+  height: 460px;
   border-radius: 18px;
   border: 3px solid var(--fifth-color);
 
@@ -418,13 +429,24 @@ const Card = styled.div`
   position: relative;
 `;
 
+const PostImgBox = styled.div`
+  /* border: 2px solid black;
+  border-radius: 18px;
+  object-fit: cover;
+
+  width: 330px;
+  height: 310px;
+  margin-bottom: 15px; */
+`;
+
 const PostImg = styled.img`
   border: 2px solid black;
   border-radius: 18px;
   object-fit: cover;
 
-  width: 225px;
-  height: 250px;
+  width: 330px;
+  height: 310px;
+  margin-bottom: 15px;
 `;
 
 const CardInfo = styled.div`
@@ -432,18 +454,15 @@ const CardInfo = styled.div`
   justify-content: space-between;
   align-items: ceoter;
 
-  width: 225px;
+  width: 330px;
 `;
 
 const HtagTttle = styled.h3`
   /* padding: 5px; */
   margin-top: 10px;
   margin-left: 5px;
-  font-size: 15px;
+  font-size: 20px;
   width: 225px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 `;
 
 const PtagDate = styled.p`
@@ -466,7 +485,7 @@ const DetailBtn = styled.button`
   justify-content: center;
   align-items: center;
   width: 100px;
-  height: 25px;
+  height: 35px;
 
   font-size: 15px;
 
