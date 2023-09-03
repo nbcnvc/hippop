@@ -1,4 +1,4 @@
-import RPosts from '../components/community/main/RPosts';
+import RPosts from '../components/community/main/review/RPosts';
 import Write from '../components/community/write/Write';
 import SearchModal from '../components/community/write/SearchModal';
 

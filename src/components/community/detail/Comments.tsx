@@ -3,10 +3,11 @@ import React, { useMemo, useState } from 'react';
 import moment from 'moment';
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { Comment } from '../../../types/types';
 import { CommentProps } from '../../../types/props';
 import { createComment, deleteComment, getCommentCount, getComments, updateComment } from '../../../api/comment';
-import { Comment } from '../../../types/types';
 import { useCurrentUser } from '../../../store/userStore';
+
 import { styled } from 'styled-components';
 
 const Comments = ({ postId }: CommentProps) => {
