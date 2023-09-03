@@ -10,6 +10,8 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getUser } from '../../api/user';
 import { getAlarms, readAlarm } from '../../api/alarm';
+import shortid from 'shortid';
+import { toast } from 'react-toastify';
 
 function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -78,6 +80,7 @@ function Header() {
     } else {
       navigate('/');
       alert(':) 안녕히가세요 !');
+      // toast(':) 안녕히가세요 !');
     }
   };
 
@@ -154,7 +157,7 @@ function Header() {
                   <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
                     <div
                       onClick={() => {
-                        navigate(`/mypage/${user.id}`);
+                        navigate(`/mypage/${shortid.generate()}`, { state: { userId: user.id } });
                       }}
                     >
                       My Page
@@ -308,31 +311,30 @@ const HeaderTag = styled.header`
             background-color: var(--sixth-color);
             font-weight: 600;
           }
-          
+
           &:first-child {
             border-radius: 6px 6px 0 0;
           }
-          
+
           &:last-child {
             border-radius: 0 0 6px 6px;
           }
         }
-        }
       }
     }
-    .alarm {
+  }
+  .alarm {
+    position: absolute;
+    margin-left: 170px;
+    img {
       position: absolute;
-      margin-left: 170px;
-      img {
-        position: absolute;
-        top: -17%;
-        right: -25%;
-        width: 10px;
-        height: 10px;
-      }
-      ul {
-        position: relative;
-      }
+      top: -17%;
+      right: -25%;
+      width: 10px;
+      height: 10px;
+    }
+    ul {
+      position: relative;
     }
   }
 `;

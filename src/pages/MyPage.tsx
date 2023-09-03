@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-
 // 라이브러리
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 //타입
@@ -9,7 +8,6 @@ import { getUser } from '../api/user';
 import { getMyItems } from '../api/post';
 import { getMyStores } from '../api/store';
 import { supabase } from '../api/supabase';
-
 import { setUserStore } from '../store/userStore';
 import { randomFileName } from '../hooks/useHandleImageName';
 //스타일
@@ -17,21 +15,25 @@ import { styled } from 'styled-components';
 import PartyModeIcon from '@mui/icons-material/PartyMode';
 import { BsFillPeopleFill } from 'react-icons/bs';
 import { ImSpinner10 } from 'react-icons/im';
-
 //메세지
 import SendBox from '../components/message/SendBox';
 import MessageReply from '../components/message/MessageReply';
 import { MessageType } from '../types/types';
 import ReceiveBox from '../components/message/ReceiveBox';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 import MyReview from '../components/mypage/MyReview';
 import MyBookmark from '../components/mypage/MyBookmark';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const MyPage = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
-  const { data: currentUser } = useQuery(['user', id], () => getUser(id ?? ''));
+  // const { id } = useParams();
+  const { state } = useLocation();
+  const userId: string = state?.userId || '';
+
+  const { data: currentUser } = useQuery(['user', userId], () => getUser(userId ?? ''));
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState('');
   const [imageUploadVisible, setImageUploadVisible] = useState(false);
@@ -43,19 +45,14 @@ const MyPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean | null>(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [subscribers, setSubscribers] = useState<string[]>([]);
-
-  const [fetchUserPost, setFetchUserPost] = useState<PostType[]>([]);
-  const [fetchSubs, setFetchSubs] = useState<Bookmark[]>([]);
-  const [extractedData, setExtractedData] = useState<Store[]>([]);
+  const notify = () => toast('알림 메시지');
+  // const [fetchUserPost, setFetchUserPost] = useState<PostType[]>([]);
+  // const [fetchSubs, setFetchSubs] = useState<Bookmark[]>([]);
+  // const [extractedData, setExtractedData] = useState<Store[]>([]);
   // 게시글 & 북마크 토글
   const [activeSection, setActiveSection] = useState('myReview');
-
   const [toggleMsgBox, setToggleMsgBox] = useState<string>('받은 쪽지함');
   const imageInputRef = useRef(null);
-
-  // 무한스크롤상태
-  const initialPosts: any = [];
-
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
   // 현재유저 정보 가져오기
   // const currentUser: any | null = useCurrentUser();
@@ -63,7 +60,6 @@ const MyPage = () => {
   const currentUserId = currentUser?.id;
   const { data: sublistData } = useQuery(['sublist'], () => getSubList(currentUserId ?? ''));
   // console.log('test ====> ', sublistData);
-
   const getSubList = async (userId: string) => {
     const { data } = await supabase.from('subscribe').select('subscribe_to').eq('subscribe_from', userId);
     return data;
@@ -78,11 +74,9 @@ const MyPage = () => {
           return subscribeUser;
         });
         const allSubscribeUsers = await Promise.all(subscribeUserPromises);
-
         const filteredSubscribers = allSubscribeUsers
           .filter((subscribeUserArray) => subscribeUserArray && subscribeUserArray.length > 0)
           .map((subscribeUserArray) => subscribeUserArray && subscribeUserArray[0].name);
-
         setSubscribers(filteredSubscribers as string[]);
       }
     };
@@ -90,7 +84,6 @@ const MyPage = () => {
       loadSubscribers();
     }
   }, [sublistData]);
-
   // 구독목록 visible
   useEffect(() => {
     function handleOutsideClick(event: MouseEvent) {
@@ -99,12 +92,10 @@ const MyPage = () => {
       }
     }
     window.addEventListener('mousedown', handleOutsideClick);
-
     return () => {
       window.removeEventListener('mousedown', handleOutsideClick);
     };
   }, []);
-
   // 인피니티 스크롤을 위한 데이터 조회
   const getMySectionItems = ({
     pageParam,
@@ -122,7 +113,6 @@ const MyPage = () => {
     }
     return null;
   };
-
   const {
     data: items,
     isLoading,
@@ -140,7 +130,6 @@ const MyPage = () => {
       return null;
     }
   });
-
   // 인피니티 스크롤로 필터된 post
   const selectItems = useMemo(() => {
     return items?.pages
@@ -149,7 +138,6 @@ const MyPage = () => {
       })
       .flat();
   }, [items]);
-
   // 언제 다음 페이지를 가져올 것
   const { ref } = useInView({
     threshold: 1, // 맨 아래에 교차될 때
@@ -158,65 +146,56 @@ const MyPage = () => {
       fetchNextPage();
     }
   });
-
   // my page가 렌더되면 현재 login상태 user가 작성한 post 배열 가져오기
-  useEffect(() => {
-    const fetchUserPosts = async () => {
-      if (currentUser) {
-        const userPostId = currentUser.id;
-        let { data } = await supabase.from('post').select('*').eq('user_id', userPostId);
-        // console.log(data);
-        setFetchUserPost(data || []);
-      }
-    };
-    fetchUserPosts();
-  }, [currentUser]);
+  // useEffect(() => {
+  //   const fetchUserPosts = async () => {
+  //     if (currentUser) {
+  //       const userPostId = currentUser.id;
+  //       let { data } = await supabase.from('post').select('*').eq('user_id', userPostId);
+  //       // console.log(data);
+  //       setFetchUserPost(data || []);
+  //     }
+  //   };
+  //   fetchUserPosts();
+  // }, [currentUser]);
   //////////////////////////////////////
-  useEffect(() => {
-    const Subs = async () => {
-      if (currentUser) {
-        const userPostId = currentUser.id;
-        let { data } = await supabase.from('bookmark').select('*').eq('user_id', userPostId);
-        // console.log('1----', data);
-        if (data) {
-          setFetchSubs(data);
-          const storeIds = data.map((bookmark) => bookmark.store_id);
-          // console.log('2----', storeIds); // Array of store_ids
-          if (storeIds.length > 0) {
-            let { data: storeData } = await supabase.from('store').select('*').in('id', storeIds);
-            // console.log('3----', storeData); // Array of store data
-            if (storeData) {
-              const extractedData: Store[] = storeData.map((store) => ({
-                id: store.id,
-                location: store.location,
-                period_start: store.period_start,
-                period_end: store.period_end,
-                title: store.title,
-                body: store.body,
-                opening: store.opening,
-                images: store.images,
-                link: store.link
-              }));
-              // console.log('4----', extractedData);
-              setExtractedData(extractedData);
-            }
-          }
-        }
-      }
-    };
-
-    Subs();
-  }, [currentUser]);
-
+  // useEffect(() => {
+  //   const Subs = async () => {
+  //     if (currentUser) {
+  //       const userPostId = currentUser.id;
+  //       let { data } = await supabase.from('bookmark').select('*').eq('user_id', userPostId);
+  //       if (data) {
+  //         setFetchSubs(data);
+  //         const storeIds = data.map((bookmark) => bookmark.store_id);
+  //         if (storeIds.length > 0) {
+  //           let { data: storeData } = await supabase.from('store').select('*').in('id', storeIds);
+  //           if (storeData) {
+  //             const extractedData: Store[] = storeData.map((store) => ({
+  //               id: store.id,
+  //               location: store.location,
+  //               period_start: store.period_start,
+  //               period_end: store.period_end,
+  //               title: store.title,
+  //               body: store.body,
+  //               opening: store.opening,
+  //               images: store.images,
+  //               link: store.link
+  //             }));
+  //             setExtractedData(extractedData);
+  //           }
+  //         }
+  //       }
+  //     }
+  //   };
+  //   Subs();
+  // }, [currentUser]);
   // 프로필 수정 저장
   const handleSaveChanges = async () => {
     let nameChanged = false;
     let imageChanged = false;
-
     if (newName.trim() !== '' && newName.length < 5 && newName !== currentUser?.name) {
       // 이름 변경 처리
       const { error: nameError } = await supabase.from('user').update({ name: newName }).eq('id', currentUser?.id);
-
       if (!nameError) {
         const userData = await getUser(currentUser?.id ?? '');
         setCurrentUser(userData);
@@ -224,22 +203,17 @@ const MyPage = () => {
         nameChanged = true;
       } else {
         console.error(nameError);
-        alert('닉네임 변경 중 오류가 발생했습니다.');
+        alert('닉네임 변경 중 오류가 발생했습니다 :(');
       }
     }
-
     if (selectedImage) {
       try {
         const newFileName = randomFileName(selectedImage.name);
         const renamedFile = new File([selectedImage], newFileName);
-
         const { data } = await supabase.storage.from('images').upload(`profile/${renamedFile.name}`, renamedFile);
-
         if (data) {
           const imgUrl = data.path;
-
           await supabase.from('user').update({ avatar_url: imgUrl }).eq('id', currentUser?.id);
-
           // Fetch updated user data using getUser
           if (currentUser) {
             const userData = await getUser(currentUser?.id ?? '');
@@ -252,7 +226,6 @@ const MyPage = () => {
         alert('프로필 사진 변경 중 오류가 발생했습니다.');
       }
     }
-
     if (nameChanged || imageChanged) {
       alert('프로필 변경이 완료됐습니다 :)');
       setEditingName(false); // 수정 모드 해제
@@ -289,12 +262,10 @@ const MyPage = () => {
   const handleSectionChange = (e: React.MouseEvent<HTMLButtonElement>) => {
     const button = e.target as HTMLButtonElement;
     const section = button.getAttribute('data-section');
-
     if (section !== null) {
       setActiveSection(section);
     }
   };
-
   if (isLoading) {
     return (
       <div>
@@ -305,7 +276,6 @@ const MyPage = () => {
   if (isError) {
     return <div>오류가 발생했습니다.</div>;
   }
-
   const ClickToggleBox = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = (e.target as HTMLButtonElement).name;
     setToggleMsgBox(name);
@@ -394,14 +364,13 @@ const MyPage = () => {
                 })}
               </ul>
             )}
-
             {editingName ? (
               <div className="name-btn">
                 <button onClick={handleNameCancel}>취소</button>
                 <button onClick={handleSaveChanges}>저장</button>
               </div>
             ) : (
-              currentUser?.id === id && <button onClick={handleNameEdit}>프로필 변경</button>
+              currentUser?.id === userId && <button onClick={handleNameEdit}>프로필 변경</button>
             )}
           </div>
           {sublistData && (
@@ -514,7 +483,6 @@ const MypageTag = styled.div`
     justify-content: space-between;
     align-items: center;
     gap: 20px;
-
     .avatar-container {
       position: relative;
       margin: 0 auto;
@@ -574,16 +542,13 @@ const MypageTag = styled.div`
     li {
       text-align: center;
       padding: 8px 10px;
-      
       &:hover {
         background-color: var(--sixth-color);
         font-weight: 600;
       }
-      
       &:first-child {
         border-radius: 6px 6px 0 0;
       }
-      
       &:last-child {
         border-radius: 0 0 6px 6px;
       }
@@ -609,7 +574,7 @@ const MypageTag = styled.div`
         cursor: pointer;
         &:hover {
           border-radius: 8px;
-          background-color: #f1f1f1;
+          background-color: #F1F1F1;
         }
       }
     }
@@ -638,7 +603,6 @@ const MypageTag = styled.div`
       border: 3px solid var(--fifth-color);
       border-radius: 18px;
       background-color: white;
-
       .info-main {
         margin: 1rem 0 0;
         display: flex;
@@ -670,7 +634,6 @@ const MypageTag = styled.div`
           display: flex;
           justify-content: center;
           align-items: center;
-
           input{
             width: 55px !important;
             border-radius: 6px;
@@ -679,7 +642,6 @@ const MypageTag = styled.div`
           .user-sub-info {
             display: flex;
           }
-          
         }
       }
       h4{
@@ -697,7 +659,6 @@ const MypageTag = styled.div`
           color: gray;
         }
       }
-
       .btn-mother {
         margin: 0 auto;
         padding: 0;
@@ -707,7 +668,6 @@ const MypageTag = styled.div`
         justify-content: center;
         position: relative;
         gap:10px;
-        
         .name-btn{
           gap:10px;
           width:170px;
@@ -723,7 +683,6 @@ const MypageTag = styled.div`
       }
       button:first-child {
         background-color: var(--sixth-color);
-
         font-weight: bold;
         }
         button:last-child {
@@ -744,16 +703,13 @@ const MypageTag = styled.div`
       background-color: white;
       width: 65%;
       height: 300px;
-
       .alram-wrapper {
-        
         margin: 0 auto;
         width: 100%;
         height: 240px;
         margin-top: 14px;
         display: flex;
         justify-content: flex-end;
-        
         button {
           width: 120px;
           height: 22px;
@@ -787,7 +743,6 @@ const MypageTag = styled.div`
       text-align: center !important;
       margin: 6rem 0 4rem !important;
       font-size: 28px !important;
-    
       p {
         span {
           padding: 2px;
@@ -812,7 +767,6 @@ const MypageTag = styled.div`
       max-width: 1920px;
       width: 99%;
       margin-top: 50px;
-    
       .fid {
         margin: 0 auto;
         width: 100%;
@@ -824,7 +778,7 @@ const MypageTag = styled.div`
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        background-color: #ffffff;
+        background-color: #FFFFFF;
         transition: color 0.3s ease, transform 0.3s ease;
         &:hover {
           border: 6px solid var(--primary-color);
@@ -878,7 +832,6 @@ const MypageTag = styled.div`
       max-width: 1920px;
       width: 99%;
       margin-top: 50px;
-    
       .user-subs {
         margin: 0 auto;
         width: 100%;
@@ -890,7 +843,7 @@ const MypageTag = styled.div`
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        background-color: #ffffff;
+        background-color: #FFFFFF;
         transition: color 0.3s ease, transform 0.3s ease;
         &:hover {
           border: 6px solid var(--primary-color);

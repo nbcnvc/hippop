@@ -98,7 +98,7 @@ const RDetail = () => {
               </div>
             </div>
             {/* 작성자 */}
-            <></> : <Writer writer={post.user} postId={postId} />
+            <Writer writer={post.user} postId={postId} />
             {/* 댓글 */}
             <Comments postId={post.id} />
           </>

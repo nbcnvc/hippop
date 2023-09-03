@@ -5,8 +5,11 @@ import { useState } from 'react';
 
 import { styled } from 'styled-components';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import { useNavigate } from 'react-router-dom';
 
 const RPosts = () => {
+  const navigate = useNavigate();
+
   const [sortName, setSortName] = useState<string>('최신순');
   const toggleSortButton = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = (e.target as HTMLButtonElement).name;

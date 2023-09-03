@@ -1,7 +1,7 @@
 import CommentCount from './CommentCount';
 
 import moment from 'moment';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -26,7 +26,8 @@ const RNewPosts = () => {
     isError,
     hasNextPage,
     fetchNextPage,
-    isFetchingNextPage
+    isFetchingNextPage,
+    refetch
   } = useInfiniteQuery<FetchPost>({
     queryKey: [`${queryKey}`, pathname],
     queryFn: ({ pageParam }) => getPosts(pageParam, storeId, pathname),
@@ -39,6 +40,10 @@ const RNewPosts = () => {
       return null; // 마지막 페이지인 경우
     }
   });
+
+  useEffect(() => {
+    refetch();
+  }, [storeId]);
 
   const selectPosts = useMemo(() => {
     return posts?.pages
