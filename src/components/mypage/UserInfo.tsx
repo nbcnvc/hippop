@@ -160,10 +160,8 @@ const UserInfo = () => {
             />
           ) : (
             <div className="avatar">
-              {currentUser.avatar_url.startsWith('profile/') ? (
+              {currentUser.avatar_url && (
                 <img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser.avatar_url}`} alt="User Avatar" />
-              ) : (
-                <img src={currentUser.avatar_url} alt="User Avatar" />
               )}
             </div>
           )}

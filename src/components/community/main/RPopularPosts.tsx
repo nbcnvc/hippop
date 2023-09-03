@@ -76,7 +76,7 @@ const RPopularPosts = () => {
   };
 
   if (isLoading) {
-    return <div>로딩중입니다.</div>;
+    return <div></div>;
   }
   if (isError) {
     return <div>오류가 발생했습니다.</div>;

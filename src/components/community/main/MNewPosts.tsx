@@ -10,7 +10,7 @@ import { getPosts } from '../../../api/post';
 import { styled } from 'styled-components';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-
+import Skeleton from '@mui/material/Skeleton';
 const MNewPosts = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -64,7 +64,55 @@ const MNewPosts = () => {
   };
 
   if (isLoading) {
-    return <div>로딩중입니다.</div>;
+    // 로딩 중일 때 스켈레톤 표시
+    return (
+      <PostContainer>
+        {Array.from({ length: 5 }).map((_, index) => (
+          <PostBox key={index}>
+            <ContentBox>
+              <Between>
+                <Between>
+                  <Skeleton variant="circular" width={24} height={24} /> &nbsp;
+                  <Skeleton width={100} height={24} />
+                </Between>
+                <Date>
+                  <Skeleton width={100} height={12} />
+                </Date>
+              </Between>
+              &nbsp;
+              <Title>
+                <Skeleton width={400} height={20} />
+              </Title>
+              <Between>
+                <Body>
+                  <Skeleton width={400} height={30} />
+                </Body>
+                <Button>
+                  <Skeleton width={60} height={16} />
+                </Button>
+              </Between>
+            </ContentBox>
+            <ProfileBox>
+              <Between>
+                <Skeleton variant="circular" width={70} height={70} />
+                <div>
+                  <Name style={{ marginBottom: '5px' }}>
+                    <Skeleton width={80} height={20} />
+                  </Name>
+                  <Name>
+                    <Skeleton width={80} height={14} />
+                  </Name>
+                </div>
+              </Between>
+              <ProfileButton>
+                <Skeleton width={60} height={16} />
+              </ProfileButton>
+            </ProfileBox>
+          </PostBox>
+        ))}
+        <Trigger ref={ref} />
+      </PostContainer>
+    );
   }
   if (isError) {
     return <div>오류가 발생했습니다.</div>;

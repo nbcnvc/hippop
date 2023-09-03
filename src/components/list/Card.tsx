@@ -29,7 +29,7 @@ const Card = (props: CardProps) => {
     }
   });
 
-  const { title, images, location, period_start, period_end } = props.store;
+  const { title, images, location, period_start, period_end, isClosed } = props.store;
   const [isHovered, setIsHovered] = useState(false);
   const [cardHeight, setCardHeight] = useState<number>(0);
 
@@ -38,48 +38,124 @@ const Card = (props: CardProps) => {
   }, []);
 
   return (
-    <CardContainer
-      ref={sliderRef}
-      className="keen-slider"
-      style={{ height: cardHeight }}
-      onMouseOver={() => setIsHovered(true)}
-      onMouseOut={() => setIsHovered(false)}
-    >
-      {images.map((image) => (
-        <img src={`${supabaseStorageUrl}/${image}`} className="keen-slider__slide" key={image} />
-      ))}
-      {isHovered && (
-        <StoreInfo>
-          <div>{title}</div>
-          <div>{location}</div>
-          <div>{`${period_start} ~ ${period_end}`}</div>
-        </StoreInfo>
-      )}
-      {loaded && instanceRef.current && (
-        <>
-          <Arrow
-            left
-            onClick={(e: any) => {
-              e.stopPropagation();
-              instanceRef.current?.prev();
-            }}
-            disabled={currentSlide === 0}
-          />
+    <>
+      {isClosed ? (
+        <CardContainerClosed
+          ref={sliderRef}
+          className="keen-slider"
+          style={{ height: cardHeight }}
+          onMouseOver={() => setIsHovered(true)}
+          onMouseOut={() => setIsHovered(false)}
+        >
+          {images.map((image) => (
+            <img src={`${supabaseStorageUrl}/${image}`} className="keen-slider__slide" key={image} />
+          ))}
+          <CLosed>CLOSED</CLosed>
 
-          <Arrow
-            onClick={(e: any) => {
-              e.stopPropagation();
-              instanceRef.current?.next();
-            }}
-            disabled={currentSlide === instanceRef.current.track.details.slides.length - 1}
-          />
-        </>
+          {isHovered && (
+            <StoreInfo>
+              <div>CLSOED</div>
+              <div>{title}</div>
+              <div>{location}</div>
+              <div>{`${period_start} ~ ${period_end}`}</div>
+            </StoreInfo>
+          )}
+          {loaded && instanceRef.current && (
+            <>
+              <Arrow
+                left
+                onClick={(e: any) => {
+                  e.stopPropagation();
+                  instanceRef.current?.prev();
+                }}
+                disabled={currentSlide === 0}
+              />
+
+              <Arrow
+                onClick={(e: any) => {
+                  e.stopPropagation();
+                  instanceRef.current?.next();
+                }}
+                disabled={currentSlide === instanceRef.current.track.details.slides.length - 1}
+              />
+            </>
+          )}
+        </CardContainerClosed>
+      ) : (
+        <CardContainer
+          ref={sliderRef}
+          className="keen-slider"
+          style={{ height: cardHeight }}
+          onMouseOver={() => setIsHovered(true)}
+          onMouseOut={() => setIsHovered(false)}
+        >
+          {images.map((image) => (
+            <img src={`${supabaseStorageUrl}/${image}`} className="keen-slider__slide" key={image} />
+          ))}
+          {isHovered && (
+            <StoreInfo>
+              <div>{title}</div>
+              <div>{location}</div>
+              <div>{`${period_start} ~ ${period_end}`}</div>
+            </StoreInfo>
+          )}
+          {loaded && instanceRef.current && (
+            <>
+              <Arrow
+                left
+                onClick={(e: any) => {
+                  e.stopPropagation();
+                  instanceRef.current?.prev();
+                }}
+                disabled={currentSlide === 0}
+              />
+
+              <Arrow
+                onClick={(e: any) => {
+                  e.stopPropagation();
+                  instanceRef.current?.next();
+                }}
+                disabled={currentSlide === instanceRef.current.track.details.slides.length - 1}
+              />
+            </>
+          )}
+        </CardContainer>
       )}
-    </CardContainer>
+    </>
   );
 };
 
 export default Card;
+
+const CardContainerClosed = styled.div`
+  position: relative;
+  border-radius: 7px;
+  overflow: hidden;
+  border-radius: 18px;
+  filter: grayscale(100%); /* 이미지를 흑백으로 만듭니다. */
+  transition: filter 0.3s ease; /* 효과를 부드럽게 적용합니다. */
+  /* margin: 0 auto; */
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+`;
+
+const CLosed = styled.div`
+  position: absolute;
+  /* top: 46.3%;
+  left: 35%; */
+
+  font-size: 40px;
+  font-weight: bold;
+  color: white;
+`;
 
 const CardContainer = styled.div`
   position: relative;

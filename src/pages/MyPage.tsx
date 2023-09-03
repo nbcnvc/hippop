@@ -9,8 +9,8 @@ import { getUser } from '../api/user';
 import { getMyItems } from '../api/post';
 import { getMyStores } from '../api/store';
 import { supabase } from '../api/supabase';
-
-import { setUserStore, useCurrentUser } from '../store/userStore';
+// store
+import { setUserStore } from '../store/userStore';
 import { randomFileName } from '../hooks/useHandleImageName';
 //스타일
 import { styled } from 'styled-components';
@@ -22,10 +22,11 @@ import SendBox from '../components/message/SendBox';
 import MessageReply from '../components/message/MessageReply';
 import { MessageType } from '../types/types';
 import ReceiveBox from '../components/message/ReceiveBox';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 import MyReview from '../components/mypage/MyReview';
 import MyBookmark from '../components/mypage/MyBookmark';
+import { Skeleton } from '@mui/material';
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ const MyPage = () => {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [subscribers, setSubscribers] = useState<string[]>([]);
 
-  const [fetchUserPost, setFetchUserPost] = useState<PostType[]>([]);
+  const [setFetchUserPost] = useState<PostType[]>([]);
   const [fetchSubs, setFetchSubs] = useState<Bookmark[]>([]);
   const [extractedData, setExtractedData] = useState<Store[]>([]);
   // 게시글 & 북마크 토글
@@ -53,7 +54,7 @@ const MyPage = () => {
   const imageInputRef = useRef(null);
 
   // 무한스크롤상태
-  const initialPosts: any = [];
+  // const initialPosts: any = [];
 
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
   // 현재유저 정보 가져오기
@@ -194,7 +195,8 @@ const MyPage = () => {
                 body: store.body,
                 opening: store.opening,
                 images: store.images,
-                link: store.link
+                link: store.link,
+                isClosed: store.isClosed
               }));
               // console.log('4----', extractedData);
               setExtractedData(extractedData);
@@ -215,40 +217,39 @@ const MyPage = () => {
     setImageUploadVisible(!imageUploadVisible);
   };
   // 닉네임 저장
-// 닉네임 저장
-const handleNameSave = async () => {
-  if (newName.trim() === '') {
-    alert('닉네임을 입력해주세요.');
-    return;
-  }
+  // 닉네임 저장
+  const handleNameSave = async () => {
+    if (newName.trim() === '') {
+      alert('닉네임을 입력해주세요.');
+      return;
+    }
 
-  if (newName.length >= 5) {
-    alert('닉네임은 다섯 글자 미만이어야 합니다.');
-    return;
-  }
+    if (newName.length >= 5) {
+      alert('닉네임은 다섯 글자 미만이어야 합니다.');
+      return;
+    }
 
-  if (newName === currentUser?.name) {
-    alert('변경된 부분이 없어요 :( [취소] 버튼을 눌러주세요 !');
-    return;
-  }
+    if (newName === currentUser?.name) {
+      alert('변경된 부분이 없어요 :( [취소] 버튼을 눌러주세요 !');
+      return;
+    }
 
-  const { error } = await supabase.from('user').update({ name: newName }).eq('id', currentUser?.id);
-  if (currentUser && !error) {
-    const userData = await getUser(currentUser?.id ?? '');
-    setCurrentUser(userData);
-    setEditingName(false); // 수정 모드 해제
-    alert('닉네임이 변경 됐습니다 :)');
-  } else {
-    console.error(error);
-  }
-};
+    const { error } = await supabase.from('user').update({ name: newName }).eq('id', currentUser?.id);
+    if (currentUser && !error) {
+      const userData = await getUser(currentUser?.id ?? '');
+      setCurrentUser(userData);
+      setEditingName(false); // 수정 모드 해제
+      alert('닉네임이 변경 됐습니다 :)');
+    } else {
+      console.error(error);
+    }
+  };
 
   // 수정 모드 해제
   const handleNameCancel = () => {
     setEditingName(false);
     setSelectedImage(null);
     setImageUploadVisible(!imageUploadVisible);
-
   };
 
   // 프로필 수정 handler
@@ -268,68 +269,58 @@ const handleNameSave = async () => {
     }
   };
 
-  
   const handleSaveChanges = async () => {
     let nameChanged = false;
-  let imageChanged = false;
+    let imageChanged = false;
 
-if (newName.trim() !== '' && newName.length < 5 && newName !== currentUser?.name) {
-    // 이름 변경 처리
-    const { error: nameError } = await supabase
-      .from('user')
-      .update({ name: newName })
-      .eq('id', currentUser?.id);
+    if (newName.trim() !== '' && newName.length < 5 && newName !== currentUser?.name) {
+      // 이름 변경 처리
+      const { error: nameError } = await supabase.from('user').update({ name: newName }).eq('id', currentUser?.id);
 
-    if (!nameError) {
-      const userData = await getUser(currentUser?.id ?? '');
-      setCurrentUser(userData);
-      setEditingName(false); // 수정 모드 해제
-      nameChanged = true;
-    } else {
-      console.error(nameError);
-      alert('닉네임 변경 중 오류가 발생했습니다.');
-    }
-  }
-
-  if (selectedImage) {
-    try {
-      const newFileName = randomFileName(selectedImage.name);
-      const renamedFile = new File([selectedImage], newFileName);
-
-      const { data } = await supabase
-        .storage
-        .from('images')
-        .upload(`profile/${renamedFile.name}`, renamedFile);
-
-      if (data) {
-        const imgUrl = data.path;
-
-        await supabase
-          .from('user')
-          .update({ avatar_url: imgUrl })
-          .eq('id', currentUser?.id);
-
-        // Fetch updated user data using getUser
-        if (currentUser) {
-          const userData = await getUser(currentUser?.id ?? '');
-          setCurrentUser(userData);
-          imageChanged = true;
-        }
+      if (!nameError) {
+        const userData = await getUser(currentUser?.id ?? '');
+        setCurrentUser(userData);
+        setEditingName(false); // 수정 모드 해제
+        nameChanged = true;
+      } else {
+        console.error(nameError);
+        alert('닉네임 변경 중 오류가 발생했습니다.');
       }
-    } catch (error) {
-      console.error(error);
-      alert('프로필 사진 변경 중 오류가 발생했습니다.');
     }
-  }
 
-  if (nameChanged || imageChanged) {
-    alert('프로필 변경이 완료됐습니다 :)');
-    setEditingName(false); // 수정 모드 해제
-    setImageUploadVisible(false);
-  } else if (!nameChanged && !imageChanged) {
-    alert('변경된 부분이 없어요 :( [취소] 버튼을 눌러주세요 !');
-  }
-};
+    if (selectedImage) {
+      try {
+        const newFileName = randomFileName(selectedImage.name);
+        const renamedFile = new File([selectedImage], newFileName);
+
+        const { data } = await supabase.storage.from('images').upload(`profile/${renamedFile.name}`, renamedFile);
+
+        if (data) {
+          const imgUrl = data.path;
+
+          await supabase.from('user').update({ avatar_url: imgUrl }).eq('id', currentUser?.id);
+
+          // Fetch updated user data using getUser
+          if (currentUser) {
+            const userData = await getUser(currentUser?.id ?? '');
+            setCurrentUser(userData);
+            imageChanged = true;
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        alert('프로필 사진 변경 중 오류가 발생했습니다.');
+      }
+    }
+
+    if (nameChanged || imageChanged) {
+      alert('프로필 변경이 완료됐습니다 :)');
+      setEditingName(false); // 수정 모드 해제
+      setImageUploadVisible(false);
+    } else if (!nameChanged && !imageChanged) {
+      alert('변경된 부분이 없어요 :( [취소] 버튼을 눌러주세요 !');
+    }
+  };
 
   // 프로필 선택후 저장하기
   const handleImageConfirm = async () => {
@@ -369,17 +360,118 @@ if (newName.trim() !== '' && newName.length < 5 && newName !== currentUser?.name
     }
   };
 
-  if (isLoading) {
-    return <div>로딩중입니다.</div>;
-  }
-  if (isError) {
-    return <div>오류가 발생했습니다.</div>;
-  }
-
   const ClickToggleBox = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = (e.target as HTMLButtonElement).name;
     setToggleMsgBox(name);
   };
+  if (isLoading) {
+    // Loading state: Render skeleton loaders
+    return (
+      <MypageTag>
+        {/* Header */}
+        <header>
+          <div className="info-wrapper">
+            <div className="info-main">
+              <div className="info-inner">
+                <div>
+                  <Skeleton width={100} height={10} /> {/* Adjust size */}
+                  <Skeleton width={140} height={20} /> {/* Adjust size */}
+                </div>
+
+                <div className="user-sub-info">
+                  <Skeleton width={150} height={16} /> {/* Adjust size */}
+                </div>
+              </div>
+              <div className="avatar-container">
+                <div className="avatar">
+                  <Skeleton variant="circular" width={120} height={120} /> {/* Circular skeleton */}
+                </div>
+                <div className="circle-bg"></div>
+                <div className="img-uploader">
+                  <input
+                    type="file"
+                    id="file-input"
+                    accept="image/*"
+                    ref={imageInputRef}
+                    onChange={handleImageInputChange}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="btn-mother">
+              <Skeleton width={80} height={24} />
+            </div>
+            <div className="btn-mother">
+              <div onClick={() => setIsMenuOpen((isMenuOpen) => !isMenuOpen)}>
+                {/* <Skeleton width={80} height={16} /> */}
+                <Skeleton width={80} height={24} />
+
+                {/* <Skeleton width={80} height={24} /> */}
+              </div>
+            </div>
+          </div>
+          {/* Message tab */}
+          <div className="alram-mother">
+            <div className="btn-wrapper">
+              <Skeleton width={80} height={24} />
+              &nbsp;&nbsp;&nbsp;
+              <Skeleton width={80} height={24} />
+            </div>
+            <div className="alram-wrapper">
+              {toggleMsgBox === '받은 쪽지함' ? (
+                <ReceiveBox toggleMsgBox={toggleMsgBox} setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
+              ) : (
+                <SendBox toggleMsgBox={toggleMsgBox} setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
+              )}
+            </div>
+            {replyModal && <MessageReply sendMsgUser={sendMsgUser} setOpenReply={setReplyModal} />}
+          </div>
+        </header>
+
+        {/* Toggle tab */}
+        <div className="toggle-wrapper">
+          <h3>
+            <p>
+              <div style={{ padding: '2px' }}> </div>
+            </p>
+          </h3>
+
+          <div style={{ display: 'flex' }}>
+            <Skeleton width={120} height={60} />
+            &nbsp;&nbsp;&nbsp;
+            <Skeleton width={120} height={60} />
+          </div>
+
+          {/* Skeleton for MyReview and MyBookmark */}
+          <div className="skeleton-container">
+            <div style={{ margin: '0 auto' }}>
+              <div className="post-wrapper">
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <div className="fid" key={index}>
+                    <div>
+                      <Skeleton variant="rectangular" width={270} height={300} /> {/* Adjust size */}
+                    </div>
+                    <div className="info-box">
+                      <div>
+                        <Skeleton width={200} height={24} /> {/* Adjust size */}
+                        <Skeleton width={100} height={16} /> {/* Adjust size */}
+                      </div>
+
+                      <Skeleton width={120} height={60} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </MypageTag>
+    );
+  }
+
+  if (isError) {
+    return <div>오류가 발생했습니다.</div>;
+  }
 
   return (
     <MypageTag>
@@ -412,31 +504,29 @@ if (newName.trim() !== '' && newName.length < 5 && newName !== currentUser?.name
             {currentUser?.avatar_url && (
               <div className="avatar-container">
                 {selectedImage ? (
-                  <img
-                    src={URL.createObjectURL(selectedImage)}
-                    alt="Selected Image"
-                    width={120}
-                    height={120}
-                  />
+                  <img src={URL.createObjectURL(selectedImage)} alt="Selected Image" width={120} height={120} />
                 ) : (
                   <div className="avatar">
-                    {currentUser.avatar_url.startsWith('profile/') ? (
+                    {currentUser.avatar_url && (
                       <img
                         src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser.avatar_url}`}
                         alt="User Avatar"
                       />
-                    ) : (
-                      <img src={currentUser.avatar_url} alt="User Avatar" />
                     )}
                   </div>
                 )}
-                <div className="circle-bg">
-                </div>
+                <div className="circle-bg"></div>
                 {imageUploadVisible && (
                   <div className="img-uploader">
-                    <label htmlFor='file-input'>
-                    <PartyModeIcon className="party-icon"  />
-                    <input type="file" id='file-input'accept='image/*' ref={imageInputRef} onChange={handleImageInputChange} />
+                    <label htmlFor="file-input">
+                      <PartyModeIcon className="party-icon" />
+                      <input
+                        type="file"
+                        id="file-input"
+                        accept="image/*"
+                        ref={imageInputRef}
+                        onChange={handleImageInputChange}
+                      />
                     </label>
                     {/* <button className="confirm" onClick={handleImageConfirm}>
                       저장
@@ -451,10 +541,10 @@ if (newName.trim() !== '' && newName.length < 5 && newName !== currentUser?.name
               <ul>
                 {sublistData?.map((subscriberData, index) => (
                   <li
-                  key={index}
-                  onClick={() => {
-                    navigate(`/yourpage/${subscriberData.subscribe_to}`);
-                  }}
+                    key={index}
+                    onClick={() => {
+                      navigate(`/yourpage/${subscriberData.subscribe_to}`);
+                    }}
                   >
                     {subscribers}
                   </li>
@@ -462,19 +552,19 @@ if (newName.trim() !== '' && newName.length < 5 && newName !== currentUser?.name
               </ul>
             )}
             {editingName ? (
-              <div className='name-btn'>
+              <div className="name-btn">
                 <button onClick={handleNameCancel}>취소</button>
                 <button onClick={handleSaveChanges}>저장</button>
               </div>
             ) : (
               currentUser?.id === id && <button onClick={handleNameEdit}>프로필 변경</button>
-              )}
+            )}
           </div>
-              {sublistData && (
-                <h4 onClick={() => setIsMenuOpen((isMenuOpen) => !isMenuOpen)}>
-                  구독한 유저 <BsFillPeopleFill/>
-                </h4>
-              )}
+          {sublistData && (
+            <h4 onClick={() => setIsMenuOpen((isMenuOpen) => !isMenuOpen)}>
+              구독한 유저 <BsFillPeopleFill />
+            </h4>
+          )}
         </div>
         {/* message tab */}
         <div className="alram-mother">

@@ -27,27 +27,25 @@ const MessageDetail = ({ selectedMessage, setIsClicked, setReplyModal, toggleMsg
         {toggleMsgBox === '받은 쪽지함' ? (
           <ProfileBox>
             {toggleMsgBox === '받은 쪽지함' ? '' : ''}
-            {selectedMessage?.to.avatar_url && selectedMessage.to.avatar_url.startsWith('profile/') ? (
+            {selectedMessage?.to.avatar_url && (
               <Img
                 src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${selectedMessage.to.avatar_url}`}
                 alt="User Avatar"
               />
-            ) : (
-              <>{currentUser && <Img src={selectedMessage?.to.avatar_url} alt="User Avatar" />}</>
             )}
+
             <h4>{selectedMessage?.to.name}</h4>
           </ProfileBox>
         ) : (
           <ProfileBox>
             {toggleMsgBox === '받은 쪽지함' ? '' : '수신자'}
-            {selectedMessage?.to.avatar_url && selectedMessage.to.avatar_url.startsWith('profile/') ? (
+            {selectedMessage?.to.avatar_url && (
               <Img
                 src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${selectedMessage.to.avatar_url}`}
                 alt="User Avatar"
               />
-            ) : (
-              <>{currentUser && <Img src={selectedMessage?.to.avatar_url} alt="User Avatar" />}</>
             )}
+
             <h4>{selectedMessage?.to.name}</h4>
           </ProfileBox>
         )}

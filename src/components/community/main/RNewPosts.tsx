@@ -13,6 +13,8 @@ import { styled } from 'styled-components';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import NotesRoundedIcon from '@mui/icons-material/NotesRounded';
 
+import Skeleton from '@mui/material/Skeleton'; // 스켈레톤 추가
+
 const RNewPosts = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -44,7 +46,6 @@ const RNewPosts = () => {
       })
       .flat();
   }, [posts]);
-  console.log(selectPosts);
 
   // 언제 다음 페이지를 가져올 것
   const { ref } = useInView({
@@ -74,7 +75,39 @@ const RNewPosts = () => {
   };
 
   if (isLoading) {
-    return <div>로딩중입니다.</div>;
+    // 로딩 중일 때 스켈레톤을 렌더링합니다.
+    return (
+      <PostContainer>
+        {Array.from({ length: 5 }, (_, index) => (
+          <PostBox key={index}>
+            <div>
+              <ImageBoxs>
+                <Skeleton variant="rectangular" width="100%" height={190} animation="wave" />
+              </ImageBoxs>
+            </div>
+            <ContentBox>
+              <Between>
+                <Between>
+                  <RoomRoundedIcon /> &nbsp;
+                  <Skeleton width="80%" animation="wave" />
+                </Between>
+                <Between>
+                  <NotesRoundedIcon /> &nbsp;
+                  <Skeleton width="50px" animation="wave" />
+                </Between>
+              </Between>
+              &nbsp;
+              <Skeleton width="80%" animation="wave" />
+              <Skeleton width="95%" animation="wave" />
+              <Between>
+                <Skeleton width="60px" animation="wave" />
+                <Skeleton width="80px" animation="wave" />
+              </Between>
+            </ContentBox>
+          </PostBox>
+        ))}
+      </PostContainer>
+    );
   }
   if (isError) {
     return <div>오류가 발생했습니다.</div>;
@@ -144,6 +177,15 @@ const PostBox = styled.div`
 const ContentBox = styled.div`
   width: 515px;
   padding: 10px 20px;
+`;
+
+const ImageBoxs = styled.div`
+  width: 310px;
+  height: 190px;
+  border: 2px solid var(--fifth-color);
+  border-radius: 10px;
+  margin: 5px 0 5px 3px;
+  object-fit: cover;
 `;
 
 const ImageBox = styled.img`

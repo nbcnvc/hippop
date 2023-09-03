@@ -15,7 +15,8 @@ export const receiveMessage = async (userId: string): Promise<MessageType[] | nu
   const { data, error } = await supabase
     .from('message')
     .select(`*, from:receiver(*), to:sender(*)`)
-    .eq('receiver', userId);
+    .eq('receiver', userId)
+    .eq('isReceiver', false);
 
   if (error) {
     console.log('Error receiving message:', error.message);
@@ -28,7 +29,8 @@ export const mySendMessage = async (userId: string): Promise<MessageType[] | nul
   const { data, error } = await supabase
     .from('message')
     .select(`*, from:sender(*), to:receiver(*)`)
-    .eq('sender', userId);
+    .eq('sender', userId)
+    .eq('isSender', false);
 
   if (error) {
     console.log('Error receiving message:', error.message);
@@ -47,8 +49,17 @@ export const readMessage = async (id: number): Promise<void> => {
 };
 
 // 메세지 삭제
-export const deleteMessage = async (id: number): Promise<void> => {
-  const { error } = await supabase.from('message').delete().eq('id', id);
+export const deleteReceiveMessage = async (id: number): Promise<void> => {
+  const { error } = await supabase.from('message').update({ isReceiver: true }).eq('id', id);
+
+  if (error) {
+    console.log('Error deleting message:', error.message);
+  }
+};
+
+// 메세지 삭제
+export const deleteSendMessage = async (id: number): Promise<void> => {
+  const { error } = await supabase.from('message').update({ isSender: true }).eq('id', id);
 
   if (error) {
     console.log('Error deleting message:', error.message);
