@@ -18,6 +18,7 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 // img
 import DefaultImg from '../images/defaultImg.png';
+import { ImSpinner, ImSpinner10 } from 'react-icons/im';
 
 const YourPage = () => {
   // const { id } = useParams();
@@ -125,7 +126,11 @@ const YourPage = () => {
   }, [userData]);
 
   if (isLoading || isUserLoading || isBookMarkLoading) {
-    return <div>Loading user data...</div>;
+    return (
+      <div>
+        <ImSpinner />
+      </div>
+    );
   }
 
   if (isError || isUserError || isBookMarkError) {

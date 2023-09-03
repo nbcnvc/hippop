@@ -295,7 +295,7 @@ const HeaderTag = styled.header`
         width: 120px;
         background-color: white;
         border: 1px solid var(--fifth-color);
-        border-radius: 5px;
+        border-radius: 6px;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         display: none;
         z-index: 1;
@@ -306,25 +306,35 @@ const HeaderTag = styled.header`
           text-align: center;
           text-decoration: none;
           color: #333;
+
           &:hover {
             background-color: var(--sixth-color);
+            font-weight: 600;
+          }
+
+          &:first-child {
+            border-radius: 6px 6px 0 0;
+          }
+
+          &:last-child {
+            border-radius: 0 0 6px 6px;
           }
         }
       }
     }
-    .alarm {
+  }
+  .alarm {
+    position: absolute;
+    margin-left: 170px;
+    img {
       position: absolute;
-      margin-left: 170px;
-      img {
-        position: absolute;
-        top: -17%;
-        right: -25%;
-        width: 10px;
-        height: 10px;
-      }
-      ul {
-        position: relative;
-      }
+      top: -17%;
+      right: -25%;
+      width: 10px;
+      height: 10px;
+    }
+    ul {
+      position: relative;
     }
   }
 `;

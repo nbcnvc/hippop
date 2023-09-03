@@ -108,7 +108,7 @@ const AlarmContainer = styled.li`
   background-color: white;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--fifth-color);
-  border-radius: 5px;
+  border-radius: 6px;
   z-index: 1;
 `;
 
@@ -122,6 +122,15 @@ const AlarmContents = styled.div`
 
   &:hover {
     background-color: var(--sixth-color);
+    font-weight: 600;
+  }
+
+  &:first-child {
+    border-radius: 6px 6px 0 0;
+  }
+
+  &:last-child {
+    border-radius: 0 0 6px 6px;
   }
 `;
 
