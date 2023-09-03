@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 // 라이브러리
+import shortid from 'shortid';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 //타입
 import { Bookmark, PostType, Store } from '../types/types';
@@ -280,7 +281,6 @@ const MyPage = () => {
     const name = (e.target as HTMLButtonElement).name;
     setToggleMsgBox(name);
   };
-
   return (
     <MypageTag>
       <header>
@@ -354,7 +354,7 @@ const MyPage = () => {
                       key={index}
                       onClick={() => {
                         if (subscribers) {
-                          navigate(`/yourpage/${subscriberIndex}`);
+                          navigate(`/yourpage/${shortid.generate()}`, { state: { userId: subscriberIndex } });
                         }
                       }}
                     >
@@ -879,7 +879,7 @@ const MypageTag = styled.div`
           button {
             width: 130px;
             padding: 10px 14px;
-            background-color: var(--second-color);
+            background-color: var(—second-color);
             color: white;
             margin-right: 0;
           }

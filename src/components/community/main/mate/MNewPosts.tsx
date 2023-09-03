@@ -1,4 +1,5 @@
 import moment from 'moment';
+import shortid from 'shortid';
 import { useEffect, useMemo, useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
@@ -10,24 +11,14 @@ import { getPosts } from '../../../../api/post';
 import { styled } from 'styled-components';
 import Skeleton from '@mui/material/Skeleton';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
-<<<<<<< HEAD:src/components/community/main/mate/MNewPosts.tsx
-=======
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import shortid from 'shortid';
-import { ImSpinner } from 'react-icons/im';
->>>>>>> bb3b2240dc5e56842800889c140d0231c4ee0b30:src/components/community/main/MNewPosts.tsx
 
 const MNewPosts = () => {
   const navigate = useNavigate();
-
   const { pathname } = useLocation();
-<<<<<<< HEAD:src/components/community/main/mate/MNewPosts.tsx
-=======
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
 
   const { state } = useLocation();
   const storeId: number = state?.storeId || 0; // state가 존재하지 않을 때 기본값으로 0 사용
->>>>>>> bb3b2240dc5e56842800889c140d0231c4ee0b30:src/components/community/main/MNewPosts.tsx
 
   const {
     data: posts,
@@ -84,7 +75,6 @@ const MNewPosts = () => {
   };
 
   if (isLoading) {
-<<<<<<< HEAD:src/components/community/main/mate/MNewPosts.tsx
     // 로딩 중일 때 스켈레톤 표시
     return (
       <PostContainer>
@@ -133,12 +123,6 @@ const MNewPosts = () => {
         ))}
         <Trigger ref={ref} />
       </PostContainer>
-=======
-    return (
-      <div>
-        <ImSpinner />
-      </div>
->>>>>>> bb3b2240dc5e56842800889c140d0231c4ee0b30:src/components/community/main/MNewPosts.tsx
     );
   }
   if (isError) {

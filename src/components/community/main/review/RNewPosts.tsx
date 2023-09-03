@@ -39,10 +39,6 @@ const RNewPosts = () => {
     }
   });
 
-  useEffect(() => {
-    refetch();
-  }, [storeId]);
-
   const selectPosts = useMemo(() => {
     return posts?.pages
       .map((data) => {
