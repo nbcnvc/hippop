@@ -10,19 +10,20 @@ import { getMyItems } from '../api/post';
 import { getMyStores } from '../api/store';
 import { supabase } from '../api/supabase';
 
-import { setUserStore, useCurrentUser } from '../store/userStore';
+import { setUserStore } from '../store/userStore';
 import { randomFileName } from '../hooks/useHandleImageName';
 //스타일
 import { styled } from 'styled-components';
 import PartyModeIcon from '@mui/icons-material/PartyMode';
 import { BsFillPeopleFill } from 'react-icons/bs';
+import { ImSpinner10 } from 'react-icons/im';
 
 //메세지
 import SendBox from '../components/message/SendBox';
 import MessageReply from '../components/message/MessageReply';
 import { MessageType } from '../types/types';
 import ReceiveBox from '../components/message/ReceiveBox';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 import MyReview from '../components/mypage/MyReview';
 import MyBookmark from '../components/mypage/MyBookmark';
@@ -215,44 +216,9 @@ const MyPage = () => {
     setImageUploadVisible(!imageUploadVisible);
   };
   // 닉네임 저장
-// 닉네임 저장
-const handleNameSave = async () => {
-  if (newName.trim() === '') {
-    alert('닉네임을 입력해주세요.');
-    return;
-  }
-
-  if (newName.length >= 5) {
-    alert('닉네임은 다섯 글자 미만이어야 합니다.');
-    return;
-  }
-
-  if (newName === currentUser?.name) {
-    alert('변경된 부분이 없어요 :( [취소] 버튼을 눌러주세요 !');
-    return;
-  }
-
-  const { error } = await supabase.from('user').update({ name: newName }).eq('id', currentUser?.id);
-  if (currentUser && !error) {
-    const userData = await getUser(currentUser?.id ?? '');
-    setCurrentUser(userData);
-    setEditingName(false); // 수정 모드 해제
-    alert('닉네임이 변경 됐습니다 :)');
-  } else {
-    console.error(error);
-  }
-};
-
   // 수정 모드 해제
   const handleNameCancel = () => {
     setEditingName(false);
-    setSelectedImage(null);
-    setImageUploadVisible(!imageUploadVisible);
-
-  };
-
-  // 프로필 수정 handler
-  const handleImageUpload = () => {
     setSelectedImage(null);
     setImageUploadVisible(!imageUploadVisible);
   };
@@ -268,71 +234,25 @@ const handleNameSave = async () => {
     }
   };
 
-  
   const handleSaveChanges = async () => {
     let nameChanged = false;
-  let imageChanged = false;
+    let imageChanged = false;
 
-if (newName.trim() !== '' && newName.length < 5 && newName !== currentUser?.name) {
-    // 이름 변경 처리
-    const { error: nameError } = await supabase
-      .from('user')
-      .update({ name: newName })
-      .eq('id', currentUser?.id);
+    if (newName.trim() !== '' && newName.length < 5 && newName !== currentUser?.name) {
+      // 이름 변경 처리
+      const { error: nameError } = await supabase.from('user').update({ name: newName }).eq('id', currentUser?.id);
 
-    if (!nameError) {
-      const userData = await getUser(currentUser?.id ?? '');
-      setCurrentUser(userData);
-      setEditingName(false); // 수정 모드 해제
-      nameChanged = true;
-    } else {
-      console.error(nameError);
-      alert('닉네임 변경 중 오류가 발생했습니다.');
-    }
-  }
-
-  if (selectedImage) {
-    try {
-      const newFileName = randomFileName(selectedImage.name);
-      const renamedFile = new File([selectedImage], newFileName);
-
-      const { data } = await supabase
-        .storage
-        .from('images')
-        .upload(`profile/${renamedFile.name}`, renamedFile);
-
-      if (data) {
-        const imgUrl = data.path;
-
-        await supabase
-          .from('user')
-          .update({ avatar_url: imgUrl })
-          .eq('id', currentUser?.id);
-
-        // Fetch updated user data using getUser
-        if (currentUser) {
-          const userData = await getUser(currentUser?.id ?? '');
-          setCurrentUser(userData);
-          imageChanged = true;
-        }
+      if (!nameError) {
+        const userData = await getUser(currentUser?.id ?? '');
+        setCurrentUser(userData);
+        setEditingName(false); // 수정 모드 해제
+        nameChanged = true;
+      } else {
+        console.error(nameError);
+        alert('닉네임 변경 중 오류가 발생했습니다.');
       }
-    } catch (error) {
-      console.error(error);
-      alert('프로필 사진 변경 중 오류가 발생했습니다.');
     }
-  }
 
-  if (nameChanged || imageChanged) {
-    alert('프로필 변경이 완료됐습니다 :)');
-    setEditingName(false); // 수정 모드 해제
-    setImageUploadVisible(false);
-  } else if (!nameChanged && !imageChanged) {
-    alert('변경된 부분이 없어요 :( [취소] 버튼을 눌러주세요 !');
-  }
-};
-
-  // 프로필 선택후 저장하기
-  const handleImageConfirm = async () => {
     if (selectedImage) {
       try {
         const newFileName = randomFileName(selectedImage.name);
@@ -349,17 +269,24 @@ if (newName.trim() !== '' && newName.length < 5 && newName !== currentUser?.name
           if (currentUser) {
             const userData = await getUser(currentUser?.id ?? '');
             setCurrentUser(userData);
-            // console.log('userData', userData);
+            imageChanged = true;
           }
-
-          alert('프로필 변경이 완료됐습니다 :)');
-          setImageUploadVisible(false);
         }
       } catch (error) {
         console.error(error);
+        alert('프로필 사진 변경 중 오류가 발생했습니다.');
       }
     }
+
+    if (nameChanged || imageChanged) {
+      alert('프로필 변경이 완료됐습니다 :)');
+      setEditingName(false); // 수정 모드 해제
+      setImageUploadVisible(false);
+    } else if (!nameChanged && !imageChanged) {
+      alert('변경된 부분이 없어요 :( [취소] 버튼을 눌러주세요 !');
+    }
   };
+
   const handleSectionChange = (e: React.MouseEvent<HTMLButtonElement>) => {
     const button = e.target as HTMLButtonElement;
     const section = button.getAttribute('data-section');
@@ -370,7 +297,11 @@ if (newName.trim() !== '' && newName.length < 5 && newName !== currentUser?.name
   };
 
   if (isLoading) {
-    return <div>로딩중입니다.</div>;
+    return (
+      <div>
+        <ImSpinner10 />
+      </div>
+    );
   }
   if (isError) {
     return <div>오류가 발생했습니다.</div>;
@@ -412,12 +343,7 @@ if (newName.trim() !== '' && newName.length < 5 && newName !== currentUser?.name
             {currentUser?.avatar_url && (
               <div className="avatar-container">
                 {selectedImage ? (
-                  <img
-                    src={URL.createObjectURL(selectedImage)}
-                    alt="Selected Image"
-                    width={120}
-                    height={120}
-                  />
+                  <img src={URL.createObjectURL(selectedImage)} alt="Selected Image" width={120} height={120} />
                 ) : (
                   <div className="avatar">
                     {currentUser.avatar_url.startsWith('profile/') ? (
@@ -430,17 +356,19 @@ if (newName.trim() !== '' && newName.length < 5 && newName !== currentUser?.name
                     )}
                   </div>
                 )}
-                <div className="circle-bg">
-                </div>
+                <div className="circle-bg"></div>
                 {imageUploadVisible && (
                   <div className="img-uploader">
-                    <label htmlFor='file-input'>
-                    <PartyModeIcon className="party-icon"  />
-                    <input type="file" id='file-input'accept='image/*' ref={imageInputRef} onChange={handleImageInputChange} />
+                    <label htmlFor="file-input">
+                      <PartyModeIcon className="party-icon" />
+                      <input
+                        type="file"
+                        id="file-input"
+                        accept="image/*"
+                        ref={imageInputRef}
+                        onChange={handleImageInputChange}
+                      />
                     </label>
-                    {/* <button className="confirm" onClick={handleImageConfirm}>
-                      저장
-                    </button> */}
                   </div>
                 )}
               </div>
@@ -451,10 +379,10 @@ if (newName.trim() !== '' && newName.length < 5 && newName !== currentUser?.name
               <ul>
                 {sublistData?.map((subscriberData, index) => (
                   <li
-                  key={index}
-                  onClick={() => {
-                    navigate(`/yourpage/${subscriberData.subscribe_to}`);
-                  }}
+                    key={index}
+                    onClick={() => {
+                      navigate(`/yourpage/${subscriberData.subscribe_to}`);
+                    }}
                   >
                     {subscribers}
                   </li>
@@ -462,19 +390,19 @@ if (newName.trim() !== '' && newName.length < 5 && newName !== currentUser?.name
               </ul>
             )}
             {editingName ? (
-              <div className='name-btn'>
+              <div className="name-btn">
                 <button onClick={handleNameCancel}>취소</button>
                 <button onClick={handleSaveChanges}>저장</button>
               </div>
             ) : (
               currentUser?.id === id && <button onClick={handleNameEdit}>프로필 변경</button>
-              )}
+            )}
           </div>
-              {sublistData && (
-                <h4 onClick={() => setIsMenuOpen((isMenuOpen) => !isMenuOpen)}>
-                  구독한 유저 <BsFillPeopleFill/>
-                </h4>
-              )}
+          {sublistData && (
+            <h4 onClick={() => setIsMenuOpen((isMenuOpen) => !isMenuOpen)}>
+              구독한 유저 <BsFillPeopleFill />
+            </h4>
+          )}
         </div>
         {/* message tab */}
         <div className="alram-mother">
@@ -695,7 +623,7 @@ const MypageTag = styled.div`
       background-color: white;
 
       .info-main {
-        margin: 1rem 0;
+        margin: 1rem 0 0;
         display: flex;
         flex-direction: column;
         align-items: flex-end;
@@ -713,8 +641,9 @@ const MypageTag = styled.div`
           text-align: center;
           color: gray;
           span{
+            height: 22px;
             color: var(--primary-color);
-          font-size: 20px !important;
+            font-size: 20px !important;
           }
         }
         span {
@@ -737,10 +666,19 @@ const MypageTag = styled.div`
         }
       }
       h4{
+        margin: 0 auto;
         margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        padding-left: 10px;
+        width: 120px;
         color: var(--fifth-color);
         text-align: center;
         cursor:pointer;
+        transition: color 0.6s ease;
+        &:hover{
+          color: gray;
+        }
       }
 
       .btn-mother {
@@ -791,6 +729,8 @@ const MypageTag = styled.div`
       height: 300px;
 
       .alram-wrapper {
+        
+        margin: 0 auto;
         width: 100%;
         height: 240px;
         margin-top: 14px;
@@ -802,7 +742,7 @@ const MypageTag = styled.div`
           height: 22px;
         }
         li {
-          width: 100%;
+          width: 99%;
           text-align: center;
           padding: 2px 20px;
           margin: 4px 0;
