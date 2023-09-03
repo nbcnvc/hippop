@@ -1,16 +1,28 @@
 import RNewPosts from './RNewPosts';
+import RStorePosts from './RStorePosts';
 import RPopularPosts from './RPopularPosts';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import { styled } from 'styled-components';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import { useNavigate } from 'react-router-dom';
 
 const RPosts = () => {
+<<<<<<< HEAD:src/components/community/main/review/RPosts.tsx
+  const { state } = useLocation();
+  const storeId: number = state?.storeId || 0; // state가 존재하지 않을 때 기본값으로 0 사용
+=======
   const navigate = useNavigate();
 
+>>>>>>> bb3b2240dc5e56842800889c140d0231c4ee0b30:src/components/community/main/RPosts.tsx
   const [sortName, setSortName] = useState<string>('최신순');
+  useEffect(() => {
+    if (storeId !== 0) {
+      setSortName('후기보러 가기');
+    }
+  }, [storeId]);
   const toggleSortButton = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = (e.target as HTMLButtonElement).name;
     setSortName(name);
@@ -34,7 +46,9 @@ const RPosts = () => {
           </div>
         </Between>
       </ButtonContainer>
-      {sortName === '최신순' ? <RNewPosts /> : <RPopularPosts />}
+      {sortName === '후기보러 가기' && <RStorePosts />}
+      {sortName === '최신순' && <RNewPosts />}
+      {sortName === '인기순' && <RPopularPosts />}
     </>
   );
 };
