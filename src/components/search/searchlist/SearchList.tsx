@@ -446,9 +446,9 @@ const SearchBox = styled.div`
   .custom-btn {
     border: 2px solid #333333;
 
-    border-bottom: 3.4px solid var(--fifth-color);
+    border-bottom: 5.2px solid var(--fifth-color);
     border-radius: 0 18px 18px 0;
-    padding: 14.4px 20px;
+    padding: 13.2px 20px;
   }
 `;
 
@@ -462,7 +462,7 @@ const Reset = styled(RestartAltIcon)`
 
 const SearchInput = styled.input`
   width: 450px;
-  height: 48px;
+  height: 46.6px;
 
   box-shadow: 1px;
 

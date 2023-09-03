@@ -123,9 +123,9 @@ const ReceiveBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProp
                     <h4>{message.to.name}</h4>
                   </ProfileBox>
                   <p>{moment(message.created_at).format('YYYY-MM-DD HH:mm:ss')}</p>
-                  <div>{message.isRead ? <span>읽은 메세지입니다..</span> : <span>읽지 않은 메세지입니다..</span>}</div>
+                  <Body>{message.isRead ? <span>{message.body}</span> : <span>읽지 않은 메세지입니다..</span>}</Body>
                 </div>
-                <h5>{message.isRead ? <DraftsOutlinedIcon /> : <EmailOutlinedIcon />}</h5>
+                <section>{message.isRead ? <DraftsOutlinedIcon /> : <EmailOutlinedIcon />}</section>
                 <button className="deletBtn" onClick={() => handleDeleteMsg(message)} style={{ width: '60px' }}>
                   삭제
                 </button>
@@ -202,4 +202,25 @@ const Img = styled.img`
   height: 40px;
   object-fit: cover;
   border-radius: 50%;
+`;
+
+const Body = styled.div`
+  width: 30%;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+
+  span {
+    display: inline-block;
+    animation: marquee 7s linear infinite;
+  }
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
 `;

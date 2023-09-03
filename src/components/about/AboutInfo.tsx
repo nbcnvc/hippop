@@ -16,7 +16,7 @@ const AboutInfo = () => {
         </Box>
         <Box>
           <FaceImg src={face1Img} />
-          <ColorTag2>개성잇는</ColorTag2>
+          <ColorTag2>개성있는</ColorTag2>
           <Ptag>평소와는 다른 개성있는 장소를 가고 싶을 때</Ptag>
           <Ptag>힙팝이 추천해요!</Ptag>
         </Box>
