@@ -13,13 +13,17 @@ function App() {
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
 
   const currentUser = useCurrentUser();
+  console.log('currentUser', currentUser);
+
   useEffect(() => {
     supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && !currentUser) {
-        const response = await supabase.from('user').select(`*`).eq('id', session?.user.id);
-        if (response.data) {
-          setCurrentUser(response.data[0]);
+        const { data } = await supabase.from('user').select(`*`).eq('id', session?.user.id).single();
+
+        if (data) {
+          setCurrentUser(data);
         }
+
         if (event === 'SIGNED_IN' && !currentUser) {
           const user = {
             id: session?.user.id,
@@ -28,8 +32,12 @@ function App() {
             avatar_url: session?.user.user_metadata.avatar_url,
             name: session?.user.user_metadata.name
           };
+
           await supabase.from('user').insert(user);
-          setCurrentUser(user);
+
+          const { data } = await supabase.from('user').select(`*`).eq('id', session?.user.id).single();
+
+          setCurrentUser(data);
         }
       }
       if (event === 'SIGNED_OUT' && currentUser) {

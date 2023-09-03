@@ -36,7 +36,7 @@ const StyleCalendar = styled(Calendar1)`
   /* top: 40%;
   right: -10%; */
   top: 180px;
-  right: 80px;
+  right: -40px;
   width: 325px;
   border: 3px solid var(--fifth-color);
   border-radius: 22px 18px;
@@ -58,6 +58,7 @@ const StyleCalendar = styled(Calendar1)`
     min-width: 100px;
     background: none;
     font-size: 18px;
+    font-weight: bold;
   }
   .react-calendar__navigation button:enabled:hover,
   .react-calendar__navigation button:enabled:focus {

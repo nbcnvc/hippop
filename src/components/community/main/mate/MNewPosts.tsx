@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -10,19 +10,33 @@ import { getPosts } from '../../../../api/post';
 import { styled } from 'styled-components';
 import Skeleton from '@mui/material/Skeleton';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
+<<<<<<< HEAD:src/components/community/main/mate/MNewPosts.tsx
+=======
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import shortid from 'shortid';
+import { ImSpinner } from 'react-icons/im';
+>>>>>>> bb3b2240dc5e56842800889c140d0231c4ee0b30:src/components/community/main/MNewPosts.tsx
 
 const MNewPosts = () => {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
 
+  const { pathname } = useLocation();
+<<<<<<< HEAD:src/components/community/main/mate/MNewPosts.tsx
+=======
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
+
+  const { state } = useLocation();
+  const storeId: number = state?.storeId || 0; // state가 존재하지 않을 때 기본값으로 0 사용
+>>>>>>> bb3b2240dc5e56842800889c140d0231c4ee0b30:src/components/community/main/MNewPosts.tsx
+
   const {
     data: posts,
     isLoading,
     isError,
     hasNextPage,
     fetchNextPage,
-    isFetchingNextPage
+    isFetchingNextPage,
+    refetch
   } = useInfiniteQuery<FetchPost>({
     queryKey: [`${queryKey}`, pathname],
     queryFn: ({ pageParam }) => getPosts(pageParam, pathname),
@@ -35,6 +49,10 @@ const MNewPosts = () => {
       return null; // 마지막 페이지인 경우
     }
   });
+
+  useEffect(() => {
+    refetch();
+  }, [storeId]);
 
   const selectPosts = useMemo(() => {
     return posts?.pages
@@ -61,10 +79,12 @@ const MNewPosts = () => {
 
   // 프로필로 넘어가기
   const naviProfile = (userId: string) => {
-    navigate(`/yourpage/${userId}`);
+    // navigate(`/yourpage/${userId}`);
+    navigate(`/yourpage/${shortid.generate()}`, { state: { userId: userId } });
   };
 
   if (isLoading) {
+<<<<<<< HEAD:src/components/community/main/mate/MNewPosts.tsx
     // 로딩 중일 때 스켈레톤 표시
     return (
       <PostContainer>
@@ -113,6 +133,12 @@ const MNewPosts = () => {
         ))}
         <Trigger ref={ref} />
       </PostContainer>
+=======
+    return (
+      <div>
+        <ImSpinner />
+      </div>
+>>>>>>> bb3b2240dc5e56842800889c140d0231c4ee0b30:src/components/community/main/MNewPosts.tsx
     );
   }
   if (isError) {
@@ -143,7 +169,8 @@ const MNewPosts = () => {
                 <Between>
                   <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${post.user.avatar_url}`} alt="User Avatar" />
                   <div>
-                    <Name style={{ marginBottom: '5px' }}>
+                    <Name style={{ marginBottom: '5px', display: 'flex', flexDirection: 'column' }}>
+                      <button />
                       <NameLine>{post.user.name}</NameLine>
                     </Name>
                     <Name>님과 함께 하기</Name>
@@ -241,6 +268,24 @@ const Name = styled.div`
   font-size: 18px;
   font-weight: 600;
   margin: 0 0 0 25px;
+  position: relative;
+  button {
+    position: absolute;
+    // margin-bottom: 20px;
+    bottom: 34px;
+    left: 54px;
+    background-color: var(--fourth-color);
+    width: 50px;
+    height: 20px;
+
+    cursor: default;
+    &:hover {
+      filter: brightness(100%);
+    }
+    &:active {
+      transform: scale(1);
+    }
+  }
 `;
 
 const NameLine = styled.span`
