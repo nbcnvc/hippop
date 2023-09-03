@@ -10,6 +10,7 @@ import { getPosts } from '../../../api/post';
 import { styled } from 'styled-components';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import { ImSpinner } from 'react-icons/im';
 
 const MNewPosts = () => {
   const navigate = useNavigate();
@@ -67,7 +68,11 @@ const MNewPosts = () => {
   };
 
   if (isLoading) {
-    return <div>로딩중입니다.</div>;
+    return (
+      <div>
+        <ImSpinner />
+      </div>
+    );
   }
   if (isError) {
     return <div>오류가 발생했습니다.</div>;
@@ -97,7 +102,8 @@ const MNewPosts = () => {
                 <Between>
                   <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${post.user.avatar_url}`} alt="User Avatar" />
                   <div>
-                    <Name style={{ marginBottom: '5px' }}>
+                    <Name style={{ marginBottom: '5px', display: 'flex', flexDirection: 'column' }}>
+                      <button />
                       <NameLine>{post.user.name}</NameLine>
                     </Name>
                     <Name>님과 함께 하기</Name>
@@ -195,6 +201,24 @@ const Name = styled.div`
   font-size: 18px;
   font-weight: 600;
   margin: 0 0 0 25px;
+  position: relative;
+  button {
+    position: absolute;
+    // margin-bottom: 20px;
+    bottom: 34px;
+    left: 54px;
+    background-color: var(--fourth-color);
+    width: 50px;
+    height: 20px;
+
+    cursor: default;
+    &:hover {
+      filter: brightness(100%);
+    }
+    &:active {
+      transform: scale(1);
+    }
+  }
 `;
 
 const NameLine = styled.span`
