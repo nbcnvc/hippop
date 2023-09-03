@@ -89,8 +89,8 @@ const RNewPosts = () => {
             <ContentBox>
               <Between>
                 <Between>
-                  <RoomRoundedIcon /> &nbsp;
-                  <Skeleton width="80%" animation="wave" />
+                  <Skeleton variant="circular" width={24} height={24} /> &nbsp;
+                  <Skeleton width={100} height={24} />
                 </Between>
                 <Between>
                   <NotesRoundedIcon /> &nbsp;

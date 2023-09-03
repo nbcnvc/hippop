@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { supabase } from '../api/supabase';
 import { Store } from '../types/types';
 import Card from '../components/list/Card';
+import Skeleton from '@mui/material/Skeleton';
 
 const PAGE_SIZE = 5;
 
@@ -14,6 +15,7 @@ const fetchStores = async ({ pageParam = 0 }) => {
   const { data } = await supabase
     .from('store')
     .select()
+    // .order('period_start', { ascending: false }) // 내림차순
     .range(pageParam, pageParam + PAGE_SIZE - 1);
   return data || [];
 };
@@ -23,7 +25,9 @@ const Main = () => {
     data: storesData,
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage
+    isFetchingNextPage,
+    isLoading,
+    isError
   } = useInfiniteQuery<Store[][], Error, Store[], [string]>(['stores'], fetchStores, {
     getNextPageParam: (lastPage, allPages) => {
       if (!lastPage || lastPage.length < PAGE_SIZE) return undefined;
@@ -55,6 +59,31 @@ const Main = () => {
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const allStores = storesData?.pages.flatMap((page) => page) || [];
+
+  if (isLoading) {
+    // 로딩 중일 때 스켈레톤을 렌더링합니다.
+    return (
+      <MainContainer>
+        <header>
+          <img src="/asset/mainBanner.png" alt="Banner-img" />
+          <h4 style={{ textAlign: 'center' }}>
+            <span>당신</span>에게 맞는 <span>힙한 팝업스토어</span>를 찾아보세요! XD
+          </h4>
+        </header>
+        <Masonry columns={3} spacing={2} sx={{ maxWidth: '1920px', width: '50%', margin: '0 auto' }}>
+          {Array.from({ length: PAGE_SIZE }, (_, index) => (
+            <Link to="/" key={index} ref={index === PAGE_SIZE - 1 ? observerRef : null}>
+              <Skeleton variant="rectangular" width="100%" height={300} animation="wave" />
+            </Link>
+          ))}
+          {isFetchingNextPage && <p>Loading...</p>}
+        </Masonry>
+      </MainContainer>
+    );
+  }
+  if (isError) {
+    return <div>오류가 발생했습니다.</div>;
+  }
 
   return (
     <MainContainer>
