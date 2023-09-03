@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 // 라이브러리
-import { useLocation, useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import format from 'date-fns/format';
 import { Parser } from 'htmlparser2'; // 문서를 분석해주는 (div, p tag) 라이브러리
@@ -8,17 +8,15 @@ import { useInView } from 'react-intersection-observer';
 import { styled } from 'styled-components';
 // api
 import { getProfileImg, getUser } from '../api/user'; // 사용자 정보를 가져오는 함수
-import { getMyItems, getYourItems } from '../api/post'; // 게시글 가져오는 함수
-import { getMyStores } from '../api/store'; // 북마크 가져오는 함수
+import { getYourItems } from '../api/post'; // 게시글 가져오는 함수
+
 import { fetchBookMarkStore } from '../api/bookmark';
 // 타입
-import { UserInfo, Store, PostType } from '../types/types';
-
+import { UserInfo, PostType } from '../types/types';
 // mui
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
-import Review from './Review';
-
+// img
 import DefaultImg from '../images/defaultImg.png';
 
 const YourPage = () => {
@@ -28,7 +26,6 @@ const YourPage = () => {
   const [activeSection, setActiveSection] = useState('myReview'); // 기본값 설정
   const navigate = useNavigate();
   const { data: user, isLoading: isUserLoading, isError: isUserError } = useQuery(['user', id], () => getUser(userId));
-  console.log(user);
 
   const {
     data: bookMarkStore,
@@ -36,7 +33,6 @@ const YourPage = () => {
     isError: isBookMarkError
   } = useQuery(['BookMarkStore', userId], () => fetchBookMarkStore(userId));
 
-  console.log('bookMarkStore', bookMarkStore);
   const handleSectionChange = (e: React.MouseEvent<HTMLButtonElement>) => {
     const button = e.target as HTMLButtonElement;
     const section = button.getAttribute('data-section');
@@ -458,7 +454,6 @@ const CardInfo = styled.div`
 `;
 
 const HtagTttle = styled.h3`
-  /* padding: 5px; */
   margin-top: 10px;
   margin-left: 5px;
   font-size: 20px;
@@ -467,7 +462,6 @@ const HtagTttle = styled.h3`
 
 const PtagDate = styled.p`
   margin-top: 12px;
-  /* padding: 5px; */
   margin-left: 5px;
   width: 100px;
   display: flex;
