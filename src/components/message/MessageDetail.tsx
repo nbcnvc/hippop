@@ -38,7 +38,7 @@ const MessageDetail = ({ selectedMessage, setIsClicked, setReplyModal, toggleMsg
           </ProfileBox>
         ) : (
           <ProfileBox>
-            {toggleMsgBox === '받은 쪽지함' ? '' : '수신자'}
+            {toggleMsgBox === '받은 쪽지함' ? '' : ''}
             {selectedMessage?.to.avatar_url && (
               <Img
                 src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${selectedMessage.to.avatar_url}`}

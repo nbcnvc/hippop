@@ -1,4 +1,4 @@
-import CommentCount from './CommentCount';
+import CommentCount from '../CommentCount';
 
 import moment from 'moment';
 import { useMemo } from 'react';
@@ -6,10 +6,11 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { FetchPost, PostType } from '../../../types/types';
-import { getPopularPosts } from '../../../api/post';
+import { FetchPost, PostType } from '../../../../types/types';
+import { getPopularPosts } from '../../../../api/post';
 
 import { styled } from 'styled-components';
+import Skeleton from '@mui/material/Skeleton'; // 스켈레톤 추가
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import NotesRoundedIcon from '@mui/icons-material/NotesRounded';
 
@@ -55,8 +56,6 @@ const RPopularPosts = () => {
     }
   });
 
-  console.log(selectPosts);
-
   // 대표이미지
   const extractImageTags = (html: string) => {
     const imageTags = [];
@@ -76,7 +75,39 @@ const RPopularPosts = () => {
   };
 
   if (isLoading) {
-    return <div></div>;
+    // 로딩 중일 때 스켈레톤을 렌더링합니다.
+    return (
+      <PostContainer>
+        {Array.from({ length: 5 }, (_, index) => (
+          <PostBox key={index}>
+            <div>
+              <ImageBoxs>
+                <Skeleton variant="rectangular" width="100%" height={190} animation="wave" />
+              </ImageBoxs>
+            </div>
+            <ContentBox>
+              <Between>
+                <Between>
+                  <RoomRoundedIcon /> &nbsp;
+                  <Skeleton width="80%" animation="wave" />
+                </Between>
+                <Between>
+                  <NotesRoundedIcon /> &nbsp;
+                  <Skeleton width="50px" animation="wave" />
+                </Between>
+              </Between>
+              &nbsp;
+              <Skeleton width="80%" animation="wave" />
+              <Skeleton width="95%" animation="wave" />
+              <Between>
+                <Skeleton width="60px" animation="wave" />
+                <Skeleton width="80px" animation="wave" />
+              </Between>
+            </ContentBox>
+          </PostBox>
+        ))}
+      </PostContainer>
+    );
   }
   if (isError) {
     return <div>오류가 발생했습니다.</div>;
@@ -101,7 +132,7 @@ const RPopularPosts = () => {
               <Between>
                 <Between>
                   <RoomRoundedIcon /> &nbsp;
-                  <Store>{post.store.title}</Store>
+                  <Store>{post.store_title}</Store>
                 </Between>
                 <Between>
                   <NotesRoundedIcon /> &nbsp;
@@ -203,4 +234,14 @@ const Button = styled.button`
 const Trigger = styled.div`
   width: 100%;
   align-items: center;
+`;
+
+// 스켈레톤
+const ImageBoxs = styled.div`
+  width: 310px;
+  height: 190px;
+  border: 2px solid var(--fifth-color);
+  border-radius: 10px;
+  margin: 5px 0 5px 3px;
+  object-fit: cover;
 `;

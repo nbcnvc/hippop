@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 // 라이브러리
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import format from 'date-fns/format';
 import { Parser } from 'htmlparser2'; // 문서를 분석해주는 (div, p tag) 라이브러리
@@ -21,12 +21,20 @@ import DefaultImg from '../images/defaultImg.png';
 import { Skeleton } from '@mui/material';
 
 const YourPage = () => {
-  const { id } = useParams();
-  const userId: string = id as string;
+  // const { id } = useParams();
+
+  const { state } = useLocation();
+  const userId: string = state?.userId || '';
+
+  // const userId: string = id as string;
   const [userData, setUserData] = useState<UserInfo | null>(null);
   const [activeSection, setActiveSection] = useState('myReview'); // 기본값 설정
   const navigate = useNavigate();
-  const { data: user, isLoading: isUserLoading, isError: isUserError } = useQuery(['user', id], () => getUser(userId));
+  const {
+    data: user,
+    isLoading: isUserLoading,
+    isError: isUserError
+  } = useQuery(['user', userId], () => getUser(userId));
 
   const {
     data: bookMarkStore,
@@ -70,8 +78,8 @@ const YourPage = () => {
     fetchNextPage,
     isFetchingNextPage
   } = useInfiniteQuery({
-    queryKey: ['yourpage', id, activeSection],
-    queryFn: ({ pageParam }) => getYourSectionItems({ pageParam, activeSection, userId: id }),
+    queryKey: ['yourpage', userId, activeSection],
+    queryFn: ({ pageParam }) => getYourSectionItems({ pageParam, activeSection, userId: userId }),
     getNextPageParam: (lastPage) => {
       if (lastPage.page < lastPage.totalPages) {
         return lastPage.page + 1;

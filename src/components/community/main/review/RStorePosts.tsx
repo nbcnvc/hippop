@@ -1,4 +1,4 @@
-import CommentCount from './CommentCount';
+import CommentCount from '../CommentCount';
 
 import moment from 'moment';
 import { useMemo } from 'react';
@@ -6,18 +6,20 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { FetchPost, PostType } from '../../../types/types';
-import { getPosts } from '../../../api/post';
+import { FetchPost, PostType } from '../../../../types/types';
+import { getStorePosts } from '../../../../api/post';
 
 import { styled } from 'styled-components';
+import Skeleton from '@mui/material/Skeleton'; // 스켈레톤 추가
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import NotesRoundedIcon from '@mui/icons-material/NotesRounded';
 
-import Skeleton from '@mui/material/Skeleton'; // 스켈레톤 추가
-
-const RNewPosts = () => {
+const RStorePosts = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { state } = useLocation();
+  const storeId: number = state?.storeId || 0; // state가 존재하지 않을 때 기본값으로 0 사용
+
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
   const {
     data: posts,
@@ -27,8 +29,8 @@ const RNewPosts = () => {
     fetchNextPage,
     isFetchingNextPage
   } = useInfiniteQuery<FetchPost>({
-    queryKey: [`${queryKey}`, pathname],
-    queryFn: ({ pageParam }) => getPosts(pageParam, pathname),
+    queryKey: [`${queryKey}`, storeId, pathname],
+    queryFn: ({ pageParam }) => getStorePosts(pageParam, storeId, pathname),
     getNextPageParam: (lastPage) => {
       // 전체 페이지 개수보다 작을 때
       if (lastPage.page < lastPage.totalPages) {
@@ -88,8 +90,8 @@ const RNewPosts = () => {
             <ContentBox>
               <Between>
                 <Between>
-                  <Skeleton variant="circular" width={24} height={24} /> &nbsp;
-                  <Skeleton width={100} height={24} />
+                  <RoomRoundedIcon /> &nbsp;
+                  <Skeleton width="80%" animation="wave" />
                 </Between>
                 <Between>
                   <NotesRoundedIcon /> &nbsp;
@@ -154,7 +156,7 @@ const RNewPosts = () => {
   );
 };
 
-export default RNewPosts;
+export default RStorePosts;
 
 const PostContainer = styled.div`
   display: flex;
@@ -177,15 +179,6 @@ const PostBox = styled.div`
 const ContentBox = styled.div`
   width: 515px;
   padding: 10px 20px;
-`;
-
-const ImageBoxs = styled.div`
-  width: 310px;
-  height: 190px;
-  border: 2px solid var(--fifth-color);
-  border-radius: 10px;
-  margin: 5px 0 5px 3px;
-  object-fit: cover;
 `;
 
 const ImageBox = styled.img`
@@ -243,4 +236,14 @@ const Button = styled.button`
 const Trigger = styled.div`
   width: 100%;
   align-items: center;
+`;
+
+// 스켈레톤
+const ImageBoxs = styled.div`
+  width: 310px;
+  height: 190px;
+  border: 2px solid var(--fifth-color);
+  border-radius: 10px;
+  margin: 5px 0 5px 3px;
+  object-fit: cover;
 `;

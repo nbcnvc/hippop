@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 // 타입
 import { HotPlaceProps } from '../../types/props';
 // 스타일
@@ -8,15 +8,19 @@ import Switch, { SwitchProps } from '@mui/material/Switch';
 import { styled as muiStyled } from '@mui/material/styles';
 
 const HotPlace = ({ setCategory, setIsSelected }: HotPlaceProps) => {
+  const [isOpened, setIsOpened] = useState<boolean>(false);
+
   const handleHotPlaceCategory = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = (e.target as HTMLButtonElement).name;
     setCategory(name);
     setIsSelected(undefined);
+    setIsOpened(true);
   };
 
   const handleShowMarker = () => {
     setCategory('');
     setIsSelected(undefined);
+    setIsOpened(false);
   };
 
   return (
@@ -37,7 +41,7 @@ const HotPlace = ({ setCategory, setIsSelected }: HotPlaceProps) => {
         </div>
       </div>
       <div className="toggle-button">
-        <IOSSwitch onClick={handleShowMarker} />
+        <IOSSwitch checked={isOpened} onClick={handleShowMarker} />
       </div>
     </HotPlaceContainer>
   );

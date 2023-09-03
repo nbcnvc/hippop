@@ -14,13 +14,17 @@ function App() {
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
 
   const currentUser = useCurrentUser();
+  console.log('currentUser', currentUser);
+
   useEffect(() => {
     supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && !currentUser) {
-        const response = await supabase.from('user').select(`*`).eq('id', session?.user.id);
-        if (response.data) {
-          setCurrentUser(response.data[0]);
+        const { data } = await supabase.from('user').select(`*`).eq('id', session?.user.id).single();
+
+        if (data) {
+          setCurrentUser(data);
         }
+
         if (event === 'SIGNED_IN' && !currentUser) {
           // const imageUrl = session?.user.user_metadata.avatar_url
           async function uploadImageToStorage(imageUrl: any) {

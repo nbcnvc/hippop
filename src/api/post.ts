@@ -9,7 +9,7 @@ export const uploadImages = async (uploadImage: File) => {
 };
 
 // Post 최신순 조회
-export const getPosts = async (pageParam: number = 1, param?: string): Promise<FetchPost> => {
+export const getPosts = async (pageParam: number = 1, param: string): Promise<FetchPost> => {
   let data: PostType[] | null = [];
   let count: number | null = null;
 
@@ -57,40 +57,71 @@ export const getPosts = async (pageParam: number = 1, param?: string): Promise<F
   return { posts: data as any, page: pageParam, totalPages, count };
 };
 
-// Post 인기순 조회
-export const getPopularPosts = async (pageParam: number = 1, param?: string): Promise<FetchPost> => {
+// Post 스토어 조회
+export const getStorePosts = async (pageParam: number = 1, storeId?: number, param?: string): Promise<FetchPost> => {
   let data: PostType[] | null = [];
   let count: number | null = null;
 
   if (param === '/review') {
-    // const { data: reviews } = await supabase;
-    //   select
-    //   post.*,
-    //   coalesce(comment_count, 0) as comment_count
-    // from
-    //   post
-    //   left join (
-    //     select
-    //       post_id,
-    //       count(*) as comment_count
-    //     from
-    //     comment
-    //     group by
-    //       post_id
-    //   ) as comment_counts on post.id = comment_counts.post_id
-    // where
-    //   post.ctg_index = 1
-    //   and post.isdeleted = false
-    // order by
-    //   comment_count desc;
+    const { data: reviews } = await supabase
+      .from('post')
+      .select(`*, store(title)`)
+      .eq('ctg_index', 1)
+      .eq('isdeleted', false)
+      .eq('store_id', storeId)
+      .order('created_at', { ascending: false }) // 내림차순
+      .range(pageParam * 10 - 10, pageParam * 10 - 1); // 범위 지정
 
-    // data = reviews;
+    data = reviews;
 
     const { count: reviewCount } = await supabase
       .from('post')
       .select('count', { count: 'exact' })
       .eq('ctg_index', 1)
       .eq('isdeleted', false);
+
+    count = reviewCount;
+  } else if (param === '/mate') {
+    const { data: mates } = await supabase
+      .from('post')
+      .select(`*, user( * ), store( title )`)
+      .eq('ctg_index', 2)
+      .eq('isdeleted', false)
+      .eq('store_id', storeId)
+      .order('created_at', { ascending: false })
+      .range(pageParam * 10 - 10, pageParam * 10 - 1);
+
+    data = mates;
+
+    const { count: mateCount } = await supabase
+      .from('post')
+      .select('count', { count: 'exact' })
+      .eq('ctg_index', 2)
+      .eq('isdeleted', false)
+      .eq('store_id', storeId);
+
+    count = mateCount;
+
+    console.log('mates', mates);
+  }
+
+  // 총 페이지
+  const totalPages = count ? Math.floor(count / 10) + (count % 10 === 0 ? 0 : 1) : 1;
+
+  return { posts: data as any, page: pageParam, totalPages, count };
+};
+
+// Post 인기순 조회
+export const getPopularPosts = async (pageParam: number = 1, param?: string): Promise<FetchPost> => {
+  let data: PostType[] | null = [];
+  let count: number | null = null;
+
+  if (param === '/review') {
+    const { data: reviews } = await supabase.from('popular_posts').select('*');
+
+    data = reviews;
+
+    const { count: reviewCount } = await supabase.from('popular_posts').select('*');
 
     count = reviewCount;
   }

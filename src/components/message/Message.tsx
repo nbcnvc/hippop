@@ -15,6 +15,7 @@ const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
   const [body, setBody] = useState<string>('');
   const currentUser = useCurrentUser() ?? { id: '', avatar_url: '', name: '' };
   console.log('currentUser', currentUser);
+
   // 쪽지 보내기 요청
   const messageHandler = async () => {
     if (writer) {
@@ -67,7 +68,6 @@ const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
 
                 <Name>{currentUser?.name}</Name>
               </SenderInfoBox>
-
               <SendIconBox>
                 <SendSharpIcon />
               </SendIconBox>

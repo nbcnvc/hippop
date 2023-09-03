@@ -1,4 +1,4 @@
-import MPosts from '../components/community/main/MPosts';
+import MPosts from '../components/community/main/mate/MPosts';
 import Write from '../components/community/write/Write';
 import SearchModal from '../components/community/write/SearchModal';
 

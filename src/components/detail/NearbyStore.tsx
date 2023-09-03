@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 // 라이브러리
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -93,6 +93,7 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
 
   // detail page 이동
   const navDetail = (id: number) => {
+    // window.location.reload();
     navigate(`/detail/${id}`);
   };
 
@@ -109,26 +110,27 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
         <h1>{guName}의 다른 팝업스토어는 어때요?</h1>
       </div>
       {filteredStore && filteredStore?.length > 3 && (
-        <StyledSlider {...settings}>
-          {filteredStore?.map((data) => {
-            return (
-              <div key={data.id}>
-                <Card key={data.id}>
-                  <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${data.images[0]}`} />
-                  <InfoBox>
-                    <div>
-                      {data.location.split(' ').slice(0, 1)} {data.location.split(' ').slice(1, 2)}
-                      <StoreName>{data.title}</StoreName>
-                      {data.period_start} ~ {data.period_end}
-                    </div>
-
-                    <DetailBtn onClick={() => navDetail(data.id)}>상세보기</DetailBtn>
-                  </InfoBox>
-                </Card>
-              </div>
-            );
-          })}
-        </StyledSlider>
+        <SlideContainer>
+          <StyledSlider {...settings}>
+            {filteredStore?.map((data) => {
+              return (
+                <div key={data.id}>
+                  <Card key={data.id}>
+                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${data.images[0]}`} />
+                    <InfoBox>
+                      <div>
+                        {data.location.split(' ').slice(0, 1)} {data.location.split(' ').slice(1, 2)}
+                        <StoreName>{data.title}</StoreName>
+                        {data.period_start} ~ {data.period_end}
+                      </div>
+                      <DetailBtn onClick={() => navDetail(data.id)}>상세보기</DetailBtn>
+                    </InfoBox>
+                  </Card>
+                </div>
+              );
+            })}
+          </StyledSlider>
+        </SlideContainer>
       )}
       {filteredStore && filteredStore.length < 4 && filteredStore.length > 0 && (
         <div
@@ -203,31 +205,36 @@ const NearbyStoreContainer = styled.div`
   }
 `;
 
-const StyledSlider = styled(Slider)`
+const SlideContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 70px 0;
+`;
+
+const StyledSlider = styled(Slider)`
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  width: 1300px;
 
   .slick-slide {
-    /* width: 90%; */
     display: flex;
     justify-content: center;
     align-items: center;
   }
   .slick-list {
-    /* margin: 0 -30px; // space(여백)/-2 */
     overflow: hidden;
   }
 `;
 
 const Card = styled.div`
-  width: 380px;
+  width: 370px !important ;
+
   height: 500px;
   border-radius: 18px;
   border: 3px solid var(--fifth-color);
 
-  display: flex;
+  display: flex !important;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -246,8 +253,8 @@ const InfoBox = styled.div`
 
 const Img = styled.img`
   width: 340px;
-  height: 370px;
-  /* margin-top: 10px; */
+  height: 369px;
+
   object-fit: cover;
   border-radius: 10px;
 
@@ -267,15 +274,10 @@ const StoreName = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
 
-  margin: 7px 0 7px 0;
+  margin: 13px 0 13px 0;
 `;
 
-const BtnBox = styled.div``;
-
 const DetailBtn = styled.button`
-  /* background-color: var(--primary-color); */
   background-color: var(--second-color);
-  /* background-color: var(--third-color); */
-  /* color: black; */
   color: white;
 `;

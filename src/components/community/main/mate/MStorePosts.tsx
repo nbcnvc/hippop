@@ -1,19 +1,23 @@
 import moment from 'moment';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { FetchPost } from '../../../types/types';
-import { getPosts } from '../../../api/post';
+import { FetchPost } from '../../../../types/types';
+import { getStorePosts } from '../../../../api/post';
 
 import { styled } from 'styled-components';
+import Skeleton from '@mui/material/Skeleton';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import Skeleton from '@mui/material/Skeleton';
-const MNewPosts = () => {
+
+const MStorePosts = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { state } = useLocation();
+  const storeId: number = state?.storeId || 0; // state가 존재하지 않을 때 기본값으로 0 사용
+
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
   const {
     data: posts,
@@ -23,8 +27,8 @@ const MNewPosts = () => {
     fetchNextPage,
     isFetchingNextPage
   } = useInfiniteQuery<FetchPost>({
-    queryKey: [`${queryKey}`, pathname],
-    queryFn: ({ pageParam }) => getPosts(pageParam, pathname),
+    queryKey: [`${queryKey}`, storeId, pathname],
+    queryFn: ({ pageParam }) => getStorePosts(pageParam, storeId, pathname),
     getNextPageParam: (lastPage) => {
       // 전체 페이지 개수보다 작을 때
       if (lastPage.page < lastPage.totalPages) {
@@ -153,7 +157,7 @@ const MNewPosts = () => {
   );
 };
 
-export default MNewPosts;
+export default MStorePosts;
 
 const PostContainer = styled.div`
   display: flex;

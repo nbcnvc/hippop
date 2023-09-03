@@ -2,8 +2,9 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 
 // 라이브러리
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import shortid from 'shortid';
 //타입
-import { Bookmark, PostType, Store } from '../types/types';
+// import { Bookmark, PostType, Store } from '../types/types';
 //api
 import { getUser } from '../api/user';
 import { getMyItems } from '../api/post';
@@ -22,7 +23,7 @@ import SendBox from '../components/message/SendBox';
 import MessageReply from '../components/message/MessageReply';
 import { MessageType } from '../types/types';
 import ReceiveBox from '../components/message/ReceiveBox';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 import MyReview from '../components/mypage/MyReview';
 import MyBookmark from '../components/mypage/MyBookmark';
@@ -30,8 +31,12 @@ import { Skeleton } from '@mui/material';
 
 const MyPage = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
-  const { data: currentUser } = useQuery(['user', id], () => getUser(id ?? ''));
+  // const { id } = useParams();
+  const { state } = useLocation();
+  const userId: string = state?.userId || '';
+  const { data: currentUser } = useQuery(['user', userId], () => getUser(userId ?? ''));
+
+  // const { data: currentUser } = useQuery(['user', id], () => getUser(id ?? ''));
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState('');
   const [imageUploadVisible, setImageUploadVisible] = useState(false);
@@ -44,18 +49,13 @@ const MyPage = () => {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [subscribers, setSubscribers] = useState<string[]>([]);
 
-  const [fetchUserPost, setFetchUserPost] = useState<PostType[]>([]);
-  const [fetchSubs, setFetchSubs] = useState<Bookmark[]>([]);
-  const [extractedData, setExtractedData] = useState<Store[]>([]);
-  // 게시글 & 북마크 토글!
+  // const [fetchUserPost, setFetchUserPost] = useState<PostType[]>([]);
+  // const [fetchSubs, setFetchSubs] = useState<Bookmark[]>([]);
+  // const [extractedData, setExtractedData] = useState<Store[]>([]);
+  // 게시글 & 북마크 토글
   const [activeSection, setActiveSection] = useState('myReview');
-
   const [toggleMsgBox, setToggleMsgBox] = useState<string>('받은 쪽지함');
   const imageInputRef = useRef(null);
-
-  // 무한스크롤상태
-  // const initialPosts: any = [];
-
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
   // 현재유저 정보 가져오기
   // const currentUser: any | null = useCurrentUser();
@@ -63,7 +63,6 @@ const MyPage = () => {
   const currentUserId = currentUser?.id;
   const { data: sublistData } = useQuery(['sublist'], () => getSubList(currentUserId ?? ''));
   // console.log('test ====> ', sublistData);
-
   const getSubList = async (userId: string) => {
     const { data } = await supabase.from('subscribe').select('subscribe_to').eq('subscribe_from', userId);
     return data;
@@ -78,11 +77,9 @@ const MyPage = () => {
           return subscribeUser;
         });
         const allSubscribeUsers = await Promise.all(subscribeUserPromises);
-
         const filteredSubscribers = allSubscribeUsers
           .filter((subscribeUserArray) => subscribeUserArray && subscribeUserArray.length > 0)
           .map((subscribeUserArray) => subscribeUserArray && subscribeUserArray[0].name);
-
         setSubscribers(filteredSubscribers as string[]);
       }
     };
@@ -90,7 +87,6 @@ const MyPage = () => {
       loadSubscribers();
     }
   }, [sublistData]);
-
   // 구독목록 visible
   useEffect(() => {
     function handleOutsideClick(event: MouseEvent) {
@@ -99,12 +95,10 @@ const MyPage = () => {
       }
     }
     window.addEventListener('mousedown', handleOutsideClick);
-
     return () => {
       window.removeEventListener('mousedown', handleOutsideClick);
     };
   }, []);
-
   // 인피니티 스크롤을 위한 데이터 조회
   const getMySectionItems = ({
     pageParam,
@@ -122,7 +116,6 @@ const MyPage = () => {
     }
     return null;
   };
-
   const {
     data: items,
     isLoading,
@@ -140,7 +133,6 @@ const MyPage = () => {
       return null;
     }
   });
-
   // 인피니티 스크롤로 필터된 post
   const selectItems = useMemo(() => {
     return items?.pages
@@ -149,7 +141,6 @@ const MyPage = () => {
       })
       .flat();
   }, [items]);
-
   // 언제 다음 페이지를 가져올 것
   const { ref } = useInView({
     threshold: 1, // 맨 아래에 교차될 때
@@ -158,125 +149,56 @@ const MyPage = () => {
       fetchNextPage();
     }
   });
-
   // my page가 렌더되면 현재 login상태 user가 작성한 post 배열 가져오기
-  useEffect(() => {
-    const fetchUserPosts = async () => {
-      if (currentUser) {
-        const userPostId = currentUser.id;
-        let { data } = await supabase.from('post').select('*').eq('user_id', userPostId);
-        // console.log(data);
-        setFetchUserPost(data || []);
-      }
-    };
-    fetchUserPosts();
-  }, [currentUser]);
+  // useEffect(() => {
+  //   const fetchUserPosts = async () => {
+  //     if (currentUser) {
+  //       const userPostId = currentUser.id;
+  //       let { data } = await supabase.from('post').select('*').eq('user_id', userPostId);
+  //       // console.log(data);
+  //       setFetchUserPost(data || []);
+  //     }
+  //   };
+  //   fetchUserPosts();
+  // }, [currentUser]);
   //////////////////////////////////////
-  useEffect(() => {
-    const Subs = async () => {
-      if (currentUser) {
-        const userPostId = currentUser.id;
-        let { data } = await supabase.from('bookmark').select('*').eq('user_id', userPostId);
-        // console.log('1----', data);
-        if (data) {
-          setFetchSubs(data);
-          const storeIds = data.map((bookmark) => bookmark.store_id);
-          // console.log('2----', storeIds); // Array of store_ids
-          if (storeIds.length > 0) {
-            let { data: storeData } = await supabase.from('store').select('*').in('id', storeIds);
-            // console.log('3----', storeData); // Array of store data
-            if (storeData) {
-              const extractedData: Store[] = storeData.map((store) => ({
-                id: store.id,
-                location: store.location,
-                period_start: store.period_start,
-                period_end: store.period_end,
-                title: store.title,
-                body: store.body,
-                opening: store.opening,
-                images: store.images,
-                link: store.link,
-                isClosed: store.isClosed
-              }));
-              // console.log('4----', extractedData);
-              setExtractedData(extractedData);
-            }
-          }
-        }
-      }
-    };
-
-    Subs();
-  }, [currentUser]);
-
-  // 닉네임 수정 handler
-  const handleNameEdit = () => {
-    setEditingName(true);
-    setNewName(currentUser?.name || '');
-    setSelectedImage(null);
-    setImageUploadVisible(!imageUploadVisible);
-  };
-  // 닉네임 저장
-  // 닉네임 저장
-  const handleNameSave = async () => {
-    if (newName.trim() === '') {
-      alert('닉네임을 입력해주세요.');
-      return;
-    }
-
-    if (newName.length >= 5) {
-      alert('닉네임은 다섯 글자 미만이어야 합니다.');
-      return;
-    }
-
-    if (newName === currentUser?.name) {
-      alert('변경된 부분이 없어요 :( [취소] 버튼을 눌러주세요 !');
-      return;
-    }
-
-    const { error } = await supabase.from('user').update({ name: newName }).eq('id', currentUser?.id);
-    if (currentUser && !error) {
-      const userData = await getUser(currentUser?.id ?? '');
-      setCurrentUser(userData);
-      setEditingName(false); // 수정 모드 해제
-      alert('닉네임이 변경 됐습니다 :)');
-    } else {
-      console.error(error);
-    }
-  };
-
-  // 수정 모드 해제
-  const handleNameCancel = () => {
-    setEditingName(false);
-    setSelectedImage(null);
-    setImageUploadVisible(!imageUploadVisible);
-  };
-
-  // 프로필 수정 handler
-  const handleImageUpload = () => {
-    setSelectedImage(null);
-    setImageUploadVisible(!imageUploadVisible);
-  };
-
-  const handleImageInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      setSelectedImage(files[0]);
-      setImageUploadVisible(true);
-    } else {
-      setSelectedImage(null); // 이미지를 선택하지 않은 경우에 null로 설정
-      setImageUploadVisible(false);
-    }
-  };
-
+  // useEffect(() => {
+  //   const Subs = async () => {
+  //     if (currentUser) {
+  //       const userPostId = currentUser.id;
+  //       let { data } = await supabase.from('bookmark').select('*').eq('user_id', userPostId);
+  //       if (data) {
+  //         setFetchSubs(data);
+  //         const storeIds = data.map((bookmark) => bookmark.store_id);
+  //         if (storeIds.length > 0) {
+  //           let { data: storeData } = await supabase.from('store').select('*').in('id', storeIds);
+  //           if (storeData) {
+  //             const extractedData: Store[] = storeData.map((store) => ({
+  //               id: store.id,
+  //               location: store.location,
+  //               period_start: store.period_start,
+  //               period_end: store.period_end,
+  //               title: store.title,
+  //               body: store.body,
+  //               opening: store.opening,
+  //               images: store.images,
+  //               link: store.link
+  //             }));
+  //             setExtractedData(extractedData);
+  //           }
+  //         }
+  //       }
+  //     }
+  //   };
+  //   Subs();
+  // }, [currentUser]);
+  // 프로필 수정 저장
   const handleSaveChanges = async () => {
     let nameChanged = false;
     let imageChanged = false;
-
     if (newName.trim() !== '' && newName.length < 5 && newName !== currentUser?.name) {
       // 이름 변경 처리
       const { error: nameError } = await supabase.from('user').update({ name: newName }).eq('id', currentUser?.id);
-
       if (!nameError) {
         const userData = await getUser(currentUser?.id ?? '');
         setCurrentUser(userData);
@@ -284,22 +206,17 @@ const MyPage = () => {
         nameChanged = true;
       } else {
         console.error(nameError);
-        alert('닉네임 변경 중 오류가 발생했습니다.');
+        alert('닉네임 변경 중 오류가 발생했습니다 :(');
       }
     }
-
     if (selectedImage) {
       try {
         const newFileName = randomFileName(selectedImage.name);
         const renamedFile = new File([selectedImage], newFileName);
-
         const { data } = await supabase.storage.from('images').upload(`profile/${renamedFile.name}`, renamedFile);
-
         if (data) {
           const imgUrl = data.path;
-
           await supabase.from('user').update({ avatar_url: imgUrl }).eq('id', currentUser?.id);
-
           // Fetch updated user data using getUser
           if (currentUser) {
             const userData = await getUser(currentUser?.id ?? '');
@@ -312,7 +229,6 @@ const MyPage = () => {
         alert('프로필 사진 변경 중 오류가 발생했습니다.');
       }
     }
-
     if (nameChanged || imageChanged) {
       alert('프로필 변경이 완료됐습니다 :)');
       setEditingName(false); // 수정 모드 해제
@@ -321,45 +237,38 @@ const MyPage = () => {
       alert('변경된 부분이 없어요 :( [취소] 버튼을 눌러주세요 !');
     }
   };
-
-  // 프로필 선택후 저장하기
-  const handleImageConfirm = async () => {
-    if (selectedImage) {
-      try {
-        const newFileName = randomFileName(selectedImage.name);
-        const renamedFile = new File([selectedImage], newFileName);
-
-        const { data } = await supabase.storage.from('images').upload(`profile/${renamedFile.name}`, renamedFile);
-
-        if (data) {
-          const imgUrl = data.path;
-
-          await supabase.from('user').update({ avatar_url: imgUrl }).eq('id', currentUser?.id);
-
-          // Fetch updated user data using getUser
-          if (currentUser) {
-            const userData = await getUser(currentUser?.id ?? '');
-            setCurrentUser(userData);
-            // console.log('userData', userData);
-          }
-
-          alert('프로필 변경이 완료됐습니다 :)');
-          setImageUploadVisible(false);
-        }
-      } catch (error) {
-        console.error(error);
-      }
+  // 닉네임 수정 handler
+  const handleNameEdit = () => {
+    setEditingName(true);
+    setNewName(currentUser?.name || '');
+    setSelectedImage(null);
+    setImageUploadVisible(!imageUploadVisible);
+  };
+  // 수정 모드 해제
+  const handleNameCancel = () => {
+    setEditingName(false);
+    setSelectedImage(null);
+    setImageUploadVisible(!imageUploadVisible);
+  };
+  // 프로필 이미지 변경
+  const handleImageInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      setSelectedImage(files[0]);
+      setImageUploadVisible(true);
+    } else {
+      setSelectedImage(null); // 이미지를 선택하지 않은 경우에 null로 설정
+      setImageUploadVisible(false);
     }
   };
+  // 프로필 이미지 선택-미리보여주기
   const handleSectionChange = (e: React.MouseEvent<HTMLButtonElement>) => {
     const button = e.target as HTMLButtonElement;
     const section = button.getAttribute('data-section');
-
     if (section !== null) {
       setActiveSection(section);
     }
   };
-
   const ClickToggleBox = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = (e.target as HTMLButtonElement).name;
     setToggleMsgBox(name);
@@ -432,10 +341,7 @@ const MyPage = () => {
         <div className="toggle-wrapper">
           <h3>
             <p>
-              <div style={{ padding: '2px' }}>
-                {' '}
-                <Skeleton width={120} height={60} />
-              </div>
+              <div style={{ padding: '2px' }}> </div>
             </p>
           </h3>
 
@@ -542,16 +448,22 @@ const MyPage = () => {
           <div className="btn-mother">
             {isMenuOpen && (
               <ul>
-                {sublistData?.map((subscriberData, index) => (
-                  <li
-                    key={index}
-                    onClick={() => {
-                      navigate(`/yourpage/${subscriberData.subscribe_to}`);
-                    }}
-                  >
-                    {subscribers}
-                  </li>
-                ))}
+                {sublistData?.map((subscriberData, index) => {
+                  const subscriberIndex = subscriberData.subscribe_to;
+                  const subscriberName = subscribers[index];
+                  return (
+                    <li
+                      key={index}
+                      onClick={() => {
+                        if (subscribers) {
+                          navigate(`/yourpage/${shortid.generate()}`, { state: { userId: subscriberIndex } });
+                        }
+                      }}
+                    >
+                      {subscriberName !== undefined ? subscriberName : ''}
+                    </li>
+                  );
+                })}
               </ul>
             )}
             {editingName ? (
@@ -560,7 +472,7 @@ const MyPage = () => {
                 <button onClick={handleSaveChanges}>저장</button>
               </div>
             ) : (
-              currentUser?.id === id && <button onClick={handleNameEdit}>프로필 변경</button>
+              currentUser?.id === userId && <button onClick={handleNameEdit}>프로필 변경</button>
             )}
           </div>
           {sublistData && (

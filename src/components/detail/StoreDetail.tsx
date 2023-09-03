@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 // 라이브러리
-import { useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import CopyToClipboard from 'react-copy-to-clipboard';
 // 타입
 import { Store } from '../../types/types';
 // api
@@ -25,10 +26,34 @@ import Menu from '@mui/material/Menu';
 
 const StoreDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const calendarRef = useRef<HTMLDivElement | null>(null);
 
-  const [isHovered, setIsHovered] = useState<boolean>(false);
-
+  const [isClicked, setIsClicked] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const {
+    data: storeData,
+    isLoading,
+    isError,
+    refetch
+  } = useQuery<Store | null>({
+    queryKey: ['detailData', Number(id)],
+    queryFn: () => fetchDetailData(Number(id))
+    // refetchOnWindowFocus: true
+  });
+
+  useEffect(() => {
+    // 컴포넌트가 마운트될 때 실행되는 부분
+    refetch();
+    setIsClicked(false);
+
+    // 컴포넌트가 언마운트될 때 실행되는 부분
+    // return () => {
+    //   setIsClicked(false);
+    // };
+  }, [id]);
+
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -37,18 +62,33 @@ const StoreDetail = () => {
     setAnchorEl(null);
   };
 
-  const {
-    data: storeData,
-    isLoading,
-    isError
-  } = useQuery<Store | null>({ queryKey: ['detailData', Number(id)], queryFn: () => fetchDetailData(Number(id)) });
-
   const handleopenlink = (link: string) => {
     window.open(link, '_blank');
   };
 
-  const handleMouseEnter = () => setIsHovered(true);
-  const handleMouseLeave = () => setIsHovered(false);
+  const handleMouseEnter = () => setIsClicked(!isClicked);
+  console.log('isClicked', isClicked);
+
+  // useEffect(() => {
+  //   const handleOutsideClick = (event: MouseEvent) => {
+  //     if (isClicked && calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
+  //       setIsClicked(false);
+  //     }
+  //   };
+
+  //   // Attach the event listener to the document when the calendar is open
+  //   if (isClicked) {
+  //     document.addEventListener('click', handleOutsideClick);
+  //   } else {
+  //     // Remove the event listener when the calendar is closed
+  //     document.removeEventListener('click', handleOutsideClick);
+  //   }
+
+  //   // Cleanup the event listener when the component unmounts
+  //   return () => {
+  //     document.removeEventListener('click', handleOutsideClick);
+  //   };
+  // }, [isClicked]);
 
   const settings = {
     slidesToShow: 1,
@@ -61,12 +101,12 @@ const StoreDetail = () => {
     pauseOnFocus: true
   };
 
-  if (isError) {
-    return <div>데이터를 가져오는 도중 오류가 발생했습니다.</div>;
-  }
-
   if (isLoading) {
     return <div>데이터를 로딩 중입니다.</div>;
+  }
+
+  if (isError) {
+    return <div>데이터를 가져오는 도중 오류가 발생했습니다.</div>;
   }
 
   return (
@@ -88,7 +128,6 @@ const StoreDetail = () => {
                 <h1>{storeData.title}</h1>
                 <BookMark storeData={storeData} />
               </TopBox>
-
               <div className="store-body">
                 <div>{storeData.body}</div>
               </div>
@@ -98,6 +137,9 @@ const StoreDetail = () => {
                 </div>
                 <div>
                   <span>기간</span> {storeData.period_start} ~ {storeData.period_end}
+                  <div style={{ margin: 0 }} ref={calendarRef}>
+                    <CalendarIcon onClick={handleMouseEnter} />
+                  </div>
                 </div>
                 <div>
                   <span>운영 시간</span> {storeData.opening}
@@ -105,28 +147,47 @@ const StoreDetail = () => {
                 <div>
                   <span>예약 여부</span>
                 </div>
-                <div>
-                  <span>링크 </span>
+                {/* <div className="link-url">
+                  <div>
+                    <span>링크 </span>
+                    <p>{storeData.link}</p>
+                  </div>
                   <LinkIcon
                     onClick={() => {
                       handleopenlink(storeData.link);
                     }}
                   />
+                </div> */}
+                <div>
+                  <span>링크 </span>
+                  <p
+                    onClick={() => {
+                      handleopenlink(storeData.link);
+                    }}
+                  >
+                    Visit the official page
+                  </p>
+                  <CopyToClipboard
+                    text={storeData.link}
+                    onCopy={() =>
+                      alert('주소가 복사되었습니다. 공식 페이지에서 더 자세한 정보를 확인하실 수 있습니다!')
+                    }
+                  >
+                    <LinkIcon />
+                  </CopyToClipboard>
                 </div>
               </div>
               <div className="button-box">
-                <button>후기 보러가기</button>
-                <button>팝업 메이트 구하기</button>
+                <button onClick={() => navigate('/review', { state: { storeId: id } })}>후기 보러가기</button>
+                <button onClick={() => navigate('/mate', { state: { storeId: id } })}>팝업 메이트 구하기</button>
                 <ShareBtn
                   id="basic-button"
                   aria-controls={open ? 'basic-menu' : undefined}
                   aria-haspopup="true"
                   aria-expanded={open ? 'true' : undefined}
                   onClick={handleClick}
-                  // className="share-button"
                 >
                   <IosShareIcon fontSize="small" />
-                  {/*  */}
                 </ShareBtn>
                 <Menu
                   id="basic-menu"
@@ -141,8 +202,8 @@ const StoreDetail = () => {
                 </Menu>
               </div>
             </div>
-            <CalendarIcon onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} />
-            {isHovered && <Calendar storeData={storeData} />}
+            {isClicked && <Calendar storeData={storeData} />}
+            {/* {isClicked && <Calendar storeData={storeData} />} */}
           </div>
           <StoreMap storeLocation={storeData.location} title={storeData.title} />
         </>
@@ -156,7 +217,7 @@ export default StoreDetail;
 const DetailContainer = styled.div`
   max-width: 1920px;
   min-width: 900px;
-  width: 60%;
+  width: 50%;
   height: 100%;
   margin: 90px auto;
 
@@ -185,6 +246,7 @@ const DetailContainer = styled.div`
     }
 
     .store-info {
+      width: 100%;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -198,10 +260,12 @@ const DetailContainer = styled.div`
       }
 
       .store-body {
+        width: 100%;
         border-bottom: 2px dashed #65656587;
+        margin-bottom: 10px;
 
         div {
-          height: 124px;
+          height: 100px;
           font-size: 18px;
           line-height: 26px;
           overflow: auto;
@@ -212,9 +276,22 @@ const DetailContainer = styled.div`
 
       .store-text {
         display: flex;
+        justify-content: center;
         flex-direction: column;
-        justify-content: space-between;
-        padding-left: 5px;
+        /* align-items: center; */
+
+        /* .link-url {
+          display: flex;
+          align-items: center;
+
+          span {
+            width: 40px;
+          }
+          p {
+            text-align: left;
+            font-size: 12px;
+          }
+        } */
 
         div {
           display: flex;
@@ -226,6 +303,14 @@ const DetailContainer = styled.div`
           font-size: 18px;
           font-weight: 600;
           margin-right: 15px;
+        }
+        p {
+          text-decoration: underline;
+          cursor: pointer;
+          margin-right: 15px;
+          &:hover {
+            color: var(--primary-color);
+          }
         }
       }
 
@@ -265,24 +350,26 @@ const ShareBtn = styled.button`
 `;
 
 const LinkIcon = styled(InsertLinkIcon)`
+  margin-right: 20px;
   cursor: pointer;
 
   &:hover {
-    color: var(--sixth-color);
+    color: var(--primary-color);
     transform: scale(1.1);
   }
 `;
 
 const CalendarIcon = styled(CalendarMonthIcon)`
-  position: absolute;
+  /* position: absolute; */
   /* bottom: 203px; */
   /* right: 375px; */
-  margin-left: 921px;
-  margin-top: 299px;
+  /* margin-left: -510px; */
+  /* margin-top: 291px; */
+  margin-left: 15px;
   cursor: pointer;
 
   &:hover {
-    color: var(--sixth-color);
+    color: var(--primary-color);
     transform: scale(1.1);
   }
 `;

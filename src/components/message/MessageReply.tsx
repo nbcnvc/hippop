@@ -186,8 +186,8 @@ const Textarea = styled.textarea`
   width: 400px;
   height: 200px;
 
-  border: 2px solid black;
-  border-radius: 18px;
+  border: 3px solid black;
+  border-radius: 10px;
 
   padding: 10px;
 `;

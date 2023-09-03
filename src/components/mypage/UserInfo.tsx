@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 
 //api
@@ -12,10 +12,19 @@ import { randomFileName } from '../../hooks/useHandleImageName';
 import PartyModeIcon from '@mui/icons-material/PartyMode';
 //메세지
 import { useQuery } from '@tanstack/react-query';
+import shortid from 'shortid';
 const UserInfo = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
-  const { data: currentUser } = useQuery(['user', id], () => getUser(id ?? ''));
+  // const { id } = useParams();
+
+  const { state } = useLocation();
+  // const userId = state.userId;
+  const userId: string = state?.userId || '';
+  console.log(state.userId);
+
+  const { data: currentUser } = useQuery(['user', userId], () => getUser(userId ?? ''));
+  // const { data: currentUser } = useQuery(['user', id], () => getUser(id ?? ''));
+
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState('');
   const [imageUploadVisible, setImageUploadVisible] = useState(false);
@@ -202,7 +211,8 @@ const UserInfo = () => {
                   <li
                     key={index}
                     onClick={() => {
-                      navigate(`/yourpage/${subscriberData.subscribe_to}`);
+                      // navigate(`/yourpage/${subscriberData.subscribe_to}`);
+                      navigate(`/yourpage/${shortid.generate()}`, { state: { userId: subscriberData.subscribe_to } });
                     }}
                   >
                     Subscriber {index + 1}
@@ -218,7 +228,7 @@ const UserInfo = () => {
                 <button onClick={handleNameCancel}>취소</button>
               </>
             ) : (
-              currentUser?.id === id && <button onClick={handleNameEdit}>수정</button>
+              currentUser?.id === userId && <button onClick={handleNameEdit}>수정</button>
             )}
           </div>
         </span>
