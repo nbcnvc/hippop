@@ -14,6 +14,9 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 const MNewPosts = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { state } = useLocation();
+  const storeId: number = state?.storeId || 0; // state가 존재하지 않을 때 기본값으로 0 사용
+
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
   const {
     data: posts,
@@ -24,7 +27,7 @@ const MNewPosts = () => {
     isFetchingNextPage
   } = useInfiniteQuery<FetchPost>({
     queryKey: [`${queryKey}`, pathname],
-    queryFn: ({ pageParam }) => getPosts(pageParam, pathname),
+    queryFn: ({ pageParam }) => getPosts(pageParam, storeId, pathname),
     getNextPageParam: (lastPage) => {
       // 전체 페이지 개수보다 작을 때
       if (lastPage.page < lastPage.totalPages) {

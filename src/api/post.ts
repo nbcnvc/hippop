@@ -9,11 +9,11 @@ export const uploadImages = async (uploadImage: File) => {
 };
 
 // Post 최신순 조회
-export const getPosts = async (pageParam: number = 1, param?: string): Promise<FetchPost> => {
+export const getPosts = async (pageParam: number = 1, storeId?: number, param?: string): Promise<FetchPost> => {
   let data: PostType[] | null = [];
   let count: number | null = null;
 
-  if (param === '/review') {
+  if (param === '/review' && storeId === 0) {
     const { data: reviews } = await supabase
       .from('post')
       .select(`*, store(title)`)
@@ -31,7 +31,26 @@ export const getPosts = async (pageParam: number = 1, param?: string): Promise<F
       .eq('isdeleted', false);
 
     count = reviewCount;
-  } else if (param === '/mate') {
+  } else if (param === '/review' && storeId !== 0 && storeId) {
+    const { data: reviews } = await supabase
+      .from('post')
+      .select(`*, store(title)`)
+      .eq('ctg_index', 1)
+      .eq('isdeleted', false)
+      .eq('store_id', storeId)
+      .order('created_at', { ascending: false }) // 내림차순
+      .range(pageParam * 10 - 10, pageParam * 10 - 1); // 범위 지정
+
+    data = reviews;
+
+    const { count: reviewCount } = await supabase
+      .from('post')
+      .select('count', { count: 'exact' })
+      .eq('ctg_index', 1)
+      .eq('isdeleted', false);
+
+    count = reviewCount;
+  } else if (param === '/mate' && storeId === 0) {
     const { data: mates } = await supabase
       .from('post')
       .select(`*, user( * ), store( title )`)
@@ -49,6 +68,28 @@ export const getPosts = async (pageParam: number = 1, param?: string): Promise<F
       .eq('isdeleted', false);
 
     count = mateCount;
+  } else if (param === '/mate' && storeId !== 0 && storeId) {
+    const { data: mates } = await supabase
+      .from('post')
+      .select(`*, user( * ), store( title )`)
+      .eq('ctg_index', 2)
+      .eq('isdeleted', false)
+      .eq('store_id', storeId)
+      .order('created_at', { ascending: false })
+      .range(pageParam * 10 - 10, pageParam * 10 - 1);
+
+    data = mates;
+
+    const { count: mateCount } = await supabase
+      .from('post')
+      .select('count', { count: 'exact' })
+      .eq('ctg_index', 2)
+      .eq('isdeleted', false)
+      .eq('store_id', storeId);
+
+    count = mateCount;
+
+    console.log('mates', mates);
   }
 
   // 총 페이지

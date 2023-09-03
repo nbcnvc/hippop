@@ -12,6 +12,7 @@ const RPosts = () => {
     const name = (e.target as HTMLButtonElement).name;
     setSortName(name);
   };
+
   return (
     <>
       <ButtonContainer>
