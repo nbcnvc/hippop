@@ -87,9 +87,6 @@ const MNewPosts = () => {
                 <Body>
                   <Skeleton width={400} height={30} />
                 </Body>
-                <Button>
-                  <Skeleton width={60} height={16} />
-                </Button>
               </Between>
             </ContentBox>
             <ProfileBox>
@@ -104,9 +101,6 @@ const MNewPosts = () => {
                   </Name>
                 </div>
               </Between>
-              <ProfileButton>
-                <Skeleton width={60} height={16} />
-              </ProfileButton>
             </ProfileBox>
           </PostBox>
         ))}

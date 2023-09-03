@@ -432,7 +432,10 @@ const MyPage = () => {
         <div className="toggle-wrapper">
           <h3>
             <p>
-              <div style={{ padding: '2px' }}> </div>
+              <div style={{ padding: '2px' }}>
+                {' '}
+                <Skeleton width={120} height={60} />
+              </div>
             </p>
           </h3>
 
