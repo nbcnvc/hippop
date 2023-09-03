@@ -44,10 +44,10 @@ const MyPage = () => {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [subscribers, setSubscribers] = useState<string[]>([]);
 
-  const [setFetchUserPost] = useState<PostType[]>([]);
+  const [fetchUserPost, setFetchUserPost] = useState<PostType[]>([]);
   const [fetchSubs, setFetchSubs] = useState<Bookmark[]>([]);
   const [extractedData, setExtractedData] = useState<Store[]>([]);
-  // 게시글 & 북마크 토글
+  // 게시글 & 북마크 토글!
   const [activeSection, setActiveSection] = useState('myReview');
 
   const [toggleMsgBox, setToggleMsgBox] = useState<string>('받은 쪽지함');
