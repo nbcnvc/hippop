@@ -10,6 +10,14 @@ export const fetchAllBookMark = async () => {
   return data;
 };
 
+// user의 북마크한 store list 가져오기
+export const fetchBookMarkStore = async (userId: string) => {
+  const { data } = await supabase.from('bookmark').select(`*, store(*)`).eq('user_id', userId);
+  console.log('data', data);
+
+  return data;
+};
+
 // 북마크 토글
 export const toggleBookMark = async (bookmark: Bookmark): Promise<void> => {
   const { data: isBookMark }: any = await supabase

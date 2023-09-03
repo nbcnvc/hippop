@@ -26,7 +26,7 @@ const Footer = () => {
         <span>
           Project-Name : HIPPOP | Team : 그 여름, 우리는
           <br />
-          Developer : 조성록 / 장혜진 / 나윤빈 / 김우리 / 조진명 / 양윤아 | Build-Period : 2023.08.16 ~ 2023.09.12
+          Developer : 조성록 / 장혜진 / 나윤빈 / 김우리 / 조진명 | Designer : 양윤아 | Build-Period : 2023.08.16 ~ 2023.09.12
           <br />
           Stack : React TypeScript | Design-Tool : Figma | GitHub : https://github.com/nbcnvc/hippop
           <br />
