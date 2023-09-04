@@ -49,10 +49,10 @@ const StoreDetail = () => {
     setIsClicked(false);
 
     // 컴포넌트가 언마운트될 때 실행되는 부분
-    return () => {
-      setIsClicked(false);
-    };
-  }, [storeData]);
+    // return () => {
+    //   setIsClicked(false);
+    // };
+  }, [id]);
 
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -137,7 +137,7 @@ const StoreDetail = () => {
                 </div>
                 <div>
                   <span>기간</span> {storeData.period_start} ~ {storeData.period_end}
-                  <div ref={calendarRef}>
+                  <div style={{ margin: 0 }} ref={calendarRef}>
                     <CalendarIcon onClick={handleMouseEnter} />
                   </div>
                 </div>
@@ -198,7 +198,7 @@ const StoreDetail = () => {
                     'aria-labelledby': 'basic-button'
                   }}
                 >
-                  <Share onClick={handleClose} />
+                  <Share storeData={storeData} onClick={handleClose} />
                 </Menu>
               </div>
             </div>

@@ -15,6 +15,7 @@ const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
   const [body, setBody] = useState<string>('');
   const currentUser = useCurrentUser() ?? { id: '', avatar_url: '', name: '' };
   console.log('currentUser', currentUser);
+
   // 쪽지 보내기 요청
   const messageHandler = async () => {
     if (writer) {
@@ -22,7 +23,9 @@ const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
         sender: currentUser.id ?? '',
         receiver: writer.id ?? '',
         body,
-        isRead: false
+        isRead: false,
+        isSender: false,
+        isReceiver: false
       };
 
       await sendMessage(message);
@@ -56,25 +59,21 @@ const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
             <TopTitle>팝업메이트에게 쪽지하는 중...</TopTitle>
             <UserInfo>
               <SenderInfoBox>
-                {writer?.avatar_url && writer?.avatar_url.startsWith('profile/') ? (
+                {writer?.avatar_url && (
                   <Img
                     src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser?.avatar_url}`}
                     alt="User Avatar"
                   />
-                ) : (
-                  <Img src={currentUser?.avatar_url} alt="User Avatar" />
                 )}
+
                 <Name>{currentUser?.name}</Name>
               </SenderInfoBox>
-
               <SendIconBox>
                 <SendSharpIcon />
               </SendIconBox>
               <RecieverInfoBox>
-                {writer?.avatar_url && writer?.avatar_url.startsWith('profile/') ? (
+                {writer?.avatar_url && (
                   <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${writer?.avatar_url}`} alt="User Avatar" />
-                ) : (
-                  <Img src={writer?.avatar_url} alt="User Avatar" />
                 )}
 
                 <Name>{writer?.name}</Name>
@@ -100,8 +99,10 @@ const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
 export default Message;
 
 const Container = styled.div`
-  position: absolute;
-  z-index: 0;
+  /* position: absolute;
+  z-index: 0; */
+  position: fixed;
+  z-index: 9;
   top: 0;
   left: 0;
   width: 100%;

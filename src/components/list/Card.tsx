@@ -44,7 +44,7 @@ const Card = (props: CardProps) => {
     }
   });
 
-  const { title, images, location, period_start, period_end } = props.store;
+  const { title, images, location, period_start, period_end, isClosed } = props.store;
   const [isHovered, setIsHovered] = useState(false);
   const [cardHeight, setCardHeight] = useState<number>(0);
 
@@ -53,54 +53,137 @@ const Card = (props: CardProps) => {
   }, []);
 
   return (
-    <CardContainer
-      ref={sliderRef}
-      className="keen-slider"
-      style={{ height: cardHeight }}
-      onMouseOver={() => {
-        setIsHovered(true);
-      }}
-      onMouseOut={() => {
-        setIsHovered(false);
-      }}
-    >
-      {images.map((image) => (
-        <img src={`${supabaseStorageUrl}/${image}`} className="keen-slider__slide" key={image} />
-      ))}
-      <StoreInfo className="store-info" style={{ opacity: isHovered ? 1 : 0, maxHeight: isHovered ? '100%' : '0' }}>
-        <div className="info-wrap">
-          <h2>{title}</h2>
-          <p>{location}</p>
-          <span>{`${period_start} ~ ${period_end}`}</span>
-        </div>
-      </StoreInfo>
-      {loaded && instanceRef.current && (
-        <>
-          <Arrow
-            left
-            onClick={() => {
-              instanceRef.current?.prev();
-            }}
-            disabled={currentSlide === 0}
-          />
+    <>
+      {isClosed ? (
+        <CardContainerClosed
+          ref={sliderRef}
+          className="keen-slider"
+          style={{ height: cardHeight }}
+          onMouseOver={() => {
+            setIsHovered(true);
+          }}
+          onMouseOut={() => {
+            setIsHovered(false);
+          }}
+        >
+          {images.map((image) => (
+            <img src={`${supabaseStorageUrl}/${image}`} className="keen-slider__slide" key={image} />
+          ))}
+          <ClosedStoreInfo>
+            <CLosed>CLOSED</CLosed>
+          </ClosedStoreInfo>
 
-          <Arrow
-            onClick={() => {
-              instanceRef.current?.next();
-            }}
-            disabled={currentSlide === instanceRef.current.track.details.slides.length - 1}
-          />
-        </>
+          <StoreInfo className="store-info" style={{ opacity: isHovered ? 1 : 0, maxHeight: isHovered ? '100%' : '0' }}>
+            <div className="closed-wrap">
+              <h2>CLOSED</h2>
+              <h5>{title}</h5>
+              <p>{location}</p>
+              <span>{`${period_start} ~ ${period_end}`}</span>
+            </div>
+          </StoreInfo>
+          {loaded && instanceRef.current && (
+            <>
+              <Arrow
+                left
+                onClick={() => {
+                  instanceRef.current?.prev();
+                }}
+                disabled={currentSlide === 0}
+              />
+              <Arrow
+                onClick={() => {
+                  instanceRef.current?.next();
+                }}
+                disabled={currentSlide === instanceRef.current.track.details.slides.length - 1}
+              />
+            </>
+          )}
+        </CardContainerClosed>
+      ) : (
+        <CardContainer
+          ref={sliderRef}
+          className="keen-slider"
+          style={{ height: cardHeight }}
+          onMouseOver={() => {
+            setIsHovered(true);
+          }}
+          onMouseOut={() => {
+            setIsHovered(false);
+          }}
+        >
+          {images.map((image) => (
+            <img src={`${supabaseStorageUrl}/${image}`} className="keen-slider__slide" key={image} />
+          ))}
+          <StoreInfo className="store-info" style={{ opacity: isHovered ? 1 : 0, maxHeight: isHovered ? '100%' : '0' }}>
+            <div className="info-wrap">
+              <h2>{title}</h2>
+              <p>{location}</p>
+              <span>{`${period_start} ~ ${period_end}`}</span>
+            </div>
+          </StoreInfo>
+          {loaded && instanceRef.current && (
+            <>
+              <Arrow
+                left
+                onClick={() => {
+                  instanceRef.current?.prev();
+                }}
+                disabled={currentSlide === 0}
+              />
+              <Arrow
+                onClick={() => {
+                  instanceRef.current?.next();
+                }}
+                disabled={currentSlide === instanceRef.current.track.details.slides.length - 1}
+              />
+            </>
+          )}
+        </CardContainer>
       )}
-    </CardContainer>
+    </>
   );
 };
 
 export default Card;
 
+const CardContainerClosed = styled.div`
+  position: relative;
+  // border-radius: 7px;
+  overflow: hidden;
+  border-radius: 18px;
+
+  transition: all 0.3s ease-in-out; /* 크기 변화에 대한 트랜지션 추가 */
+  box-sizing: border-box;
+
+  margin: 0 auto;
+  img {
+    filter: grayscale(100%); /* 이미지를 흑백으로 만듭니다. */
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+  }
+
+  &:hover {
+    border: 6px solid var(--primary-color);
+  }
+
+  &:active {
+    transform: scale(0.97); /* 클릭 시 작아지는 효과 */
+  }
+`;
+
+const CLosed = styled.div`
+  // position: absolute;
+  /* top: 46.3%;
+  left: 35%; */
+
+  font-size: 40px;
+  font-weight: bold;
+  color: white;
+`;
+
 const CardContainer = styled.div`
   position: relative;
-  border-radius: 7px;
   overflow: hidden;
   border-radius: 18px;
 
@@ -119,6 +202,19 @@ const CardContainer = styled.div`
   &:active {
     transform: scale(0.97); /* 클릭 시 작아지는 효과 */
   }
+`;
+
+const ClosedStoreInfo = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  padding: 5px 10px;
 `;
 
 const StoreInfo = styled.div`
@@ -141,6 +237,18 @@ const StoreInfo = styled.div`
   overflow: hidden;
   z-index: 1;
 
+  .closed-wrap {
+    padding: 2rem;
+    h2 {
+      text-align: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+    p {
+      line-height: 20px;
+      margin-bottom: 20px;
+    }
+  }
   .info-wrap {
     padding: 2rem;
     h2 {
@@ -150,9 +258,6 @@ const StoreInfo = styled.div`
     p {
       line-height: 20px;
       margin-bottom: 20px;
-    }
-    &:last-child {
-      margin-top: 40px;
     }
   }
 `;

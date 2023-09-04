@@ -1,18 +1,18 @@
 import moment from 'moment';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { FetchPost } from '../../../types/types';
-import { getPosts } from '../../../api/post';
+import { FetchPost } from '../../../../types/types';
+import { getStorePosts } from '../../../../api/post';
 
 import { styled } from 'styled-components';
+import Skeleton from '@mui/material/Skeleton';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import { ImSpinner } from 'react-icons/im';
 
-const MNewPosts = () => {
+const MStorePosts = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { state } = useLocation();
@@ -27,8 +27,8 @@ const MNewPosts = () => {
     fetchNextPage,
     isFetchingNextPage
   } = useInfiniteQuery<FetchPost>({
-    queryKey: [`${queryKey}`, pathname],
-    queryFn: ({ pageParam }) => getPosts(pageParam, storeId, pathname),
+    queryKey: [`${queryKey}`, storeId, pathname],
+    queryFn: ({ pageParam }) => getStorePosts(pageParam, storeId, pathname),
     getNextPageParam: (lastPage) => {
       // 전체 페이지 개수보다 작을 때
       if (lastPage.page < lastPage.totalPages) {
@@ -68,10 +68,48 @@ const MNewPosts = () => {
   };
 
   if (isLoading) {
+    // 로딩 중일 때 스켈레톤 표시
     return (
-      <div>
-        <ImSpinner />
-      </div>
+      <PostContainer>
+        {Array.from({ length: 5 }).map((_, index) => (
+          <PostBox key={index}>
+            <ContentBox>
+              <Between>
+                <Between>
+                  <Skeleton variant="circular" width={24} height={24} /> &nbsp;
+                  <Skeleton width={100} height={24} />
+                </Between>
+                <Date>
+                  <Skeleton width={100} height={12} />
+                </Date>
+              </Between>
+              &nbsp;
+              <Title>
+                <Skeleton width={400} height={20} />
+              </Title>
+              <Between>
+                <Body>
+                  <Skeleton width={400} height={30} />
+                </Body>
+              </Between>
+            </ContentBox>
+            <ProfileBox>
+              <Between>
+                <Skeleton variant="circular" width={70} height={70} />
+                <div>
+                  <Name style={{ marginBottom: '5px' }}>
+                    <Skeleton width={80} height={20} />
+                  </Name>
+                  <Name>
+                    <Skeleton width={80} height={14} />
+                  </Name>
+                </div>
+              </Between>
+            </ProfileBox>
+          </PostBox>
+        ))}
+        <Trigger ref={ref} />
+      </PostContainer>
     );
   }
   if (isError) {
@@ -102,8 +140,7 @@ const MNewPosts = () => {
                 <Between>
                   <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${post.user.avatar_url}`} alt="User Avatar" />
                   <div>
-                    <Name style={{ marginBottom: '5px', display: 'flex', flexDirection: 'column' }}>
-                      <button />
+                    <Name style={{ marginBottom: '5px' }}>
                       <NameLine>{post.user.name}</NameLine>
                     </Name>
                     <Name>님과 함께 하기</Name>
@@ -120,7 +157,7 @@ const MNewPosts = () => {
   );
 };
 
-export default MNewPosts;
+export default MStorePosts;
 
 const PostContainer = styled.div`
   display: flex;
@@ -211,24 +248,6 @@ const Name = styled.div`
   font-size: 18px;
   font-weight: 600;
   margin: 0 0 0 25px;
-  position: relative;
-  button {
-    position: absolute;
-    // margin-bottom: 20px;
-    bottom: 34px;
-    left: 54px;
-    background-color: var(--fourth-color);
-    width: 50px;
-    height: 20px;
-
-    cursor: default;
-    &:hover {
-      filter: brightness(100%);
-    }
-    &:active {
-      transform: scale(1);
-    }
-  }
 `;
 
 const NameLine = styled.span`

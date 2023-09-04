@@ -15,6 +15,7 @@ import { styled } from 'styled-components';
 // mui
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AlarmBoxProps } from '../../types/props';
+import shortid from 'shortid';
 
 const AlarmBox = ({ alarms }: AlarmBoxProps) => {
   const navigate = useNavigate();
@@ -66,11 +67,13 @@ const AlarmBox = ({ alarms }: AlarmBoxProps) => {
     }
     // 구독
     if (alarm.ctg_index === 2) {
-      return navigate(`/yourpage/${alarm.sub_from}`);
+      // return navigate(`/yourpage/${alarm.sub_from}`);
+      return navigate(`/yourpage/${shortid.generate()}`, { state: { userId: alarm.sub_from } });
     }
     // 쪽지
     if (alarm.ctg_index === 3) {
-      return navigate(`/mypage/${alarm.targetUserId}`);
+      // return navigate(`/mypage/${alarm.targetUserId}`);
+      return navigate(`/mypage/${shortid.generate()}`, { state: { userId: currentUser?.id } });
     }
   };
 
@@ -121,15 +124,14 @@ const AlarmContents = styled.div`
     background-color: var(--sixth-color);
     font-weight: 600;
   }
-  
+
   &:first-child {
     border-radius: 6px 6px 0 0;
   }
-  
+
   &:last-child {
     border-radius: 0 0 6px 6px;
   }
-}
 `;
 
 const AlarmTime = styled.span`

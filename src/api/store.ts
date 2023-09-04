@@ -5,7 +5,7 @@ import { FetchsStore, Store } from '../types/types';
 
 // store 전체 조회
 export const fetchStoreData = async () => {
-  const { data } = await supabase.from('store').select('*');
+  const { data } = await supabase.from('store').select('*').eq('isClosed', false);
   return data as Store[];
 };
 

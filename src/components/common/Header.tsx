@@ -10,6 +10,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getUser } from '../../api/user';
 import { getAlarms, readAlarm } from '../../api/alarm';
+import shortid from 'shortid';
 import { toast } from 'react-toastify';
 
 function Header() {
@@ -24,7 +25,9 @@ function Header() {
   const currentUser = useCurrentUser();
   const currentUserId = currentUser?.id;
   const { data: user } = useQuery(['user', currentUserId], () => getUser(currentUserId ?? ''));
-
+  console.log('currentUser', currentUser);
+  console.log('user', user);
+  console.log('ser.avatar_url', user?.avatar_url);
   // 알림 데이터 가져오기
   const { data: alarms, isLoading, isError } = useQuery(['alarms'], () => getAlarms(currentUserId ?? ''));
   const readAlarms = alarms?.filter((alarm) => alarm.isRead === false);
@@ -146,16 +149,14 @@ function Header() {
                       <p>Hello,</p>
                       <p>{user.name}님</p>
                     </div>
-                    {user.avatar_url && user.avatar_url.startsWith('profile/') ? (
+                    {user.avatar_url && (
                       <img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${user.avatar_url}`} alt="User Avatar" />
-                    ) : (
-                      <img src={user.avatar_url} alt="User Avatar" />
                     )}
                   </div>
                   <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
                     <div
                       onClick={() => {
-                        navigate(`/mypage/${user.id}`);
+                        navigate(`/mypage/${shortid.generate()}`, { state: { userId: user.id } });
                       }}
                     >
                       My Page
@@ -309,31 +310,30 @@ const HeaderTag = styled.header`
             background-color: var(--sixth-color);
             font-weight: 600;
           }
-          
+
           &:first-child {
             border-radius: 6px 6px 0 0;
           }
-          
+
           &:last-child {
             border-radius: 0 0 6px 6px;
           }
         }
-        }
       }
     }
-    .alarm {
+  }
+  .alarm {
+    position: absolute;
+    margin-left: 170px;
+    img {
       position: absolute;
-      margin-left: 170px;
-      img {
-        position: absolute;
-        top: -17%;
-        right: -25%;
-        width: 10px;
-        height: 10px;
-      }
-      ul {
-        position: relative;
-      }
+      top: -17%;
+      right: -25%;
+      width: 10px;
+      height: 10px;
+    }
+    ul {
+      position: relative;
     }
   }
 `;
