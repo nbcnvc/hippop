@@ -174,10 +174,6 @@ const PostBox = styled.div`
   padding: 10px;
   margin: 10px;
   display: flex;
-<<<<<<< HEAD
-=======
-
->>>>>>> e84a1b4448ff115f53348816a26674d7da0e957c
   // box-sizing: border-box;
   transition: color 0.3s ease, transform 0.3s ease;
   &:hover {
@@ -213,7 +209,7 @@ const Title = styled.span`
 `;
 
 const Body = styled.div`
-  height: 45px;
+  height: 43px;
   width: 430px;
   color: black;
   font-size: 14px;
