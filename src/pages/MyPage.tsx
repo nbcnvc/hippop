@@ -28,6 +28,9 @@ import { useInView } from 'react-intersection-observer';
 import MyReview from '../components/mypage/MyReview';
 import MyBookmark from '../components/mypage/MyBookmark';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const MyPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -44,17 +47,15 @@ const MyPage = () => {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [subscribers, setSubscribers] = useState<string[]>([]);
 
-  const [fetchUserPost, setFetchUserPost] = useState<PostType[]>([]);
-  const [fetchSubs, setFetchSubs] = useState<Bookmark[]>([]);
-  const [extractedData, setExtractedData] = useState<Store[]>([]);
+  const notify = () => toast('알림 메시지');
+  // const [fetchUserPost, setFetchUserPost] = useState<PostType[]>([]);
+  // const [fetchSubs, setFetchSubs] = useState<Bookmark[]>([]);
+  // const [extractedData, setExtractedData] = useState<Store[]>([]);
   // 게시글 & 북마크 토글
   const [activeSection, setActiveSection] = useState('myReview');
 
   const [toggleMsgBox, setToggleMsgBox] = useState<string>('받은 쪽지함');
   const imageInputRef = useRef(null);
-
-  // 무한스크롤상태
-  const initialPosts: any = [];
 
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
   // 현재유저 정보 가져오기
@@ -160,53 +161,49 @@ const MyPage = () => {
   });
 
   // my page가 렌더되면 현재 login상태 user가 작성한 post 배열 가져오기
-  useEffect(() => {
-    const fetchUserPosts = async () => {
-      if (currentUser) {
-        const userPostId = currentUser.id;
-        let { data } = await supabase.from('post').select('*').eq('user_id', userPostId);
-        // console.log(data);
-        setFetchUserPost(data || []);
-      }
-    };
-    fetchUserPosts();
-  }, [currentUser]);
+  // useEffect(() => {
+  //   const fetchUserPosts = async () => {
+  //     if (currentUser) {
+  //       const userPostId = currentUser.id;
+  //       let { data } = await supabase.from('post').select('*').eq('user_id', userPostId);
+  //       // console.log(data);
+  //       setFetchUserPost(data || []);
+  //     }
+  //   };
+  //   fetchUserPosts();
+  // }, [currentUser]);
   //////////////////////////////////////
-  useEffect(() => {
-    const Subs = async () => {
-      if (currentUser) {
-        const userPostId = currentUser.id;
-        let { data } = await supabase.from('bookmark').select('*').eq('user_id', userPostId);
-        // console.log('1----', data);
-        if (data) {
-          setFetchSubs(data);
-          const storeIds = data.map((bookmark) => bookmark.store_id);
-          // console.log('2----', storeIds); // Array of store_ids
-          if (storeIds.length > 0) {
-            let { data: storeData } = await supabase.from('store').select('*').in('id', storeIds);
-            // console.log('3----', storeData); // Array of store data
-            if (storeData) {
-              const extractedData: Store[] = storeData.map((store) => ({
-                id: store.id,
-                location: store.location,
-                period_start: store.period_start,
-                period_end: store.period_end,
-                title: store.title,
-                body: store.body,
-                opening: store.opening,
-                images: store.images,
-                link: store.link
-              }));
-              // console.log('4----', extractedData);
-              setExtractedData(extractedData);
-            }
-          }
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const Subs = async () => {
+  //     if (currentUser) {
+  //       const userPostId = currentUser.id;
+  //       let { data } = await supabase.from('bookmark').select('*').eq('user_id', userPostId);
+  //       if (data) {
+  //         setFetchSubs(data);
+  //         const storeIds = data.map((bookmark) => bookmark.store_id);
+  //         if (storeIds.length > 0) {
+  //           let { data: storeData } = await supabase.from('store').select('*').in('id', storeIds);
+  //           if (storeData) {
+  //             const extractedData: Store[] = storeData.map((store) => ({
+  //               id: store.id,
+  //               location: store.location,
+  //               period_start: store.period_start,
+  //               period_end: store.period_end,
+  //               title: store.title,
+  //               body: store.body,
+  //               opening: store.opening,
+  //               images: store.images,
+  //               link: store.link
+  //             }));
+  //             setExtractedData(extractedData);
+  //           }
+  //         }
+  //       }
+  //     }
+  //   };
 
-    Subs();
-  }, [currentUser]);
+  //   Subs();
+  // }, [currentUser]);
 
   // 프로필 수정 저장
   const handleSaveChanges = async () => {
@@ -224,7 +221,7 @@ const MyPage = () => {
         nameChanged = true;
       } else {
         console.error(nameError);
-        alert('닉네임 변경 중 오류가 발생했습니다.');
+        alert('닉네임 변경 중 오류가 발생했습니다 :(');
       }
     }
 

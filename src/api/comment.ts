@@ -11,7 +11,7 @@ export const getComments = async (pageParam: number = 1, postId: number): Promis
     .from('comment')
     .select(`*, user( * )`)
     .eq('post_id', postId)
-    .eq('isDeleted', false)
+    .eq('isdeleted', false)
     .order('created_at', { ascending: false }) // 내림차순
     .range(pageParam * 5 - 5, pageParam * 5 - 1); // 범위 지정
 
@@ -21,7 +21,7 @@ export const getComments = async (pageParam: number = 1, postId: number): Promis
     .from('comment')
     .select('count', { count: 'exact' })
     .eq('post_id', postId)
-    .eq('isDeleted', false);
+    .eq('isdeleted', false);
 
   count = commentCount;
 
@@ -37,7 +37,7 @@ export const getCommentCount = async (postId: number): Promise<any> => {
     .from('comment')
     .select('count', { count: 'exact' })
     .eq('post_id', postId)
-    .eq('isDeleted', false);
+    .eq('isdeleted', false);
   return count;
 };
 

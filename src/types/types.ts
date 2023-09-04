@@ -62,7 +62,7 @@ export interface Comment {
   user_id: string;
   post_id: number;
   body: string;
-  isDeleted: boolean;
+  isdeleted: boolean;
 }
 
 export interface NewComment {

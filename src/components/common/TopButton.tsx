@@ -19,9 +19,10 @@ const Top = styled.button`
   border-radius: 30px;
   cursor: pointer;
   position: fixed;
-  bottom: 20px;
+  bottom: 80px;
   z-index: 1;
   right: 20%;
+  margin-bottom:
   transition: all 0.1s ease-in-out;
   @media (max-width: 1700px) {
     right: 15%;

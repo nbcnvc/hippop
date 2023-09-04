@@ -10,6 +10,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getUser } from '../../api/user';
 import { getAlarms, readAlarm } from '../../api/alarm';
+import { toast } from 'react-toastify';
 
 function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -76,8 +77,8 @@ function Header() {
     if (error) {
       console.error('error=>', error);
     } else {
+      toast(':) 안녕히가세요 !');
       navigate('/');
-      alert(':) 안녕히가세요 !');
     }
   };
 
