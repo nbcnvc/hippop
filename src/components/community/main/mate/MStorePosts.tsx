@@ -10,7 +10,6 @@ import { getStorePosts } from '../../../../api/post';
 import { styled } from 'styled-components';
 import Skeleton from '@mui/material/Skeleton';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 
 const MStorePosts = () => {
   const navigate = useNavigate();
@@ -175,7 +174,10 @@ const PostBox = styled.div`
   padding: 10px;
   margin: 10px;
   display: flex;
+<<<<<<< HEAD
+=======
 
+>>>>>>> e84a1b4448ff115f53348816a26674d7da0e957c
   // box-sizing: border-box;
   transition: color 0.3s ease, transform 0.3s ease;
   &:hover {
