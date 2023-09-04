@@ -3,10 +3,11 @@ import React, { useMemo, useState } from 'react';
 import moment from 'moment';
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { Comment } from '../../../types/types';
 import { CommentProps } from '../../../types/props';
 import { createComment, deleteComment, getCommentCount, getComments, updateComment } from '../../../api/comment';
-import { Comment } from '../../../types/types';
 import { useCurrentUser } from '../../../store/userStore';
+
 import { styled } from 'styled-components';
 
 const Comments = ({ postId }: CommentProps) => {
@@ -172,14 +173,13 @@ const Comments = ({ postId }: CommentProps) => {
                   <Date>{moment(comment.created_at).format('YYYY.MM.DD HH:mm')}</Date>
                 </DateBox>
                 <ProfileBox>
-                  {comment.user.avatar_url.startsWith('profile/') ? (
+                  {comment.user.avatar_url && (
                     <Img
                       src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${comment.user.avatar_url}`}
                       alt="User Avatar"
                     />
-                  ) : (
-                    <Img src={comment.user.avatar_url} alt="User Avatar" />
                   )}
+
                   <Name>{comment.user.name}</Name>
                 </ProfileBox>
                 {isEditId === comment.id ? (

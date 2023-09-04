@@ -1,24 +1,22 @@
-import CommentCount from './CommentCount';
+import CommentCount from '../CommentCount';
 
 import moment from 'moment';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { FetchPost, PostType } from '../../../types/types';
-import { getPosts } from '../../../api/post';
+import { FetchPost, PostType } from '../../../../types/types';
+import { getPopularPosts } from '../../../../api/post';
 
 import { styled } from 'styled-components';
+import Skeleton from '@mui/material/Skeleton'; // 스켈레톤 추가
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import NotesRoundedIcon from '@mui/icons-material/NotesRounded';
 
-const RNewPosts = () => {
+const RPopularPosts = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { state } = useLocation();
-  const storeId: number = state?.storeId || 0; // state가 존재하지 않을 때 기본값으로 0 사용
-
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
   const {
     data: posts,
@@ -26,11 +24,10 @@ const RNewPosts = () => {
     isError,
     hasNextPage,
     fetchNextPage,
-    isFetchingNextPage,
-    refetch
+    isFetchingNextPage
   } = useInfiniteQuery<FetchPost>({
-    queryKey: [`${queryKey}`, pathname],
-    queryFn: ({ pageParam }) => getPosts(pageParam, storeId, pathname),
+    queryKey: [`popular${queryKey}`, pathname],
+    queryFn: ({ pageParam }) => getPopularPosts(pageParam, pathname),
     getNextPageParam: (lastPage) => {
       // 전체 페이지 개수보다 작을 때
       if (lastPage.page < lastPage.totalPages) {
@@ -40,10 +37,6 @@ const RNewPosts = () => {
       return null; // 마지막 페이지인 경우
     }
   });
-
-  useEffect(() => {
-    refetch();
-  }, [storeId]);
 
   const selectPosts = useMemo(() => {
     return posts?.pages
@@ -82,7 +75,39 @@ const RNewPosts = () => {
   };
 
   if (isLoading) {
-    return <div>로딩중입니다.</div>;
+    // 로딩 중일 때 스켈레톤을 렌더링합니다.
+    return (
+      <PostContainer>
+        {Array.from({ length: 5 }, (_, index) => (
+          <PostBox key={index}>
+            <div>
+              <ImageBoxs>
+                <Skeleton variant="rectangular" width="100%" height={190} animation="wave" />
+              </ImageBoxs>
+            </div>
+            <ContentBox>
+              <Between>
+                <Between>
+                  <RoomRoundedIcon /> &nbsp;
+                  <Skeleton width="80%" animation="wave" />
+                </Between>
+                <Between>
+                  <NotesRoundedIcon /> &nbsp;
+                  <Skeleton width="50px" animation="wave" />
+                </Between>
+              </Between>
+              &nbsp;
+              <Skeleton width="80%" animation="wave" />
+              <Skeleton width="95%" animation="wave" />
+              <Between>
+                <Skeleton width="60px" animation="wave" />
+                <Skeleton width="80px" animation="wave" />
+              </Between>
+            </ContentBox>
+          </PostBox>
+        ))}
+      </PostContainer>
+    );
   }
   if (isError) {
     return <div>오류가 발생했습니다.</div>;
@@ -107,7 +132,7 @@ const RNewPosts = () => {
               <Between>
                 <Between>
                   <RoomRoundedIcon /> &nbsp;
-                  <Store>{post.store.title}</Store>
+                  <Store>{post.store_title}</Store>
                 </Between>
                 <Between>
                   <NotesRoundedIcon /> &nbsp;
@@ -129,7 +154,7 @@ const RNewPosts = () => {
   );
 };
 
-export default RNewPosts;
+export default RPopularPosts;
 
 const PostContainer = styled.div`
   display: flex;
@@ -209,4 +234,14 @@ const Button = styled.button`
 const Trigger = styled.div`
   width: 100%;
   align-items: center;
+`;
+
+// 스켈레톤
+const ImageBoxs = styled.div`
+  width: 310px;
+  height: 190px;
+  border: 2px solid var(--fifth-color);
+  border-radius: 10px;
+  margin: 5px 0 5px 3px;
+  object-fit: cover;
 `;

@@ -10,6 +10,7 @@ export interface Store {
   opening: string;
   images: string[];
   link: string;
+  isClosed: boolean;
 }
 
 // Kakao 타입 선언
@@ -62,7 +63,7 @@ export interface Comment {
   user_id: string;
   post_id: number;
   body: string;
-  isDeleted: boolean;
+  isdeleted: boolean;
 }
 
 export interface NewComment {
@@ -179,6 +180,8 @@ export interface MessageType {
   receiver: string;
   body: string;
   isRead: boolean;
+  isSender: boolean;
+  isReceiver: boolean;
 
   from: UserMsgType;
   to: UserMsgType;

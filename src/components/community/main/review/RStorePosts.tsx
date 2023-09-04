@@ -1,4 +1,4 @@
-import CommentCount from './CommentCount';
+import CommentCount from '../CommentCount';
 
 import moment from 'moment';
 import { useMemo } from 'react';
@@ -6,16 +6,20 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { FetchPost, PostType } from '../../../types/types';
-import { getPopularPosts } from '../../../api/post';
+import { FetchPost, PostType } from '../../../../types/types';
+import { getStorePosts } from '../../../../api/post';
 
 import { styled } from 'styled-components';
+import Skeleton from '@mui/material/Skeleton'; // 스켈레톤 추가
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import NotesRoundedIcon from '@mui/icons-material/NotesRounded';
 
-const RPopularPosts = () => {
+const RStorePosts = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { state } = useLocation();
+  const storeId: number = state?.storeId || 0; // state가 존재하지 않을 때 기본값으로 0 사용
+
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
   const {
     data: posts,
@@ -25,8 +29,8 @@ const RPopularPosts = () => {
     fetchNextPage,
     isFetchingNextPage
   } = useInfiniteQuery<FetchPost>({
-    queryKey: [`popular${queryKey}`, pathname],
-    queryFn: ({ pageParam }) => getPopularPosts(pageParam, pathname),
+    queryKey: [`${queryKey}`, storeId, pathname],
+    queryFn: ({ pageParam }) => getStorePosts(pageParam, storeId, pathname),
     getNextPageParam: (lastPage) => {
       // 전체 페이지 개수보다 작을 때
       if (lastPage.page < lastPage.totalPages) {
@@ -44,7 +48,6 @@ const RPopularPosts = () => {
       })
       .flat();
   }, [posts]);
-  console.log(selectPosts);
 
   // 언제 다음 페이지를 가져올 것
   const { ref } = useInView({
@@ -54,8 +57,6 @@ const RPopularPosts = () => {
       fetchNextPage();
     }
   });
-
-  console.log(selectPosts);
 
   // 대표이미지
   const extractImageTags = (html: string) => {
@@ -76,7 +77,39 @@ const RPopularPosts = () => {
   };
 
   if (isLoading) {
-    return <div>로딩중입니다.</div>;
+    // 로딩 중일 때 스켈레톤을 렌더링합니다.
+    return (
+      <PostContainer>
+        {Array.from({ length: 5 }, (_, index) => (
+          <PostBox key={index}>
+            <div>
+              <ImageBoxs>
+                <Skeleton variant="rectangular" width="100%" height={190} animation="wave" />
+              </ImageBoxs>
+            </div>
+            <ContentBox>
+              <Between>
+                <Between>
+                  <RoomRoundedIcon /> &nbsp;
+                  <Skeleton width="80%" animation="wave" />
+                </Between>
+                <Between>
+                  <NotesRoundedIcon /> &nbsp;
+                  <Skeleton width="50px" animation="wave" />
+                </Between>
+              </Between>
+              &nbsp;
+              <Skeleton width="80%" animation="wave" />
+              <Skeleton width="95%" animation="wave" />
+              <Between>
+                <Skeleton width="60px" animation="wave" />
+                <Skeleton width="80px" animation="wave" />
+              </Between>
+            </ContentBox>
+          </PostBox>
+        ))}
+      </PostContainer>
+    );
   }
   if (isError) {
     return <div>오류가 발생했습니다.</div>;
@@ -123,7 +156,7 @@ const RPopularPosts = () => {
   );
 };
 
-export default RPopularPosts;
+export default RStorePosts;
 
 const PostContainer = styled.div`
   display: flex;
@@ -203,4 +236,14 @@ const Button = styled.button`
 const Trigger = styled.div`
   width: 100%;
   align-items: center;
+`;
+
+// 스켈레톤
+const ImageBoxs = styled.div`
+  width: 310px;
+  height: 190px;
+  border: 2px solid var(--fifth-color);
+  border-radius: 10px;
+  margin: 5px 0 5px 3px;
+  object-fit: cover;
 `;

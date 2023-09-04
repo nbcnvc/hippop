@@ -11,6 +11,7 @@ import RDetail from '../pages/RDetail';
 import MDetail from '../pages/MDetail';
 import Layout from './Layout';
 import YourPage from '../pages/YourPage';
+import NotFound from '../components/common/NotFound';
 
 const Router = () => {
   return (
@@ -27,6 +28,7 @@ const Router = () => {
           <Route path="/rdetail/:id" element={<RDetail />} />
           <Route path="/mdetail/:id" element={<MDetail />} />
           <Route path="/about" element={<About />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>
