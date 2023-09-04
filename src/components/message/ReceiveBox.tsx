@@ -107,31 +107,39 @@ const ReceiveBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProp
         />
       ) : (
         <>
-          {sortedMessages?.map((message) => {
-            return (
-              <Wrapper key={message.id} onClick={() => handleClickMsg(message)}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }} onClick={handleShowDetail}>
-                  <ProfileBox>
-                    {message?.to.avatar_url && message?.to.avatar_url.startsWith('profile/') ? (
-                      <Img
-                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${message.to.avatar_url}`}
-                        alt="User Avatar"
-                      />
-                    ) : (
-                      <>{currentUser && <Img src={message.to.avatar_url} alt="User Avatar" />}</>
-                    )}
-                    <h4>{message.to.name}</h4>
-                  </ProfileBox>
-                  <p>{moment(message.created_at).format('YYYY-MM-DD HH:mm:ss')}</p>
-                  <Body>{message.isRead ? <span>{message.body}</span> : <span>읽지 않은 메세지입니다..</span>}</Body>
-                </div>
-                <section>{message.isRead ? <DraftsOutlinedIcon /> : <EmailOutlinedIcon />}</section>
-                <button className="deletBtn" onClick={() => handleDeleteMsg(message)} style={{ width: '60px' }}>
-                  삭제
-                </button>
-              </Wrapper>
-            );
-          })}
+          {sortedMessages && sortedMessages?.length > 0 ? (
+            <>
+              {sortedMessages?.map((message) => {
+                return (
+                  <Wrapper key={message.id} onClick={() => handleClickMsg(message)}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }} onClick={handleShowDetail}>
+                      <ProfileBox>
+                        {message?.to.avatar_url && message?.to.avatar_url.startsWith('profile/') ? (
+                          <Img
+                            src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${message.to.avatar_url}`}
+                            alt="User Avatar"
+                          />
+                        ) : (
+                          <>{currentUser && <Img src={message.to.avatar_url} alt="User Avatar" />}</>
+                        )}
+                        <h4>{message.to.name}</h4>
+                      </ProfileBox>
+                      <p>{moment(message.created_at).format('YYYY-MM-DD HH:mm:ss')}</p>
+                      <Body>
+                        {message.isRead ? <span>{message.body}</span> : <span>읽지 않은 메세지입니다..</span>}
+                      </Body>
+                    </div>
+                    <section>{message.isRead ? <DraftsOutlinedIcon /> : <EmailOutlinedIcon />}</section>
+                    <button className="deletBtn" onClick={() => handleDeleteMsg(message)} style={{ width: '60px' }}>
+                      삭제
+                    </button>
+                  </Wrapper>
+                );
+              })}
+            </>
+          ) : (
+            <NullBox> 아직 받은 쪽지가 없습니다! </NullBox>
+          )}
         </>
       )}
     </Container>
@@ -221,4 +229,14 @@ const Body = styled.div`
       transform: translateX(-100%);
     }
   }
+`;
+
+const NullBox = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  background-color: var(--fourth-color);
+  border-radius: 30px;
 `;

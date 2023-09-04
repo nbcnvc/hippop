@@ -26,6 +26,7 @@ import MyReview from '../components/mypage/MyReview';
 import MyBookmark from '../components/mypage/MyBookmark';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import shortid from 'shortid';
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -354,7 +355,7 @@ const MyPage = () => {
                       key={index}
                       onClick={() => {
                         if (subscribers) {
-                          navigate(`/yourpage/${subscriberIndex}`);
+                          navigate(`/yourpage/${shortid.generate()}`, { state: { userId: subscriberIndex } });
                         }
                       }}
                     >
@@ -885,6 +886,6 @@ const MypageTag = styled.div`
           }
         }
       }
-  }
+  } }
 }
 `;
