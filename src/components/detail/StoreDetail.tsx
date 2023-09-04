@@ -198,7 +198,7 @@ const StoreDetail = () => {
                     'aria-labelledby': 'basic-button'
                   }}
                 >
-                  <Share onClick={handleClose} />
+                  <Share storeData={storeData} onClick={handleClose} />
                 </Menu>
               </div>
             </div>

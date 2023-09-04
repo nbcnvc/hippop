@@ -10,6 +10,7 @@ import { getStorePosts } from '../../../../api/post';
 import { styled } from 'styled-components';
 import Skeleton from '@mui/material/Skeleton';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 
 const MStorePosts = () => {
   const navigate = useNavigate();
@@ -90,9 +91,6 @@ const MStorePosts = () => {
                 <Body>
                   <Skeleton width={400} height={30} />
                 </Body>
-                <Button>
-                  <Skeleton width={60} height={16} />
-                </Button>
               </Between>
             </ContentBox>
             <ProfileBox>
@@ -107,9 +105,6 @@ const MStorePosts = () => {
                   </Name>
                 </div>
               </Between>
-              <ProfileButton>
-                <Skeleton width={60} height={16} />
-              </ProfileButton>
             </ProfileBox>
           </PostBox>
         ))}

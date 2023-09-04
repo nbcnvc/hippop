@@ -18,7 +18,7 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 // img
 import DefaultImg from '../images/defaultImg.png';
-import { ImSpinner, ImSpinner10 } from 'react-icons/im';
+import { Skeleton } from '@mui/material';
 
 const YourPage = () => {
   // const { id } = useParams();
@@ -126,10 +126,110 @@ const YourPage = () => {
   }, [userData]);
 
   if (isLoading || isUserLoading || isBookMarkLoading) {
+    // 로딩 중일 때 스켈레톤 표시
     return (
-      <div>
-        <ImSpinner />
-      </div>
+      <>
+        <Container>
+          <UserWrapper>
+            <UserBox>
+              <Htag>
+                <Skeleton width={24} height={24} /> {/* You can adjust the size */}
+                {/* <HtagLine> */}
+                <Skeleton width={100} height={24} /> {/* Adjust size */}
+                {/* 님의 프로필 */}
+                {/* </HtagLine> */}
+              </Htag>
+              <BoxLine></BoxLine>
+              <UserProfile>
+                <div>
+                  <Skeleton variant="circular" width={70} height={70} /> {/* Circular skeleton */}
+                </div>
+                <div>
+                  {/* <Ptag>힙팝메이트</Ptag> */}
+
+                  <Ptag>
+                    <SpanLine>
+                      <Skeleton width={80} height={14} /> {/* Adjust size */}
+                      <Skeleton width={80} height={14} /> {/* Adjust size */}
+                    </SpanLine>
+                    {/* 님 */}
+                  </Ptag>
+                </div>
+              </UserProfile>
+            </UserBox>
+            <div></div>
+            <StoreListBox>
+              <Htag>
+                <Skeleton width={160} height={24} /> {/* Adjust size */}
+              </Htag>
+              <BookMarkList>
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <BookMarkWraaper key={index}>
+                    <BookMarkBox>
+                      <div>
+                        <StoreList>
+                          <p>
+                            <Skeleton width={40} height={40} /> {/* Adjust size */}
+                          </p>
+                          <StoreInfo>
+                            <div>
+                              <Location>
+                                <Skeleton width={100} height={12} /> {/* Adjust size */}
+                              </Location>
+                            </div>
+                            <TitleBox>
+                              <StoreTitle>
+                                <Skeleton width={200} height={20} /> {/* Adjust size */}
+                              </StoreTitle>
+                            </TitleBox>
+                          </StoreInfo>
+                        </StoreList>
+                      </div>
+                    </BookMarkBox>
+                    <Line></Line>
+                  </BookMarkWraaper>
+                ))}
+              </BookMarkList>
+            </StoreListBox>
+          </UserWrapper>
+
+          <ReviewWrapper>
+            <Htag2>
+              <Skeleton width={160} height={20} /> {/* Adjust size */}
+            </Htag2>
+            <GridContainer>
+              {Array.from({ length: 5 }).map((_, index) => (
+                <Card key={index}>
+                  {' '}
+                  <div>
+                    {/* <PostImgBox> */}
+                    {/* <Skeleton width="100%" height="100%" /> */}
+                    <Skeleton width={340} height={310} />
+                    {/* </PostImgBox> */}
+
+                    <HtagTttle>
+                      <Skeleton width={200} height={20} /> {/* Adjust size */}
+                    </HtagTttle>
+                    <CardInfo>
+                      <div>
+                        <PtagDate>
+                          <Skeleton width={100} height={12} /> {/* Adjust size */}
+                        </PtagDate>
+                      </div>
+                      <BtnBox>
+                        <DetailBtn>
+                          <Skeleton width={80} height={32} /> {/* Adjust size */}
+                        </DetailBtn>
+                      </BtnBox>
+                    </CardInfo>
+                  </div>
+                </Card>
+              ))}
+            </GridContainer>
+          </ReviewWrapper>
+        </Container>
+        <div ref={ref}></div>
+      </>
     );
   }
 
@@ -438,7 +538,7 @@ const Card = styled.div`
   position: relative;
 `;
 
-const PostImgBox = styled.div`
+const PostImgBox1 = styled.div`
   /* border: 2px solid black;
   border-radius: 18px;
   object-fit: cover;
@@ -446,6 +546,16 @@ const PostImgBox = styled.div`
   width: 330px;
   height: 310px;
   margin-bottom: 15px; */
+`;
+
+const PostImgBox = styled.div`
+  border: 2px solid black;
+  border-radius: 18px;
+  object-fit: cover;
+
+  width: 330px;
+  height: 310px;
+  /* margin-bottom: 15px; */
 `;
 
 const PostImg = styled.img`

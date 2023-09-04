@@ -21,7 +21,7 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import SearchCalendar from '../searchcalander/SearchCalendar';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-// import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
+import Skeleton from '@mui/material/Skeleton';
 
 interface SliderButton {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;

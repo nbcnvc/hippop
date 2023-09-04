@@ -24,6 +24,12 @@ export interface NearbyStoreProps {
   setNearbyStoreMarker: React.Dispatch<SetStateAction<Store[] | undefined>>;
 }
 
+// share props
+export interface ShareProps {
+  onClick: () => void;
+  storeData: Store;
+}
+
 // 캘린더 props
 export interface CalendarProps {
   storeData: Store;

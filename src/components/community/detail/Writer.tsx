@@ -13,7 +13,7 @@ const Writer = ({ writer, postId }: WriterProps) => {
   const currentUser = useCurrentUser();
   const currentUserId = currentUser?.id;
   const [msgModal, setMsgModal] = useState<boolean>(false);
-
+  console.log('writer', writer);
   const openMsgModal = () => {
     if (!currentUser) {
       return alert('로그인을 해주세요.');
@@ -25,11 +25,10 @@ const Writer = ({ writer, postId }: WriterProps) => {
     <>
       <WriterContainer>
         <ProfileBox>
-          {writer?.avatar_url && writer.avatar_url.startsWith('profile/') ? (
+          {writer?.avatar_url && (
             <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${writer?.avatar_url}`} alt="User Avatar" />
-          ) : (
-            <Img src={writer?.avatar_url} alt="User Avatar" />
           )}
+
           <Name>
             <TitleLine>{writer?.name}</TitleLine>님이 궁금하시다면?
           </Name>

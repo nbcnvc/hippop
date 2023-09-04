@@ -22,7 +22,9 @@ const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
         sender: currentUser.id ?? '',
         receiver: sendMsgUser.sender,
         body,
-        isRead: false
+        isRead: false,
+        isSender: false,
+        isReceiver: false
       };
 
       await sendMessage(message);
@@ -53,11 +55,10 @@ const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
         <TopTitle>팝업메이트에게 답장하는 중...</TopTitle>
         <UserInfo>
           <SenderInfoBox>
-            {currentUser?.avatar_url && currentUser.avatar_url.startsWith('profile/') ? (
+            {currentUser?.avatar_url && (
               <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${currentUser?.avatar_url}`} alt="User Avatar" />
-            ) : (
-              <>{currentUser && <Img src={currentUser?.avatar_url} alt="User Avatar" />}</>
             )}
+
             <Name>{currentUser?.name}</Name>
           </SenderInfoBox>
 
@@ -65,14 +66,13 @@ const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
             <SendSharpIcon />
           </SendIconBox>
           <RecieverInfoBox>
-            {sendMsgUser?.to.avatar_url && sendMsgUser?.to.avatar_url.startsWith('profile/') ? (
+            {sendMsgUser?.to.avatar_url && (
               <Img
                 src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${sendMsgUser?.to.avatar_url}`}
                 alt="User Avatar"
               />
-            ) : (
-              <>{currentUser && <Img src={sendMsgUser?.to.avatar_url} alt="User Avatar" />}</>
             )}
+
             <Name>{sendMsgUser?.to.name}</Name>
           </RecieverInfoBox>
         </UserInfo>
@@ -93,8 +93,10 @@ const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
 export default MessageReply;
 
 const Container = styled.div`
-  position: absolute;
-  z-index: 0;
+  /* position: absolute;
+  z-index: 0; */
+  position: fixed;
+  z-index: 9;
   top: 0;
   left: 0;
   width: 100%;

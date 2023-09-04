@@ -173,14 +173,13 @@ const Comments = ({ postId }: CommentProps) => {
                   <Date>{moment(comment.created_at).format('YYYY.MM.DD HH:mm')}</Date>
                 </DateBox>
                 <ProfileBox>
-                  {comment.user.avatar_url.startsWith('profile/') ? (
+                  {comment.user.avatar_url && (
                     <Img
                       src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${comment.user.avatar_url}`}
                       alt="User Avatar"
                     />
-                  ) : (
-                    <Img src={comment.user.avatar_url} alt="User Avatar" />
                   )}
+
                   <Name>{comment.user.name}</Name>
                 </ProfileBox>
                 {isEditId === comment.id ? (
