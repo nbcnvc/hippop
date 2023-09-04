@@ -598,15 +598,27 @@ const MypageTag = styled.div`
     width: 100px;
     background: white;
     margin-left: -8px;
+    text-align: center;
     top: 85px;
     border-radius: 8px;
-    box-shadow: 4px 4px 10px rgb(87, 87, 87);
+    box-shadow: 4px 4px 10px rgb(129, 129, 129);
   }
   li {
     padding: 5px 10px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+
     &:hover {
-      border-radius: 8px;
       background-color: var(--sixth-color);
+      font-weight: 600;
+    }
+
+    &:first-child {
+      border-radius: 6px 6px 0 0;
+    }
+
+    &:last-child {
+      border-radius: 0 0 6px 6px;
     }
   }
   h5 {
@@ -660,7 +672,7 @@ const MypageTag = styled.div`
     background-color: white;
 
     .info-main {
-      margin: 1rem 0;
+      margin: 1rem 0 0.5rem;
       display: flex;
       flex-direction: column;
       align-items: flex-end;
@@ -678,6 +690,7 @@ const MypageTag = styled.div`
         text-align: center;
         color: gray;
         span {
+          height: 22px;
           color: var(--primary-color);
           font-size: 20px !important;
         }
@@ -711,7 +724,6 @@ const MypageTag = styled.div`
       margin: 0 auto;
       padding: 0;
       width: 210px;
-      margin-top: 0.5rem;
       display: flex;
       justify-content: center;
       position: relative;
