@@ -132,3 +132,7 @@ export interface AlarmBoxProps {
 export interface CommentCountProps {
   postId: number;
 }
+
+export interface RSearchPostsProps {
+  keyword: string;
+}
