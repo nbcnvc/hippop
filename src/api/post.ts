@@ -78,7 +78,8 @@ export const getStorePosts = async (pageParam: number = 1, storeId?: number, par
       .from('post')
       .select('count', { count: 'exact' })
       .eq('ctg_index', 1)
-      .eq('isdeleted', false);
+      .eq('isdeleted', false)
+      .eq('store_id', storeId);
 
     count = reviewCount;
   } else if (param === '/mate') {
@@ -111,7 +112,39 @@ export const getStorePosts = async (pageParam: number = 1, storeId?: number, par
   return { posts: data as any, page: pageParam, totalPages, count };
 };
 
-// Post 인기순 조회
+// Post 스토어 검색 조회
+export const getSearchPosts = async (pageParam: number = 1, keyword: string, param?: string) => {
+  let data: any[] | null = [];
+  let count: number | null = null;
+
+  if (param === '/review') {
+    const { data: reviews } = await supabase
+      .from('post')
+      .select(`*, store(title)`)
+      .eq('ctg_index', 1)
+      .eq('isdeleted', false)
+      .filter('store.title', 'eq', `${keyword}`)
+      .order('created_at', { ascending: false })
+      .range(pageParam * 10 - 10, pageParam * 10 - 1);
+
+    data = reviews;
+
+    const { count: reviewCount } = await supabase
+      .from('post')
+      .select('count', { count: 'exact' })
+      .eq('ctg_index', 1)
+      .eq('isdeleted', false);
+    // .ilike('store.title', `%${keyword}%`);
+
+    count = reviewCount;
+  }
+  // 총 페이지
+  const totalPages = count ? Math.floor(count / 10) + (count % 10 === 0 ? 0 : 1) : 1;
+
+  return { posts: data as any, page: pageParam, totalPages, count };
+};
+
+// Review Post 인기순 조회
 export const getPopularPosts = async (pageParam: number = 1, param?: string): Promise<FetchPost> => {
   let data: PostType[] | null = [];
   let count: number | null = null;
