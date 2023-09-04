@@ -93,8 +93,10 @@ const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
 export default MessageReply;
 
 const Container = styled.div`
-  position: absolute;
-  z-index: 0;
+  /* position: absolute;
+  z-index: 0; */
+  position: fixed;
+  z-index: 9;
   top: 0;
   left: 0;
   width: 100%;

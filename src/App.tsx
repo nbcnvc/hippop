@@ -68,7 +68,12 @@ function App() {
                 name: session?.user.user_metadata.name
               };
               await supabase.from('user').insert(user);
-              setCurrentUser(user);
+
+              const { data } = await supabase.from('user').select(`*`).eq('id', session?.user.id).single();
+
+              if (data) {
+                setCurrentUser(data);
+              }
             }
           }
         }

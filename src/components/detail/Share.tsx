@@ -7,12 +7,9 @@ import { styled } from 'styled-components';
 // 소셜 링크 이미지
 import LinkIcon from '../../images/LinkIcon.png';
 import KakaoIcon from '../../images/kakaoIcon.png';
+import { ShareProps } from '../../types/props';
 
-interface ShareProps {
-  onClick: () => void;
-}
-
-const Share = ({ onClick }: ShareProps) => {
+const Share = ({ onClick, storeData }: ShareProps) => {
   // 현재 주소 가져오기
   const currentUrl = window.location.href;
 
@@ -20,23 +17,24 @@ const Share = ({ onClick }: ShareProps) => {
 
   // 카카오톡 init
   Kakao.cleanup();
-  window.Kakao.init(`${process.env.REACT_APP_KAKAO_KEY}`);
+  window.Kakao.init(`${process.env.REACT_APP_KAKAO_JS_APP_KEY}`);
+  // REACT_APP_KAKAO_JS_APP_KEY
 
   // 카카오톡 링크 공유
   const shareKakao = () => {
     Kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
-        title: 'HiPPOP, 팝업의 모든 것',
-        description: '다양한 팝업스토어 정보를 제공 해드립니다!',
-        imageUrl: 'https://jlmwyvwmjcanbthgkpmh.supabase.co/storage/v1/object/public/images/store/kusmitea1.jpg',
+        title: 'HIPPOP, 팝업의 모든 것',
+        description: `${storeData.title} 팝업스토어에 대한 정보를 구경해 보세요!`,
+        imageUrl: `${process.env.REACT_APP_SUPABASE_STORAGE_URL}${storeData.images[0]}`,
         link: {
           mobileWebUrl: currentUrl
         }
       },
       buttons: [
         {
-          title: '자세히 보러 가기',
+          title: '구경하러 가기',
           link: { mobileWebUrl: currentUrl }
         }
       ]
