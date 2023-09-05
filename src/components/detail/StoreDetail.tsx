@@ -67,28 +67,6 @@ const StoreDetail = () => {
   };
 
   const handleMouseEnter = () => setIsClicked(!isClicked);
-  // console.log('isClicked', isClicked);
-
-  // useEffect(() => {
-  //   const handleOutsideClick = (event: MouseEvent) => {
-  //     if (isClicked && calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
-  //       setIsClicked(false);
-  //     }
-  //   };
-
-  //   // Attach the event listener to the document when the calendar is open
-  //   if (isClicked) {
-  //     document.addEventListener('click', handleOutsideClick);
-  //   } else {
-  //     // Remove the event listener when the calendar is closed
-  //     document.removeEventListener('click', handleOutsideClick);
-  //   }
-
-  //   // Cleanup the event listener when the component unmounts
-  //   return () => {
-  //     document.removeEventListener('click', handleOutsideClick);
-  //   };
-  // }, [isClicked]);
 
   const settings = {
     slidesToShow: 1,

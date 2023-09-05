@@ -14,7 +14,6 @@ import SendSharpIcon from '@mui/icons-material/SendSharp';
 const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
   const [body, setBody] = useState<string>('');
   const currentUser = useCurrentUser() ?? { id: '', avatar_url: '', name: '' };
-  console.log('currentUser', currentUser);
 
   // 쪽지 보내기 요청
   const messageHandler = async () => {
@@ -29,8 +28,6 @@ const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
       };
 
       await sendMessage(message);
-
-      console.log('메세지 전송 성공!');
     }
   };
 

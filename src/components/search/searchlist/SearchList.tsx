@@ -188,9 +188,6 @@ const SearchList = ({ storeData }: SearchListProps) => {
         );
       });
 
-      // 검색 필터링 결과를 콘솔에 출력하여 확인
-      console.log('필터링 결과:', filteredStores);
-
       // 검색 결과를 상태로 설정
       setFilteredStoreList(filteredStores || null);
       setSearchResultCount(filteredStores?.length || 0);

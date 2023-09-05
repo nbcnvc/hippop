@@ -25,9 +25,7 @@ function Header() {
   const currentUser = useCurrentUser();
   const currentUserId = currentUser?.id;
   const { data: user } = useQuery(['user', currentUserId], () => getUser(currentUserId ?? ''));
-  console.log('currentUser', currentUser);
-  console.log('user', user);
-  console.log('ser.avatar_url', user?.avatar_url);
+
   // 알림 데이터 가져오기
   const { data: alarms, isLoading, isError } = useQuery(['alarms'], () => getAlarms(currentUserId ?? ''));
   const readAlarms = alarms?.filter((alarm) => alarm.isRead === false);

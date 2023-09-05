@@ -13,7 +13,6 @@ const Writer = ({ writer, postId }: WriterProps) => {
   const currentUser = useCurrentUser();
   const currentUserId = currentUser?.id;
   const [msgModal, setMsgModal] = useState<boolean>(false);
-  console.log('writer', writer);
   const openMsgModal = () => {
     if (!currentUser) {
       return alert('로그인을 해주세요.');

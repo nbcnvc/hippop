@@ -24,7 +24,6 @@ const BookMark = ({ storeData }: CalendarProps) => {
 
   // 로그인한
   const currentUser = useCurrentUser();
-  // console.log('북마크 currentUser', typeof currentUser);
 
   // Query
   const queryClient = useQueryClient();

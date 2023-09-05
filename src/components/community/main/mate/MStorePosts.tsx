@@ -45,7 +45,6 @@ const MStorePosts = () => {
       })
       .flat();
   }, [posts]);
-  // console.log(selectPosts);
 
   // 언제 다음 페이지를 가져올 것
   const { ref } = useInView({
@@ -139,7 +138,7 @@ const MStorePosts = () => {
                 <Between>
                   <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${post.user.avatar_url}`} alt="User Avatar" />
                   <div>
-                    <Name style={{ marginBottom: '5px' }}>
+                    <Name>
                       <NameLine>{post.user.name}</NameLine>
                     </Name>
                     <Name>님과 함께 하기</Name>
@@ -209,7 +208,7 @@ const Title = styled.span`
 `;
 
 const Body = styled.div`
-  height: 45px;
+  height: 43px;
   width: 430px;
   color: black;
   font-size: 14px;
@@ -245,7 +244,7 @@ const ProfileBox = styled.div`
 const Name = styled.div`
   font-size: 18px;
   font-weight: 600;
-  margin: 0 0 0 25px;
+  margin: 0 0 5px 10px;
 `;
 
 const NameLine = styled.span`
@@ -256,7 +255,7 @@ const NameLine = styled.span`
 const Img = styled.img`
   width: 70px;
   height: 70px;
-  margin: 10px 0 10px 20px;
+  margin: 10px 10px 10px 20px;
   object-fit: cover;
   border-radius: 50%;
 `;
