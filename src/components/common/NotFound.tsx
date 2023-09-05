@@ -21,7 +21,7 @@ const Layout = styled.div`
   min-width: 800px;
   margin: 0 auto;
   width: 50%;
-  height: 600px;
+  height: 900px;
   display: flex;
   justify-content: space-between;
   align-items: center;

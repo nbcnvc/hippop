@@ -1,6 +1,8 @@
 import React from 'react';
 import { styled } from 'styled-components';
-import face1Img from '../../images/aboutFace1.png';
+import face1Img from '../../images/mimoticon1.png';
+import face2Img from '../../images/mimoticon3.png';
+import face3Img from '../../images/mimoticon2.png';
 import NewJeans from '../../images/Newjeans.png';
 
 const AboutInfo = () => {
@@ -15,13 +17,13 @@ const AboutInfo = () => {
           <Ptag>통통 튀는 다양한 팝업스토어를 추천해요!</Ptag>
         </Box>
         <Box>
-          <FaceImg src={face1Img} />
+          <FaceImg src={face2Img} />
           <ColorTag2>개성있는</ColorTag2>
           <Ptag>평소와는 다른 개성있는 장소를 가고 싶을 때</Ptag>
           <Ptag>힙팝이 추천해요!</Ptag>
         </Box>
         <Box>
-          <FaceImg src={face1Img} />
+          <FaceImg src={face3Img} />
           <ColorTag3>다양한</ColorTag3>
           <Ptag>한 가지 팝업스토어만 찾지 않아요!</Ptag>
           <Ptag>가능한 한 모두가 만족할 수 있게,</Ptag>

@@ -838,12 +838,12 @@ const MypageTag = styled.div`
       height: 500px;
       border-radius: 18px;
       border: 3px solid var(--fifth-color);
-      box-sizing: border-box;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       background-color: #ffffff;
+      box-sizing: border-box;
       transition: color 0.3s ease, transform 0.3s ease;
       &:hover {
         border: 6px solid var(--primary-color);
