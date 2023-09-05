@@ -11,6 +11,7 @@ export interface Store {
   images: string[];
   link: string;
   isClosed: boolean;
+  reservation: boolean;
 }
 
 // Kakao 타입 선언
