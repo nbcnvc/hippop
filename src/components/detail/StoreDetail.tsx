@@ -145,7 +145,7 @@ const StoreDetail = () => {
                   <span>운영 시간</span> {storeData.opening}
                 </div>
                 <div>
-                  <span>예약 여부</span>
+                  <span>예약 여부</span> {storeData.reservation ? '있음' : '없음'}
                 </div>
                 {/* <div className="link-url">
                   <div>
@@ -202,7 +202,7 @@ const StoreDetail = () => {
                 </Menu>
               </div>
             </div>
-            {isClicked && <Calendar storeData={storeData} />}
+            <CalendarBox>{isClicked && <Calendar storeData={storeData} />}</CalendarBox>
             {/* {isClicked && <Calendar storeData={storeData} />} */}
           </div>
           <StoreMap storeLocation={storeData.location} title={storeData.title} />
@@ -372,4 +372,13 @@ const CalendarIcon = styled(CalendarMonthIcon)`
     color: var(--primary-color);
     transform: scale(1.1);
   }
+`;
+
+const CalendarBox = styled.div`
+  position: absolute;
+  /* top: 40%;
+  right: -10%; */
+  top: 180px;
+  right: 10px;
+  width: 325px;
 `;

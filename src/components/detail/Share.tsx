@@ -18,7 +18,6 @@ const Share = ({ onClick, storeData }: ShareProps) => {
   // 카카오톡 init
   Kakao.cleanup();
   window.Kakao.init(`${process.env.REACT_APP_KAKAO_JS_APP_KEY}`);
-  // REACT_APP_KAKAO_JS_APP_KEY
 
   // 카카오톡 링크 공유
   const shareKakao = () => {
@@ -29,13 +28,17 @@ const Share = ({ onClick, storeData }: ShareProps) => {
         description: `${storeData.title} 팝업스토어에 대한 정보를 구경해 보세요!`,
         imageUrl: `${process.env.REACT_APP_SUPABASE_STORAGE_URL}${storeData.images[0]}`,
         link: {
-          mobileWebUrl: currentUrl
+          mobileWebUrl: currentUrl,
+          webUrl: currentUrl
         }
       },
       buttons: [
         {
           title: '구경하러 가기',
-          link: { mobileWebUrl: currentUrl }
+          link: {
+            mobileWebUrl: currentUrl,
+            webUrl: currentUrl
+          }
         }
       ]
     });
