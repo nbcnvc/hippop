@@ -20,7 +20,7 @@ import { styled } from 'styled-components';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-// import Skeleton from '@mui/material/Skeleton';
+import Skeleton from '@mui/material/Skeleton';
 
 interface SliderButton {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
