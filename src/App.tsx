@@ -83,11 +83,19 @@ function App() {
           }
         }
       }
+      // if (event === 'SIGNED_OUT' && currentUser) {
+      //   setCurrentUser(null);
+      // }
+    });
+  }, []);
+
+  useEffect(() => {
+    supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_OUT' && currentUser) {
         setCurrentUser(null);
       }
     });
-  }, []);
+  }, [currentUser]);
 
   return (
     <>
