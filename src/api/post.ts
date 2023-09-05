@@ -85,7 +85,7 @@ export const getStorePosts = async (pageParam: number = 1, storeId?: number, par
   } else if (param === '/mate') {
     const { data: mates } = await supabase
       .from('post')
-      .select(`*, user( * ), store( title )`)
+      .select(`*, user!inner(*), store!inner(title)`)
       .eq('ctg_index', 2)
       .eq('isdeleted', false)
       .eq('store_id', storeId)
@@ -118,10 +118,10 @@ export const getSearchPosts = async (pageParam: number = 1, keyword: string, par
   if (param === '/review') {
     const { data: reviews } = await supabase
       .from('post')
-      .select(`*, store(title)`)
+      .select(`*, store!inner(title)`)
       .eq('ctg_index', 1)
       .eq('isdeleted', false)
-      .filter('store.title', 'eq', `${keyword}`)
+      .ilike('store.title', `%${keyword}%`)
       .order('created_at', { ascending: false })
       .range(pageParam * 10 - 10, pageParam * 10 - 1);
 
@@ -132,9 +132,27 @@ export const getSearchPosts = async (pageParam: number = 1, keyword: string, par
       .select('count', { count: 'exact' })
       .eq('ctg_index', 1)
       .eq('isdeleted', false);
-    // .ilike('store.title', `%${keyword}%`);
 
     count = reviewCount;
+  } else if (param === '/mate') {
+    const { data: mates } = await supabase
+      .from('post')
+      .select(`*, user( * ), store!inner(title)`)
+      .eq('ctg_index', 2)
+      .eq('isdeleted', false)
+      .ilike('store.title', `%${keyword}%`)
+      .order('created_at', { ascending: false })
+      .range(pageParam * 10 - 10, pageParam * 10 - 1);
+
+    data = mates;
+
+    const { count: mateCount } = await supabase
+      .from('post')
+      .select('count', { count: 'exact' })
+      .eq('ctg_index', 2)
+      .eq('isdeleted', false);
+
+    count = mateCount;
   }
   // 총 페이지
   const totalPages = count ? Math.floor(count / 10) + (count % 10 === 0 ? 0 : 1) : 1;
