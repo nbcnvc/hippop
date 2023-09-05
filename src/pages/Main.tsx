@@ -8,6 +8,7 @@ import { supabase } from '../api/supabase';
 import { Store } from '../types/types';
 import Card from '../components/list/Card';
 import Skeleton from '@mui/material/Skeleton';
+import { useInView } from 'react-intersection-observer';
 
 const PAGE_SIZE = 5;
 
@@ -35,6 +36,8 @@ const Main = () => {
     }
   });
 
+  console.log('storesData', storesData);
+
   const observerRef = useRef(null);
 
   useEffect(() => {
@@ -60,6 +63,14 @@ const Main = () => {
 
   const allStores = storesData?.pages.flatMap((page) => page) || [];
 
+  // 언제 다음 페이지를 가져올 것
+  const { ref } = useInView({
+    threshold: 1, // 맨 아래에 교차될 때
+    onChange: (inView) => {
+      console.log('Is in view:', inView);
+    }
+  });
+
   if (isLoading) {
     // 로딩 중일 때 스켈레톤을 렌더링합니다.
     return (
@@ -72,12 +83,14 @@ const Main = () => {
         </header>
         <Masonry columns={3} spacing={2} sx={{ maxWidth: '1920px', width: '50%', margin: '0 auto' }}>
           {Array.from({ length: PAGE_SIZE }, (_, index) => (
-            <Link to="/" key={index} ref={index === PAGE_SIZE - 1 ? observerRef : null}>
+            <Link to="/" key={index}>
+              {/* <Link to="/" key={index} ref={index === PAGE_SIZE - 1 ? observerRef : null}> */}
               <Skeleton variant="rectangular" width="100%" height={300} animation="wave" />
             </Link>
           ))}
           {isFetchingNextPage && <p>Loading...</p>}
         </Masonry>
+        <div></div>
       </MainContainer>
     );
   }
@@ -95,18 +108,27 @@ const Main = () => {
       </header>
       <Masonry columns={3} spacing={2} sx={{ maxWidth: '1920px', width: '50%', margin: '0 auto' }}>
         {allStores.map((store, index) => (
-          <Link to={`detail/${store.id}`} key={store.id} ref={index === allStores.length - 1 ? observerRef : null}>
+          <Link to={`detail/${store.id}`} key={store.id}>
             <Card store={store} />
           </Link>
         ))}
         {isFetchingNextPage && <p>Loading...</p>}
       </Masonry>
+      <div
+        style={{
+          backgroundColor: 'transparent',
+          width: '90%',
+          border: 'none',
+          padding: '20px',
+          margin: '10px'
+        }}
+        ref={observerRef}
+      />
     </MainContainer>
   );
 };
 
 export default Main;
-
 const MainContainer = styled.div`
   margin: 0 auto;
   display: flex;

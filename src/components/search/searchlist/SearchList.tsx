@@ -5,7 +5,7 @@ import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-quer
 import { useInView } from 'react-intersection-observer';
 import Slider from 'react-slick';
 // 컴포넌트
-
+import SearchCalendar from '../searchcalander/SearchCalendar';
 // api
 import { fetchStoreIdCount } from '../../../api/bookmark';
 import { getSearchStore } from '../../../api/store';
@@ -18,10 +18,9 @@ import { FetchsStore, SearchListProps, Store } from '../../../types/types';
 import { styled } from 'styled-components';
 // mui
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-import SearchCalendar from '../searchcalander/SearchCalendar';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
-import Skeleton from '@mui/material/Skeleton';
+// import Skeleton from '@mui/material/Skeleton';
 
 interface SliderButton {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -273,6 +272,8 @@ const SearchList = ({ storeData }: SearchListProps) => {
     infinite: true
   };
 
+  const combinedLabel = `${momentStart} ~ ${momentEnd}`;
+
   if (isLoading) {
     return <div>로딩중입니다.</div>;
   }
@@ -308,8 +309,7 @@ const SearchList = ({ storeData }: SearchListProps) => {
 
             {(momentStart !== '0000.01.01' || momentEnd !== '9999.12.31') && (
               <>
-                <Chip label={momentStart} onDelete={handleDateDelete} />
-                <Chip label={momentEnd} onDelete={handleDateDelete} />
+                <Chip label={combinedLabel} onDelete={handleDateDelete} />
               </>
             )}
           </Stack>
