@@ -31,3 +31,9 @@ export const getSubList = async (userId: string) => {
   const { data } = await supabase.from('subscribe').select('subscribe_to').eq('subscribe_from', userId);
   return data;
 };
+
+// 구독자 목록 및 유저 정보 가져오기
+export const getSubInfo = async (userId: string) => {
+  const { data } = await supabase.from('subscribe').select(`*, to:subscribe_to(*)`).eq('subscribe_from', userId);
+  return data;
+};

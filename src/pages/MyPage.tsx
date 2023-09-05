@@ -31,10 +31,10 @@ import { Skeleton } from '@mui/material';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { getSubList } from '../api/subscribe';
+import { getSubInfo, getSubList } from '../api/subscribe';
+import MySubModal from '../components/mypage/MySubModal';
 
 const MyPage = () => {
-  const navigate = useNavigate();
   // 유저 정보
   const currentUser = useCurrentUser();
   const [editingName, setEditingName] = useState(false);
@@ -45,41 +45,19 @@ const MyPage = () => {
   const [replyModal, setReplyModal] = useState<boolean | null>(null);
   const [sendMsgUser, setSendMsgUser] = useState<MessageType | null>(null);
   // 구독 목록 메뉴 상태
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean | null>(false);
+  const [isSubModal, setIsSubModal] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
-  const [subscribers, setSubscribers] = useState<string[]>([]);
   // 게시글 & 북마크 토글
   const [activeSection, setActiveSection] = useState('myReview');
   const [toggleMsgBox, setToggleMsgBox] = useState<string>('받은 쪽지함');
   const imageInputRef = useRef(null);
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
-  const currentUserId = currentUser?.id;
-  const { data: sublistData, isLoading, isError } = useQuery(['sublist'], () => getSubList(currentUserId ?? ''));
 
-  useEffect(() => {
-    const loadSubscribers = async () => {
-      if (sublistData) {
-        const subscribeToValues = sublistData.map((item) => item.subscribe_to);
-        const subscribeUserPromises = subscribeToValues.map(async (subscribe_to) => {
-          const { data: subscribeUser } = await supabase.from('user').select('*').eq('id', subscribe_to);
-          return subscribeUser;
-        });
-        const allSubscribeUsers = await Promise.all(subscribeUserPromises);
-        const filteredSubscribers = allSubscribeUsers
-          .filter((subscribeUserArray) => subscribeUserArray && subscribeUserArray.length > 0)
-          .map((subscribeUserArray) => subscribeUserArray && subscribeUserArray[0].name);
-        setSubscribers(filteredSubscribers as string[]);
-      }
-    };
-    if (sublistData) {
-      loadSubscribers();
-    }
-  }, [sublistData]);
   // 구독목록 visible
   useEffect(() => {
     function handleOutsideClick(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsMenuOpen(false);
+        setIsSubModal(false);
       }
     }
     window.addEventListener('mousedown', handleOutsideClick);
@@ -278,13 +256,6 @@ const MyPage = () => {
   //   return <div>오류가 발생했습니다.</div>;
   // }
 
-  if (isLoading) {
-    return <div>로딩중입니다.</div>;
-  }
-  if (isError) {
-    return <div>오류입니다.</div>;
-  }
-
   return (
     <MypageTag>
       <header>
@@ -349,26 +320,7 @@ const MyPage = () => {
             )}
           </div>
           <div className="btn-mother">
-            {isMenuOpen && (
-              <ul>
-                {sublistData?.map((subscriberData, index) => {
-                  const subscriberIndex = subscriberData.subscribe_to;
-                  const subscriberName = subscribers[index];
-                  return (
-                    <li
-                      key={index}
-                      onClick={() => {
-                        if (subscribers) {
-                          navigate(`/yourpage/${shortid.generate()}`, { state: { userId: subscriberIndex } });
-                        }
-                      }}
-                    >
-                      {subscriberName !== undefined ? subscriberName : ''}
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
+            {isSubModal && <MySubModal setIsSubModal={setIsSubModal} />}
             {editingName ? (
               <div className="name-btn">
                 <button onClick={handleNameCancel}>취소</button>
@@ -378,11 +330,9 @@ const MyPage = () => {
               currentUser && <button onClick={handleNameEdit}>프로필 변경</button>
             )}
           </div>
-          {sublistData && (
-            <h4 onClick={() => setIsMenuOpen((isMenuOpen) => !isMenuOpen)}>
-              구독한 유저 <BsFillPeopleFill />
-            </h4>
-          )}
+          <h4 onClick={() => setIsSubModal(true)}>
+            구독한 유저 <BsFillPeopleFill />
+          </h4>
         </div>
         {/* message tab */}
         <div className="alram-mother">
@@ -437,39 +387,6 @@ const MyPage = () => {
         {activeSection === 'myReview' && <MyReview activeSection={activeSection} />}
         {/* Bookmark tab */}
         {activeSection === 'myBookmark' && <MyBookmark activeSection={activeSection} />}
-        {/* {activeSection === 'myBookmark' && (
-          <div>
-            <h2>My Bookmark</h2>
-            <div className="subs-wrapper">
-              {items?.pages.map((page) => (
-                <React.Fragment key={page.page}>
-                  {page.stores.slice(0, 3).map((store: Store) => (
-                    <Link to={`/detail/${store.id}`} key={store.id} className="user-subs">
-                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`}
-                        alt={`Store Image`}
-                        width={200}
-                      />
-                      <h2>{store.title}</h2>
-                      <p>
-                        {store.period_start} ~ {store.period_end}
-                      </p>
-                    </Link>
-                  ))}
-                </React.Fragment>
-              ))}
-            </div>
-          </div>
-        )} */}
-        {/* <div
-          style={{
-            backgroundColor: 'transparent',
-            width: '90%',
-            border: 'none',
-            padding: '20px',
-            margin: '10px'
-          }}
-          ref={ref}
-        /> */}
       </div>
     </MypageTag>
   );
