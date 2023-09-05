@@ -1,15 +1,17 @@
-import CommentCount from '../CommentCount';
-
+// 라이브러리
 import moment from 'moment';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-import { FetchPost, PostType } from '../../../../types/types';
-import { getPosts } from '../../../../api/post';
-
 import { styled } from 'styled-components';
+// 타입
+import { FetchPost, PostType } from '../../../../types/types';
+// api
+import { getPosts } from '../../../../api/post';
+// 컴포넌트
+import CommentCount from '../CommentCount';
+// mui
 import Skeleton from '@mui/material/Skeleton'; // 스켈레톤 추가
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import NotesRoundedIcon from '@mui/icons-material/NotesRounded';
@@ -24,8 +26,7 @@ const RNewPosts = () => {
     isError,
     hasNextPage,
     fetchNextPage,
-    isFetchingNextPage,
-    refetch
+    isFetchingNextPage
   } = useInfiniteQuery<FetchPost>({
     queryKey: [`${queryKey}`, pathname],
     queryFn: ({ pageParam }) => getPosts(pageParam, pathname),
@@ -164,6 +165,7 @@ const PostContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-bottom: 30px;
 `;
 
 const PostBox = styled.div`

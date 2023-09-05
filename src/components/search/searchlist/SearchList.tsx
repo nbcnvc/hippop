@@ -4,29 +4,23 @@ import { useNavigate } from 'react-router-dom';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import Slider from 'react-slick';
+import moment from 'moment';
+import _debounce from 'lodash/debounce';
+import { styled } from 'styled-components';
 // 컴포넌트
 import SearchCalendar from '../searchcalander/SearchCalendar';
 // api
 import { fetchStoreIdCount } from '../../../api/bookmark';
-import { getSearchStore } from '../../../api/store';
-// 라이브러리
-import moment from 'moment';
-import _debounce from 'lodash/debounce';
+import { fetchStoreData, getSearchStore } from '../../../api/store';
 // 타입
-import { FetchsStore, SearchListProps, Store } from '../../../types/types';
-//스타일
-import { styled } from 'styled-components';
+import { FetchsStore, SliderButton, Store } from '../../../types/types';
 // mui
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
 
-interface SliderButton {
-  onClick?: React.MouseEventHandler<HTMLButtonElement>;
-}
-
-const SearchList = ({ storeData }: SearchListProps) => {
+const SearchList = () => {
   const navigate = useNavigate();
 
   // 검색 inputValue state
@@ -61,11 +55,21 @@ const SearchList = ({ storeData }: SearchListProps) => {
     };
   }, [inputValue]);
 
+  // store 전체 조회
+  const {
+    data: storeData,
+    isLoading,
+    isError
+  } = useQuery<Store[] | null>({
+    queryKey: ['storeData'],
+    queryFn: () => fetchStoreData()
+  });
+
   // 인피니티 스크롤을 위한 데이터 조회
   const {
     data: stores,
-    isLoading,
-    isError,
+    isLoading: isScrollLoding,
+    isError: isScrollError,
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage
@@ -107,17 +111,20 @@ const SearchList = ({ storeData }: SearchListProps) => {
 
   // 북마크 카운트를 가져오는 함수
   const fetchBookmarkCounts = async () => {
-    const storeIds = storeData.map((store) => store.id);
-    // storeIds 배열에 있는 각 스토어 id를 순회하면서 fetchCount를 실행하고
-    // 각 스토어의 북마크 카운트를 가져와서 객체 형태로 배열에 저장
-    const countsPromises = storeIds.map(async (store_id) => {
-      const count = await fetchStoreIdCount(store_id);
-      return { store_id, count };
-    });
-    // Promise.all
-    // 배열에 담긴 모든 비동기 작업이 완료 될떄까지 대기하고, 완료되면 모든 결과를 배열로 반환
-    const bookmarkCounts = await Promise.all(countsPromises);
-    return bookmarkCounts;
+    if (storeData) {
+      const storeIds = storeData.map((store) => store.id);
+
+      // storeIds 배열에 있는 각 스토어 id를 순회하면서 fetchCount를 실행하고
+      // 각 스토어의 북마크 카운트를 가져와서 객체 형태로 배열에 저장
+      const countsPromises = storeIds.map(async (store_id) => {
+        const count = await fetchStoreIdCount(store_id);
+        return { store_id, count };
+      });
+      // Promise.all
+      // 배열에 담긴 모든 비동기 작업이 완료 될떄까지 대기하고, 완료되면 모든 결과를 배열로 반환
+      const bookmarkCounts = await Promise.all(countsPromises);
+      return bookmarkCounts;
+    }
   };
 
   // 컴포넌트가 마운트되거나 storeData가 변경될 때 북마크 카운트를 가져옴
@@ -142,12 +149,13 @@ const SearchList = ({ storeData }: SearchListProps) => {
     : [];
 
   // 최신순 정렬된 storeData
-  const latestStores = [...storeData]?.sort((a, b) => {
-    const indexC = a.period_start;
-    const indexD = b.period_start;
-
-    return indexD.localeCompare(indexC); // Compare as strings
-  });
+  const latestStores = storeData
+    ? [...storeData].sort((a, b) => {
+        const indexC = a.period_start;
+        const indexD = b.period_start;
+        return indexD.localeCompare(indexC); // Compare as strings
+      })
+    : [];
 
   // 인기 팝업스토어 자르기
   const popStores = sortedStores?.slice(0, 10);
@@ -161,7 +169,7 @@ const SearchList = ({ storeData }: SearchListProps) => {
     setInputValue(newValue);
   };
 
-  // 검색 버튼  핸들러
+  // 검색 버튼 핸들러
   const handleSearchButtonClick = () => {
     setDebouncedInputValue(inputValue);
     if (!inputValue) {
@@ -272,11 +280,216 @@ const SearchList = ({ storeData }: SearchListProps) => {
   const combinedLabel = `${momentStart} ~ ${momentEnd}`;
 
   if (isLoading) {
-    return <div>로딩중입니다.</div>;
+    return (
+      <div>
+        {' '}
+        <Container>
+          <TagBox>
+            <TagTitle>검색 Tip</TagTitle>
+            <Tag> "성수" or "제목 또는 내용" </Tag>
+          </TagBox>
+          <SearchBox>
+            {/* <Search /> */}
+            <form onSubmit={handleSearchButtonClick}>
+              <SearchInput
+                type="text"
+                value={inputValue}
+                placeholder="팝업스토어를 검색해보세요!"
+                onChange={handleInputChange}
+              />
+              <button type="submit" className="custom-btn">
+                검색
+              </button>
+            </form>
+            <Reset onClick={handleReset} />
+          </SearchBox>
+          <div style={{ display: 'flex', marginTop: '30px', gap: '30px' }}>
+            <Skeleton variant="text" width={150} height={20} />
+            <Skeleton variant="text" width={150} height={20} />
+          </div>
+          <div style={{ display: 'flex', marginTop: '100px', marginBottom: '30px' }}>
+            <Skeleton variant="text" width={250} height={20} />
+          </div>
+
+          <div style={{ display: 'flex', gap: '30px' }}>
+            <Card>
+              <Skeleton variant="rectangular" width={340} height={369} />
+              <InfoBox>
+                <div>
+                  <Skeleton variant="text" width={150} height={20} />
+                  <Skeleton variant="text" width={100} height={15} />
+                  <Skeleton variant="text" width={100} height={15} />
+                </div>
+                <Skeleton variant="rectangular" width={100} height={40} />
+              </InfoBox>
+            </Card>
+
+            <Card>
+              <Skeleton variant="rectangular" width={340} height={369} />
+              <InfoBox>
+                <div>
+                  <Skeleton variant="text" width={150} height={20} />
+                  <Skeleton variant="text" width={100} height={15} />
+                  <Skeleton variant="text" width={100} height={15} />
+                </div>
+                <Skeleton variant="rectangular" width={100} height={40} />
+              </InfoBox>
+            </Card>
+
+            <Card>
+              <Skeleton variant="rectangular" width={340} height={369} />
+              <InfoBox>
+                <div>
+                  <Skeleton variant="text" width={150} height={20} />
+                  <Skeleton variant="text" width={100} height={15} />
+                  <Skeleton variant="text" width={100} height={15} />
+                </div>
+                <Skeleton variant="rectangular" width={100} height={40} />
+              </InfoBox>
+            </Card>
+          </div>
+        </Container>
+      </div>
+    );
   }
+
   if (isError) {
     return <div>오류가 발생했습니다.</div>;
   }
+
+  if (isScrollLoding) {
+    return (
+      <div>
+        {' '}
+        <Container>
+          <TagBox>
+            <TagTitle>검색 Tip</TagTitle>
+            <Tag> "성수" or "제목 또는 내용" </Tag>
+          </TagBox>
+          <SearchBox>
+            {/* <Search /> */}
+            <form onSubmit={handleSearchButtonClick}>
+              <SearchInput
+                type="text"
+                value={inputValue}
+                placeholder="팝업스토어를 검색해보세요!"
+                onChange={handleInputChange}
+              />
+              <button type="submit" className="custom-btn">
+                검색
+              </button>
+            </form>
+            <Reset onClick={handleReset} />
+          </SearchBox>
+          <div style={{ display: 'flex', marginTop: '30px', gap: '30px' }}>
+            <Skeleton variant="text" width={150} height={20} />
+            <Skeleton variant="text" width={150} height={20} />
+          </div>
+
+          <div style={{ display: 'flex', gap: '30px', flexDirection: 'column' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: '100px',
+                marginBottom: '30px'
+              }}
+            >
+              <Skeleton variant="text" width={250} height={20} />
+            </div>
+            <div style={{ display: 'flex', gap: '30px' }}>
+              <Card>
+                <Skeleton variant="rectangular" width={340} height={369} />
+                <InfoBox>
+                  <div>
+                    <Skeleton variant="text" width={150} height={20} />
+                    <Skeleton variant="text" width={100} height={15} />
+                    <Skeleton variant="text" width={100} height={15} />
+                  </div>
+                  <Skeleton variant="rectangular" width={100} height={40} />
+                </InfoBox>
+              </Card>
+
+              <Card>
+                <Skeleton variant="rectangular" width={340} height={369} />
+                <InfoBox>
+                  <div>
+                    <Skeleton variant="text" width={150} height={20} />
+                    <Skeleton variant="text" width={100} height={15} />
+                    <Skeleton variant="text" width={100} height={15} />
+                  </div>
+                  <Skeleton variant="rectangular" width={100} height={40} />
+                </InfoBox>
+              </Card>
+
+              <Card>
+                <Skeleton variant="rectangular" width={340} height={369} />
+                <InfoBox>
+                  <div>
+                    <Skeleton variant="text" width={150} height={20} />
+                    <Skeleton variant="text" width={100} height={15} />
+                    <Skeleton variant="text" width={100} height={15} />
+                  </div>
+                  <Skeleton variant="rectangular" width={100} height={40} />
+                </InfoBox>
+              </Card>
+            </div>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: '100px',
+                marginBottom: '30px'
+              }}
+            >
+              <Skeleton variant="text" width={250} height={20} />
+            </div>
+            <div style={{ display: 'flex', gap: '30px', marginTop: '30px' }}>
+              <Card>
+                <Skeleton variant="rectangular" width={340} height={369} />
+                <InfoBox>
+                  <div>
+                    <Skeleton variant="text" width={150} height={20} />
+                    <Skeleton variant="text" width={100} height={15} />
+                    <Skeleton variant="text" width={100} height={15} />
+                  </div>
+                  <Skeleton variant="rectangular" width={100} height={40} />
+                </InfoBox>
+              </Card>
+              <Card>
+                <Skeleton variant="rectangular" width={340} height={369} />
+                <InfoBox>
+                  <div>
+                    <Skeleton variant="text" width={150} height={20} />
+                    <Skeleton variant="text" width={100} height={15} />
+                    <Skeleton variant="text" width={100} height={15} />
+                  </div>
+                  <Skeleton variant="rectangular" width={100} height={40} />
+                </InfoBox>
+              </Card>
+              <Card>
+                <Skeleton variant="rectangular" width={340} height={369} />
+                <InfoBox>
+                  <div>
+                    <Skeleton variant="text" width={150} height={20} />
+                    <Skeleton variant="text" width={100} height={15} />
+                    <Skeleton variant="text" width={100} height={15} />
+                  </div>
+                  <Skeleton variant="rectangular" width={100} height={40} />
+                </InfoBox>
+              </Card>
+            </div>
+          </div>
+        </Container>
+      </div>
+    );
+  }
+  if (isScrollError) {
+    return <div>오류가 발생했습니다.</div>;
+  }
+
   return (
     <Container>
       <TagBox>

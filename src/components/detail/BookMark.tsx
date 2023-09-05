@@ -1,21 +1,19 @@
 import React from 'react';
 // 라이브러리
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { styled } from 'styled-components';
 // api
 import { fetchAllBookMark, toggleBookMark } from '../../api/bookmark';
-//store
+// zustand store
 import { useCurrentUser } from '../../store/userStore';
 // 타입
 import { Bookmark } from '../../types/types';
-// props타입
 import { CalendarProps } from '../../types/props';
-// 스타일
-import { styled } from 'styled-components';
-// 이미지
-
+// mui
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 import { Skeleton } from '@mui/material';
+
 const BookMark = ({ storeData }: CalendarProps) => {
   // 북마크 전체 조회
   const { data: bookMark, isLoading, isError } = useQuery(['bookMark'], () => fetchAllBookMark());
@@ -48,9 +46,6 @@ const BookMark = ({ storeData }: CalendarProps) => {
     }
   };
 
-  // 스토어 필터링 북마크 카운트
-  const CountTotalBookMark = bookMark?.filter((item) => item.store_id === storeId).length;
-
   // 스토어, 유저 필터링 북마크 카운트
   const CountMyBookMark = bookMark?.filter(
     (item) => currentUser && item.user_id === currentUser.id && item.store_id === storeId
@@ -75,7 +70,6 @@ const BookMark = ({ storeData }: CalendarProps) => {
     <>
       {CountMyBookMark !== undefined && (
         <>
-          {/* {CountTotalBookMark} / */}
           {CountMyBookMark > 0 ? (
             <BookMarkBtn onClick={onClickToggle}>
               <BookMarkOn sx={{ fontSize: 50 }} />

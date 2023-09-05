@@ -1,17 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react';
+// 라이브러리
 import { Link, useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
-import Login from '../../pages/Login';
-import { setUserStore, useCurrentUser } from '../../store/userStore';
-import Alarm from './Alarm';
-import AlarmBox from './AlarmBox';
-import { supabase } from '../../api/supabase';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getUser } from '../../api/user';
-import { getAlarms, readAlarm } from '../../api/alarm';
 import shortid from 'shortid';
 import { toast } from 'react-toastify';
+// zustand store
+import { setUserStore, useCurrentUser } from '../../store/userStore';
+// api
+import { getUser } from '../../api/user';
+import { getAlarms, readAlarm } from '../../api/alarm';
+import { supabase } from '../../api/supabase';
+// 컴포넌트
+import Login from '../../pages/Login';
+import Alarm from './Alarm';
+import AlarmBox from './AlarmBox';
+// mui
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false);

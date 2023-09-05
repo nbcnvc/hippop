@@ -1,14 +1,16 @@
 import React, { useMemo, useState } from 'react';
-
+// 라이브러리
 import moment from 'moment';
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
+import { styled } from 'styled-components';
+// 타입
 import { Comment } from '../../../types/types';
 import { CommentProps } from '../../../types/props';
+// api
 import { createComment, deleteComment, getCommentCount, getComments, updateComment } from '../../../api/comment';
+// zustand store
 import { useCurrentUser } from '../../../store/userStore';
-
-import { styled } from 'styled-components';
+// mui
 import { Skeleton } from '@mui/material';
 
 const Comments = ({ postId }: CommentProps) => {
@@ -193,7 +195,7 @@ const Comments = ({ postId }: CommentProps) => {
       <CommentContainer>
         {selectComments?.map((comment) => {
           return (
-            <>
+            <div key={comment.id}>
               {currentUser?.id === comment.user_id && (
                 <ButtonBox>
                   <Button onClick={() => deleteButton(comment.id)}>삭제</Button>
@@ -220,7 +222,7 @@ const Comments = ({ postId }: CommentProps) => {
                   <Content>{comment.body}</Content>
                 )}
               </CommentBox>
-            </>
+            </div>
           );
         })}
       </CommentContainer>

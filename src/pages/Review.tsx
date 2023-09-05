@@ -1,13 +1,14 @@
+import { useState } from 'react';
+// 라이브러리
+import { styled } from 'styled-components';
+// 타입
+import { Store } from '../types/types';
+// zustand
+import { useCurrentUser } from '../store/userStore';
+// 컴포넌트
 import RPosts from '../components/community/main/review/RPosts';
 import Write from '../components/community/write/Write';
 import SearchModal from '../components/community/write/SearchModal';
-
-import { useState } from 'react';
-
-import { Store } from '../types/types';
-import { useCurrentUser } from '../store/userStore';
-
-import { styled } from 'styled-components';
 
 const Review = () => {
   const [writeModal, setWriteModal] = useState<boolean>(false);

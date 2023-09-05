@@ -1,12 +1,17 @@
 import React, { useMemo } from 'react';
+// 라이브러리
 import { Link } from 'react-router-dom';
-import { PostType, ReviewProps } from '../../types/types';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInView } from 'react-intersection-observer';
+// 타입
+import { PostType } from '../../types/types';
+import { MyReviewProps } from '../../types/props';
+// api
 import { getMyItems } from '../../api/post';
 import { getMyStores } from '../../api/store';
-import { useInfiniteQuery } from '@tanstack/react-query';
+// zustand
 import { useCurrentUser } from '../../store/userStore';
-import { useInView } from 'react-intersection-observer';
-import { MyReviewProps } from '../../types/props';
+// mui
 import { Skeleton } from '@mui/material';
 
 const MyReview = ({ activeSection }: MyReviewProps) => {

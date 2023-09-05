@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-
-import { supabase } from '../api/supabase';
+// 라이브러리
 import { RealtimePostgresInsertPayload } from '@supabase/supabase-js';
+// api
+import { supabase } from '../api/supabase';
 
 export const useRealTimeData = (subList: any[], currentUserId: any) => {
   const [realtimeData, setRealtimeData] = useState<

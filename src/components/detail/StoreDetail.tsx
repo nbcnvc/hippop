@@ -6,6 +6,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { styled } from 'styled-components';
 // 타입
 import { Store } from '../../types/types';
 // api
@@ -15,8 +16,6 @@ import Share from './Share';
 import Calendar from './Calendar';
 import BookMark from './BookMark';
 import StoreMap from './StoreMap';
-// 스타일
-import { styled } from 'styled-components';
 // mui
 import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -48,11 +47,6 @@ const StoreDetail = () => {
     // 컴포넌트가 마운트될 때 실행되는 부분
     refetch();
     setIsClicked(false);
-
-    // 컴포넌트가 언마운트될 때 실행되는 부분
-    // return () => {
-    //   setIsClicked(false);
-    // };
   }, [id]);
 
   const open = Boolean(anchorEl);
@@ -196,17 +190,7 @@ const StoreDetail = () => {
                 <div>
                   <span>예약 여부</span> {storeData.reservation ? '있음' : '없음'}
                 </div>
-                {/* <div className="link-url">
-                  <div>
-                    <span>링크 </span>
-                    <p>{storeData.link}</p>
-                  </div>
-                  <LinkIcon
-                    onClick={() => {
-                      handleopenlink(storeData.link);
-                    }}
-                  />
-                </div> */}
+
                 <div>
                   <span>링크 </span>
                   <p
@@ -252,7 +236,6 @@ const StoreDetail = () => {
               </div>
             </div>
             <CalendarBox>{isClicked && <Calendar storeData={storeData} />}</CalendarBox>
-            {/* {isClicked && <Calendar storeData={storeData} />} */}
           </div>
           <StoreMap storeLocation={storeData.location} title={storeData.title} />
         </>
@@ -327,20 +310,6 @@ const DetailContainer = styled.div`
         display: flex;
         justify-content: center;
         flex-direction: column;
-        /* align-items: center; */
-
-        /* .link-url {
-          display: flex;
-          align-items: center;
-
-          span {
-            width: 40px;
-          }
-          p {
-            text-align: left;
-            font-size: 12px;
-          }
-        } */
 
         div {
           display: flex;

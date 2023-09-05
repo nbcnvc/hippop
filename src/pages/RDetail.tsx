@@ -1,16 +1,18 @@
-import Edit from '../components/community/write/Edit';
-import Writer from '../components/community/detail/Writer';
-import Comments from '../components/community/detail/Comments';
-
+// 라이브러리
 import moment from 'moment';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
-import { useCurrentUser } from '../store/userStore';
-import { deletePost, getPost } from '../api/post';
-
 import { styled } from 'styled-components';
+// zustand
+import { useCurrentUser } from '../store/userStore';
+// api
+import { deletePost, getPost } from '../api/post';
+// 컴포넌트
+import Edit from '../components/community/write/Edit';
+import Writer from '../components/community/detail/Writer';
+import Comments from '../components/community/detail/Comments';
+// mui
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import Skeleton from '@mui/material/Skeleton';
 

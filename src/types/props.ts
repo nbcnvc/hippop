@@ -150,3 +150,7 @@ export interface MyReviewProps {
 export interface BookmarkProps {
   activeSection: string;
 }
+
+export interface MySubModalProps {
+  setIsSubModal: React.Dispatch<SetStateAction<boolean>>;
+}
