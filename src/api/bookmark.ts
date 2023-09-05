@@ -13,7 +13,6 @@ export const fetchAllBookMark = async () => {
 // user의 북마크한 store list 가져오기
 export const fetchBookMarkStore = async (userId: string) => {
   const { data } = await supabase.from('bookmark').select(`*, store(*)`).eq('user_id', userId);
-  console.log('data', data);
 
   return data;
 };

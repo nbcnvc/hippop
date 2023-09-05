@@ -29,7 +29,6 @@ const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
 
       await sendMessage(message);
     }
-    console.log('메세지 전송 성공!');
   };
 
   // 쪽지 내용 onChange

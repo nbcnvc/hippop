@@ -17,8 +17,6 @@ const Subscribe = ({ writerId }: SubscribeProps) => {
     subscribe_to: writerId
   };
 
-  // console.log('userId : ', userId);
-
   // 구독 확인하기
   const { data: subscribed } = useQuery(['subscribe'], async () => {
     if (currentUser) {
