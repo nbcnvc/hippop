@@ -137,5 +137,6 @@ const LoginTag = styled.div`
   .list > img {
     width: 200px;
     border-radius: 8px;
+    box-shadow: 4px 4px 10px rgba(45, 45, 45, 0.665);
   }
 `;
