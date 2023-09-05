@@ -152,8 +152,7 @@ const MNewPosts = () => {
                 <Between>
                   <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${post.user.avatar_url}`} alt="User Avatar" />
                   <div>
-                    <Name style={{ marginBottom: '5px', display: 'flex', flexDirection: 'column' }}>
-                      <button />
+                    <Name>
                       <NameLine>{post.user.name}</NameLine>
                     </Name>
                     <Name>님과 함께 하기</Name>
@@ -259,25 +258,7 @@ const ProfileBox = styled.div`
 const Name = styled.div`
   font-size: 18px;
   font-weight: 600;
-  margin: 0 0 0 25px;
-  position: relative;
-  button {
-    position: absolute;
-    // margin-bottom: 20px;
-    bottom: 34px;
-    left: 54px;
-    background-color: var(--fourth-color);
-    width: 50px;
-    height: 20px;
-
-    cursor: default;
-    &:hover {
-      filter: brightness(100%);
-    }
-    &:active {
-      transform: scale(1);
-    }
-  }
+  margin: 0 0 5px 10px;
 `;
 
 const NameLine = styled.span`
@@ -288,7 +269,7 @@ const NameLine = styled.span`
 const Img = styled.img`
   width: 70px;
   height: 70px;
-  margin: 10px 0 10px 20px;
+  margin: 10px 10px 10px 20px;
   object-fit: cover;
   border-radius: 50%;
 `;
