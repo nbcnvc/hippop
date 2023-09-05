@@ -1,3 +1,4 @@
+// 라이브러리
 import { v4 as uuidv4 } from 'uuid';
 
 export const randomFileName = (originalFileName: string): string => {

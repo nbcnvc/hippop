@@ -1,15 +1,16 @@
 import CommentCount from '../CommentCount';
-
+// 라이브러리
 import moment from 'moment';
 import { useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-import { FetchPost, PostType } from '../../../../types/types';
-import { getPopularPosts } from '../../../../api/post';
-
 import { styled } from 'styled-components';
+// 타입
+import { FetchPost, PostType } from '../../../../types/types';
+// api
+import { getPopularPosts } from '../../../../api/post';
+// mui
 import Skeleton from '@mui/material/Skeleton'; // 스켈레톤 추가
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import NotesRoundedIcon from '@mui/icons-material/NotesRounded';

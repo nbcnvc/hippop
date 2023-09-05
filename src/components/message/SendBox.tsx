@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 // 라이브러리
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { styled } from 'styled-components';
 import moment from 'moment';
 // api
 import { deleteSendMessage, mySendMessage, readMessage } from '../../api/message';
@@ -11,8 +12,6 @@ import { MessageType } from '../../types/types';
 import { SendBoxProps } from '../../types/props';
 // 컴포넌트
 import MessageDetail from './MessageDetail';
-// 스타일
-import { styled } from 'styled-components';
 // mui
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import DraftsOutlinedIcon from '@mui/icons-material/DraftsOutlined';
@@ -20,7 +19,6 @@ import DraftsOutlinedIcon from '@mui/icons-material/DraftsOutlined';
 const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) => {
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [selectedMessage, setSelectedMessage] = useState<MessageType | null>(null);
-  const [isSender, setIsSender] = useState<boolean>(false);
   const currentUser = useCurrentUser();
   const userId = currentUser?.id ?? '';
 

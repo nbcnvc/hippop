@@ -1,20 +1,21 @@
-import MNewPosts from './MNewPosts';
-import MStorePosts from './MStorePosts';
-
+import { useEffect, useMemo, useState } from 'react';
+// 라이브러리
 import moment from 'moment';
 import shortid from 'shortid';
-import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
-
-import { FetchPost, PostType } from '../../../../types/types';
-import { getSearchPosts } from '../../../../api/post';
-
 import { styled } from 'styled-components';
+// 타입
+import { FetchPost } from '../../../../types/types';
+// api
+import { getSearchPosts } from '../../../../api/post';
+// 컴포넌트
+import MNewPosts from './MNewPosts';
+import MStorePosts from './MStorePosts';
+// mui
 import Skeleton from '@mui/material/Skeleton';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
-
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 
 const MPosts = () => {
@@ -278,7 +279,7 @@ const PostBox = styled.div`
   padding: 10px;
   margin: 10px;
   display: flex;
-  // box-sizing: border-box;
+
   transition: color 0.3s ease, transform 0.3s ease;
   &:hover {
     border: 6px solid var(--primary-color);

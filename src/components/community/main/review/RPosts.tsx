@@ -1,18 +1,20 @@
-import RNewPosts from './RNewPosts';
-import RStorePosts from './RStorePosts';
-import RPopularPosts from './RPopularPosts';
-import CommentCount from '../CommentCount';
-
+// 라이브러리
 import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
-
-import { FetchPost, PostType } from '../../../../types/types';
-import { getSearchPosts } from '../../../../api/post';
-
 import { styled } from 'styled-components';
+// 타입
+import { FetchPost, PostType } from '../../../../types/types';
+// api
+import { getSearchPosts } from '../../../../api/post';
+// 컴포넌트
+import RNewPosts from './RNewPosts';
+import RStorePosts from './RStorePosts';
+import RPopularPosts from './RPopularPosts';
+import CommentCount from '../CommentCount';
+// mui
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import Skeleton from '@mui/material/Skeleton'; // 스켈레톤 추가
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';

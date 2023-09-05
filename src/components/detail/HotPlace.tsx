@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+// 라이브러리
+import { styled } from 'styled-components';
 // 타입
 import { HotPlaceProps } from '../../types/props';
-// 스타일
-import { styled } from 'styled-components';
 // mui
 import Switch, { SwitchProps } from '@mui/material/Switch';
 import { styled as muiStyled } from '@mui/material/styles';
@@ -27,7 +27,6 @@ const HotPlace = ({ setCategory, setIsSelected }: HotPlaceProps) => {
     <HotPlaceContainer>
       <div className="hotplace-title">
         <h1>함께 갈만한 핫플레이스 추천!</h1>
-        {/* <div style={{ marginTop: '10px', fontSize: '16px' }}> (카테고리 클릭 후) 마커핀을 클릭해 보세요!</div> */}
         <div className="button-box">
           <button name="맛집" onClick={handleHotPlaceCategory}>
             # 맛집

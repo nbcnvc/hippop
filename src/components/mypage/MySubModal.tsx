@@ -1,11 +1,16 @@
+// 라이브러리
 import { useQuery } from '@tanstack/react-query';
-import { useCurrentUser } from '../../store/userStore';
-import { getSubInfo, getSubList } from '../../api/subscribe';
-import { MySubModalProps } from '../../types/props';
-import { styled } from 'styled-components';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { useNavigate } from 'react-router-dom';
+import { styled } from 'styled-components';
 import shortid from 'shortid';
+// zustand
+import { useCurrentUser } from '../../store/userStore';
+// api
+import { getSubInfo } from '../../api/subscribe';
+// 타입
+import { MySubModalProps } from '../../types/props';
+// mui
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 const MySubModal = ({ setIsSubModal }: MySubModalProps) => {
   const navigate = useNavigate();

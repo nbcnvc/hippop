@@ -1,38 +1,28 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
-
+import React, { useState, useRef, useEffect } from 'react';
 // 라이브러리
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import shortid from 'shortid';
-//타입
-//api
-import { getUser } from '../api/user';
-import { getMyItems } from '../api/post';
-import { getMyStores } from '../api/store';
-import { supabase } from '../api/supabase';
-// store
-import { setUserStore, useCurrentUser } from '../store/userStore';
-import { randomFileName } from '../hooks/useHandleImageName';
-//스타일
-import { styled } from 'styled-components';
-import PartyModeIcon from '@mui/icons-material/PartyMode';
-import { BsFillPeopleFill } from 'react-icons/bs';
-
-//메세지
+import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css';
+// 타입
+import { MessageType } from '../types/types';
+// 컴포넌트
 import SendBox from '../components/message/SendBox';
 import MessageReply from '../components/message/MessageReply';
-import { MessageType } from '../types/types';
 import ReceiveBox from '../components/message/ReceiveBox';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useInView } from 'react-intersection-observer';
 import MyReview from '../components/mypage/MyReview';
 import MyBookmark from '../components/mypage/MyBookmark';
-import 'react-toastify/dist/ReactToastify.css';
-import { Skeleton } from '@mui/material';
-
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { getSubInfo, getSubList } from '../api/subscribe';
 import MySubModal from '../components/mypage/MySubModal';
+// ㅁpi
+import { getUser } from '../api/user';
+import { supabase } from '../api/supabase';
+//store
+import { setUserStore, useCurrentUser } from '../store/userStore';
+import { randomFileName } from '../hooks/useHandleImageName';
+// 스타일
+import { styled } from 'styled-components';
+// react-icons
+import { BsFillPeopleFill } from 'react-icons/bs';
+// mui
+import PartyModeIcon from '@mui/icons-material/PartyMode';
 
 const MyPage = () => {
   // 유저 정보
@@ -147,114 +137,6 @@ const MyPage = () => {
     const name = (e.target as HTMLButtonElement).name;
     setToggleMsgBox(name);
   };
-  // if (isLoading) {
-  // Loading state: Render skeleton loaders
-  //   return (
-  //     <MypageTag>
-  //       {/* Header */}
-  //       <header>
-  //         <div className="info-wrapper">
-  //           <div className="info-main">
-  //             <div className="info-inner">
-  //               <div>
-  //                 <Skeleton width={100} height={10} /> {/* Adjust size */}
-  //                 <Skeleton width={140} height={20} /> {/* Adjust size */}
-  //               </div>
-
-  //               <div className="user-sub-info">
-  //                 <Skeleton width={150} height={16} /> {/* Adjust size */}
-  //               </div>
-  //             </div>
-  //             <div className="avatar-container">
-  //               <div className="avatar">
-  //                 <Skeleton variant="circular" width={120} height={120} /> {/* Circular skeleton */}
-  //               </div>
-  //               <div className="circle-bg"></div>
-  //               <div className="img-uploader">
-  //                 <input
-  //                   type="file"
-  //                   id="file-input"
-  //                   accept="image/*"
-  //                   ref={imageInputRef}
-  //                   onChange={handleImageInputChange}
-  //                 />
-  //               </div>
-  //             </div>
-  //           </div>
-  //           <div className="btn-mother">
-  //             <Skeleton width={80} height={24} />
-  //           </div>
-  //           <div className="btn-mother">
-  //             <div onClick={() => setIsMenuOpen((isMenuOpen) => !isMenuOpen)}>
-  //               {/* <Skeleton width={80} height={16} /> */}
-  //               <Skeleton width={80} height={24} />
-
-  //               {/* <Skeleton width={80} height={24} /> */}
-  //             </div>
-  //           </div>
-  //         </div>
-  //         {/* Message tab */}
-  //         <div className="alram-mother">
-  //           <div className="btn-wrapper">
-  //             <Skeleton width={80} height={24} />
-  //             &nbsp;&nbsp;&nbsp;
-  //             <Skeleton width={80} height={24} />
-  //           </div>
-  //           <div className="alram-wrapper">
-  //             {toggleMsgBox === '받은 쪽지함' ? (
-  //               <ReceiveBox toggleMsgBox={toggleMsgBox} setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
-  //             ) : (
-  //               <SendBox toggleMsgBox={toggleMsgBox} setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
-  //             )}
-  //           </div>
-  //           {replyModal && <MessageReply sendMsgUser={sendMsgUser} setOpenReply={setReplyModal} />}
-  //         </div>
-  //       </header>
-
-  //       {/* Toggle tab */}
-  //       <div className="toggle-wrapper">
-  //         <h3>
-  //           <p>
-  //             <div style={{ padding: '2px' }}> </div>
-  //           </p>
-  //         </h3>
-
-  //         <div style={{ display: 'flex' }}>
-  //           <Skeleton width={120} height={60} />
-  //           &nbsp;&nbsp;&nbsp;
-  //           <Skeleton width={120} height={60} />
-  //         </div>
-
-  //         {/* Skeleton for MyReview and MyBookmark */}
-  //         <div className="skeleton-container">
-  //           <div style={{ margin: '0 auto' }}>
-  //             <div className="post-wrapper">
-  //               {Array.from({ length: 5 }).map((_, index) => (
-  //                 <div className="fid" key={index}>
-  //                   <div>
-  //                     <Skeleton variant="rectangular" width={270} height={300} /> {/* Adjust size */}
-  //                   </div>
-  //                   <div className="info-box">
-  //                     <div>
-  //                       <Skeleton width={200} height={24} /> {/* Adjust size */}
-  //                       <Skeleton width={100} height={16} /> {/* Adjust size */}
-  //                     </div>
-
-  //                     <Skeleton width={120} height={60} />
-  //                   </div>
-  //                 </div>
-  //               ))}
-  //             </div>
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </MypageTag>
-  //   );
-  // };
-
-  // if (isError) {
-  //   return <div>오류가 발생했습니다.</div>;
-  // }
 
   return (
     <MypageTag>
@@ -311,9 +193,6 @@ const MyPage = () => {
                         onChange={handleImageInputChange}
                       />
                     </label>
-                    {/* <button className="confirm" onClick={handleImageConfirm}>
-                      저장
-                    </button> */}
                   </div>
                 )}
               </div>

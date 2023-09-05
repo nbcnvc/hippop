@@ -5,12 +5,13 @@ import { useQuery } from '@tanstack/react-query';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { styled } from 'styled-components';
 // 타입
 import { NearbyStoreProps } from '../../types/props';
 // api
 import { fetchStoreData } from '../../api/store';
-// 스타일
-import { styled } from 'styled-components';
+// mui
+import { Skeleton } from '@mui/material';
 
 interface SliderButton {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -66,29 +67,6 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
     speed: 500
   };
 
-  //   // responsive: [
-  //   //   {
-  //   //     breakpoint: 1024,
-  //   //     settings: {
-  //   //       slidesToShow: 3,
-  //   //       slidesToScroll: 3
-  //   //     }
-  //   //   },
-  //   //   {
-  //   //     breakpoint: 600,
-  //   //     settings: {
-  //   //       slidesToShow: 2,
-  //   //       slidesToScroll: 2
-  //   //     }
-  //   //   },
-  //   //   {
-  //   //     breakpoint: 320,
-  //   //     settings: {
-  //   //       slidesToShow: 1,
-  //   //       slidesToScroll: 1
-  //   //     }
-  //   //   }
-
   // detail page 이동
   const navDetail = (id: number) => {
     // window.location.reload();
@@ -96,7 +74,20 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
   };
 
   if (isLoading) {
-    return <div>로딩중입니다...</div>;
+    return (
+      <div>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+          <Skeleton variant="text" width={90} height={30} />
+          <div style={{ display: 'flex' }}>
+            <Skeleton variant="text" width={400} height={800} />
+            <div style={{ margin: '0 15px 0 15px' }}>
+              <Skeleton variant="text" width={400} height={800} />
+            </div>
+            <Skeleton variant="text" width={400} height={800} />
+          </div>
+        </div>
+      </div>
+    );
   }
   if (isError) {
     return <div>오류가 발생했습니다...</div>;

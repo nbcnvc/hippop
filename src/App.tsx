@@ -1,11 +1,17 @@
 import './App.css';
 import React, { useEffect } from 'react';
+// Router
 import Router from './shared/Router';
+// GlobalStyle
 import GlobalStyle from './GlobalStyle';
+// 라이브러리
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+// api
 import { supabase } from './api/supabase';
+// zustand
 import { setUserStore, useCurrentUser } from './store/userStore';
+// hook
 import { randomFileName } from './hooks/useHandleImageName';
 
 const queryClient = new QueryClient();

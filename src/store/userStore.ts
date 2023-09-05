@@ -1,3 +1,4 @@
+// 라이브러리
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { UserInfo } from '../types/types';
