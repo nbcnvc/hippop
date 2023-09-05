@@ -16,6 +16,7 @@ import { UserInfo, PostType } from '../types/types';
 // mui
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 // img
 import DefaultImg from '../images/defaultImg.png';
 import { Skeleton } from '@mui/material';
@@ -111,6 +112,9 @@ const YourPage = () => {
 
   const PostDetail = (postId: number) => {
     navigate(`/rdetail/${postId}`);
+  };
+  const BookMarkDetail = (storeId: number) => {
+    navigate(`/detail/${storeId}`);
   };
 
   useEffect(() => {
@@ -275,14 +279,23 @@ const YourPage = () => {
                           </p>
                           <StoreInfo>
                             <div>
-                              <Location>
-                                {bookMark.store?.location.split(' ').slice(0, 1)}{' '}
-                                {bookMark.store?.location.split(' ').slice(1, 2)}
-                              </Location>
+                              <div>
+                                <Location>
+                                  {bookMark.store?.location.split(' ').slice(0, 1)}{' '}
+                                  {bookMark.store?.location.split(' ').slice(1, 2)}
+                                </Location>
+                              </div>
+                              <TitleBox>
+                                <StoreTitle>{bookMark.store?.title}</StoreTitle>
+                              </TitleBox>
                             </div>
-                            <TitleBox>
-                              <StoreTitle>{bookMark.store?.title}</StoreTitle>
-                            </TitleBox>
+                            <StoreDetailArrow
+                              onClick={() => {
+                                BookMarkDetail(bookMark.store.id);
+                              }}
+                            >
+                              <ArrowForwardIosIcon />
+                            </StoreDetailArrow>
                           </StoreInfo>
                         </StoreList>
                       </div>
@@ -465,6 +478,10 @@ const StoreList = styled.div`
 
 const StoreInfo = styled.div`
   margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 230px;
 `;
 
 const Location = styled.span`
@@ -472,7 +489,7 @@ const Location = styled.span`
 `;
 
 const TitleBox = styled.div`
-  max-width: 240px;
+  max-width: 200px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -480,6 +497,10 @@ const TitleBox = styled.div`
 
 const StoreTitle = styled.span`
   font-size: 15px;
+`;
+
+const StoreDetailArrow = styled.div`
+  cursor: pointer;
 `;
 
 const Line = styled.div`

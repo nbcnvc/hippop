@@ -161,7 +161,7 @@ const Comments = ({ postId }: CommentProps) => {
       <CommentContainer>
         {selectComments?.map((comment) => {
           return (
-            <>
+            <div key={comment.id}>
               {currentUser?.id === comment.user_id && (
                 <ButtonBox>
                   <Button onClick={() => deleteButton(comment.id)}>삭제</Button>
@@ -188,7 +188,7 @@ const Comments = ({ postId }: CommentProps) => {
                   <Content>{comment.body}</Content>
                 )}
               </CommentBox>
-            </>
+            </div>
           );
         })}
       </CommentContainer>
