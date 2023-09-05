@@ -161,7 +161,7 @@ const SearchList = ({ storeData }: SearchListProps) => {
     setInputValue(newValue);
   };
 
-  // 검색 버튼  핸들러
+  // 검색 버튼 핸들러
   const handleSearchButtonClick = () => {
     setDebouncedInputValue(inputValue);
     if (!inputValue) {
