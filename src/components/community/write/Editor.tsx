@@ -114,8 +114,6 @@ const Editor = ({ body, setBody }: EditorProps) => {
     'width'
   ];
 
-  console.log(body);
-
   return (
     <>
       <ReactQuill

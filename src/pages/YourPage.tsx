@@ -106,12 +106,6 @@ const YourPage = () => {
   const fetchProfileImage = async () => {
     if (userData) {
       const profileImgData = await getProfileImg(userData.id);
-      console.log('Profile Image Data:', profileImgData);
-
-      // if (profileImgData && profileImgData.avatar_url) {
-      //   // avatar_url이 존재하면 해당 URL을 사용하여 이미지를 렌더링
-      //   `${process.env.REACT_APP_SUPABASE_STORAGE_URL}${profileImgData.avatar_url}`;
-      // }
     }
   };
 

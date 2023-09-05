@@ -99,8 +99,6 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
           } else if (category && category === '술집') {
             setHImageSrc('/asset/bMarker.png');
           }
-          console.log('hImageSrc', hImageSrc);
-          console.log('category', category);
 
           // 마커이미지의 크기
           const imageSize = new kakao.maps.Size(30, 40);
@@ -162,10 +160,6 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
               // 정상적으로 검색이 완료됐으면
               if (status === kakao.maps.services.Status.OK) {
                 const coords = new kakao.maps.LatLng(Number(result[0].y), Number(result[0].x));
-
-                // console.log('result', result);
-
-                // const displayMarker = (place: Geocoder) => {
                 // 메인 마커이미지의 주소
                 const imageSrc = '/asset/nearbyMarker.png';
                 // // 마커이미지의 크기
@@ -205,8 +199,6 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
       }
     });
   }, [storeLocation, category, hImageSrc, nearbyStoreMarker]);
-
-  console.log(nearbyStoreMarker);
 
   return (
     <MapContainer>

@@ -46,7 +46,6 @@ const RNewPosts = () => {
       })
       .flat();
   }, [posts]);
-  // console.log(selectPosts);
 
   // 언제 다음 페이지를 가져올 것
   const { ref } = useInView({

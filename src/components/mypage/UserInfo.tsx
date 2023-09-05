@@ -15,16 +15,9 @@ import { useQuery } from '@tanstack/react-query';
 import shortid from 'shortid';
 const UserInfo = () => {
   const navigate = useNavigate();
-  // const { id } = useParams();
-
   const { state } = useLocation();
-  // const userId = state.userId;
   const userId: string = state?.userId || '';
-  console.log(state.userId);
-
   const { data: currentUser } = useQuery(['user', userId], () => getUser(userId ?? ''));
-  // const { data: currentUser } = useQuery(['user', id], () => getUser(id ?? ''));
-
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState('');
   const [imageUploadVisible, setImageUploadVisible] = useState(false);
@@ -144,7 +137,6 @@ const UserInfo = () => {
           if (currentUser) {
             const userData = await getUser(currentUser?.id ?? '');
             setCurrentUser(userData);
-            // console.log('userData', userData);
           }
 
           alert('프로필 변경이 완료됐습니다 :)');

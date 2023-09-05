@@ -142,3 +142,11 @@ export interface CommentCountProps {
 export interface RSearchPostsProps {
   keyword: string;
 }
+
+export interface MyReviewProps {
+  activeSection: string;
+}
+
+export interface BookmarkProps {
+  activeSection: string;
+}

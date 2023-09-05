@@ -102,8 +102,6 @@ export const getStorePosts = async (pageParam: number = 1, storeId?: number, par
       .eq('store_id', storeId);
 
     count = mateCount;
-
-    console.log('mates', mates);
   }
 
   // 총 페이지
@@ -165,25 +163,25 @@ export const getPopularPosts = async (pageParam: number = 1, param?: string): Pr
   return { posts: data as any, page: pageParam, totalPages, count };
 };
 
-//myPage - pageParam
-// 내가 쓴 글 Post 전체 조회 (isdeleted가 false인 것만)
+// myPage 내가 쓴 글 Post 전체 조회
 export const getMyItems = async (userId: string, itemType: 'posts' | 'stores', pageParam: number = 1): Promise<any> => {
   const PAGE_SIZE = 3; // 페이지당 아이템 개수
   const resource = itemType === 'posts' ? 'post' : 'store';
   const { data: items } = await supabase
     .from(resource)
     .select()
+    .eq('isdeleted', false)
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
     .range((pageParam - 1) * PAGE_SIZE, pageParam * PAGE_SIZE - 1);
-  const { count } = await supabase.from(resource).select('count', { count: 'exact' });
+  const { count } = await supabase.from(resource).select('count', { count: 'exact' }).eq('isdeleted', false);
 
   const totalPages = count ? Math.ceil(count / PAGE_SIZE) : 1;
 
   return { items, page: pageParam, totalPages, count };
 };
 
-//yourPage - pageParam
+// yourPage 내가 쓴 글 Review Post 조회
 export const getYourItems = async (
   userId: string,
   itemType: 'posts' | 'stores',
@@ -194,10 +192,17 @@ export const getYourItems = async (
   const { data: items } = await supabase
     .from(resource)
     .select(`*, store( title )`)
+    .eq('ctg_index', 1)
+    .eq('isdeleted', false)
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
     .range((pageParam - 1) * PAGE_SIZE, pageParam * PAGE_SIZE - 1);
-  const { count } = await supabase.from(resource).select('count', { count: 'exact' });
+  const { count } = await supabase
+    .from(resource)
+    .select('count', { count: 'exact' })
+    .eq('ctg_index', 1)
+    .eq('isdeleted', false)
+    .eq('user_id', userId);
 
   const totalPages = count ? Math.ceil(count / PAGE_SIZE) : 1;
 

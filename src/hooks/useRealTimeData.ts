@@ -23,7 +23,6 @@ export const useRealTimeData = (subList: any[], currentUserId: any) => {
       },
       (payload) => {
         if (payload.new.ctg_index === 1) {
-          console.log(payload);
           setRealtimeData(payload);
         }
       }

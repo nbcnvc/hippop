@@ -14,7 +14,6 @@ function App() {
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
 
   const currentUser = useCurrentUser();
-  console.log('currentUser', currentUser);
 
   useEffect(() => {
     supabase.auth.onAuthStateChange(async (event, session) => {

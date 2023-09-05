@@ -36,8 +36,6 @@ const Main = () => {
     }
   });
 
-  console.log('storesData', storesData);
-
   const observerRef = useRef(null);
 
   useEffect(() => {
@@ -66,9 +64,7 @@ const Main = () => {
   // 언제 다음 페이지를 가져올 것
   const { ref } = useInView({
     threshold: 1, // 맨 아래에 교차될 때
-    onChange: (inView) => {
-      console.log('Is in view:', inView);
-    }
+    onChange: (inView) => {}
   });
 
   if (isLoading) {
