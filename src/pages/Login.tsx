@@ -75,6 +75,7 @@ const Login = ({ closeModal }: { closeModal: () => void }) => {
               </div>
             </div>
           </div>
+          <p>copyright by 'Our time, in that summer'</p>
         </div>
       </div>
     </LoginTag>
@@ -96,7 +97,10 @@ const LoginTag = styled.div`
   padding: 1rem;
   // backdrop-filter: blur(10px);
   box-shadow: 4px 4px 18px rgba(0, 0, 0, 0.3);
-
+  p {
+    margin-top: 2rem;
+    font-size: 12px;
+  }
   .login-content {
     gap: 10px;
     display: flex;
