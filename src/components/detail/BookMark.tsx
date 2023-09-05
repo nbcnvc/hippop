@@ -15,6 +15,7 @@ import { styled } from 'styled-components';
 
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
+import { Skeleton } from '@mui/material';
 const BookMark = ({ storeData }: CalendarProps) => {
   // 북마크 전체 조회
   const { data: bookMark, isLoading, isError } = useQuery(['bookMark'], () => fetchAllBookMark());
@@ -55,12 +56,19 @@ const BookMark = ({ storeData }: CalendarProps) => {
     (item) => currentUser && item.user_id === currentUser.id && item.store_id === storeId
   ).length;
 
-  if (isError) {
-    return <div>데이터를 가져오는 도중 오류가 발생했습니다.</div>;
+  if (isLoading) {
+    return (
+      <div>
+        {' '}
+        <div style={{ marginLeft: '30px' }}>
+          <Skeleton variant="text" width={70} height={50} />
+        </div>
+      </div>
+    );
   }
 
-  if (isLoading) {
-    return <div>데이터를 로딩 중입니다.</div>;
+  if (isError) {
+    return <div>데이터를 가져오는 도중 오류가 발생했습니다.</div>;
   }
 
   return (

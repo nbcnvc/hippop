@@ -103,6 +103,9 @@ const RNewPosts = () => {
                 <Skeleton width="60px" animation="wave" />
                 <Skeleton width="80px" animation="wave" />
               </Between>
+              <div style={{ marginTop: '60px', marginLeft: '450px' }}>
+                <Skeleton width={60} height={16} />
+              </div>
             </ContentBox>
           </PostBox>
         ))}

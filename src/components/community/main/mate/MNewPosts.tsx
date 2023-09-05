@@ -97,9 +97,9 @@ const MNewPosts = () => {
                 <Body>
                   <Skeleton width={400} height={30} />
                 </Body>
-                <Button>
+                <div style={{ marginTop: '46px', marginRight: '12px' }}>
                   <Skeleton width={60} height={16} />
-                </Button>
+                </div>
               </Between>
             </ContentBox>
             <ProfileBox>
@@ -114,9 +114,9 @@ const MNewPosts = () => {
                   </Name>
                 </div>
               </Between>
-              <ProfileButton>
+              <div style={{ marginTop: '32px', marginLeft: '145px' }}>
                 <Skeleton width={60} height={16} />
-              </ProfileButton>
+              </div>
             </ProfileBox>
           </PostBox>
         ))}
