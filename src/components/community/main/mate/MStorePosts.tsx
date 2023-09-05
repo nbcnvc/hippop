@@ -10,7 +10,6 @@ import { getStorePosts } from '../../../../api/post';
 import { styled } from 'styled-components';
 import Skeleton from '@mui/material/Skeleton';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 
 const MStorePosts = () => {
   const navigate = useNavigate();
@@ -46,7 +45,7 @@ const MStorePosts = () => {
       })
       .flat();
   }, [posts]);
-  console.log(selectPosts);
+  // console.log(selectPosts);
 
   // 언제 다음 페이지를 가져올 것
   const { ref } = useInView({
@@ -175,6 +174,19 @@ const PostBox = styled.div`
   padding: 10px;
   margin: 10px;
   display: flex;
+<<<<<<< HEAD
+=======
+
+>>>>>>> e84a1b4448ff115f53348816a26674d7da0e957c
+  // box-sizing: border-box;
+  transition: color 0.3s ease, transform 0.3s ease;
+  &:hover {
+    border: 6px solid var(--primary-color);
+  }
+  &:active {
+    background-color: rgb(215, 215, 219);
+    transform: scale(0.98);
+  }
 `;
 
 const ContentBox = styled.div`

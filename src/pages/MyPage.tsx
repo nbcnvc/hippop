@@ -4,7 +4,6 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import shortid from 'shortid';
 //타입
-// import { Bookmark, PostType, Store } from '../types/types';
 //api
 import { getUser } from '../api/user';
 import { getMyItems } from '../api/post';
@@ -27,9 +26,11 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useInView } from 'react-intersection-observer';
 import MyReview from '../components/mypage/MyReview';
 import MyBookmark from '../components/mypage/MyBookmark';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Skeleton } from '@mui/material';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -151,49 +152,6 @@ const MyPage = () => {
       fetchNextPage();
     }
   });
-  // my page가 렌더되면 현재 login상태 user가 작성한 post 배열 가져오기
-  // useEffect(() => {
-  //   const fetchUserPosts = async () => {
-  //     if (currentUser) {
-  //       const userPostId = currentUser.id;
-  //       let { data } = await supabase.from('post').select('*').eq('user_id', userPostId);
-  //       // console.log(data);
-  //       setFetchUserPost(data || []);
-  //     }
-  //   };
-  //   fetchUserPosts();
-  // }, [currentUser]);
-  //////////////////////////////////////
-  // useEffect(() => {
-  //   const Subs = async () => {
-  //     if (currentUser) {
-  //       const userPostId = currentUser.id;
-  //       let { data } = await supabase.from('bookmark').select('*').eq('user_id', userPostId);
-  //       if (data) {
-  //         setFetchSubs(data);
-  //         const storeIds = data.map((bookmark) => bookmark.store_id);
-  //         if (storeIds.length > 0) {
-  //           let { data: storeData } = await supabase.from('store').select('*').in('id', storeIds);
-  //           if (storeData) {
-  //             const extractedData: Store[] = storeData.map((store) => ({
-  //               id: store.id,
-  //               location: store.location,
-  //               period_start: store.period_start,
-  //               period_end: store.period_end,
-  //               title: store.title,
-  //               body: store.body,
-  //               opening: store.opening,
-  //               images: store.images,
-  //               link: store.link
-  //             }));
-  //             setExtractedData(extractedData);
-  //           }
-  //         }
-  //       }
-  //     }
-  //   };
-  //   Subs();
-  // }, [currentUser]);
   // 프로필 수정 저장
   const handleSaveChanges = async () => {
     let nameChanged = false;
@@ -640,15 +598,27 @@ const MypageTag = styled.div`
     width: 100px;
     background: white;
     margin-left: -8px;
+    text-align: center;
     top: 85px;
     border-radius: 8px;
-    box-shadow: 4px 4px 10px rgb(87, 87, 87);
+    box-shadow: 4px 4px 10px rgb(129, 129, 129);
   }
   li {
     padding: 5px 10px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+
     &:hover {
-      border-radius: 8px;
       background-color: var(--sixth-color);
+      font-weight: 600;
+    }
+
+    &:first-child {
+      border-radius: 6px 6px 0 0;
+    }
+
+    &:last-child {
+      border-radius: 0 0 6px 6px;
     }
   }
   h5 {
@@ -702,7 +672,7 @@ const MypageTag = styled.div`
     background-color: white;
 
     .info-main {
-      margin: 1rem 0;
+      margin: 1rem 0 0.5rem;
       display: flex;
       flex-direction: column;
       align-items: flex-end;
@@ -720,6 +690,7 @@ const MypageTag = styled.div`
         text-align: center;
         color: gray;
         span {
+          height: 22px;
           color: var(--primary-color);
           font-size: 20px !important;
         }
@@ -753,7 +724,6 @@ const MypageTag = styled.div`
       margin: 0 auto;
       padding: 0;
       width: 210px;
-      margin-top: 0.5rem;
       display: flex;
       justify-content: center;
       position: relative;
@@ -868,12 +838,12 @@ const MypageTag = styled.div`
       height: 500px;
       border-radius: 18px;
       border: 3px solid var(--fifth-color);
-      box-sizing: border-box;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       background-color: #ffffff;
+      box-sizing: border-box;
       transition: color 0.3s ease, transform 0.3s ease;
       &:hover {
         border: 6px solid var(--primary-color);

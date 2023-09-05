@@ -186,4 +186,5 @@ const Title = styled.div`
 const Body = styled.div`
   width: 900px;
   margin: 20px 0;
+  min-height: 500px;
 `;

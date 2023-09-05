@@ -74,9 +74,12 @@ const Card = (props: CardProps) => {
           </ClosedStoreInfo>
 
           <StoreInfo className="store-info" style={{ opacity: isHovered ? 1 : 0, maxHeight: isHovered ? '100%' : '0' }}>
-            <div>{title}</div>
-            <div>{location}</div>
-            <div>{`${period_start} ~ ${period_end}`}</div>
+            <div className="closed-wrap">
+              <h2>CLOSED</h2>
+              <h5>{title}</h5>
+              <p>{location}</p>
+              <span>{`${period_start} ~ ${period_end}`}</span>
+            </div>
           </StoreInfo>
           {loaded && instanceRef.current && (
             <>
@@ -145,15 +148,16 @@ export default Card;
 
 const CardContainerClosed = styled.div`
   position: relative;
-  border-radius: 7px;
+  // border-radius: 7px;
   overflow: hidden;
   border-radius: 18px;
-  filter: grayscale(100%); /* 이미지를 흑백으로 만듭니다. */
+
   transition: all 0.3s ease-in-out; /* 크기 변화에 대한 트랜지션 추가 */
   box-sizing: border-box;
 
   margin: 0 auto;
   img {
+    filter: grayscale(100%); /* 이미지를 흑백으로 만듭니다. */
     object-fit: cover;
     width: 100%;
     height: 100%;
@@ -169,7 +173,7 @@ const CardContainerClosed = styled.div`
 `;
 
 const CLosed = styled.div`
-  position: absolute;
+  // position: absolute;
   /* top: 46.3%;
   left: 35%; */
 
@@ -180,7 +184,6 @@ const CLosed = styled.div`
 
 const CardContainer = styled.div`
   position: relative;
-  border-radius: 7px;
   overflow: hidden;
   border-radius: 18px;
 
@@ -203,12 +206,13 @@ const CardContainer = styled.div`
 
 const ClosedStoreInfo = styled.div`
   position: absolute;
-
-  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  display: flex;
   justify-content: center;
   align-items: center;
 
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.3);
   color: white;
   padding: 5px 10px;
 `;
@@ -233,6 +237,18 @@ const StoreInfo = styled.div`
   overflow: hidden;
   z-index: 1;
 
+  .closed-wrap {
+    padding: 2rem;
+    h2 {
+      text-align: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+    p {
+      line-height: 20px;
+      margin-bottom: 20px;
+    }
+  }
   .info-wrap {
     padding: 2rem;
     h2 {
@@ -243,15 +259,12 @@ const StoreInfo = styled.div`
       line-height: 20px;
       margin-bottom: 20px;
     }
-    &:last-child {
-      margin-top: 40px;
-    }
   }
 `;
 
 const Arrow = (props: { disabled: boolean; left?: boolean; onClick: (e: any) => void }) => {
   const disabeld = props.disabled ? ' arrow--disabled' : '';
-  const zIndex = 99;
+  const zIndex = 4;
 
   const handleClick = (e: any) => {
     e.preventDefault();

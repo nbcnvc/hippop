@@ -80,9 +80,8 @@ function Header() {
     if (error) {
       console.error('error=>', error);
     } else {
+      toast(':) 안녕히가세요 !');
       navigate('/');
-      alert(':) 안녕히가세요 !');
-      // toast(':) 안녕히가세요 !');
     }
   };
 

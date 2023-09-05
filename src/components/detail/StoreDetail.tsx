@@ -67,7 +67,7 @@ const StoreDetail = () => {
   };
 
   const handleMouseEnter = () => setIsClicked(!isClicked);
-  console.log('isClicked', isClicked);
+  // console.log('isClicked', isClicked);
 
   // useEffect(() => {
   //   const handleOutsideClick = (event: MouseEvent) => {

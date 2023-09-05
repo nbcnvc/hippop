@@ -189,6 +189,19 @@ const PostBox = styled.div`
   padding: 10px;
   margin: 10px;
   display: flex;
+  // box-sizing: border-box;
+<<<<<<< HEAD
+=======
+
+>>>>>>> e84a1b4448ff115f53348816a26674d7da0e957c
+  transition: color 0.3s ease, transform 0.3s ease;
+  &:hover {
+    border: 6px solid var(--primary-color);
+  }
+  &:active {
+    background-color: rgb(215, 215, 219);
+    transform: scale(0.98);
+  }
 `;
 
 const ContentBox = styled.div`
