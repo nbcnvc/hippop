@@ -192,13 +192,7 @@ const MyPage = () => {
                 </div>
                 <div className="circle-bg"></div>
                 <div className="img-uploader">
-                  <input
-                    type="file"
-                    id="file-input"
-                    accept="image/*"
-                    ref={imageInputRef}
-                    onChange={handleImageInputChange}
-                  />
+                  <input />
                 </div>
               </div>
             </div>
@@ -206,7 +200,7 @@ const MyPage = () => {
               <Skeleton width={80} height={24} />
             </div>
             <div className="btn-mother">
-              <div onClick={() => setIsMenuOpen((isMenuOpen) => !isMenuOpen)}>
+              <div>
                 {/* <Skeleton width={80} height={16} /> */}
                 <Skeleton width={80} height={24} />
 
@@ -221,12 +215,8 @@ const MyPage = () => {
               &nbsp;&nbsp;&nbsp;
               <Skeleton width={80} height={24} />
             </div>
-            <div className="alram-wrapper">
-              {toggleMsgBox === '받은 쪽지함' ? (
-                <ReceiveBox toggleMsgBox={toggleMsgBox} setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
-              ) : (
-                <SendBox toggleMsgBox={toggleMsgBox} setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
-              )}
+            <div>
+              <Skeleton width={800} height={300} />
             </div>
             {replyModal && <MessageReply sendMsgUser={sendMsgUser} setOpenReply={setReplyModal} />}
           </div>
