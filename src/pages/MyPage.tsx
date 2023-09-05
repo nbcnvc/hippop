@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-
 // 라이브러리
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import shortid from 'shortid';
@@ -12,25 +11,28 @@ import { supabase } from '../api/supabase';
 // store
 import { setUserStore } from '../store/userStore';
 import { randomFileName } from '../hooks/useHandleImageName';
+
+//메세지
+import { MessageType } from '../types/types';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+//컴포넌트
+import ReceiveBox from '../components/message/ReceiveBox';
+import MyReview from '../components/mypage/MyReview';
+import MyBookmark from '../components/mypage/MyBookmark';
+import SendBox from '../components/message/SendBox';
+
 //스타일
 import { styled } from 'styled-components';
 import PartyModeIcon from '@mui/icons-material/PartyMode';
 import { BsFillPeopleFill } from 'react-icons/bs';
-
-//메세지
-import SendBox from '../components/message/SendBox';
 import MessageReply from '../components/message/MessageReply';
-import { MessageType } from '../types/types';
-import ReceiveBox from '../components/message/ReceiveBox';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useInView } from 'react-intersection-observer';
-import MyReview from '../components/mypage/MyReview';
-import MyBookmark from '../components/mypage/MyBookmark';
-import 'react-toastify/dist/ReactToastify.css';
 import { Skeleton } from '@mui/material';
-
+import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import { useInView } from 'react-intersection-observer';
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -39,7 +41,6 @@ const MyPage = () => {
   const userId: string = state?.userId || '';
   const { data: currentUser } = useQuery(['user', userId], () => getUser(userId ?? ''));
 
-  // const { data: currentUser } = useQuery(['user', id], () => getUser(id ?? ''));
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState('');
   const [imageUploadVisible, setImageUploadVisible] = useState(false);
@@ -52,44 +53,37 @@ const MyPage = () => {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const [subscribers, setSubscribers] = useState<string[]>([]);
 
-  // const [fetchUserPost, setFetchUserPost] = useState<PostType[]>([]);
-  // const [fetchSubs, setFetchSubs] = useState<Bookmark[]>([]);
-  // const [extractedData, setExtractedData] = useState<Store[]>([]);
   // 게시글 & 북마크 토글
   const [activeSection, setActiveSection] = useState('myReview');
   const [toggleMsgBox, setToggleMsgBox] = useState<string>('받은 쪽지함');
   const imageInputRef = useRef(null);
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
-  // 현재유저 정보 가져오기
-  // const currentUser: any | null = useCurrentUser();
-  // console.log('test ====> ', currentUser);
   const currentUserId = currentUser?.id;
   const { data: sublistData } = useQuery(['sublist'], () => getSubList(currentUserId ?? ''));
-  // console.log('test ====> ', sublistData);
   const getSubList = async (userId: string) => {
     const { data } = await supabase.from('subscribe').select('subscribe_to').eq('subscribe_from', userId);
     return data;
   };
   //
-  useEffect(() => {
-    const loadSubscribers = async () => {
-      if (sublistData) {
-        const subscribeToValues = sublistData.map((item) => item.subscribe_to);
-        const subscribeUserPromises = subscribeToValues.map(async (subscribe_to) => {
-          const { data: subscribeUser } = await supabase.from('user').select('*').eq('id', subscribe_to);
-          return subscribeUser;
-        });
-        const allSubscribeUsers = await Promise.all(subscribeUserPromises);
-        const filteredSubscribers = allSubscribeUsers
-          .filter((subscribeUserArray) => subscribeUserArray && subscribeUserArray.length > 0)
-          .map((subscribeUserArray) => subscribeUserArray && subscribeUserArray[0].name);
-        setSubscribers(filteredSubscribers as string[]);
-      }
-    };
-    if (sublistData) {
-      loadSubscribers();
-    }
-  }, [sublistData]);
+  // useEffect(() => {
+  //   const loadSubscribers = async () => {
+  //     if (sublistData) {
+  //       const subscribeToValues = sublistData.map((item) => item.subscribe_to);
+  //       const subscribeUserPromises = subscribeToValues.map(async (subscribe_to) => {
+  //         const { data: subscribeUser } = await supabase.from('user').select('*').eq('id', subscribe_to);
+  //         return subscribeUser;
+  //       });
+  //       const allSubscribeUsers = await Promise.all(subscribeUserPromises);
+  //       const filteredSubscribers = allSubscribeUsers
+  //         .filter((subscribeUserArray) => subscribeUserArray && subscribeUserArray.length > 0)
+  //         .map((subscribeUserArray) => subscribeUserArray && subscribeUserArray[0].name);
+  //       setSubscribers(filteredSubscribers as string[]);
+  //     }
+  //   };
+  //   if (sublistData) {
+  //     loadSubscribers();
+  //   }
+  // }, [sublistData]);
   // 구독목록 visible
   useEffect(() => {
     function handleOutsideClick(event: MouseEvent) {
@@ -860,7 +854,7 @@ const MypageTag = styled.div`
         height: 370px;
         object-fit: cover;
         border-radius: 10px;
-        border: 3px solid var(--fifth-color);
+        border: 2px solid var(--fifth-color);
       }
       .info-box {
         width: 90%;
@@ -926,7 +920,7 @@ const MypageTag = styled.div`
         height: 370px;
         object-fit: cover;
         border-radius: 10px;
-        border: 3px solid var(--fifth-color);
+        border: 2px solid var(--fifth-color);
       }
       .info-box {
         width: 90%;

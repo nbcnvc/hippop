@@ -36,7 +36,7 @@ const Main = () => {
     }
   });
 
-  console.log('storesData', storesData);
+  // console.log('storesData', storesData);
 
   const observerRef = useRef(null);
 
@@ -158,6 +158,7 @@ const MainContainer = styled.div`
       }
     }
     span {
+      font-size: 1.5vw;
       color: var(--primary-color);
     }
   }

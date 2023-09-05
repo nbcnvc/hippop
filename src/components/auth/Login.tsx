@@ -1,15 +1,12 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
-import { supabase } from '../api/supabase';
+import { supabase } from '../../api/supabase';
 
 import { styled } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { randomFileName } from '../hooks/useHandleImageName';
-import { setUserStore } from '../store/userStore';
+import { setUserStore } from '../../store/userStore';
 
 const Login = ({ closeModal }: { closeModal: () => void }) => {
-  const setCurrentUser = setUserStore((state) => state.setCurrentUser);
-
   //google
   const signupGoogle = async (e: React.FormEvent) => {
     try {

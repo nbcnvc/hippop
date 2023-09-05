@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
-import Login from '../../pages/Login';
+import Login from '../auth/Login';
 import { setUserStore, useCurrentUser } from '../../store/userStore';
 import Alarm from './Alarm';
 import AlarmBox from './AlarmBox';
@@ -25,9 +25,9 @@ function Header() {
   const currentUser = useCurrentUser();
   const currentUserId = currentUser?.id;
   const { data: user } = useQuery(['user', currentUserId], () => getUser(currentUserId ?? ''));
-  console.log('currentUser', currentUser);
-  console.log('user', user);
-  console.log('ser.avatar_url', user?.avatar_url);
+  // console.log('currentUser', currentUser);
+  // console.log('user', user);
+  // console.log('ser.avatar_url', user?.avatar_url);
   // 알림 데이터 가져오기
   const { data: alarms, isLoading, isError } = useQuery(['alarms'], () => getAlarms(currentUserId ?? ''));
   const readAlarms = alarms?.filter((alarm) => alarm.isRead === false);
