@@ -32,12 +32,6 @@ const Calendar = ({ storeData }: CalendarProps) => {
 export default Calendar;
 
 const StyleCalendar = styled(Calendar1)`
-  position: absolute;
-  /* top: 40%;
-  right: -10%; */
-  top: 180px;
-  right: -40px;
-  width: 325px;
   border: 3px solid var(--fifth-color);
   border-radius: 22px 18px;
   box-shadow: 0 7px 15px rgba(0, 0, 0, 0.4);
