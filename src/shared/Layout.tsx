@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css'; //
 const Layout = () => {
   return (
     <>
-      <ToastContainer position="top-center" limit={1} />
+      {/* <ToastContainer position="top-center" limit={1} /> */}
       <Header />
       <div style={{ marginTop: '5rem' }}>
         <Outlet />
