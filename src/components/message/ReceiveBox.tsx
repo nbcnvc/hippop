@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 // 라이브러리
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import moment from 'moment';
+import { styled } from 'styled-components';
 // api
 import { deleteReceiveMessage, readMessage, receiveMessage } from '../../api/message';
 // zustand 상태관리 hook
@@ -11,16 +12,14 @@ import { MessageType } from '../../types/types';
 import { SendBoxProps } from '../../types/props';
 // 컴포넌트
 import MessageDetail from './MessageDetail';
-// style
-import { styled } from 'styled-components';
 // mui
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import DraftsOutlinedIcon from '@mui/icons-material/DraftsOutlined';
+import { Skeleton } from '@mui/material';
 
 const ReceiveBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) => {
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [selectedMessage, setSelectedMessage] = useState<MessageType | null>(null);
-  const [isReceiver, setIsReceiver] = useState<boolean>(false);
 
   // 현재 로그인 유저 정보
   const currentUser = useCurrentUser();
@@ -89,7 +88,11 @@ const ReceiveBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProp
   });
 
   if (isLoading) {
-    return <div>로딩중입니다.</div>;
+    return (
+      <Wrapper style={{ marginTop: '100px', backgroundColor: 'transparent' }}>
+        <Skeleton width={800} height={350} />
+      </Wrapper>
+    );
   }
   if (isError) {
     return <div>오류가 발생했습니다.</div>;

@@ -1,13 +1,14 @@
+import { useState } from 'react';
+// 라이브러리
+import { styled } from 'styled-components';
+// 타입
+import { Store } from '../types/types';
+// 컴포넌트
 import MPosts from '../components/community/main/mate/MPosts';
 import Write from '../components/community/write/Write';
 import SearchModal from '../components/community/write/SearchModal';
-
-import { useState } from 'react';
-
-import { Store } from '../types/types';
+// zustand
 import { useCurrentUser } from '../store/userStore';
-
-import { styled } from 'styled-components';
 
 const Mate = () => {
   const [writeModal, setWriteModal] = useState<boolean>(false);

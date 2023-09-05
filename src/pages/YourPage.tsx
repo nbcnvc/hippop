@@ -9,7 +9,6 @@ import { styled } from 'styled-components';
 // api
 import { getProfileImg, getUser } from '../api/user'; // 사용자 정보를 가져오는 함수
 import { getYourItems } from '../api/post'; // 게시글 가져오는 함수
-
 import { fetchBookMarkStore } from '../api/bookmark';
 // 타입
 import { UserInfo, PostType } from '../types/types';

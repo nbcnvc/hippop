@@ -1,17 +1,20 @@
-import Edit from '../components/community/write/Edit';
-import Writer from '../components/community/detail/Writer';
-import Comments from '../components/community/detail/Comments';
-
+// 라이브러리
 import moment from 'moment';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
-import { useCurrentUser } from '../store/userStore';
-import { deletePost, getPost } from '../api/post';
-
 import { styled } from 'styled-components';
+// zustand
+import { useCurrentUser } from '../store/userStore';
+// api
+import { deletePost, getPost } from '../api/post';
+// 컴포넌트
+import Edit from '../components/community/write/Edit';
+import Writer from '../components/community/detail/Writer';
+import Comments from '../components/community/detail/Comments';
+// mui
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
+import Skeleton from '@mui/material/Skeleton';
 
 const RDetail = () => {
   const { id } = useParams();
@@ -55,7 +58,53 @@ const RDetail = () => {
   };
 
   if (isLoading) {
-    return <div>로딩중입니다.</div>;
+    return (
+      <div>
+        {' '}
+        <Layout>
+          <CategoryBox>
+            <Category>
+              <Skeleton variant="text" width={100} height={30} />
+            </Category>
+            <ButtonBox>
+              <div style={{ marginRight: '20px', marginBottom: '23px' }}>
+                <Skeleton variant="text" width={40} height={30} />
+              </div>
+              <div style={{ marginRight: '12px', marginBottom: '23px' }}>
+                <Skeleton variant="text" width={40} height={30} />
+              </div>
+            </ButtonBox>
+          </CategoryBox>
+
+          {/* 글 내용 */}
+          <div>
+            <div className="ql-snow">
+              <HeadContainer>
+                <TextBox>
+                  <StoreBox>
+                    {/* <RoomRoundedIcon /> &nbsp; */}
+                    <Skeleton variant="text" width={300} height={30} />
+                  </StoreBox>
+                  <Skeleton variant="text" width={100} height={30} />
+                </TextBox>
+                <Skeleton variant="text" width={300} height={30} />
+              </HeadContainer>
+              <Skeleton variant="text" width={850} height={500} />
+            </div>
+          </div>
+          <Skeleton variant="text" width={850} height={100} />
+          {/* 댓글 목록 */}
+          <div>
+            <ButtonBox></ButtonBox>
+            <Skeleton variant="text" width={870} height={80} />
+            <ButtonBox></ButtonBox>
+            <Skeleton variant="text" width={870} height={80} />
+            {/* <CommentBox></CommentBox> */}
+          </div>
+          {/* 더보기 버튼 */}
+        </Layout>
+      </div>
+    );
   }
   if (isError) {
     return <div>오류가 발생했습니다.</div>;

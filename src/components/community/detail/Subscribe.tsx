@@ -1,11 +1,13 @@
+// 라이브러리
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
+import { styled } from 'styled-components';
+// api
 import { createSubscribe, deleteSubscribe, isSubscribe } from '../../../api/subscribe';
+// zustand store
 import { useCurrentUser } from '../../../store/userStore';
+// 타입
 import { SubscribeProps } from '../../../types/props';
 import { SubscribeType } from '../../../types/types';
-
-import { styled } from 'styled-components';
 
 const Subscribe = ({ writerId }: SubscribeProps) => {
   // 로그인한 유저 정보 가져오기 (From)

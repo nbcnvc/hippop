@@ -1,17 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react';
+// 라이브러리
 import { Link, useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
-import Login from '../../pages/Login';
-import { setUserStore, useCurrentUser } from '../../store/userStore';
-import Alarm from './Alarm';
-import AlarmBox from './AlarmBox';
-import { supabase } from '../../api/supabase';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getUser } from '../../api/user';
-import { getAlarms, readAlarm } from '../../api/alarm';
 import shortid from 'shortid';
 import { toast } from 'react-toastify';
+// zustand store
+import { setUserStore, useCurrentUser } from '../../store/userStore';
+// api
+import { getUser } from '../../api/user';
+import { getAlarms, readAlarm } from '../../api/alarm';
+import { supabase } from '../../api/supabase';
+// 컴포넌트
+import Login from '../../pages/Login';
+import Alarm from './Alarm';
+import AlarmBox from './AlarmBox';
+// mui
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -108,7 +113,81 @@ function Header() {
   };
 
   if (isLoading) {
-    return <div>로딩중입니다.</div>;
+    return (
+      <div>
+        <HeaderTag>
+          <div className="header-wrapper">
+            <Alarm />
+            <div className="logo-wrapper">
+              <Link to="/">
+                <img src="/asset/nyb_logo.png" className="nyb-logo" alt="nyb-img" />
+              </Link>
+            </div>
+            <ul>
+              <li>
+                <Link to="/about">About</Link>
+              </li>
+              <li>
+                <Link to="/review">Review</Link>
+              </li>
+              <li>
+                <Link to="/mate">Mate</Link>
+              </li>
+              <li>
+                <Link to="/search">Search</Link>
+              </li>
+            </ul>
+            <div>
+              <div className="user-info">
+                {user ? (
+                  <>
+                    <div className="user-dropdown" onClick={handleMenuToggle} ref={menuRef}>
+                      <div className="info-mate">
+                        <div className="welcome-mate">
+                          <p>Hello,</p>
+                          <p>{user.name}님</p>
+                        </div>
+                        {user.avatar_url && (
+                          <img
+                            src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${user.avatar_url}`}
+                            alt="User Avatar"
+                          />
+                        )}
+                      </div>
+                      <div className="dropdown-content" style={{ display: isMenuOpen ? 'block' : 'none' }}>
+                        <div
+                          onClick={() => {
+                            navigate(`/mypage/${shortid.generate()}`, { state: { userId: user.id } });
+                          }}
+                        >
+                          My Page
+                        </div>
+                        <div onClick={handleLogOut}>Logout</div>
+                      </div>
+                    </div>
+                    <div className="alarm" ref={alarmRef}>
+                      <AlarmButton onClick={handleToggleAlarm} />
+                      {readAlarms && readAlarms?.length > 0 && (
+                        <img src="/asset/headLight.png" alt="Alarm headLight image" />
+                      )}
+                      {isAlarmOpen && <ul>{/* <AlarmBox alarms={alarms} /> */}</ul>}
+                    </div>
+                  </>
+                ) : (
+                  <div></div>
+                )}
+              </div>
+              {isModalOpen && (
+                <ModalWrapper isopen={isModalOpen} onClick={handleModalOutsideClick}>
+                  <Login closeModal={closeModal} />
+                </ModalWrapper>
+              )}
+            </div>
+          </div>
+        </HeaderTag>
+        );
+      </div>
+    );
   }
   if (isError) {
     return <div>오류가 발생했습니다.</div>;

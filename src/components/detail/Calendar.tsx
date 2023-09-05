@@ -3,10 +3,9 @@ import React, { useState } from 'react';
 import Calendar1 from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import moment from 'moment';
-// props타입
-import { CalendarProps } from '../../types/props';
-//스타일
 import { styled } from 'styled-components';
+// 타입
+import { CalendarProps } from '../../types/props';
 
 const Calendar = ({ storeData }: CalendarProps) => {
   const [period, setPeriod] = useState([storeData.period_start, storeData.period_end]);

@@ -1,18 +1,18 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useInView } from 'react-intersection-observer';
-
+// 라이브러리
+import { useLocation, useNavigate } from 'react-router-dom';
+import shortid from 'shortid';
+import { useQuery } from '@tanstack/react-query';
 //api
 import { getUser } from '../../api/user';
 import { supabase } from '../../api/supabase';
-
+// zustand
 import { setUserStore } from '../../store/userStore';
+// hook
 import { randomFileName } from '../../hooks/useHandleImageName';
-//스타일
+// mui
 import PartyModeIcon from '@mui/icons-material/PartyMode';
-//메세지
-import { useQuery } from '@tanstack/react-query';
-import shortid from 'shortid';
+
 const UserInfo = () => {
   const navigate = useNavigate();
   const { state } = useLocation();

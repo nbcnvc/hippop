@@ -198,3 +198,7 @@ export interface UserMsgType {
 export interface ReviewProps {
   selectItems: PostType[];
 }
+
+export interface SliderButton {
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+}
