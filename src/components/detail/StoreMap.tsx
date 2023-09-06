@@ -8,6 +8,9 @@ import { StoreMapProps } from '../../types/props';
 // 컴포넌트
 import HotPlace from './HotPlace';
 import NearbyStore from './NearbyStore';
+//alert
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 declare global {
   interface Window {
@@ -76,10 +79,16 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
             }
             setSearchData(data);
           } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-            alert('검색 결과가 존재하지 않습니다.');
+            toast.info('검색 결과가 존재하지 않습니다. :(', {
+              className: 'custom-toast',
+              theme: 'light'
+            });
             return;
           } else if (status === kakao.maps.services.Status.ERROR) {
-            alert('검색 결과 중 오류가 발생했습니다.');
+            toast.info('검색 결과 중 오류가 발생했습니다. :(', {
+              className: 'custom-toast',
+              theme: 'light'
+            });
             return;
           }
         };

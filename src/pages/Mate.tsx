@@ -10,6 +10,10 @@ import SearchModal from '../components/community/write/SearchModal';
 // zustand
 import { useCurrentUser } from '../store/userStore';
 
+//alert
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Mate = () => {
   const [writeModal, setWriteModal] = useState<boolean>(false);
   const [searchModal, setSearchModal] = useState<boolean>(false);
@@ -22,7 +26,11 @@ const Mate = () => {
   // 검색 모달 열기
   const searcButton = () => {
     if (!currentUser) {
-      return alert('로그인 해주세요.');
+      toast.info('로그인 해주세요. :)', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+      return;
     }
     setSearchModal(true);
     document.body.style.overflow = 'hidden';

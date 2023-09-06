@@ -22,6 +22,9 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import Menu from '@mui/material/Menu';
+//alert
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Skeleton } from '@mui/material';
 
 const StoreDetail = () => {
@@ -212,7 +215,10 @@ const StoreDetail = () => {
                   <CopyToClipboard
                     text={storeData.link}
                     onCopy={() =>
-                      alert('주소가 복사되었습니다. 공식 페이지에서 더 자세한 정보를 확인하실 수 있습니다!')
+                      toast.info('주소가 복사되었습니다. 공식 페이지에서 더 자세한 정보를 확인하실 수 있습니다! :)', {
+                        className: 'custom-toast',
+                        theme: 'light'
+                      })
                     }
                   >
                     <LinkIcon />

@@ -10,6 +10,9 @@ import { MessageType } from '../../types/types';
 import { MessageReplyProps } from '../../types/props';
 // mui
 import SendSharpIcon from '@mui/icons-material/SendSharp';
+//alert
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
   const [body, setBody] = useState<string>('');
@@ -39,7 +42,10 @@ const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {
   // 쪽지 보내기 handler
   const handleSendMessage = () => {
     sendMessageHandler();
-    alert('쪽지가 성공적으로 전송되었습니다!');
+    toast.info('쪽지가 성공적으로 전송되었습니다 ! :)', {
+      className: 'custom-toast',
+      theme: 'light'
+    });
   };
 
   // 모달 닫기

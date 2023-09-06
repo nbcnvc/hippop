@@ -7,6 +7,9 @@ import { styled } from 'styled-components';
 import LinkIcon from '../../images/LinkIcon.png';
 import KakaoIcon from '../../images/kakaoIcon.png';
 import { ShareProps } from '../../types/props';
+// //alert
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Share = ({ onClick, storeData }: ShareProps) => {
   // 현재 주소 가져오기
@@ -59,7 +62,15 @@ const Share = ({ onClick, storeData }: ShareProps) => {
       <TwitterBtn url={currentUrl}>
         <TwitterIcon size={47} round={true} />
       </TwitterBtn>
-      <CopyToClipboard text={currentUrl} onCopy={() => alert('주소가 복사되었습니다.')}>
+      <CopyToClipboard
+        text={currentUrl}
+        onCopy={() =>
+          toast.info('주소가 복사되었습니다. :)', {
+            className: 'custom-toast',
+            theme: 'light'
+          })
+        }
+      >
         <Img src={LinkIcon} alt="링크 아이콘" />
       </CopyToClipboard>
     </Container>

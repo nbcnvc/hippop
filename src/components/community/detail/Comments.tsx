@@ -13,6 +13,9 @@ import { useCurrentUser } from '../../../store/userStore';
 // mui
 import { Skeleton } from '@mui/material';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Comments = ({ postId }: CommentProps) => {
   const queryClient = useQueryClient();
   const currentUser = useCurrentUser();
@@ -72,15 +75,29 @@ const Comments = ({ postId }: CommentProps) => {
   const createButton = () => {
     // 유효성 검사
     if (!currentUser) {
-      alert('로그인을 해주세요.');
+      toast.info('로그인을 해주세요', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+      // alert('로그인을 해주세요.');
       setBody('');
       return;
     }
     if (!body) {
-      return alert('댓글을 입력해주세요.');
+      toast.info('댓글을 입력해주세요.', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+      // alert('댓글을 입력해주세요.');
+      return;
     }
     if (body.length > 35) {
-      return alert('댓글은 35글자 미만으로 입력해주세요.');
+      toast.info('댓글은 35글자 미만으로 입력해주세요.', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+      // alert('댓글은 35글자 미만으로 입력해주세요.');
+      return;
     }
     // 새로운 댓글 객체 선언
     const newComment = {
@@ -104,10 +121,14 @@ const Comments = ({ postId }: CommentProps) => {
     const confirm = window.confirm('댓글을 삭제하시겠습니까?');
     if (confirm) {
       // DB 수정
-      deleteMutation.mutate(id);
 
+      deleteMutation.mutate(id);
       // 삭제 완료
-      alert('삭제되었습니다!');
+      toast.info('삭제되었습니다!', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+      // alert('삭제되었습니다!');
     }
   };
 
@@ -174,6 +195,19 @@ const Comments = ({ postId }: CommentProps) => {
   }
   return (
     <Layout>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        // hideProgressBar={true}
+        newestOnTop={true}
+        // closeOnClick={true}
+        // rtl={true}
+        pauseOnFocusLoss={false}
+        draggable={true}
+        pauseOnHover={true}
+        limit={1}
+        style={{ zIndex: 9999 }}
+      />
       {/* 댓글 입력창 */}
       <CommentWrite>
         <Title>댓글</Title>

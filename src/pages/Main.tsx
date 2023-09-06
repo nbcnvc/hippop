@@ -153,6 +153,7 @@ const MainContainer = styled.div`
       }
     }
     span {
+      font-size: 1.5vw;
       color: var(--primary-color);
     }
   }

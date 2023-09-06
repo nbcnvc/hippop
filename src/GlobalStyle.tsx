@@ -45,17 +45,24 @@ ${reset}
     src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
 }
 
+
+
 h1, h2, h3, h4, h5 {
   font-family: 'RixYeoljeongdo_Regular';
 }  
 body {
-    font-family: 'Pretendard-Regular';
-    max-width: 100%;
-    min-width: 900px;
-    // width:1920px;
-    margin: 0 auto;
-    background-color:var(--fourth-color);
-
+  font-family: 'Pretendard-Regular';
+  max-width: 100%;
+  min-width: 900px;
+  // width:1920px;
+  margin: 0 auto;
+  background-color:var(--fourth-color);
+  
+  
+  .react-confirm-alert-overlay {
+    background-color: transparent;
+    bottom: 900px;
+  }
   // input[type="file"]::-webkit-file-upload-button {
   //   /* Chrome 및 Safari에서 동작 */
   //   opacity: 10;

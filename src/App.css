@@ -3,9 +3,9 @@
   font-family: 'Fira Sans', sans-serif;
 } */
 .App-header {
-  background-color: rgb(215, 215, 219);
-
-  color: rgb(87, 87, 87);
+  background-color: rgb(207, 207, 207);
+  box-shadow: 4px 4px 10px rgba(45, 45, 45, 0.665);
+  color: #7c84ae;
 }
 
 /* button {
