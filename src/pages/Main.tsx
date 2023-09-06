@@ -36,36 +36,17 @@ const Main = () => {
     }
   });
 
-  const observerRef = useRef(null);
+  const { ref, inView } = useInView({
+    threshold: 1
+  });
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
-        }
-      },
-      { threshold: 1.0 }
-    );
-
-    if (observerRef.current) {
-      observer.observe(observerRef.current);
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
     }
-
-    return () => {
-      if (observerRef.current) {
-        observer.unobserve(observerRef.current);
-      }
-    };
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const allStores = storesData?.pages.flatMap((page) => page) || [];
-
-  // 언제 다음 페이지를 가져올 것
-  const { ref } = useInView({
-    threshold: 1, // 맨 아래에 교차될 때
-    onChange: (inView) => {}
-  });
 
   if (isLoading) {
     // 로딩 중일 때 스켈레톤을 렌더링합니다.
@@ -118,7 +99,7 @@ const Main = () => {
           padding: '20px',
           margin: '10px'
         }}
-        ref={observerRef}
+        ref={ref}
       />
     </MainContainer>
   );
