@@ -1,13 +1,13 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Masonry } from '@mui/lab';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import styled from 'styled-components';
+import Skeleton from '@mui/material/Skeleton';
 
 import { supabase } from '../api/supabase';
 import { Store } from '../types/types';
 import Card from '../components/list/Card';
-import Skeleton from '@mui/material/Skeleton';
 import { useInView } from 'react-intersection-observer';
 
 const PAGE_SIZE = 5;
@@ -16,7 +16,7 @@ const fetchStores = async ({ pageParam = 0 }) => {
   const { data } = await supabase
     .from('store')
     .select()
-    // .order('period_start', { ascending: false }) // 내림차순
+    .order('isClosed')
     .range(pageParam, pageParam + PAGE_SIZE - 1);
   return data || [];
 };
@@ -35,6 +35,8 @@ const Main = () => {
       return allPages.flat().length;
     }
   });
+  console.log('haha');
+  console.log(storesData);
 
   const { ref, inView } = useInView({
     threshold: 1
@@ -47,17 +49,19 @@ const Main = () => {
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const allStores = storesData?.pages.flatMap((page) => page) || [];
+  const header = (
+    <header>
+      <img src="/asset/mainBanner.png" alt="Banner-img" />
+      <h4 style={{ textAlign: 'center' }}>
+        <span>당신</span>에게 맞는 <span>힙한 팝업스토어</span>를 찾아보세요! XD
+      </h4>
+    </header>
+  );
 
   if (isLoading) {
-    // 로딩 중일 때 스켈레톤을 렌더링합니다.
     return (
       <MainContainer>
-        <header>
-          <img src="/asset/mainBanner.png" alt="Banner-img" />
-          <h4 style={{ textAlign: 'center' }}>
-            <span>당신</span>에게 맞는 <span>힙한 팝업스토어</span>를 찾아보세요! XD
-          </h4>
-        </header>
+        {header}
         <Masonry columns={3} spacing={2} sx={{ maxWidth: '1920px', width: '50%', margin: '0 auto' }}>
           {Array.from({ length: PAGE_SIZE }, (_, index) => (
             <Link to="/" key={index}>
@@ -77,14 +81,9 @@ const Main = () => {
 
   return (
     <MainContainer>
-      <header>
-        <img src="/asset/mainBanner.png" alt="Banner-img" />
-        <h4 style={{ textAlign: 'center' }}>
-          <span>당신</span>에게 맞는 <span>힙한 팝업스토어</span>를 찾아보세요! XD
-        </h4>
-      </header>
-      <Masonry columns={3} spacing={2} sx={{ maxWidth: '1920px', width: '50%', margin: '0 auto' }}>
-        {allStores.map((store, index) => (
+      {header}
+      <Masonry columns={3} spacing={2} sx={{ maxWidth: '1920px', minWidth: '1200px', width: '50%', margin: '0 auto' }}>
+        {allStores.map((store) => (
           <Link to={`detail/${store.id}`} key={store.id}>
             <Card store={store} />
           </Link>
