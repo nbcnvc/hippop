@@ -13,7 +13,7 @@ import { deletePost, getPost } from '../api/post';
 import { styled } from 'styled-components';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 //alert
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const MDetail = () => {

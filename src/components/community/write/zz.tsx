@@ -7,7 +7,7 @@
 //   theme: 'light'
 // });
 
-// if(!title)
+// if(!title)git
 // toast.info('제목을 먼저 입력해주세요 :)', {
 //     className: 'custom-toast',
 //     theme: 'light'

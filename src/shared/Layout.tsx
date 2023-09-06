@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 import Footer from '../components/common/Footer';
 import TopButton from '../components/common/TopButton';
 
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Layout = () => {
