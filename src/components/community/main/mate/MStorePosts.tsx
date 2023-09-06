@@ -154,6 +154,7 @@ const MStorePosts = () => {
             </PostBox>
           );
         })}
+        {selectPosts && selectPosts.length === 0 && <NoResult>함께 할 팝업메이트를 구해보세요!</NoResult>}
         <Trigger ref={ref} />
       </PostContainer>
     </>
@@ -320,4 +321,13 @@ const ProfileButton = styled.button`
     right: 0;
     // flex-direction: column;
   }
+`;
+
+const NoResult = styled.h1`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+  font-size: 24px;
+  font-weight: 700px;
 `;
