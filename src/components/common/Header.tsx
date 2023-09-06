@@ -196,19 +196,6 @@ function Header() {
 
   return (
     <HeaderTag>
-      {/* <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        // hideProgressBar={true}
-        newestOnTop={true}
-        // closeOnClick={true}
-        // rtl={true}
-        pauseOnFocusLoss={false}
-        draggable={true}
-        pauseOnHover={true}
-        limit={1}
-        style={{ zIndex: 9999 }}
-      /> */}
       <div className="header-wrapper">
         <Alarm />
         <div className="logo-wrapper">
@@ -283,13 +270,6 @@ function Header() {
 }
 export default Header;
 
-export const ElarmContainer = styled(ToastContainer)`
-  .custom-toast {
-    background-color: var(--sixth-color);
-    color: black;
-    z-index: 999;
-  }
-`;
 const HeaderTag = styled.header`
   position: fixed;
   background-color: var(--primary-color);
@@ -302,8 +282,8 @@ const HeaderTag = styled.header`
     margin: 0 auto;
     height: 100%;
     max-width: 1920px;
-    min-width: 800px;
-    width: 50%;
+    min-width: 764px;
+    width: 51%;
     display: flex;
     justify-content: center;
     align-items: center;
