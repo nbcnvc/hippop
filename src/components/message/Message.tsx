@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+// 라이브러리
+import { styled } from 'styled-components';
 // api
 import { sendMessage } from '../../api/message';
 // zustand 상태관리 hook
@@ -6,13 +8,12 @@ import { useCurrentUser } from '../../store/userStore';
 // 타입
 import { MessageProps } from '../../types/props';
 import { MessageType } from '../../types/types';
-// 스타일
-import { styled } from 'styled-components';
 //alert
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import SendSharpIcon from '@mui/icons-material/SendSharp';
+
 const Message = ({ setMsgModal, msgModal, writer }: MessageProps) => {
   const [body, setBody] = useState<string>('');
   const currentUser = useCurrentUser() ?? { id: '', avatar_url: '', name: '' };

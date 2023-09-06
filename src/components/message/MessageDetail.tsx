@@ -1,16 +1,12 @@
 import React from 'react';
 // 라이브러리
 import moment from 'moment';
+import { styled } from 'styled-components';
 // zustand 상태관리 hook
-import { useCurrentUser } from '../../store/userStore';
 // 타입
 import { MsgDetailType } from '../../types/props';
-// 스타일
-import { styled } from 'styled-components';
 
 const MessageDetail = ({ selectedMessage, setIsClicked, setReplyModal, toggleMsgBox }: MsgDetailType) => {
-  const currentUser = useCurrentUser();
-
   // 메세지 상세 닫기
   const closeDetail = () => {
     setIsClicked(false);

@@ -1,14 +1,16 @@
+// 라이브러리
 import moment from 'moment';
 import shortid from 'shortid';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-import { FetchPost } from '../../../../types/types';
-import { getPosts } from '../../../../api/post';
-
 import { styled } from 'styled-components';
+// 타입
+import { FetchPost } from '../../../../types/types';
+// api
+import { getPosts } from '../../../../api/post';
+// mui
 import Skeleton from '@mui/material/Skeleton';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import { ToastContainer } from 'react-toastify';
@@ -111,9 +113,9 @@ const MNewPosts = () => {
                 <Body>
                   <Skeleton width={400} height={30} />
                 </Body>
-                <Button>
+                <div style={{ marginTop: '46px', marginRight: '12px' }}>
                   <Skeleton width={60} height={16} />
-                </Button>
+                </div>
               </Between>
             </ContentBox>
             <ProfileBox>
@@ -128,9 +130,9 @@ const MNewPosts = () => {
                   </Name>
                 </div>
               </Between>
-              <ProfileButton>
+              <div style={{ marginTop: '32px', marginLeft: '145px' }}>
                 <Skeleton width={60} height={16} />
-              </ProfileButton>
+              </div>
             </ProfileBox>
           </PostBox>
         ))}
@@ -166,8 +168,7 @@ const MNewPosts = () => {
                 <Between>
                   <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${post.user.avatar_url}`} alt="User Avatar" />
                   <div>
-                    <Name style={{ marginBottom: '5px', display: 'flex', flexDirection: 'column' }}>
-                      <button />
+                    <Name>
                       <NameLine>{post.user.name}</NameLine>
                     </Name>
                     <Name>님과 함께 하기</Name>
@@ -191,6 +192,7 @@ const PostContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-bottom: 30px;
 `;
 
 const PostBox = styled.div`
@@ -273,25 +275,7 @@ const ProfileBox = styled.div`
 const Name = styled.div`
   font-size: 18px;
   font-weight: 600;
-  margin: 0 0 0 25px;
-  position: relative;
-  button {
-    position: absolute;
-    // margin-bottom: 20px;
-    bottom: 34px;
-    left: 54px;
-    background-color: var(--fourth-color);
-    width: 50px;
-    height: 20px;
-
-    cursor: default;
-    &:hover {
-      filter: brightness(100%);
-    }
-    &:active {
-      transform: scale(1);
-    }
-  }
+  margin: 0 0 5px 10px;
 `;
 
 const NameLine = styled.span`
@@ -302,7 +286,7 @@ const NameLine = styled.span`
 const Img = styled.img`
   width: 70px;
   height: 70px;
-  margin: 10px 0 10px 20px;
+  margin: 10px 10px 10px 20px;
   object-fit: cover;
   border-radius: 50%;
 `;

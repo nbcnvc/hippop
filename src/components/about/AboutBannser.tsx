@@ -4,7 +4,6 @@ import React from 'react';
 const AboutBannser = () => {
   return (
     <BannerContainer>
-      {/* <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}/store/kusmitea2.jpg`} /> */}
       <Img src="/asset/about_1.jpg" />
       <BannerText>
         <TitleText> 힙팝은 팝업스토어를 좋아하는 사람들을 위해 탄생했어요!</TitleText>

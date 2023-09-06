@@ -1,12 +1,18 @@
 import React, { useMemo } from 'react';
+// 라이브러리
 import { Link } from 'react-router-dom';
-import { PostType, ReviewProps } from '../../types/types';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInView } from 'react-intersection-observer';
+// 타입
+import { PostType } from '../../types/types';
+import { MyReviewProps } from '../../types/props';
+// api
 import { getMyItems } from '../../api/post';
 import { getMyStores } from '../../api/store';
-import { useInfiniteQuery } from '@tanstack/react-query';
+// zustand
 import { useCurrentUser } from '../../store/userStore';
-import { useInView } from 'react-intersection-observer';
-import { MyReviewProps } from '../../types/props';
+// mui
+import { Skeleton } from '@mui/material';
 
 const MyReview = ({ activeSection }: MyReviewProps) => {
   const currentUser = useCurrentUser();
@@ -88,7 +94,32 @@ const MyReview = ({ activeSection }: MyReviewProps) => {
   }
 
   if (isLoading) {
-    return <div>로딩중입니다.</div>;
+    return (
+      <div>
+        {' '}
+        <div className="skeleton-container">
+          <div style={{ margin: '0 auto' }}>
+            <div className="post-wrapper">
+              {Array.from({ length: 5 }).map((_, index) => (
+                <div className="fid" key={index}>
+                  <div>
+                    <Skeleton variant="rectangular" width={270} height={300} /> {/* Adjust size */}
+                  </div>
+                  <div className="info-box">
+                    <div>
+                      <Skeleton width={200} height={24} /> {/* Adjust size */}
+                      <Skeleton width={100} height={16} /> {/* Adjust size */}
+                    </div>
+
+                    <Skeleton width={120} height={60} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
   if (isError) {
     return <div>오류입니다.</div>;

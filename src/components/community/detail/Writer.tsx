@@ -1,12 +1,14 @@
-import Subscribe from './Subscribe';
-import Message from '../../message/Message';
-
+// 라이브러리
 import { styled } from 'styled-components';
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-
-import { WriterProps } from '../../../types/props';
+// zustand store
 import { useCurrentUser } from '../../../store/userStore';
+// 타입
+import { WriterProps } from '../../../types/props';
+// 컴포넌트
+import Subscribe from './Subscribe';
+import Message from '../../message/Message';
 
 // //alert
 import { ToastContainer, toast } from 'react-toastify';

@@ -1,11 +1,13 @@
-import Header from '../components/common/Header';
+// 라이브러리
 import { Outlet } from 'react-router-dom';
 // component
+import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
 import TopButton from '../components/common/TopButton';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+// 컴포넌트
 
 const Layout = () => {
   return (

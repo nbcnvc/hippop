@@ -1,3 +1,4 @@
+// 라이브러리
 import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 
@@ -62,30 +63,10 @@ body {
     background-color: transparent;
     bottom: 900px;
   }
-
-    .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
-      /* border: 2px solid #333333; */
-    border-radius: 18px;
-    padding: 20px 40px;
-    margin-top: 15px;
-    }
-
-    .css-6hp17o-MuiList-root-MuiMenu-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    position: relative;
-
-
-    /* padding-bottom: 8px; */
-    /* outline: 0; */
-
-  }
   // input[type="file"]::-webkit-file-upload-button {
   //   /* Chrome 및 Safari에서 동작 */
   //   opacity: 10;
   // }
-
 
     // 검색 페이지 달력 삼각형 
     .react-datepicker__triangle  {
@@ -112,9 +93,6 @@ body {
     border-radius: 18px;
     font-weight:600;
 
-
-    
-    
     // 검색 페이지 헤더
     .react-datepicker__header {
       background-color: #2B3467;

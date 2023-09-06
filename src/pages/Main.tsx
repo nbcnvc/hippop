@@ -125,7 +125,6 @@ const Main = () => {
 };
 
 export default Main;
-
 const MainContainer = styled.div`
   margin: 0 auto;
   display: flex;

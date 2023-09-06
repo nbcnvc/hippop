@@ -1,39 +1,34 @@
 import React, { useState, useRef, useEffect } from 'react';
 // 라이브러리
-import { useQuery } from '@tanstack/react-query';
-import shortid from 'shortid';
-//api
-import { getUser } from '../api/user';
-import { getSubList } from '../api/subscribe';
-import { supabase } from '../api/supabase';
-// store
-import { setUserStore, useCurrentUser } from '../store/userStore';
-import { randomFileName } from '../hooks/useHandleImageName';
-
-//메세지
+import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css';
+// 타입
 import { MessageType } from '../types/types';
-import { useNavigate } from 'react-router-dom';
-
-//컴포넌트
+// 컴포넌트
+import SendBox from '../components/message/SendBox';
+import MessageReply from '../components/message/MessageReply';
 import ReceiveBox from '../components/message/ReceiveBox';
 import MyReview from '../components/mypage/MyReview';
 import MyBookmark from '../components/mypage/MyBookmark';
-import SendBox from '../components/message/SendBox';
-import MessageReply from '../components/message/MessageReply';
-
-//스타일
-import PartyModeIcon from '@mui/icons-material/PartyMode';
+import MySubModal from '../components/mypage/MySubModal';
+// ㅁpi
+import { getUser } from '../api/user';
+import { supabase } from '../api/supabase';
+//store
+import { setUserStore, useCurrentUser } from '../store/userStore';
+import { randomFileName } from '../hooks/useHandleImageName';
+// react-icons
 import { BsFillPeopleFill } from 'react-icons/bs';
+// mui
+import PartyModeIcon from '@mui/icons-material/PartyMode';
 import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Skeleton } from '@mui/material';
 
 // style component
 import { MypageTag } from './St';
-
 const MyPage = () => {
-  const navigate = useNavigate();
   // 유저 정보
   const currentUser = useCurrentUser();
   const [editingName, setEditingName] = useState(false);
@@ -44,42 +39,19 @@ const MyPage = () => {
   const [replyModal, setReplyModal] = useState<boolean | null>(null);
   const [sendMsgUser, setSendMsgUser] = useState<MessageType | null>(null);
   // 구독 목록 메뉴 상태
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean | null>(false);
+  const [isSubModal, setIsSubModal] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
-  const [subscribers, setSubscribers] = useState<string[]>([]);
   // 게시글 & 북마크 토글
   const [activeSection, setActiveSection] = useState('myReview');
   const [toggleMsgBox, setToggleMsgBox] = useState<string>('받은 쪽지함');
   const imageInputRef = useRef(null);
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
-  const currentUserId = currentUser?.id;
-  const { data: sublistData, isLoading, isError } = useQuery(['sublist'], () => getSubList(currentUserId ?? ''));
-  // 구독한 사용자 불러오기
-  useEffect(() => {
-    const loadSubscribers = async () => {
-      if (sublistData) {
-        const subscribeToValues = sublistData.map((item) => item.subscribe_to);
-        const subscribeUserPromises = subscribeToValues.map(async (subscribe_to) => {
-          const { data: subscribeUser } = await supabase.from('user').select('*').eq('id', subscribe_to);
-          return subscribeUser;
-        });
-        const allSubscribeUsers = await Promise.all(subscribeUserPromises);
-        const filteredSubscribers = allSubscribeUsers
-          .filter((subscribeUserArray) => subscribeUserArray && subscribeUserArray.length > 0)
-          .map((subscribeUserArray) => subscribeUserArray && subscribeUserArray[0].name);
-        setSubscribers(filteredSubscribers as string[]);
-      }
-    };
-    if (sublistData) {
-      loadSubscribers();
-    }
-  }, [sublistData]);
 
   // 구독목록 visible
   useEffect(() => {
     function handleOutsideClick(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsMenuOpen(false);
+        setIsSubModal(false);
       }
     }
     window.addEventListener('mousedown', handleOutsideClick);
@@ -185,121 +157,6 @@ const MyPage = () => {
     const name = (e.target as HTMLButtonElement).name;
     setToggleMsgBox(name);
   };
-  // if (isLoading) {
-  // Loading state: Render skeleton loaders
-  //   return (
-  //     <MypageTag>
-  //       {/* Header */}
-  //       <header>
-  //         <div className="info-wrapper">
-  //           <div className="info-main">
-  //             <div className="info-inner">
-  //               <div>
-  //                 <Skeleton width={100} height={10} /> {/* Adjust size */}
-  //                 <Skeleton width={140} height={20} /> {/* Adjust size */}
-  //               </div>
-
-  //               <div className="user-sub-info">
-  //                 <Skeleton width={150} height={16} /> {/* Adjust size */}
-  //               </div>
-  //             </div>
-  //             <div className="avatar-container">
-  //               <div className="avatar">
-  //                 <Skeleton variant="circular" width={120} height={120} /> {/* Circular skeleton */}
-  //               </div>
-  //               <div className="circle-bg"></div>
-  //               <div className="img-uploader">
-  //                 <input
-  //                   type="file"
-  //                   id="file-input"
-  //                   accept="image/*"
-  //                   ref={imageInputRef}
-  //                   onChange={handleImageInputChange}
-  //                 />
-  //               </div>
-  //             </div>
-  //           </div>
-  //           <div className="btn-mother">
-  //             <Skeleton width={80} height={24} />
-  //           </div>
-  //           <div className="btn-mother">
-  //             <div onClick={() => setIsMenuOpen((isMenuOpen) => !isMenuOpen)}>
-  //               {/* <Skeleton width={80} height={16} /> */}
-  //               <Skeleton width={80} height={24} />
-
-  //               {/* <Skeleton width={80} height={24} /> */}
-  //             </div>
-  //           </div>
-  //         </div>
-  //         {/* Message tab */}
-  //         <div className="alram-mother">
-  //           <div className="btn-wrapper">
-  //             <Skeleton width={80} height={24} />
-  //             &nbsp;&nbsp;&nbsp;
-  //             <Skeleton width={80} height={24} />
-  //           </div>
-  //           <div className="alram-wrapper">
-  //             {toggleMsgBox === '받은 쪽지함' ? (
-  //               <ReceiveBox toggleMsgBox={toggleMsgBox} setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
-  //             ) : (
-  //               <SendBox toggleMsgBox={toggleMsgBox} setSendMsgUser={setSendMsgUser} setReplyModal={setReplyModal} />
-  //             )}
-  //           </div>
-  //           {replyModal && <MessageReply sendMsgUser={sendMsgUser} setOpenReply={setReplyModal} />}
-  //         </div>
-  //       </header>
-
-  //       {/* Toggle tab */}
-  //       <div className="toggle-wrapper">
-  //         <h3>
-  //           <p>
-  //             <div style={{ padding: '2px' }}> </div>
-  //           </p>
-  //         </h3>
-
-  //         <div style={{ display: 'flex' }}>
-  //           <Skeleton width={120} height={60} />
-  //           &nbsp;&nbsp;&nbsp;
-  //           <Skeleton width={120} height={60} />
-  //         </div>
-
-  //         {/* Skeleton for MyReview and MyBookmark */}
-  //         <div className="skeleton-container">
-  //           <div style={{ margin: '0 auto' }}>
-  //             <div className="post-wrapper">
-  //               {Array.from({ length: 5 }).map((_, index) => (
-  //                 <div className="fid" key={index}>
-  //                   <div>
-  //                     <Skeleton variant="rectangular" width={270} height={300} /> {/* Adjust size */}
-  //                   </div>
-  //                   <div className="info-box">
-  //                     <div>
-  //                       <Skeleton width={200} height={24} /> {/* Adjust size */}
-  //                       <Skeleton width={100} height={16} /> {/* Adjust size */}
-  //                     </div>
-
-  //                     <Skeleton width={120} height={60} />
-  //                   </div>
-  //                 </div>
-  //               ))}
-  //             </div>
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </MypageTag>
-  //   );
-  // };
-
-  // if (isError) {
-  //   return <div>오류가 발생했습니다.</div>;
-  // }
-
-  if (isLoading) {
-    return <div>로딩중입니다.</div>;
-  }
-  if (isError) {
-    return <div>오류입니다.</div>;
-  }
 
   return (
     <MypageTag>
@@ -356,35 +213,13 @@ const MyPage = () => {
                         onChange={handleImageInputChange}
                       />
                     </label>
-                    {/* <button className="confirm" onClick={handleImageConfirm}>
-                      저장
-                    </button> */}
                   </div>
                 )}
               </div>
             )}
           </div>
           <div className="btn-mother">
-            {isMenuOpen && (
-              <ul>
-                {sublistData?.map((subscriberData, index) => {
-                  const subscriberIndex = subscriberData.subscribe_to;
-                  const subscriberName = subscribers[index];
-                  return (
-                    <li
-                      key={index}
-                      onClick={() => {
-                        if (subscribers) {
-                          navigate(`/yourpage/${shortid.generate()}`, { state: { userId: subscriberIndex } });
-                        }
-                      }}
-                    >
-                      {subscriberName !== undefined ? subscriberName : ''}
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
+            {isSubModal && <MySubModal setIsSubModal={setIsSubModal} />}
             {editingName ? (
               <div className="name-btn">
                 <button onClick={handleNameCancel}>취소</button>
@@ -394,11 +229,9 @@ const MyPage = () => {
               currentUser && <button onClick={handleNameEdit}>프로필 변경</button>
             )}
           </div>
-          {sublistData && (
-            <h4 onClick={() => setIsMenuOpen((isMenuOpen) => !isMenuOpen)}>
-              구독한 유저 <BsFillPeopleFill />
-            </h4>
-          )}
+          <h4 onClick={() => setIsSubModal(true)}>
+            구독한 유저 <BsFillPeopleFill />
+          </h4>
         </div>
         {/* message tab */}
         <div className="alram-mother">
@@ -453,39 +286,6 @@ const MyPage = () => {
         {activeSection === 'myReview' && <MyReview activeSection={activeSection} />}
         {/* Bookmark tab */}
         {activeSection === 'myBookmark' && <MyBookmark activeSection={activeSection} />}
-        {/* {activeSection === 'myBookmark' && (
-          <div>
-            <h2>My Bookmark</h2>
-            <div className="subs-wrapper">
-              {items?.pages.map((page) => (
-                <React.Fragment key={page.page}>
-                  {page.stores.slice(0, 3).map((store: Store) => (
-                    <Link to={`/detail/${store.id}`} key={store.id} className="user-subs">
-                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`}
-                        alt={`Store Image`}
-                        width={200}
-                      />
-                      <h2>{store.title}</h2>
-                      <p>
-                        {store.period_start} ~ {store.period_end}
-                      </p>
-                    </Link>
-                  ))}
-                </React.Fragment>
-              ))}
-            </div>
-          </div>
-        )} */}
-        {/* <div
-          style={{
-            backgroundColor: 'transparent',
-            width: '90%',
-            border: 'none',
-            padding: '20px',
-            margin: '10px'
-          }}
-          ref={ref}
-        /> */}
       </div>
     </MypageTag>
   );

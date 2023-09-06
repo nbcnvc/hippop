@@ -1,12 +1,13 @@
+// 라이브러리
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
+import { styled } from 'styled-components';
+// api
 import { createSubscribe, deleteSubscribe, isSubscribe } from '../../../api/subscribe';
+// zustand store
 import { useCurrentUser } from '../../../store/userStore';
+// 타입
 import { SubscribeProps } from '../../../types/props';
 import { SubscribeType } from '../../../types/types';
-
-import { styled } from 'styled-components';
-
 //alert
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

@@ -1,12 +1,17 @@
 import React, { useMemo } from 'react';
+// 라이브러리
 import { Link } from 'react-router-dom';
-import { Store } from '../../types/types';
-import { useCurrentUser } from '../../store/userStore';
-import { getMyItems } from '../../api/post';
-import { getMyStores } from '../../api/store';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
+// 타입
+import { Store } from '../../types/types';
 import { BookmarkProps } from '../../types/props';
+
+// zustand store
+import { useCurrentUser } from '../../store/userStore';
+// api
+import { getMyItems } from '../../api/post';
+import { getMyStores } from '../../api/store';
 
 function Bookmark({ activeSection }: BookmarkProps) {
   const currentUser = useCurrentUser();

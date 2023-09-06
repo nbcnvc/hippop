@@ -4,10 +4,9 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
 import { getMonth, getYear } from 'date-fns';
+import { styled } from 'styled-components';
 // 타입
 import { SearchCalendarProps } from '../../../types/props';
-// 스타일
-import { styled } from 'styled-components';
 //alert
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -67,7 +66,6 @@ const SearchCalendar = ({ onSearch }: SearchCalendarProps) => {
     <Container>
       {/* <div>기간별</div> */}
       <StartDateBox>
-        {/* <CalendarMonthOutlinedIcon /> */}
         <StyledDatePicker // DatePicker의 styled-component명
           locale={ko} //한글
           dateFormat="yyyy.MM.dd"
@@ -106,7 +104,6 @@ const SearchCalendar = ({ onSearch }: SearchCalendarProps) => {
       </StartDateBox>
       <Ptag>~</Ptag>
       <EndDateBox>
-        {/* <CalendarMonthOutlinedIcon /> */}
         <StyledDatePicker
           locale={ko} //한글
           dateFormat="yyyy.MM.dd"
