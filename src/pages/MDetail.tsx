@@ -146,7 +146,7 @@ const MDetail = () => {
                     </StoreBox>
                     <Text>{formatDate}</Text>
                   </TextBox>
-                  <Title>제목 : {post.title}</Title>
+                  <Title>{post.title}</Title>
                 </HeadContainer>
                 <Body className="ql-editor" dangerouslySetInnerHTML={{ __html: post.body }} />
               </div>

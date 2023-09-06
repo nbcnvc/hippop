@@ -1,4 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
+
+// 컴포넌트
+import Subscribe from '../components/community/detail/Subscribe';
+import Message from '../components/message/Message';
 // 라이브러리
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
@@ -22,7 +26,19 @@ import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 import DefaultImg from '../images/defaultImg.png';
 import { Skeleton } from '@mui/material';
 
+import { useCurrentUser } from '../store/userStore';
+
 const YourPage = () => {
+  // 현재 유저
+  const currentUser = useCurrentUser();
+  // 쪽지 보내기
+  const [msgModal, setMsgModal] = useState<boolean>(false);
+  const [stateId, setStateId] = useState<string>('');
+
+  const openMsgModal = () => {
+    setMsgModal(true);
+  };
+
   // const { id } = useParams();
 
   const { state } = useLocation();
@@ -36,13 +52,13 @@ const YourPage = () => {
     data: user,
     isLoading: isUserLoading,
     isError: isUserError
-  } = useQuery(['user', userId], () => getUser(userId));
+  } = useQuery(['user', stateId], () => getUser(stateId));
 
   const {
     data: bookMarkStore,
     isLoading: isBookMarkLoading,
     isError: isBookMarkError
-  } = useQuery(['BookMarkStore', userId], () => fetchBookMarkStore(userId));
+  } = useQuery(['BookMarkStore', stateId], () => fetchBookMarkStore(stateId));
 
   const handleSectionChange = (e: React.MouseEvent<HTMLButtonElement>) => {
     const button = e.target as HTMLButtonElement;
@@ -52,6 +68,21 @@ const YourPage = () => {
       setActiveSection(section);
     }
   };
+
+  // userId가 state로 최초에 들어오면 토큰을 생성하고
+  // 생성한 토큰을 setStateId 담아줌
+  useEffect(() => {
+    if (user || userId) {
+      localStorage.setItem('YourToken', userId);
+    }
+
+    setStateId(localStorage.getItem('YourToken') ?? '');
+  }, []);
+
+  // stateId를 가지고 getUser => user가 들어오면 setUserData해주기
+  useEffect(() => {
+    setUserData(user || null); // Use null as a fallback when user is undefined
+  }, [user]);
 
   // 인피니티 스크롤로 필터된 게시글 또는 북마크 가져오기
   const getYourSectionItems = ({
@@ -80,8 +111,8 @@ const YourPage = () => {
     fetchNextPage,
     isFetchingNextPage
   } = useInfiniteQuery({
-    queryKey: ['yourpage', userId, activeSection],
-    queryFn: ({ pageParam }) => getYourSectionItems({ pageParam, activeSection, userId: userId }),
+    queryKey: ['yourpage', stateId, activeSection],
+    queryFn: ({ pageParam }) => getYourSectionItems({ pageParam, activeSection, userId: stateId }),
     getNextPageParam: (lastPage) => {
       if (lastPage.page < lastPage.totalPages) {
         return lastPage.page + 1;
@@ -238,6 +269,7 @@ const YourPage = () => {
 
   return (
     <>
+      {msgModal && <Message msgModal={msgModal} setMsgModal={setMsgModal} writer={user!} />}
       <Container>
         <UserWrapper>
           <UserBox>
@@ -247,20 +279,23 @@ const YourPage = () => {
             </Htag>
             <BoxLine></BoxLine>
             <UserProfile>
-              <div>
+              <Between>
                 {user?.avatar_url?.startsWith('profile/') ? (
                   <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${user?.avatar_url}`} alt="User Avatar" />
                 ) : (
                   <Img src={user?.avatar_url} alt="User Avatar" />
                 )}
-              </div>
-              <div>
-                <Ptag>힙팝메이트</Ptag>
-                <Ptag>
-                  <SpanLine>{user?.name}</SpanLine>님
-                </Ptag>
-                {/* <Ptage>{user?.email}</Ptage> */}
-              </div>
+                <NameBox>
+                  <Ptag>힙팝메이트</Ptag>
+                  <Ptag>
+                    <SpanLine>{user?.name}</SpanLine>님
+                  </Ptag>
+                </NameBox>
+              </Between>
+              <Between1>
+                <Subscribe writerId={user?.id} />
+                {currentUser?.id !== user?.id && <MsgButton onClick={openMsgModal}>쪽지 보내기</MsgButton>}
+              </Between1>
             </UserProfile>
           </UserBox>
           {/* <div></div> */}
@@ -316,44 +351,50 @@ const YourPage = () => {
             <EditNoteRoundedIcon fontSize="large" />
             <HtagLine>작성한 게시글</HtagLine>
           </Htag2>
-          <GridContainer>
-            {selectItems?.map((post: PostType) => {
-              const imageTags: string[] = [];
-              const parser = new Parser({
-                onopentag(name, attribs) {
-                  if (name === 'img' && attribs.src) {
-                    imageTags.push(attribs.src);
+          {userData && (
+            <GridContainer>
+              {selectItems?.map((post: PostType) => {
+                const imageTags: string[] = [];
+                const parser = new Parser({
+                  onopentag(name, attribs) {
+                    if (name === 'img' && attribs.src) {
+                      imageTags.push(attribs.src);
+                    }
                   }
-                }
-              });
+                });
 
-              parser.write(post.body);
-              parser.end();
+                parser.write(post.body);
+                parser.end();
 
-              return (
-                <Card>
-                  <div key={post.id}>
-                    {imageTags.length > 0 ? <PostImg src={imageTags[0]} alt={`Image`} /> : <PostImg src={DefaultImg} />}
-                    <HtagTttle>{post.store?.title}</HtagTttle>
-                    <CardInfo>
-                      <div>
-                        <PtagDate>{format(new Date(post.created_at), 'yyyy-MM-dd')}</PtagDate>
-                      </div>
-                      <BtnBox>
-                        <DetailBtn
-                          onClick={() => {
-                            PostDetail(post.id);
-                          }}
-                        >
-                          상세보기
-                        </DetailBtn>
-                      </BtnBox>
-                    </CardInfo>
-                  </div>
-                </Card>
-              );
-            })}
-          </GridContainer>
+                return (
+                  <Card>
+                    <div key={post.id}>
+                      {imageTags.length > 0 ? (
+                        <PostImg src={imageTags[0]} alt={`Image`} />
+                      ) : (
+                        <PostImg src={DefaultImg} />
+                      )}
+                      <HtagTttle>{post.store?.title}</HtagTttle>
+                      <CardInfo>
+                        <div>
+                          <PtagDate>{format(new Date(post.created_at), 'yyyy-MM-dd')}</PtagDate>
+                        </div>
+                        <BtnBox>
+                          <DetailBtn
+                            onClick={() => {
+                              PostDetail(post.id);
+                            }}
+                          >
+                            상세보기
+                          </DetailBtn>
+                        </BtnBox>
+                      </CardInfo>
+                    </div>
+                  </Card>
+                );
+              })}
+            </GridContainer>
+          )}
         </ReviewWrapper>
       </Container>
       <div ref={ref}></div>
@@ -415,18 +456,35 @@ const HtagLine = styled.h2`
 
   margin-left: 5px;
 `;
+
 const BoxLine = styled.div`
   border-bottom: 2px dashed #333333;
 
-  margin: 25px 10px 20px 10px;
+  margin: 15px 10px 5px 10px;
 `;
 
 const UserProfile = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
 
-  margin-bottom: 20px;
+const Between = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  margin: 10px 0;
+`;
+
+const Between1 = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  margin: 10px 0;
+
+  width: 200px;
+  font-size: 12px;
 `;
 
 const Img = styled.img`
@@ -436,8 +494,16 @@ const Img = styled.img`
   border-radius: 50%;
 `;
 
+const NameBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Ptag = styled.p`
   font-size: 20px;
+  font-weight: 700;
   color: #333333;
 
   padding: 5px;
@@ -447,6 +513,14 @@ const Ptag = styled.p`
 
 const SpanLine = styled.span`
   background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+`;
+
+const MsgButton = styled.button`
+  width: 120px;
+  height: 40px;
+  margin-left: 10px;
+  font-weight: 600;
+  font-size: 15px;
 `;
 
 const StoreListBox = styled.div`
@@ -582,6 +656,7 @@ const Card = styled.div`
   position: relative;
 
   box-sizing: border-box;
+
   transition: color 0.3s ease, transform 0.3s ease;
   &:hover {
     border: 6px solid var(--primary-color);

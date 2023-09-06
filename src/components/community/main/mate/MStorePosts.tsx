@@ -239,7 +239,7 @@ const Title = styled.span`
 `;
 
 const Body = styled.div`
-  height: 43px;
+  height: 63px;
   width: 430px;
   color: black;
   font-size: 14px;
@@ -248,7 +248,7 @@ const Body = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* 표시할 줄 수 설정 */
+  -webkit-line-clamp: 3; /* 표시할 줄 수 설정 */
   -webkit-box-orient: vertical; /* 텍스트의 방향 설정 */
 `;
 
@@ -262,7 +262,7 @@ const Button = styled.button`
   float: right;
   width: 80px;
   font-size: 14px;
-  margin-top: 62px;
+  margin-top: 42px;
 `;
 
 const ProfileBox = styled.div`
