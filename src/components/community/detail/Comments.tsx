@@ -1,14 +1,17 @@
 import React, { useMemo, useState } from 'react';
-
+// 라이브러리
 import moment from 'moment';
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
+import { styled } from 'styled-components';
+// 타입
 import { Comment } from '../../../types/types';
 import { CommentProps } from '../../../types/props';
+// api
 import { createComment, deleteComment, getCommentCount, getComments, updateComment } from '../../../api/comment';
+// zustand store
 import { useCurrentUser } from '../../../store/userStore';
-
-import { styled } from 'styled-components';
+// mui
+import { Skeleton } from '@mui/material';
 
 const Comments = ({ postId }: CommentProps) => {
   const queryClient = useQueryClient();
@@ -133,7 +136,38 @@ const Comments = ({ postId }: CommentProps) => {
   };
 
   if (isLoading) {
-    return <div>로딩중입니다.</div>;
+    return (
+      <div>
+        {' '}
+        <Layout>
+          {/* 댓글 입력창 */}
+          <CommentWrite>
+            <Skeleton variant="text" width={40} height={30} />
+            <div style={{ display: 'flex' }}>
+              <Skeleton variant="text" width={750} height={50} />
+              <div style={{ marginLeft: '30px' }}>
+                <Skeleton variant="text" width={70} height={50} />
+              </div>
+            </div>
+          </CommentWrite>
+          {/* 댓글 목록 */}
+          <CommentContainer>
+            <ButtonBox>
+              <div style={{ marginRight: '20px' }}></div>
+              <div style={{ marginRight: '12px' }}></div>
+            </ButtonBox>
+            <Skeleton variant="text" width={870} height={80} />
+            <ButtonBox>
+              <div style={{ marginRight: '20px' }}></div>
+              <div style={{ marginRight: '12px' }}></div>
+            </ButtonBox>
+            <Skeleton variant="text" width={870} height={80} />
+            {/* <CommentBox></CommentBox> */}
+          </CommentContainer>
+          {/* 더보기 버튼 */}
+        </Layout>
+      </div>
+    );
   }
   if (isError) {
     return <div>오류가 발생했습니다.</div>;
@@ -161,7 +195,7 @@ const Comments = ({ postId }: CommentProps) => {
       <CommentContainer>
         {selectComments?.map((comment) => {
           return (
-            <>
+            <div key={comment.id}>
               {currentUser?.id === comment.user_id && (
                 <ButtonBox>
                   <Button onClick={() => deleteButton(comment.id)}>삭제</Button>
@@ -188,7 +222,7 @@ const Comments = ({ postId }: CommentProps) => {
                   <Content>{comment.body}</Content>
                 )}
               </CommentBox>
-            </>
+            </div>
           );
         })}
       </CommentContainer>

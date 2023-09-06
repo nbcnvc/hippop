@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+// 라이브러리
+import { styled } from 'styled-components';
 // 타입
 import { HotPlaceProps } from '../../types/props';
-// 스타일
-import { styled } from 'styled-components';
 // mui
 import Switch, { SwitchProps } from '@mui/material/Switch';
 import { styled as muiStyled } from '@mui/material/styles';

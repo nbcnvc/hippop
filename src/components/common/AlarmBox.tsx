@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
+import React from 'react';
 // 라이브러리
 import { useNavigate } from 'react-router';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import moment from 'moment';
 import 'moment/locale/ko'; // 한국어 설정
+import shortid from 'shortid';
 // api
-import { deleteAlarm, getAlarms } from '../../api/alarm';
+import { deleteAlarm } from '../../api/alarm';
 // zustand
 import { useCurrentUser } from '../../store/userStore';
 // 타입
@@ -15,7 +16,6 @@ import { styled } from 'styled-components';
 // mui
 import DeleteIcon from '@mui/icons-material/Delete';
 import { AlarmBoxProps } from '../../types/props';
-import shortid from 'shortid';
 
 const AlarmBox = ({ alarms }: AlarmBoxProps) => {
   const navigate = useNavigate();

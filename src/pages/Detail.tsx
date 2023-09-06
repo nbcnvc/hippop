@@ -1,3 +1,4 @@
+// 컴포넌트
 import StoreDetail from '../components/detail/StoreDetail';
 
 const Detail = () => {

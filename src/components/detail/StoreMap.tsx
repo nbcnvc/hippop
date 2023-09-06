@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
+// 라이브러리
+import { styled } from 'styled-components';
+
 // 타입
 import { Geocoder, HotPlaceInfo, Store } from '../../types/types';
 import { StoreMapProps } from '../../types/props';
 // 컴포넌트
 import HotPlace from './HotPlace';
 import NearbyStore from './NearbyStore';
-// 스타일
-import { styled } from 'styled-components';
 
 declare global {
   interface Window {
@@ -21,7 +22,6 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
   const [searchData, setSearchData] = useState<HotPlaceInfo[]>();
   const [isSelected, setIsSelected] = useState<HotPlaceInfo | undefined>();
   const [nearbyStoreMarker, setNearbyStoreMarker] = useState<Store[] | undefined>();
-  // const [isOpen, setIsOpen] = useState<boolean>(false);
 
   //  ref는 맵이 렌더링될 DOM 요소를 참조
   const mapElement = useRef(null);

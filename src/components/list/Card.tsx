@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-
+// 라이브러리
 import 'keen-slider/keen-slider.min.css';
 import { useKeenSlider } from 'keen-slider/react';
 import styled from 'styled-components';
-
 import './styles.css';
+// 타입
 import { CardProps } from '../../types/props';
+// api
 import { supabaseStorageUrl } from '../../api/supabase';
 
 const showStoreInfo = () => {

@@ -1,13 +1,15 @@
-import moment from 'moment';
 import { useMemo } from 'react';
+// 라이브러리
+import moment from 'moment';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-import { FetchPost } from '../../../../types/types';
-import { getStorePosts } from '../../../../api/post';
-
 import { styled } from 'styled-components';
+// 타입
+import { FetchPost } from '../../../../types/types';
+// api
+import { getStorePosts } from '../../../../api/post';
+// mui
 import Skeleton from '@mui/material/Skeleton';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 
@@ -162,6 +164,7 @@ const PostContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-bottom: 30px;
 `;
 
 const PostBox = styled.div`

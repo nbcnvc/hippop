@@ -2,7 +2,6 @@ import React from 'react';
 // 라이브러리
 import { FacebookShareButton, FacebookIcon, TwitterShareButton, TwitterIcon } from 'react-share';
 import CopyToClipboard from 'react-copy-to-clipboard';
-// 스타일
 import { styled } from 'styled-components';
 // 소셜 링크 이미지
 import LinkIcon from '../../images/LinkIcon.png';
@@ -69,12 +68,7 @@ const Share = ({ onClick, storeData }: ShareProps) => {
 
 export default Share;
 
-const Container = styled.div`
-  /* padding: 20px;
-  gap: 20px;
-  border: 2px solid #333333; */
-  /* border-radius: 18px; */
-`;
+const Container = styled.div``;
 
 const Img = styled.img`
   width: 45px;

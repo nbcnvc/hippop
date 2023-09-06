@@ -1,15 +1,11 @@
-import React, { useEffect } from 'react';
-
-import { supabase } from '../api/supabase';
-
+import React from 'react';
+// 라이브러리
 import { styled } from 'styled-components';
 import { Link } from 'react-router-dom';
-import { randomFileName } from '../hooks/useHandleImageName';
-import { setUserStore } from '../store/userStore';
+// api
+import { supabase } from '../api/supabase';
 
 const Login = ({ closeModal }: { closeModal: () => void }) => {
-  const setCurrentUser = setUserStore((state) => state.setCurrentUser);
-
   //google
   const signupGoogle = async (e: React.FormEvent) => {
     try {

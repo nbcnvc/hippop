@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+// 라이브러리
+import { styled } from 'styled-components';
 // api
 import { sendMessage } from '../../api/message';
 // zustand 상태관리 hook
@@ -6,8 +8,6 @@ import { useCurrentUser } from '../../store/userStore';
 // 타입
 import { MessageType } from '../../types/types';
 import { MessageReplyProps } from '../../types/props';
-// 스타일
-import { styled } from 'styled-components';
 // mui
 import SendSharpIcon from '@mui/icons-material/SendSharp';
 

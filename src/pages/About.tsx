@@ -1,5 +1,5 @@
 import React from 'react';
-import { styled } from 'styled-components';
+// 컴포넌트
 import AboutBannser from '../components/about/AboutBannser';
 import AboutInfo from '../components/about/AboutInfo';
 

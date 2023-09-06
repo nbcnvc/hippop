@@ -6,6 +6,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import CopyToClipboard from 'react-copy-to-clipboard';
+import { styled } from 'styled-components';
 // 타입
 import { Store } from '../../types/types';
 // api
@@ -15,14 +16,13 @@ import Share from './Share';
 import Calendar from './Calendar';
 import BookMark from './BookMark';
 import StoreMap from './StoreMap';
-// 스타일
-import { styled } from 'styled-components';
 // mui
 import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import Menu from '@mui/material/Menu';
+import { Skeleton } from '@mui/material';
 
 const StoreDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -86,7 +86,77 @@ const StoreDetail = () => {
   };
 
   if (isLoading) {
-    return <div>데이터를 로딩 중입니다.</div>;
+    return (
+      <div>
+        {' '}
+        <DetailContainer>
+          <div>
+            <div className="store-detail">
+              <div className="image-slider">
+                <Skeleton variant="rectangular" width={600} height={600} />
+              </div>
+              <div className="store-info">
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Skeleton variant="text" width={300} height={30} />
+                  <div style={{ marginLeft: '300px' }}>
+                    <Skeleton variant="text" width={30} height={30} />
+                  </div>
+                </div>
+
+                <div className="store-body">
+                  <Skeleton variant="text" width={300} height={30} />
+                </div>
+                <div className="store-text">
+                  <div>
+                    <Skeleton variant="text" width={300} height={30} />
+                  </div>
+                  <div>
+                    <Skeleton variant="text" width={300} height={30} />
+                    <div style={{ margin: 0 }} ref={calendarRef}></div>
+                  </div>
+                  <div>
+                    <Skeleton variant="text" width={300} height={30} />
+                  </div>
+                  <div>
+                    {' '}
+                    <Skeleton variant="text" width={300} height={30} />
+                  </div>
+                  <div>
+                    <Skeleton variant="text" width={130} height={30} />
+                    <Skeleton variant="text" width={130} height={30} />
+                    <Skeleton variant="text" width={130} height={30} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+            {' '}
+            <Skeleton variant="text" width={400} height={30} />
+            <div style={{ display: 'flex' }}>
+              <Skeleton variant="text" width={90} height={30} />
+              <div style={{ margin: '0 15px 0 15px' }}>
+                <Skeleton variant="text" width={90} height={30} />
+              </div>
+
+              <Skeleton variant="text" width={90} height={30} />
+            </div>
+            <Skeleton variant="text" width={`100%`} height={800} />
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+            <Skeleton variant="text" width={90} height={30} />
+            <div style={{ display: 'flex' }}>
+              <Skeleton variant="text" width={400} height={800} />
+              <div style={{ margin: '0 15px 0 15px' }}>
+                <Skeleton variant="text" width={400} height={800} />
+              </div>
+              <Skeleton variant="text" width={400} height={800} />
+            </div>
+          </div>
+        </DetailContainer>
+      </div>
+    );
   }
 
   if (isError) {
@@ -186,7 +256,6 @@ const StoreDetail = () => {
                 </ShareMenu>
               </div>
             </div>
-            {/* {isClicked && <Calendar storeData={storeData} />} */}
           </div>
           <StoreMap storeLocation={storeData.location} title={storeData.title} />
         </>

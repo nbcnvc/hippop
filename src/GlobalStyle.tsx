@@ -1,3 +1,4 @@
+// 라이브러리
 import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 

@@ -1,23 +1,27 @@
-import RNewPosts from './RNewPosts';
-import RStorePosts from './RStorePosts';
-import RPopularPosts from './RPopularPosts';
-
+// 라이브러리
 import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInView } from 'react-intersection-observer';
 import { styled } from 'styled-components';
+// 타입
+import { FetchPost, PostType } from '../../../../types/types';
+// api
+import { getSearchPosts } from '../../../../api/post';
+// 컴포넌트
+import RNewPosts from './RNewPosts';
+import RStorePosts from './RStorePosts';
+import RPopularPosts from './RPopularPosts';
+import CommentCount from '../CommentCount';
+// mui
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import Skeleton from '@mui/material/Skeleton'; // 스켈레톤 추가
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import NotesRoundedIcon from '@mui/icons-material/NotesRounded';
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
-import { FetchPost, PostType } from '../../../../types/types';
-import { getSearchPosts } from '../../../../api/post';
-import CommentCount from '../CommentCount';
-import { useInView } from 'react-intersection-observer';
 
 const RPosts = () => {
+  const navigate = useNavigate();
   const { state } = useLocation();
   const storeId: number = state?.storeId || 0; // state가 존재하지 않을 때 기본값으로 0 사용
   const [sortName, setSortName] = useState<string>('최신순');
@@ -32,24 +36,25 @@ const RPosts = () => {
   }, [storeId]);
 
   // 검색 로직
+  const [inputValue, setInputValue] = useState<string>('');
   const [keyword, setKeyword] = useState<string>('');
-  const onChangeKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value);
+  const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
   };
 
   const handleSearch = () => {
     setSortName('팝업스토어 검색');
     fetchNextPage();
-    setKeyword('');
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
+      setKeyword(inputValue);
       handleSearch();
+      setInputValue('');
     }
   };
 
-  const navigate = useNavigate();
   const { pathname } = useLocation();
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
   const {
@@ -161,10 +166,10 @@ const RPosts = () => {
           <div>
             <Search />
             <Input
-              // value={keyword}
-              // onChange={onChangeKeyword}
-              // onKeyPress={handleKeyPress}
-              placeholder="팝업스토어 검색!"
+              value={inputValue}
+              onChange={onChangeInput}
+              onKeyPress={handleKeyPress}
+              placeholder="엔터로 팝업스토어를 검색해보세요!"
             />
           </div>
         </Between>
@@ -173,7 +178,7 @@ const RPosts = () => {
       {sortName === '최신순' && <RNewPosts />}
       {sortName === '인기순' && <RPopularPosts />}
       <PostContainer>
-        {sortName === '팝업스토어 검색' &&
+        {sortName === '팝업스토어 검색' && selectPosts && selectPosts.length > 0 ? (
           selectPosts?.map((post) => {
             const imageTags = extractImageTags(post.body);
             const postText = post.body.replace(/<img.*?>/g, '');
@@ -208,7 +213,10 @@ const RPosts = () => {
                 </ContentBox>
               </PostBox>
             );
-          })}
+          })
+        ) : (
+          <NoResult>아직 작성된 후기가 없습니다 :(</NoResult>
+        )}
         <Trigger ref={ref} />
       </PostContainer>
     </>
@@ -242,12 +250,12 @@ const Button = styled.button`
 `;
 
 const Input = styled.input`
-  width: 180px;
+  width: 200px;
   height: 33px;
   padding: 0 20px 0 40px;
   outline: none;
   border-radius: 18px;
-  border: 2px solid var(--fifth-color);
+  border: 3px solid var(--fifth-color);
 `;
 
 const Search = styled(SearchRoundedIcon)`
@@ -260,6 +268,7 @@ const PostContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-bottom: 30px;
 `;
 
 const PostBox = styled.div`
@@ -338,6 +347,15 @@ const DetailButton = styled.button`
 const Trigger = styled.div`
   width: 100%;
   align-items: center;
+`;
+
+const NoResult = styled.h1`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+  font-size: 24px;
+  font-weight: 700px;
 `;
 
 // 스켈레톤
