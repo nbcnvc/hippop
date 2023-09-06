@@ -27,6 +27,7 @@ const HotPlace = ({ setCategory, setIsSelected }: HotPlaceProps) => {
     <HotPlaceContainer>
       <div className="hotplace-title">
         <h1>함께 갈만한 핫플레이스 추천!</h1>
+        <div className="noti-box"> 카테고리 클릭 후 마커핀을 클릭해 보세요 :)</div>
         <div className="button-box">
           <button name="맛집" onClick={handleHotPlaceCategory}>
             # 맛집
@@ -64,6 +65,11 @@ const HotPlaceContainer = styled.div`
       background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
     }
 
+    .noti-box {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+
     .button-box {
       button {
         margin: 40px 15px;
@@ -83,8 +89,8 @@ const HotPlaceContainer = styled.div`
 const IOSSwitch = muiStyled((props: SwitchProps) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
 ))(({ theme }) => ({
-  width: 64,
-  height: 34,
+  width: 63,
+  height: 35,
   padding: 0,
   overflow: 'unset',
 
@@ -94,7 +100,7 @@ const IOSSwitch = muiStyled((props: SwitchProps) => (
 
   '& .MuiSwitch-switchBase': {
     padding: 0,
-    margin: '5px 8px',
+    margin: '5px 9px',
     transitionDuration: '300ms',
     border: '3px solid var(--fifth-color)',
 

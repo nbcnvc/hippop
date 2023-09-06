@@ -137,7 +137,8 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
 
         // 인포윈도우로 장소에 대한 설명 표시
         const infowindow = new kakao.maps.InfoWindow({
-          content: `<div style="width:150px;text-align:center;padding:6px 0;z-index:1;">${title}의 위치</div>`
+          // content: `<div class="info-title">${title}의 위치</div>`
+          content: `<div style="width:150px; text-align:center; padding:10px 20px; z-index:99;">${title}</div>`
         });
         infowindow.open(map, marker);
 
@@ -175,7 +176,7 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
                 // };
 
                 // 마커에 커서가 오버됐을 때 마커 위에 표시할 인포윈도우를 생성
-                const nearbyStore = `<div style="padding:5px;">${data.title}</div>`; // HTML 문자열이나 document element 가능
+                const nearbyStore = `<div style="width:150px; text-align:center; padding:10px 20px; z-index:99;">${data.title}</div>`;
 
                 const infowindow = new kakao.maps.InfoWindow({
                   content: nearbyStore
@@ -217,6 +218,26 @@ export default StoreMap;
 const MapContainer = styled.div`
   max-width: 1920px;
   min-width: 900px;
+
+  .info-title {
+    /* background-color: none;
+    border: none;
+    width: 100%;
+    height: auto;
+    background: #458bfd;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    padding: 0px 10px; */
+    cursor: default;
+    position: absolute;
+    background: rgb(255, 255, 255);
+    border: 1px solid rgb(118, 129, 168);
+    z-index: 0;
+    display: block;
+    width: 207px;
+    height: 23px;
+  }
 
   .map-iframe {
     display: flex;

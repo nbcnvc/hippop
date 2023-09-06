@@ -47,6 +47,17 @@ const StoreDetail = () => {
     // 컴포넌트가 마운트될 때 실행되는 부분
     refetch();
     setIsClicked(false);
+
+    const handleAlarmWindowClick = (event: MouseEvent) => {
+      if (!calendarRef.current?.contains(event.target as Node)) {
+        setIsClicked(false);
+      }
+    };
+
+    window.addEventListener('click', handleAlarmWindowClick);
+    return () => {
+      window.removeEventListener('click', handleAlarmWindowClick);
+    };
   }, [id]);
 
   const open = Boolean(anchorEl);
@@ -174,32 +185,30 @@ const StoreDetail = () => {
               <div className="store-body">
                 <div>{storeData.body}</div>
               </div>
-              <div className="store-text">
-                <div>
+              <div style={{ position: 'relative', fontSize: '18px' }} className="store-text">
+                <div style={{ display: 'flex', alignItems: 'center', margin: '15px 0', fontSize: '18px' }}>
                   <span>위치</span> {storeData.location}
                 </div>
-                <div>
+                <div style={{ display: 'flex', alignItems: 'center', margin: '15px 0', fontSize: '18px' }}>
                   <span>기간</span> {storeData.period_start} ~ {storeData.period_end}
-                  <div style={{ margin: 0 }} ref={calendarRef}>
+                  <div
+                    style={{ display: 'flex', alignItems: 'center', margin: '0', fontSize: '18px' }}
+                    ref={calendarRef}
+                  >
                     <CalendarIcon onClick={handleMouseEnter} />
+                    <CalendarClickInfo>← click !</CalendarClickInfo>
+                    <CalendarBox>{isClicked && <Calendar storeData={storeData} />}</CalendarBox>
                   </div>
                 </div>
-                <div>
+                <div style={{ display: 'flex', alignItems: 'center', margin: '15px 0', fontSize: '18px' }}>
                   <span>운영 시간</span> {storeData.opening}
                 </div>
-                <div>
+                <div style={{ display: 'flex', alignItems: 'center', margin: '15px 0', fontSize: '18px' }}>
                   <span>예약 여부</span> {storeData.reservation ? '있음' : '없음'}
                 </div>
-
-                <div>
+                <div style={{ display: 'flex', alignItems: 'center', margin: '15px 0', fontSize: '18px' }}>
                   <span>링크 </span>
-                  <p
-                    onClick={() => {
-                      handleopenlink(storeData.link);
-                    }}
-                  >
-                    Visit the official page
-                  </p>
+                  <p onClick={() => handleopenlink(storeData.link)}>Visit the official page</p>
                   <CopyToClipboard
                     text={storeData.link}
                     onCopy={() =>
@@ -211,9 +220,20 @@ const StoreDetail = () => {
                 </div>
               </div>
               <div className="button-box">
-                <button onClick={() => navigate('/review', { state: { storeId: id } })}>후기 보러가기</button>
-                <button onClick={() => navigate('/mate', { state: { storeId: id } })}>팝업 메이트 구하기</button>
+                <button
+                  style={{ margin: '10px', padding: '16px 25px' }}
+                  onClick={() => navigate('/review', { state: { storeId: id } })}
+                >
+                  후기 보러가기
+                </button>
+                <button
+                  style={{ margin: '10px', padding: '16px 25px' }}
+                  onClick={() => navigate('/mate', { state: { storeId: id } })}
+                >
+                  팝업 메이트 구하기
+                </button>
                 <ShareBtn
+                  style={{ margin: '10px', padding: '16px 25px' }}
                   id="basic-button"
                   aria-controls={open ? 'basic-menu' : undefined}
                   aria-haspopup="true"
@@ -222,7 +242,7 @@ const StoreDetail = () => {
                 >
                   <IosShareIcon fontSize="small" />
                 </ShareBtn>
-                <Menu
+                <ShareMenu
                   id="basic-menu"
                   anchorEl={anchorEl}
                   open={open}
@@ -231,11 +251,11 @@ const StoreDetail = () => {
                     'aria-labelledby': 'basic-button'
                   }}
                 >
+                  <ShareInfo>팝업스토어 정보 공유하기</ShareInfo>
                   <Share storeData={storeData} onClick={handleClose} />
-                </Menu>
+                </ShareMenu>
               </div>
             </div>
-            <CalendarBox>{isClicked && <Calendar storeData={storeData} />}</CalendarBox>
           </div>
           <StoreMap storeLocation={storeData.location} title={storeData.title} />
         </>
@@ -254,7 +274,6 @@ const DetailContainer = styled.div`
   margin: 90px auto;
 
   .store-detail {
-    position: relative;
     display: flex;
     gap: 30px;
     margin-bottom: 150px;
@@ -279,6 +298,7 @@ const DetailContainer = styled.div`
 
     .store-info {
       width: 100%;
+      height: auto;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -293,11 +313,15 @@ const DetailContainer = styled.div`
 
       .store-body {
         width: 100%;
+        height: auto;
         border-bottom: 2px dashed #65656587;
         margin-bottom: 10px;
 
         div {
+          max-height: 100px;
+          min-height: 100px;
           height: 100px;
+
           font-size: 18px;
           line-height: 26px;
           overflow: auto;
@@ -311,17 +335,12 @@ const DetailContainer = styled.div`
         justify-content: center;
         flex-direction: column;
 
-        div {
-          display: flex;
-          align-items: center;
-          font-size: 18px;
-          margin: 15px 0;
-        }
         span {
           font-size: 18px;
           font-weight: 600;
           margin-right: 15px;
         }
+
         p {
           text-decoration: underline;
           cursor: pointer;
@@ -333,18 +352,10 @@ const DetailContainer = styled.div`
       }
 
       button {
-        margin: 10px 20px 20px 0;
-        padding: 16px 25px;
+        padding: 13px;
       }
 
       .button-box {
-        /* .share-button { */
-        /* background-color: #fff; */
-        /* color: var(--fifth-color); */
-        /* font-size: 10px; */
-        /* margin-top: 16px; */
-        /* } */
-
         display: flex;
         align-items: center;
       }
@@ -363,8 +374,6 @@ const ShareBtn = styled.button`
   background-color: #fff;
   color: var(--fifth-color);
   padding: 14px 25px !important;
-
-  /* margin-top: ; */
 `;
 
 const LinkIcon = styled(InsertLinkIcon)`
@@ -378,12 +387,7 @@ const LinkIcon = styled(InsertLinkIcon)`
 `;
 
 const CalendarIcon = styled(CalendarMonthIcon)`
-  /* position: absolute; */
-  /* bottom: 203px; */
-  /* right: 375px; */
-  /* margin-left: -510px; */
-  /* margin-top: 291px; */
-  margin-left: 15px;
+  margin: 0 7px 0 15px;
   cursor: pointer;
 
   &:hover {
@@ -392,11 +396,44 @@ const CalendarIcon = styled(CalendarMonthIcon)`
   }
 `;
 
+const CalendarClickInfo = styled.div`
+  animation: blink 5s infinite; /* 깜빡거리는 애니메이션 적용 */
+
+  @keyframes blink {
+    0% {
+      opacity: 1; /* 시작 시 fully visible */
+    }
+    50% {
+      opacity: 0; /* 중간에 투명 */
+    }
+    100% {
+      opacity: 1; /* 다시 fully visible */
+    }
+  }
+`;
+
 const CalendarBox = styled.div`
   position: absolute;
-  /* top: 40%;
-  right: -10%; */
-  top: 180px;
-  right: 10px;
-  width: 325px;
+  top: 40%;
+  z-index: 3; /* 다른 요소 위에 나타나도록 설정 */
+`;
+
+const ShareMenu = styled(Menu)`
+  .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
+    border-radius: 18px;
+    padding: 15px 22px;
+    margin-top: 10px;
+  }
+
+  .css-6hp17o-MuiList-root-MuiMenu-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
+`;
+
+const ShareInfo = styled.div`
+  margin-bottom: 15px;
+  font-weight: 600;
 `;
