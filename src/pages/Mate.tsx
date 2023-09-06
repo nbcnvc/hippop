@@ -72,7 +72,7 @@ const Mate = () => {
 export default Mate;
 
 const Layout = styled.div`
-  min-width: 870px;
+  min-width: 744px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -96,7 +96,7 @@ const Title = styled.h1`
 `;
 
 const ButtonBox = styled.div`
-  min-width: 900px;
+  min-width: 744px;
   display: flex;
   justify-content: center;
 `;
