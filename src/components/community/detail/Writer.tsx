@@ -1,7 +1,8 @@
 // 라이브러리
+import shortid from 'shortid';
 import { styled } from 'styled-components';
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 // zustand store
 import { useCurrentUser } from '../../../store/userStore';
 // 타입
@@ -11,10 +12,11 @@ import Subscribe from './Subscribe';
 import Message from '../../message/Message';
 
 // //alert
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Writer = ({ writer, postId }: WriterProps) => {
+  const navigate = useNavigate();
   const { pathname } = useLocation();
   const currentUser = useCurrentUser();
   const currentUserId = currentUser?.id;
@@ -30,16 +32,34 @@ const Writer = ({ writer, postId }: WriterProps) => {
     setMsgModal(true);
   };
 
+  // 프로필로 넘어가기
+  const naviProfile = (userId: string | undefined) => {
+    navigate(`/yourpage/${shortid.generate()}`, { state: { userId: userId } });
+  };
+
   return (
     <>
       <WriterContainer>
         <ProfileBox>
           {writer?.avatar_url && (
-            <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${writer?.avatar_url}`} alt="User Avatar" />
+            <Img
+              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${writer?.avatar_url}`}
+              alt="User Avatar"
+              onClick={() => {
+                naviProfile(writer?.id);
+              }}
+            />
           )}
 
           <Name>
-            <TitleLine>{writer?.name}</TitleLine>님이 궁금하시다면?
+            <TitleLine
+              onClick={() => {
+                naviProfile(writer?.id);
+              }}
+            >
+              {writer?.name}
+            </TitleLine>
+            님이 궁금하시다면?
           </Name>
         </ProfileBox>
         {writer && (
@@ -79,6 +99,7 @@ const Img = styled.img`
   height: 60px;
   object-fit: cover;
   border-radius: 50%;
+  cursor: pointer;
 `;
 
 const Name = styled.div`
@@ -90,6 +111,7 @@ const Name = styled.div`
 const TitleLine = styled.span`
   padding: 2px;
   background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+  cursor: pointer;
 `;
 
 const ButtonBox = styled.div`

@@ -100,7 +100,6 @@ const MPosts = () => {
 
   // 프로필로 넘어가기
   const naviProfile = (userId: string) => {
-    // navigate(`/yourpage/${userId}`);
     navigate(`/yourpage/${shortid.generate()}`, { state: { userId: userId } });
   };
 
