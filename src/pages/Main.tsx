@@ -16,7 +16,6 @@ const fetchStores = async ({ pageParam = 0 }) => {
   const { data } = await supabase
     .from('store')
     .select()
-    .order('isClosed')
     .range(pageParam, pageParam + PAGE_SIZE - 1);
   return data || [];
 };
@@ -35,7 +34,7 @@ const Main = () => {
       return allPages.flat().length;
     }
   });
-  console.log('haha');
+  console.log('----console log----');
   console.log(storesData);
 
   const { ref, inView } = useInView({
@@ -46,7 +45,7 @@ const Main = () => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
-  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [inView]);
 
   const allStores = storesData?.pages.flatMap((page) => page) || [];
   const header = (
@@ -65,7 +64,6 @@ const Main = () => {
         <Masonry columns={3} spacing={2} sx={{ maxWidth: '1920px', width: '50%', margin: '0 auto' }}>
           {Array.from({ length: PAGE_SIZE }, (_, index) => (
             <Link to="/" key={index}>
-              {/* <Link to="/" key={index} ref={index === PAGE_SIZE - 1 ? observerRef : null}> */}
               <Skeleton variant="rectangular" width="100%" height={300} animation="wave" />
             </Link>
           ))}
@@ -83,14 +81,14 @@ const Main = () => {
     <MainContainer>
       {header}
       <Masonry columns={3} spacing={2} sx={{ maxWidth: '1920px', minWidth: '1200px', width: '50%', margin: '0 auto' }}>
-        {allStores.map((store) => (
+        {allStores.map((store, idx) => (
           <Link to={`detail/${store.id}`} key={store.id}>
             <Card store={store} />
           </Link>
         ))}
-        {isFetchingNextPage && <p>Loading...</p>}
       </Masonry>
       <div
+        className="keen-slider"
         style={{
           backgroundColor: 'transparent',
           width: '90%',
@@ -99,7 +97,7 @@ const Main = () => {
           margin: '10px'
         }}
         ref={ref}
-      />
+      ></div>
     </MainContainer>
   );
 };
