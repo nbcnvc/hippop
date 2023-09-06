@@ -153,6 +153,7 @@ const RStorePosts = () => {
           </PostBox>
         );
       })}
+      {selectPosts && selectPosts.length === 0 && <NoResult>아직 작성된 후기가 없습니다 :(</NoResult>}
       <Trigger ref={ref} />
     </PostContainer>
   );
@@ -248,6 +249,15 @@ const Button = styled.button`
 const Trigger = styled.div`
   width: 100%;
   align-items: center;
+`;
+
+const NoResult = styled.h1`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+  font-size: 24px;
+  font-weight: 700px;
 `;
 
 // 스켈레톤
