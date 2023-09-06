@@ -1,4 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
+
+// 컴포넌트
+import Subscribe from '../components/community/detail/Subscribe';
+import Message from '../components/message/Message';
 // 라이브러리
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
@@ -20,12 +24,23 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import DefaultImg from '../images/defaultImg.png';
 import { Skeleton } from '@mui/material';
 
+import { useCurrentUser } from '../store/userStore';
+
 const YourPage = () => {
+  // 현재 유저
+  const currentUser = useCurrentUser();
+  // 쪽지 보내기
+  const [msgModal, setMsgModal] = useState<boolean>(false);
+  const openMsgModal = () => {
+    setMsgModal(true);
+  };
+
   // const { id } = useParams();
 
   const { state } = useLocation();
   const userId: string = state?.userId || '';
 
+  console.log(userId);
   // const userId: string = id as string;
   const [userData, setUserData] = useState<UserInfo | null>(null);
   const [activeSection, setActiveSection] = useState('myReview'); // 기본값 설정
@@ -236,6 +251,7 @@ const YourPage = () => {
 
   return (
     <>
+      {msgModal && <Message msgModal={msgModal} setMsgModal={setMsgModal} writer={user!} />}
       <Container>
         <UserWrapper>
           <UserBox>
@@ -245,20 +261,23 @@ const YourPage = () => {
             </Htag>
             <BoxLine></BoxLine>
             <UserProfile>
-              <div>
+              <Between>
                 {user?.avatar_url?.startsWith('profile/') ? (
                   <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${user?.avatar_url}`} alt="User Avatar" />
                 ) : (
                   <Img src={user?.avatar_url} alt="User Avatar" />
                 )}
-              </div>
-              <div>
-                <Ptag>힙팝메이트</Ptag>
-                <Ptag>
-                  <SpanLine>{user?.name}</SpanLine>님
-                </Ptag>
-                {/* <Ptage>{user?.email}</Ptage> */}
-              </div>
+                <NameBox>
+                  <Ptag>힙팝메이트</Ptag>
+                  <Ptag>
+                    <SpanLine>{user?.name}</SpanLine>님
+                  </Ptag>
+                </NameBox>
+              </Between>
+              <Between>
+                <Subscribe writerId={user?.id} />
+                {/* {currentUser?.id !== user?.id && <MsgButton onClick={openMsgModal}>쪽지 보내기</MsgButton>} */}
+              </Between>
             </UserProfile>
           </UserBox>
           <div></div>
@@ -404,18 +423,25 @@ const Htag = styled.h2`
 const HtagLine = styled.h2`
   background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
 `;
+
 const BoxLine = styled.div`
   border-bottom: 2px dashed #333333;
 
-  margin: 25px 10px 40px 10px;
+  margin: 15px 10px 5px 10px;
 `;
 
 const UserProfile = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
 
-  margin-bottom: 20px;
+const Between = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  margin: 10px 0;
 `;
 
 const Img = styled.img`
@@ -425,8 +451,16 @@ const Img = styled.img`
   border-radius: 50%;
 `;
 
+const NameBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Ptag = styled.p`
   font-size: 20px;
+  font-weight: 700;
   color: #333333;
 
   padding: 5px;
@@ -436,6 +470,13 @@ const Ptag = styled.p`
 
 const SpanLine = styled.span`
   background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+`;
+
+const MsgButton = styled.button`
+  width: 120px;
+  height: 40px;
+  margin-left: 10px;
+  font-weight: 600;
 `;
 
 const StoreListBox = styled.div`
@@ -531,6 +572,7 @@ const GridContainer = styled.div`
   width: 50%;
 
   margin-top: 28px;
+
   /* margin-left: 160px; */
   /* margin-top: 50px; */
 `;
@@ -551,6 +593,7 @@ const Card = styled.div`
   position: relative;
 
   box-sizing: border-box;
+
   transition: color 0.3s ease, transform 0.3s ease;
   &:hover {
     border: 6px solid var(--primary-color);
