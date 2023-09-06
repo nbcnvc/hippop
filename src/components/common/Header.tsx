@@ -2,21 +2,21 @@ import React, { useState, useRef, useEffect } from 'react';
 // 라이브러리
 import { Link, useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
+import Login from '../auth/Login';
+import { useCurrentUser } from '../../store/userStore';
+import Alarm from './Alarm';
+import AlarmBox from './AlarmBox';
+import { supabase } from '../../api/supabase';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import shortid from 'shortid';
-import { toast } from 'react-toastify';
+//alert
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // zustand store
-import { setUserStore, useCurrentUser } from '../../store/userStore';
 // api
 import { getUser } from '../../api/user';
 import { getAlarms, readAlarm } from '../../api/alarm';
-import { supabase } from '../../api/supabase';
-// 컴포넌트
-import Login from '../../pages/Login';
-import Alarm from './Alarm';
-import AlarmBox from './AlarmBox';
-// mui
-import NotificationsIcon from '@mui/icons-material/Notifications';
 
 function Header() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -26,11 +26,10 @@ function Header() {
   const alarmRef = useRef<HTMLDivElement | null>(null);
 
   // 유저 셋 해주는 함수 가져오기
-  const setCurrentUser = setUserStore((state) => state.setCurrentUser);
+  // const setCurrentUser = setUserStore((state) => state.setCurrentUser);
   const currentUser = useCurrentUser();
   const currentUserId = currentUser?.id;
   const { data: user } = useQuery(['user', currentUserId], () => getUser(currentUserId ?? ''));
-
   // 알림 데이터 가져오기
   const { data: alarms, isLoading, isError } = useQuery(['alarms'], () => getAlarms(currentUserId ?? ''));
   const readAlarms = alarms?.filter((alarm) => alarm.isRead === false);
@@ -76,14 +75,16 @@ function Header() {
   };
 
   const navigate = useNavigate();
-
   const handleLogOut = async () => {
     const { error } = await supabase.auth.signOut();
 
     if (error) {
       console.error('error=>', error);
     } else {
-      toast(':) 안녕히가세요 !');
+      toast.info('안녕히가세요 ! :)', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
       navigate('/');
     }
   };
@@ -195,6 +196,19 @@ function Header() {
 
   return (
     <HeaderTag>
+      {/* <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        // hideProgressBar={true}
+        newestOnTop={true}
+        // closeOnClick={true}
+        // rtl={true}
+        pauseOnFocusLoss={false}
+        draggable={true}
+        pauseOnHover={true}
+        limit={1}
+        style={{ zIndex: 9999 }}
+      /> */}
       <div className="header-wrapper">
         <Alarm />
         <div className="logo-wrapper">
@@ -269,6 +283,13 @@ function Header() {
 }
 export default Header;
 
+export const ElarmContainer = styled(ToastContainer)`
+  .custom-toast {
+    background-color: var(--sixth-color);
+    color: black;
+    z-index: 999;
+  }
+`;
 const HeaderTag = styled.header`
   position: fixed;
   background-color: var(--primary-color);

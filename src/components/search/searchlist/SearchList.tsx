@@ -19,6 +19,9 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
+//alert
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SearchList = () => {
   const navigate = useNavigate();
@@ -173,7 +176,10 @@ const SearchList = () => {
   const handleSearchButtonClick = () => {
     setDebouncedInputValue(inputValue);
     if (!inputValue) {
-      alert('검색어를 입력해주세요!');
+      toast.info('검색어를 입력해주세요 ! :)', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
       setDebouncedInputValue('');
     }
     refreshData();

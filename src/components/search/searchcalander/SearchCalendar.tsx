@@ -7,7 +7,10 @@ import { getMonth, getYear } from 'date-fns';
 import { styled } from 'styled-components';
 // 타입
 import { SearchCalendarProps } from '../../../types/props';
-// mui
+//alert
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import ManageSearchRoundedIcon from '@mui/icons-material/ManageSearchRounded';
 
 const SearchCalendar = ({ onSearch }: SearchCalendarProps) => {
@@ -32,7 +35,10 @@ const SearchCalendar = ({ onSearch }: SearchCalendarProps) => {
 
   const handleStartDateChange = (date: Date) => {
     if (endDate < date) {
-      alert('종료일 보다 클 수는 없어요~ ');
+      toast.info('종료일 보다 클 수는 없어요~ :)', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
       setEndDate(date);
       setStartDate(date);
     } else {
@@ -42,7 +48,10 @@ const SearchCalendar = ({ onSearch }: SearchCalendarProps) => {
 
   const handleEndDateChange = (date: Date) => {
     if (startDate > date) {
-      alert('시작일 보다 작을 수는 없어요~.');
+      toast.info('시작일 보다 작을 수는 없어요~ :)', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
     } else {
       setEndDate(date);
     }

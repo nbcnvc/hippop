@@ -12,6 +12,9 @@ import { setUserStore } from '../../store/userStore';
 import { randomFileName } from '../../hooks/useHandleImageName';
 // mui
 import PartyModeIcon from '@mui/icons-material/PartyMode';
+//alert
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const UserInfo = () => {
   const navigate = useNavigate();
@@ -83,7 +86,10 @@ const UserInfo = () => {
   // 닉네임 저장
   const handleNameSave = async () => {
     if (newName.length >= 5) {
-      alert('닉네임은 다섯 글자 미만이어야 합니다.');
+      toast.info('닉네임은 다섯 글자 미만이어야 합니다. :)', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
       return;
     }
 
@@ -92,7 +98,10 @@ const UserInfo = () => {
       const userData = await getUser(currentUser?.id ?? '');
       setCurrentUser(userData);
       setEditingName(false); // 수정 모드 해제
-      alert('닉네임이 변경 됐습니다 :)');
+      toast.info('닉네임이 변경 됐습니다. :)', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
     } else {
       console.log(error);
     }
@@ -139,7 +148,10 @@ const UserInfo = () => {
             setCurrentUser(userData);
           }
 
-          alert('프로필 변경이 완료됐습니다 :)');
+          toast.info('프로필 변경이 완료됐습니다. :)', {
+            className: 'custom-toast',
+            theme: 'light'
+          });
           setImageUploadVisible(false);
         }
       } catch (error) {

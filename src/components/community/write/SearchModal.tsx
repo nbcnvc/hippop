@@ -10,6 +10,9 @@ import { fetchStoreData } from '../../../api/store';
 import { styled } from 'styled-components';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ReplayRoundedIcon from '@mui/icons-material/ReplayRounded';
+//alert
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SearchModal = ({
   keyword,
@@ -31,6 +34,7 @@ const SearchModal = ({
   const closeSearch = () => {
     setKeyword('');
     setSearchModal(false);
+    document.body.style.overflow = 'auto';
     // 검색 결과가 있을 경우 검색 결과 초기화
     if (result) {
       setResult(null);
@@ -69,7 +73,12 @@ const SearchModal = ({
   const searchButton = () => {
     // 유효성 검사
     if (!keyword) {
-      return alert('검색어를 입력해주세요.');
+      toast.info('검색어를 입력해주세요.', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+      return;
+      // alert('검색어를 입력해주세요.');
     }
     // 검색 로직
     if (keyword) {
@@ -164,6 +173,13 @@ const SearchModal = ({
 };
 
 export default SearchModal;
+
+export const ElarmContainer = styled(ToastContainer)`
+  .custom-toast {
+    background-color: red;
+    color: black;
+  }
+`;
 
 const ModalContainer = styled.div`
   width: 100%;

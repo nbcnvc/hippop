@@ -10,6 +10,10 @@ import { WriterProps } from '../../../types/props';
 import Subscribe from './Subscribe';
 import Message from '../../message/Message';
 
+// //alert
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Writer = ({ writer, postId }: WriterProps) => {
   const { pathname } = useLocation();
   const currentUser = useCurrentUser();
@@ -17,7 +21,11 @@ const Writer = ({ writer, postId }: WriterProps) => {
   const [msgModal, setMsgModal] = useState<boolean>(false);
   const openMsgModal = () => {
     if (!currentUser) {
-      return alert('로그인을 해주세요.');
+      toast.info('로그인을 해주세요 ! :)', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+      return;
     }
     setMsgModal(true);
   };

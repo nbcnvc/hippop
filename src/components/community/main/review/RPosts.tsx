@@ -178,7 +178,9 @@ const RPosts = () => {
       {sortName === '최신순' && <RNewPosts />}
       {sortName === '인기순' && <RPopularPosts />}
       <PostContainer>
-        {sortName === '팝업스토어 검색' && selectPosts && selectPosts.length > 0 ? (
+        {sortName === '팝업스토어 검색' &&
+          selectPosts &&
+          selectPosts.length > 0 &&
           selectPosts?.map((post) => {
             const imageTags = extractImageTags(post.body);
             const postText = post.body.replace(/<img.*?>/g, '');
@@ -213,8 +215,8 @@ const RPosts = () => {
                 </ContentBox>
               </PostBox>
             );
-          })
-        ) : (
+          })}
+        {sortName === '팝업스토어 검색' && selectPosts && selectPosts.length === 0 && (
           <NoResult>아직 작성된 후기가 없습니다 :(</NoResult>
         )}
         <Trigger ref={ref} />

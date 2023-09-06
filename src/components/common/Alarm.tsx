@@ -195,7 +195,7 @@ const Alarm = () => {
 
           if (alarm) {
             toast.info(alarm[alarm.length - 1]?.content, {
-              theme: 'dark',
+              theme: 'colored',
               icon: <TextsmsIcon />
             });
           }
@@ -208,8 +208,8 @@ const Alarm = () => {
 
   return (
     <div>
-      <AlarmContainer
-        position="top-left"
+      {/* <AlarmContainer
+        position="top-right"
         autoClose={3000}
         // hideProgressBar={true}
         newestOnTop={true}
@@ -219,14 +219,18 @@ const Alarm = () => {
         draggable={true}
         pauseOnHover={true}
         // limit={3}
-      />
+      /> */}
     </div>
   );
 };
 
 export default Alarm;
 
-const AlarmContainer = styled(ToastContainer)`
+export const AlarmContainer = styled(ToastContainer)`
+  .custom-toast {
+    background-color: var(--sixth-color);
+    color: black;
+  }
   .Toastify__toast {
     font-size: 15px;
     /* border-radius: 50px; */

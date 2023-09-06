@@ -13,6 +13,7 @@ import { getPosts } from '../../../../api/post';
 // mui
 import Skeleton from '@mui/material/Skeleton';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
+import { ToastContainer } from 'react-toastify';
 
 const MNewPosts = () => {
   const navigate = useNavigate();
@@ -79,6 +80,19 @@ const MNewPosts = () => {
     // 로딩 중일 때 스켈레톤 표시
     return (
       <PostContainer>
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          // hideProgressBar={true}
+          newestOnTop={true}
+          // closeOnClick={true}
+          // rtl={true}
+          pauseOnFocusLoss={false}
+          draggable={true}
+          pauseOnHover={true}
+          limit={1}
+          style={{ zIndex: 9999 }}
+        />
         {Array.from({ length: 5 }).map((_, index) => (
           <PostBox key={index}>
             <ContentBox>
