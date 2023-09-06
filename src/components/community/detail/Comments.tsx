@@ -1,13 +1,15 @@
 import React, { useMemo, useState } from 'react';
 // 라이브러리
 import moment from 'moment';
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import shortid from 'shortid';
+import { useNavigate } from 'react-router';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { styled } from 'styled-components';
 // 타입
 import { Comment } from '../../../types/types';
 import { CommentProps } from '../../../types/props';
 // api
-import { createComment, deleteComment, getCommentCount, getComments, updateComment } from '../../../api/comment';
+import { createComment, deleteComment, getComments, updateComment } from '../../../api/comment';
 // zustand store
 import { useCurrentUser } from '../../../store/userStore';
 // mui
@@ -17,6 +19,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Comments = ({ postId }: CommentProps) => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const currentUser = useCurrentUser();
   const [body, setBody] = useState<string>('');
@@ -156,6 +159,11 @@ const Comments = ({ postId }: CommentProps) => {
     }
   };
 
+  // 프로필로 넘어가기
+  const naviProfile = (userId: string | undefined) => {
+    navigate(`/yourpage/${shortid.generate()}`, { state: { userId: userId } });
+  };
+
   if (isLoading) {
     return (
       <div>
@@ -245,10 +253,19 @@ const Comments = ({ postId }: CommentProps) => {
                     <Img
                       src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${comment.user.avatar_url}`}
                       alt="User Avatar"
+                      onClick={() => {
+                        naviProfile(comment.user.id);
+                      }}
                     />
                   )}
 
-                  <Name>{comment.user.name}</Name>
+                  <Name
+                    onClick={() => {
+                      naviProfile(comment.user.id);
+                    }}
+                  >
+                    {comment.user.name}
+                  </Name>
                 </ProfileBox>
                 {isEditId === comment.id ? (
                   <input value={edit} onChange={onChangeEdit} style={{ width: '50%' }} />
@@ -362,11 +379,13 @@ const Img = styled.img`
   height: 40px;
   object-fit: cover;
   border-radius: 50%;
+  cursor: pointer;
 `;
 
 const Name = styled.div`
   font-weight: 600;
   padding: 0 20px;
+  cursor: pointer;
 `;
 
 const Content = styled.div`
