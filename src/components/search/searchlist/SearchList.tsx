@@ -22,6 +22,9 @@ import SearchCalendar from '../searchcalander/SearchCalendar';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
+//alert
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface SliderButton {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -166,7 +169,10 @@ const SearchList = ({ storeData }: SearchListProps) => {
   const handleSearchButtonClick = () => {
     setDebouncedInputValue(inputValue);
     if (!inputValue) {
-      alert('검색어를 입력해주세요!');
+      toast.info('검색어를 입력해주세요 ! :)', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
       setDebouncedInputValue('');
     }
     refreshData();
@@ -188,9 +194,6 @@ const SearchList = ({ storeData }: SearchListProps) => {
           storeEndDate.isSameOrAfter(momentStart)
         );
       });
-
-      // 검색 필터링 결과를 콘솔에 출력하여 확인
-      console.log('필터링 결과:', filteredStores);
 
       // 검색 결과를 상태로 설정
       setFilteredStoreList(filteredStores || null);

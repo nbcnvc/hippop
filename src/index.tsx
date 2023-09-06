@@ -8,12 +8,12 @@ import { DatePickerProvider } from '@bcad1591/react-date-picker';
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 document.cookie = 'crossCookie=bar; SameSite=None; Secure';
 root.render(
-  // <React.StrictMode>
-  // <Context.Provider></Context.Provider>
-  <DatePickerProvider>
-    <App />
-  </DatePickerProvider>
-  // </React.StrictMode>
+  <React.StrictMode>
+    {/* <Context.Provider></Context.Provider> */}
+    <DatePickerProvider>
+      <App />
+    </DatePickerProvider>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

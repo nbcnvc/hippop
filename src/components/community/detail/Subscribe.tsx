@@ -7,6 +7,10 @@ import { SubscribeType } from '../../../types/types';
 
 import { styled } from 'styled-components';
 
+//alert
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Subscribe = ({ writerId }: SubscribeProps) => {
   // 로그인한 유저 정보 가져오기 (From)
   const currentUser = useCurrentUser();
@@ -16,8 +20,6 @@ const Subscribe = ({ writerId }: SubscribeProps) => {
     subscribe_from: currentUser?.id,
     subscribe_to: writerId
   };
-
-  // console.log('userId : ', userId);
 
   // 구독 확인하기
   const { data: subscribed } = useQuery(['subscribe'], async () => {
@@ -34,11 +36,24 @@ const Subscribe = ({ writerId }: SubscribeProps) => {
       queryClient.invalidateQueries(['subscribe']);
     }
   });
-  const subButton = () => {
+  const subButton = async () => {
     if (!currentUser) {
-      return alert('로그인을 해주세요.');
+      toast.info('로그인을 해주세요.', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+      return;
     } else {
-      const confirm = window.confirm('구독하시겠습니까?');
+      const confirm = await toast.promise(
+        new Promise((resolve) => {
+          window.confirm('구독하시겠습니까?') ? resolve(true) : resolve(false);
+        }),
+        {
+          // theme: 'light',
+          success: '구독이 완료되었습니다.'
+        }
+      );
+
       if (confirm) {
         createMutation.mutate(subscribe);
       }
@@ -53,7 +68,12 @@ const Subscribe = ({ writerId }: SubscribeProps) => {
   });
   const cancelButton = () => {
     if (!currentUser) {
-      return alert('로그인을 해주세요.');
+      toast.info('로그인을 해주세요.', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+      // alert('로그인을 해주세요.');
+      return;
     } else {
       const confirm = window.confirm('구독을 취소하시겠습니까?');
       if (confirm) {

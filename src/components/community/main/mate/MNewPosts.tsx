@@ -11,6 +11,7 @@ import { getPosts } from '../../../../api/post';
 import { styled } from 'styled-components';
 import Skeleton from '@mui/material/Skeleton';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
+import { ToastContainer } from 'react-toastify';
 
 const MNewPosts = () => {
   const navigate = useNavigate();
@@ -52,7 +53,6 @@ const MNewPosts = () => {
       })
       .flat();
   }, [posts]);
-  console.log(selectPosts);
 
   // 언제 다음 페이지를 가져올 것
   const { ref } = useInView({
@@ -78,6 +78,19 @@ const MNewPosts = () => {
     // 로딩 중일 때 스켈레톤 표시
     return (
       <PostContainer>
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          // hideProgressBar={true}
+          newestOnTop={true}
+          // closeOnClick={true}
+          // rtl={true}
+          pauseOnFocusLoss={false}
+          draggable={true}
+          pauseOnHover={true}
+          limit={1}
+          style={{ zIndex: 9999 }}
+        />
         {Array.from({ length: 5 }).map((_, index) => (
           <PostBox key={index}>
             <ContentBox>
@@ -190,10 +203,6 @@ const PostBox = styled.div`
   margin: 10px;
   display: flex;
   // box-sizing: border-box;
-<<<<<<< HEAD
-=======
-
->>>>>>> e84a1b4448ff115f53348816a26674d7da0e957c
   transition: color 0.3s ease, transform 0.3s ease;
   &:hover {
     border: 6px solid var(--primary-color);
@@ -228,7 +237,7 @@ const Title = styled.span`
 `;
 
 const Body = styled.div`
-  height: 45px;
+  height: 43px;
   width: 430px;
   color: black;
   font-size: 14px;

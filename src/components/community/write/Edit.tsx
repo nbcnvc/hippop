@@ -10,6 +10,9 @@ import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Edit = ({ postId, postTitle, postBody, isEdit, setIsEdit }: EditProps) => {
   const { id } = useParams();
   const [title, setTitle] = useState<string>(postTitle);
@@ -37,16 +40,36 @@ const Edit = ({ postId, postTitle, postBody, isEdit, setIsEdit }: EditProps) => 
   const saveButton = () => {
     // 유효성 검사
     if (!title) {
-      return alert('제목을 입력해주세요.');
+      toast.info('제목을 먼저 입력해주세요 :)', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+      // alert('제목을 입력해주세요.');
+      return;
     }
     if (title.length > 30) {
-      return alert('제목은 30글자 이하로 입력해주세요.');
+      toast.info('제목은 30글자 이하로 입력해주세요.', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+      // alert('제목은 30글자 이하로 입력해주세요.');
+      return;
     }
     if (!body) {
-      return alert('내용을 입력해주세요.');
+      toast.info('내용을 입력해주세요.', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+      // alert('내용을 입력해주세요.');
+      return;
     }
     if (body === `<p><br></p>`) {
-      return alert('내용을 입력해주세요.');
+      toast.info('내용을 입력해주세요.', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+      // alert('내용을 입력해주세요.');
+      return;
     }
 
     // 수정된 내용
@@ -65,6 +88,19 @@ const Edit = ({ postId, postTitle, postBody, isEdit, setIsEdit }: EditProps) => 
 
   return (
     <ModalContainer>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        // hideProgressBar={true}
+        newestOnTop={true}
+        // closeOnClick={true}
+        // rtl={true}
+        pauseOnFocusLoss={false}
+        draggable={true}
+        pauseOnHover={true}
+        limit={1}
+        style={{ zIndex: 9999 }}
+      />
       <ModalBox>
         <ButtonBox>
           <XButton onClick={cancelButton} />

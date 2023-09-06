@@ -8,6 +8,9 @@ import { Store } from '../types/types';
 import { useCurrentUser } from '../store/userStore';
 
 import { styled } from 'styled-components';
+//alert
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Review = () => {
   const [writeModal, setWriteModal] = useState<boolean>(false);
@@ -21,7 +24,11 @@ const Review = () => {
   // 검색 모달 열기
   const searcButton = () => {
     if (!currentUser) {
-      return alert('로그인 해주세요.');
+      toast.info('로그인 먼저 부탁 드려요~ :X', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+      return;
     }
     setSearchModal(true);
     document.body.style.overflow = 'hidden';

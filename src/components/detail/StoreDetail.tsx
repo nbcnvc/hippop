@@ -23,7 +23,9 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import Menu from '@mui/material/Menu';
-
+//alert
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const StoreDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -67,28 +69,6 @@ const StoreDetail = () => {
   };
 
   const handleMouseEnter = () => setIsClicked(!isClicked);
-  // console.log('isClicked', isClicked);
-
-  // useEffect(() => {
-  //   const handleOutsideClick = (event: MouseEvent) => {
-  //     if (isClicked && calendarRef.current && !calendarRef.current.contains(event.target as Node)) {
-  //       setIsClicked(false);
-  //     }
-  //   };
-
-  //   // Attach the event listener to the document when the calendar is open
-  //   if (isClicked) {
-  //     document.addEventListener('click', handleOutsideClick);
-  //   } else {
-  //     // Remove the event listener when the calendar is closed
-  //     document.removeEventListener('click', handleOutsideClick);
-  //   }
-
-  //   // Cleanup the event listener when the component unmounts
-  //   return () => {
-  //     document.removeEventListener('click', handleOutsideClick);
-  //   };
-  // }, [isClicked]);
 
   const settings = {
     slidesToShow: 1,
@@ -170,7 +150,10 @@ const StoreDetail = () => {
                   <CopyToClipboard
                     text={storeData.link}
                     onCopy={() =>
-                      alert('주소가 복사되었습니다. 공식 페이지에서 더 자세한 정보를 확인하실 수 있습니다!')
+                      toast.info('주소가 복사되었습니다. 공식 페이지에서 더 자세한 정보를 확인하실 수 있습니다! :)', {
+                        className: 'custom-toast',
+                        theme: 'light'
+                      })
                     }
                   >
                     <LinkIcon />

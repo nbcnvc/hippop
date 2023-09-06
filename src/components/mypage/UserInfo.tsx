@@ -10,21 +10,17 @@ import { setUserStore } from '../../store/userStore';
 import { randomFileName } from '../../hooks/useHandleImageName';
 //스타일
 import PartyModeIcon from '@mui/icons-material/PartyMode';
-//메세지
+//alert
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { useQuery } from '@tanstack/react-query';
 import shortid from 'shortid';
 const UserInfo = () => {
   const navigate = useNavigate();
-  // const { id } = useParams();
-
   const { state } = useLocation();
-  // const userId = state.userId;
   const userId: string = state?.userId || '';
-  console.log(state.userId);
-
   const { data: currentUser } = useQuery(['user', userId], () => getUser(userId ?? ''));
-  // const { data: currentUser } = useQuery(['user', id], () => getUser(id ?? ''));
-
   const [editingName, setEditingName] = useState(false);
   const [newName, setNewName] = useState('');
   const [imageUploadVisible, setImageUploadVisible] = useState(false);
@@ -90,7 +86,10 @@ const UserInfo = () => {
   // 닉네임 저장
   const handleNameSave = async () => {
     if (newName.length >= 5) {
-      alert('닉네임은 다섯 글자 미만이어야 합니다.');
+      toast.info('닉네임은 다섯 글자 미만이어야 합니다. :)', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
       return;
     }
 
@@ -99,7 +98,10 @@ const UserInfo = () => {
       const userData = await getUser(currentUser?.id ?? '');
       setCurrentUser(userData);
       setEditingName(false); // 수정 모드 해제
-      alert('닉네임이 변경 됐습니다 :)');
+      toast.info('닉네임이 변경 됐습니다. :)', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
     } else {
       console.log(error);
     }
@@ -144,10 +146,12 @@ const UserInfo = () => {
           if (currentUser) {
             const userData = await getUser(currentUser?.id ?? '');
             setCurrentUser(userData);
-            // console.log('userData', userData);
           }
 
-          alert('프로필 변경이 완료됐습니다 :)');
+          toast.info('프로필 변경이 완료됐습니다. :)', {
+            className: 'custom-toast',
+            theme: 'light'
+          });
           setImageUploadVisible(false);
         }
       } catch (error) {

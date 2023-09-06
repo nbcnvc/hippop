@@ -44,7 +44,6 @@ const Alarm = () => {
         filter: `user_id=in.(${subList})`
       },
       (payload) => {
-        console.log(payload);
         if (payload.new.ctg_index === 1) {
           setPostData(payload);
         }
@@ -60,7 +59,6 @@ const Alarm = () => {
         filter: `subscribe_to=eq.${currentUserId}`
       },
       (payload) => {
-        console.log(payload);
         setSubData(payload);
       }
     )
@@ -74,7 +72,6 @@ const Alarm = () => {
         filter: `receiver=eq.${currentUserId}`
       },
       (payload) => {
-        console.log(payload);
         setMsgData(payload);
       }
     )
@@ -196,11 +193,9 @@ const Alarm = () => {
             .eq('targetUserId', currentUserId)
             .order('created_at', { ascending: true });
 
-          console.log(alarm?.length);
-
           if (alarm) {
             toast.info(alarm[alarm.length - 1]?.content, {
-              theme: 'dark',
+              theme: 'colored',
               icon: <TextsmsIcon />
             });
           }
@@ -213,8 +208,8 @@ const Alarm = () => {
 
   return (
     <div>
-      <AlarmContainer
-        position="top-left"
+      {/* <AlarmContainer
+        position="top-right"
         autoClose={3000}
         // hideProgressBar={true}
         newestOnTop={true}
@@ -224,14 +219,18 @@ const Alarm = () => {
         draggable={true}
         pauseOnHover={true}
         // limit={3}
-      />
+      /> */}
     </div>
   );
 };
 
 export default Alarm;
 
-const AlarmContainer = styled(ToastContainer)`
+export const AlarmContainer = styled(ToastContainer)`
+  .custom-toast {
+    background-color: var(--sixth-color);
+    color: black;
+  }
   .Toastify__toast {
     font-size: 15px;
     /* border-radius: 50px; */

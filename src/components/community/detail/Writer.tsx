@@ -8,15 +8,22 @@ import { useLocation } from 'react-router-dom';
 import { WriterProps } from '../../../types/props';
 import { useCurrentUser } from '../../../store/userStore';
 
+// //alert
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Writer = ({ writer, postId }: WriterProps) => {
   const { pathname } = useLocation();
   const currentUser = useCurrentUser();
   const currentUserId = currentUser?.id;
   const [msgModal, setMsgModal] = useState<boolean>(false);
-  console.log('writer', writer);
   const openMsgModal = () => {
     if (!currentUser) {
-      return alert('로그인을 해주세요.');
+      toast.info('로그인을 해주세요 ! :)', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+      return;
     }
     setMsgModal(true);
   };

@@ -31,8 +31,6 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
     }
   }, [storeData]);
 
-  console.log(filteredStore);
-
   const PrevArrow = ({ onClick }: SliderButton) => {
     return (
       <button onClick={onClick} type="button">

@@ -12,6 +12,9 @@ import { deletePost, getPost } from '../api/post';
 
 import { styled } from 'styled-components';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
+//alert
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const RDetail = () => {
   const { id } = useParams();
@@ -41,8 +44,10 @@ const RDetail = () => {
       deleteMutation.mutate(id);
 
       // 상세페이지 모달 창 닫기
-      alert('삭제되었습니다!');
-
+      toast.info('삭제되었습니다 ! :)', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
       // 메인 페이지로 이동
       navigate('/review');
     }
