@@ -16,6 +16,8 @@ import { UserInfo, PostType } from '../types/types';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
+
 // img
 import DefaultImg from '../images/defaultImg.png';
 import { Skeleton } from '@mui/material';
@@ -261,54 +263,57 @@ const YourPage = () => {
               </div>
             </UserProfile>
           </UserBox>
-          <div></div>
+          {/* <div></div> */}
           <StoreListBox>
-            <Htag>
-              <HtagLine>북마크한 팝업스토어</HtagLine>
-            </Htag>
-            <BookMarkList>
-              {bookMarkStore?.map((bookMark) => {
-                return (
-                  <BookMarkWraaper>
-                    <BookMarkBox>
-                      <div>
-                        <StoreList>
-                          <p>
-                            <RoomRoundedIcon fontSize="large" />
-                          </p>
-                          <StoreInfo>
-                            <div>
-                              <div>
+            <div>
+              <Htag>
+                <HtagLine>북마크한 팝업스토어</HtagLine>
+              </Htag>
+              <BookMarkList>
+                <div style={{ paddingRight: '1rem' }}>
+                  {bookMarkStore?.map((bookMark) => {
+                    return (
+                      <BookMarkWraaper>
+                        <BookMarkBox>
+                          <div>
+                            <StoreList>
+                              <p>
+                                <RoomRoundedIcon fontSize="large" />
+                              </p>
+                              <StoreInfo>
                                 <Location>
                                   {bookMark.store?.location.split(' ').slice(0, 1)}{' '}
                                   {bookMark.store?.location.split(' ').slice(1, 2)}
                                 </Location>
-                              </div>
-                              <TitleBox>
-                                <StoreTitle>{bookMark.store?.title}</StoreTitle>
-                              </TitleBox>
-                            </div>
-                            <StoreDetailArrow
-                              onClick={() => {
-                                BookMarkDetail(bookMark.store.id);
-                              }}
-                            >
-                              <ArrowForwardIosIcon />
-                            </StoreDetailArrow>
-                          </StoreInfo>
-                        </StoreList>
-                      </div>
-                    </BookMarkBox>
-                    <Line></Line>
-                  </BookMarkWraaper>
-                );
-              })}
-            </BookMarkList>
+
+                                <TitleBox>
+                                  <StoreTitle>{bookMark.store?.title}</StoreTitle>
+                                </TitleBox>
+
+                                <StoreDetailArrow
+                                  onClick={() => {
+                                    BookMarkDetail(bookMark.store.id);
+                                  }}
+                                >
+                                  <ArrowForwardIosIcon />
+                                </StoreDetailArrow>
+                              </StoreInfo>
+                            </StoreList>
+                          </div>
+                        </BookMarkBox>
+                        <Line></Line>
+                      </BookMarkWraaper>
+                    );
+                  })}
+                </div>
+              </BookMarkList>
+            </div>
           </StoreListBox>
         </UserWrapper>
 
         <ReviewWrapper>
           <Htag2>
+            <EditNoteRoundedIcon fontSize="large" />
             <HtagLine>작성한 게시글</HtagLine>
           </Htag2>
           <GridContainer>
@@ -360,8 +365,9 @@ export default YourPage;
 
 const Container = styled.div`
   display: flex;
-
+  flex-direction: column;
   max-width: 1920px;
+  min-width: 744px;
   width: 50%;
   height: 100%;
   margin: 0 auto;
@@ -372,23 +378,24 @@ const Container = styled.div`
 
 const UserWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  margin-top: 50px;
-  width: 300px;
+  justify-content: center;
+  align-items: center;
 
-  /* position: fixed;  */
-  /* top: 0; 상단에 고정 */
+  width: 100%;
   overflow-y: auto;
 `;
 
 const UserBox = styled.div`
   display: flex;
   flex-direction: column;
-
+  min-width: 220px;
+  width: 30%;
   height: 250px;
+  padding: 5px;
 
   border: 3px solid #333333;
   border-radius: 18px;
+  margin-right: 30px;
 `;
 
 const Htag = styled.h2`
@@ -403,11 +410,15 @@ const Htag = styled.h2`
 
 const HtagLine = styled.h2`
   background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+  display: flex;
+  align-items: center;
+
+  margin-left: 5px;
 `;
 const BoxLine = styled.div`
   border-bottom: 2px dashed #333333;
 
-  margin: 25px 10px 40px 10px;
+  margin: 25px 10px 20px 10px;
 `;
 
 const UserProfile = styled.div`
@@ -440,22 +451,23 @@ const SpanLine = styled.span`
 
 const StoreListBox = styled.div`
   background-color: var(--fourth-color);
-  margin-top: 80px;
 
+  min-width: 330px;
   border: 3px solid #333333;
   border-radius: 18px;
-
-  height: 720px;
+  width: 100%;
+  height: 250px;
   /* height: 100%; */
   /* overflow: hidden; */
   overflow-y: scroll;
-
+  display: flex;
+  flex-direction: column;
   padding: 5px;
 `;
 
 const BookMarkList = styled.div`
   margin-top: 24px;
-  max-height: inherit;
+  /* max-height: inherit; */
 `;
 
 const BookMarkWraaper = styled.div`
@@ -464,7 +476,7 @@ const BookMarkWraaper = styled.div`
 `;
 
 const BookMarkBox = styled.div`
-  display: flex;
+  /* display: flex; */
 
   padding: 5px;
 `;
@@ -473,29 +485,44 @@ const StoreList = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+
+  margin-left: 10px;
 `;
 
 const StoreInfo = styled.div`
   margin-bottom: 6px;
+
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  width: 230px;
+
+  align-items: center;
+  width: 100%;
 `;
 
 const Location = styled.span`
-  font-size: 12px;
+  font-size: 17px;
+  /* width: 30%; */
+  flex: 0.8;
+  margin-left: 20px;
 `;
 
 const TitleBox = styled.div`
-  max-width: 200px;
+  display: flex;
+  flex: 3;
+  justify-content: flex-start;
+  /* overflow-x: hidden; */
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  margin-left: 20px;
+  /* width: 100%; */
 `;
 
 const StoreTitle = styled.span`
+  display: flex;
+  justify-content: flex-start;
   font-size: 15px;
+  /* width: 100%; */
 `;
 
 const StoreDetailArrow = styled.div`
@@ -503,19 +530,20 @@ const StoreDetailArrow = styled.div`
 `;
 
 const Line = styled.div`
-  width: 92%;
+  width: 99%;
   margin: 5px 15px;
   border-bottom: 1px dashed #333333;
 `;
 
 const ReviewWrapper = styled.div`
-  margin: 50px 0 0 390px;
+  margin: 50px 0 0 0;
 `;
 
 const Htag2 = styled.h2`
   margin-bottom: 55px;
   display: flex;
-  align-items: flex-start;
+  /* justify-content: center;
+  align-items: center; */
   font-size: 25px;
 `;
 
@@ -524,24 +552,27 @@ const GridContainer = styled.div`
 
   display: grid;
   justify-content: center;
-  grid-template-columns: repeat(2, 1fr); // 한 줄에 두 개의 열
-  gap: 60px;
+  grid-template-columns: repeat(3, 1fr); // 한 줄에 두 개의 열
+  gap: 30px;
 
-  /* max-width: 500px; // 그리드가 너무 넓어지는 것을 제한 */
-  width: 50%;
+  width: 100%;
 
   margin-top: 28px;
-  /* margin-left: 160px; */
-  /* margin-top: 50px; */
+  @media (max-width: 1600px) {
+    grid-template-columns: repeat(2, 1fr); // Three columns per row
+  }
+  @media (max-width: 1000px) {
+    grid-template-columns: repeat(2, 1fr); // Three columns per row
+  }
 `;
 
 const Card = styled.div`
-  width: 400px !important ;
-
-  height: 460px;
+  width: 100%;
+  /* height: 460px; */
   border-radius: 18px;
   border: 3px solid var(--fifth-color);
 
+  padding: 10px;
   display: flex !important;
   flex-direction: column;
   justify-content: center;
@@ -561,32 +592,22 @@ const Card = styled.div`
   }
 `;
 
-const PostImgBox1 = styled.div`
-  /* border: 2px solid black;
-  border-radius: 18px;
-  object-fit: cover;
+// const PostImgBox = styled.div`
+//   border: 2px solid black;
+//   border-radius: 18px;
+//   object-fit: cover;
 
-  width: 330px;
-  height: 310px;
-  margin-bottom: 15px; */
-`;
-
-const PostImgBox = styled.div`
-  border: 2px solid black;
-  border-radius: 18px;
-  object-fit: cover;
-
-  width: 330px;
-  height: 310px;
-  /* margin-bottom: 15px; */
-`;
+//   width: ;
+//   height: 310px;
+//   /* margin-bottom: 15px; */
+// `;
 
 const PostImg = styled.img`
   border: 2px solid black;
   border-radius: 18px;
   object-fit: cover;
 
-  width: 330px;
+  width: 365px;
   height: 310px;
   margin-bottom: 15px;
 `;
@@ -596,14 +617,19 @@ const CardInfo = styled.div`
   justify-content: space-between;
   align-items: ceoter;
 
-  width: 330px;
+  width: 100%;
 `;
 
 const HtagTttle = styled.h3`
   margin-top: 10px;
   margin-left: 5px;
+  margin: 10px 0 5px 5px;
   font-size: 20px;
-  width: 225px;
+  /* width: 225px; */
+
+  white-space: nowrap;
+  overflow: hidden;
+  width: 90%;
 `;
 
 const PtagDate = styled.p`
@@ -624,7 +650,7 @@ const DetailBtn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100px;
+  /* width: 100px; */
   height: 35px;
 
   font-size: 15px;
