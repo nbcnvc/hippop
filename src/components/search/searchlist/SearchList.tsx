@@ -20,7 +20,7 @@ import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
 //alert
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const SearchList = () => {
@@ -288,10 +288,9 @@ const SearchList = () => {
   if (isLoading) {
     return (
       <div>
-        {' '}
         <Container>
           <TagBox>
-            <TagTitle>검색 Tip</TagTitle>
+            <TagTitle>검색 TIP</TagTitle>
             <Tag> "성수" or "제목 또는 내용" </Tag>
           </TagBox>
           <SearchBox>
@@ -366,7 +365,6 @@ const SearchList = () => {
   if (isScrollLoding) {
     return (
       <div>
-        {' '}
         <Container>
           <TagBox>
             <TagTitle>검색 Tip</TagTitle>
@@ -499,7 +497,7 @@ const SearchList = () => {
   return (
     <Container>
       <TagBox>
-        <TagTitle>검색 Tip</TagTitle>
+        <TagTitle>검색 TIP</TagTitle>
         <Tag> "성수" or "제목 또는 내용" </Tag>
       </TagBox>
       <SearchBox>
@@ -569,7 +567,6 @@ const SearchList = () => {
           </div>
         ) : (
           <>
-            {' '}
             <div>
               <Title>
                 <H1Tag>인기 팝업스토어는 어떨까요?</H1Tag>
