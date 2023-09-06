@@ -179,7 +179,9 @@ const MPosts = () => {
       {sortName === '팝업메이트 구하기' && <MStorePosts />}
       {sortName === '전체보기' && <MNewPosts />}
       <PostContainer>
-        {sortName === '팝업스토어 검색' && selectPosts && selectPosts.length > 0 ? (
+        {sortName === '팝업스토어 검색' &&
+          selectPosts &&
+          selectPosts.length > 0 &&
           selectPosts?.map((post) => {
             const postText = post.body.replace(/<img.*?>/g, '');
             return (
@@ -218,8 +220,8 @@ const MPosts = () => {
                 </ProfileBox>
               </PostBox>
             );
-          })
-        ) : (
+          })}
+        {sortName === '팝업스토어 검색' && selectPosts && selectPosts.length === 0 && (
           <NoResult>함께 할 팝업메이트를 구해보세요!</NoResult>
         )}
         <Trigger ref={ref} />
