@@ -280,7 +280,44 @@ const SearchList = () => {
     arrows: true,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
-    infinite: true
+    infinite: true,
+    responsive: [
+      {
+        breakpoint: 1600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      },
+      {
+        breakpoint: 1400,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      },
+      {
+        breakpoint: 1200,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      },
+      {
+        breakpoint: 900,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      }
+    ]
   };
 
   const combinedLabel = `${momentStart} ~ ${momentEnd}`;
@@ -544,7 +581,7 @@ const SearchList = () => {
                     </SearchCountBox>
                   )}
                 </Title>
-                <GridContainer>
+                <GridContainer1>
                   {filteredStoreList?.map((store) => (
                     <Card key={store.id}>
                       <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
@@ -559,7 +596,7 @@ const SearchList = () => {
                       </InfoBox>
                     </Card>
                   ))}
-                </GridContainer>
+                </GridContainer1>
               </>
             ) : (
               <div>검색 결과가 없습니다.</div>
@@ -581,7 +618,10 @@ const SearchList = () => {
                           <div>
                             {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
                             <StoreName>{store.title}</StoreName>
-                            {store.period_start} ~ {store.period_end}
+                            <Period>
+                              {' '}
+                              {store.period_start} ~ {store.period_end}
+                            </Period>
                           </div>
                           <RankingNumber>
                             {/* <Rank /> */}
@@ -606,7 +646,10 @@ const SearchList = () => {
                         <div>
                           {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
                           <StoreName>{store.title}</StoreName>
-                          {store.period_start} ~ {store.period_end}
+                          <Period>
+                            {' '}
+                            {store.period_start} ~ {store.period_end}
+                          </Period>
                         </div>
                         <RankingNumber>
                           {/* <Rank /> */}
@@ -633,7 +676,13 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+
+  margin: 0 auto;
   margin-top: 7rem;
+
+  max-width: 1920px;
+  /* width: 1920px; */
+  max-height: 100%;
 `;
 
 const TagBox = styled.div`
@@ -701,6 +750,7 @@ const Title = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top: 50px;
 `;
 
 const H1Tag = styled.h1`
@@ -721,17 +771,33 @@ const SearchCount = styled.span`
   color: var(--primary-color);
 `;
 
-const GridContainer = styled.div`
-  margin: 0 auto; /* 가운데 정렬 */
-
+const GridContainer1 = styled.div`
+  margin: 0 auto;
   display: grid;
-  justify-content: center;
-  grid-template-columns: repeat(3, 1fr); // 한 줄에 두 개의 열
-  gap: 50px; // 열 사이의 간격 조정
+  grid-template-columns: repeat(3, 1fr); // Three columns per row
+  gap: 30px;
+  @media (max-width: 1600px) {
+    grid-template-columns: repeat(2, 1fr); // Three columns per row
+  }
+  @media (max-width: 1000px) {
+    grid-template-columns: repeat(2, 1fr); // Three columns per row
+  }
 
-  max-width: 1920px; // 그리드가 너무 넓어지는 것을 제한
   width: 100%;
-  /* margin-top: 50px; */
+  margin-top: 50px;
+`;
+
+const GridContainer = styled.div`
+  /* display: flex !important; */
+  margin: 0 auto;
+  display: grid;
+  /* justify-content: center; */
+  /* align-items: center; */
+  grid-template-columns: repeat(2 1fr); // 한 줄에 두 개의 열 */
+  gap: 30px;
+  /* max-width: 1920px; // 그리드가 너무 넓어지는 것을 제한 */
+  /* width: 100%; */
+  margin-top: 50px;
 `;
 
 const StyledSlider = styled(Slider)`
@@ -739,9 +805,15 @@ const StyledSlider = styled(Slider)`
   /* position: relative; */
   justify-content: center;
   align-items: center;
-  margin: 70px 0 70px 310px;
-  width: 1300px;
 
+  /* padding: 5px; */
+  width: 1200px;
+
+  @media (max-width: 844px) {
+    width: 740px;
+  }
+
+  /* gap: 20px; */
   .slick-slide {
     display: flex;
     justify-content: center;
@@ -756,12 +828,11 @@ const SliderBtn = styled.button`
   background-color: var(--primary-color);
 `;
 const Card = styled.div`
-  width: 370px !important ;
-
+  width: 330px;
   height: 500px;
   border-radius: 18px;
   border: 3px solid var(--fifth-color);
-
+  /* padding: 5px; */
   display: flex !important;
   flex-direction: column;
   justify-content: center;
@@ -800,7 +871,8 @@ const RankingNumber = styled.div`
 `;
 
 const InfoBox = styled.div`
-  width: 330px;
+  width: 90%;
+  /* height: 30%; */
 
   display: flex;
   justify-content: space-between;
@@ -810,9 +882,14 @@ const InfoBox = styled.div`
 `;
 
 const Img = styled.img`
-  width: 340px;
-  height: 369px;
+  /* @media (max-width: 844px) {
+    width: 180px;
+    height: 400px;
+  } */
 
+  width: 300px;
+  height: 350px;
+  /* margin-top: 20px; */
   object-fit: cover;
   border-radius: 10px;
 
@@ -827,17 +904,21 @@ const StoreName = styled.div`
   font-size: 20px;
   font-weight: bold;
 
-  width: 235px;
+  width: 200px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 
-  margin: 13px 0 13px 0;
+  margin: 9px 0 9px 0;
+`;
+
+const Period = styled.div`
+  font-size: 14px;
 `;
 
 const DetailBtn = styled.button`
   background-color: var(--second-color);
-
+  width: 120px;
   color: white;
 `;
 
