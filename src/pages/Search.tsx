@@ -4,7 +4,7 @@ import SearchList from '../components/search/searchlist/SearchList';
 
 const Search = () => {
   return (
-    <div>
+    <div style={{ margin: '0 auto' }}>
       <SearchList />
     </div>
   );

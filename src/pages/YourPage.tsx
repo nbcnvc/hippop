@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import Subscribe from '../components/community/detail/Subscribe';
 import Message from '../components/message/Message';
 // 라이브러리
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import format from 'date-fns/format';
 import { Parser } from 'htmlparser2'; // 문서를 분석해주는 (div, p tag) 라이브러리
@@ -395,7 +395,7 @@ const UserWrapper = styled.div`
   margin-top: 50px;
   width: 300px;
 
-  position: fixed; /* 화면에 고정 */
+  /* position: fixed;  */
   /* top: 0; 상단에 고정 */
   overflow-y: auto;
 `;
