@@ -26,10 +26,8 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
   const filteredStore = storeData?.filter((data) => data.location.includes(guName) && data.id !== Number(id));
 
   useEffect(() => {
-    if (storeData) {
-      setNearbyStoreMarker(filteredStore);
-    }
-  }, [storeData]);
+    setNearbyStoreMarker(filteredStore);
+  }, [guName]);
 
   const PrevArrow = ({ onClick }: SliderButton) => {
     return (

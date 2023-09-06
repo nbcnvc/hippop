@@ -55,10 +55,10 @@ const Share = ({ onClick, storeData }: ShareProps) => {
         <Img src={KakaoIcon} alt="카카오톡 아이콘" />
       </KakaoBtn>
       <FacebookBtn url={currentUrl}>
-        <FacebookIcon size={45} round={true} />
+        <FacebookIcon size={47} round={true} />
       </FacebookBtn>
       <TwitterBtn url={currentUrl}>
-        <TwitterIcon size={45} round={true} />
+        <TwitterIcon size={47} round={true} />
       </TwitterBtn>
       <CopyToClipboard text={currentUrl} onCopy={() => alert('주소가 복사되었습니다.')}>
         <Img src={LinkIcon} alt="링크 아이콘" />
@@ -77,7 +77,7 @@ const Container = styled.div`
 `;
 
 const Img = styled.img`
-  width: 43px;
+  width: 45px;
   &:hover {
     filter: brightness(120%);
   }
@@ -97,9 +97,9 @@ const KakaoBtn = styled.button`
 `;
 
 const FacebookBtn = styled(FacebookShareButton)`
-  margin: 0 7px 0 14px;
+  margin: 0 5px 0 12px;
 `;
 
 const TwitterBtn = styled(TwitterShareButton)`
-  margin: 0 14px 0 7px;
+  margin: 0 12px 0 5px;
 `;

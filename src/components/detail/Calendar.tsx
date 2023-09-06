@@ -37,6 +37,7 @@ const StyleCalendar = styled(Calendar1)`
   box-shadow: 0 7px 15px rgba(0, 0, 0, 0.4);
 
   .react-calendar {
+    border: 3px solid var(--fifth-color);
     background-color: #fff;
     color: var(--fifth-color);
   }
@@ -48,6 +49,9 @@ const StyleCalendar = styled(Calendar1)`
   }
 
   .react-calendar__navigation button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: #fff;
     min-width: 100px;
     background: none;
@@ -66,15 +70,13 @@ const StyleCalendar = styled(Calendar1)`
   }
   .react-calendar__tile {
     color: #555555;
-
-    max-width: 100%;
-    padding: 10px;
     background: none;
     text-align: center;
     line-height: 16px;
   }
+
   .react-calendar__month-view__days {
-    padding: 7px;
+    padding: 8px;
   }
   .react-calendar__month-view__days__day--weekend {
     color: #be0000;
