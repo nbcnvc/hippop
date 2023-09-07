@@ -1,6 +1,6 @@
 // 라이브러리
 import moment from 'moment';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { styled } from 'styled-components';
@@ -61,6 +61,12 @@ const MDetail = () => {
     setIsEdit(!isEdit);
     document.body.style.overflow = 'hidden';
   };
+
+  useEffect(() => {
+    return () => {
+      window.scrollTo(0, 0);
+    };
+  }, []);
 
   if (isLoading) {
     return (
