@@ -27,6 +27,7 @@ import DefaultImg from '../images/defaultImg.png';
 import { Skeleton } from '@mui/material';
 
 import { useCurrentUser } from '../store/userStore';
+import { toast } from 'react-toastify';
 
 const YourPage = () => {
   // 현재 유저
@@ -36,11 +37,17 @@ const YourPage = () => {
   const [stateId, setStateId] = useState<string>('');
 
   const openMsgModal = () => {
+    if (!currentUser) {
+      toast.info('로그인을 해주세요.', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+      return;
+    }
     setMsgModal(true);
   };
 
   // const { id } = useParams();
-
   const { state } = useLocation();
   const userId: string = state?.userId || '';
 
@@ -154,6 +161,12 @@ const YourPage = () => {
       fetchProfileImage();
     }
   }, [userData]);
+
+  useEffect(() => {
+    return () => {
+      window.scrollTo(0, 0);
+    };
+  }, []);
 
   if (isLoading || isUserLoading || isBookMarkLoading) {
     // 로딩 중일 때 스켈레톤 표시
@@ -293,7 +306,7 @@ const YourPage = () => {
                 </NameBox>
               </Between>
               <Between1>
-                <Subscribe writerId={user?.id} />
+                <Subscribe writerId={stateId} />
                 {currentUser?.id !== user?.id && <MsgButton onClick={openMsgModal}>쪽지 보내기</MsgButton>}
               </Between1>
             </UserProfile>
@@ -429,7 +442,7 @@ const UserWrapper = styled.div`
 const UserBox = styled.div`
   display: flex;
   flex-direction: column;
-  min-width: 220px;
+  min-width: 230px;
   width: 30%;
   height: 250px;
   padding: 5px;
@@ -452,9 +465,11 @@ const Htag = styled.h2`
 const HtagLine = styled.h2`
   background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
   display: flex;
+  /* justify-content: flex-start; */
   align-items: center;
 
   margin-left: 5px;
+  /* width: 50%; */
 `;
 
 const BoxLine = styled.div`
@@ -575,7 +590,7 @@ const StoreInfo = styled.div`
 `;
 
 const Location = styled.span`
-  font-size: 17px;
+  font-size: 14px;
   /* width: 30%; */
   flex: 0.8;
   margin-left: 20px;
@@ -611,6 +626,7 @@ const Line = styled.div`
 
 const ReviewWrapper = styled.div`
   margin: 50px 0 0 0;
+  min-height: 750px;
 `;
 
 const Htag2 = styled.h2`
@@ -701,10 +717,10 @@ const HtagTttle = styled.h3`
   margin: 10px 0 5px 5px;
   font-size: 20px;
   /* width: 225px; */
-
   white-space: nowrap;
   overflow: hidden;
-  width: 90%;
+  text-overflow: ellipsis;
+  max-width: 369px;
 `;
 
 const PtagDate = styled.p`
