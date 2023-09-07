@@ -25,6 +25,7 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
   const { data: storeData, isLoading, isError } = useQuery({ queryKey: ['nearbyStoreData'], queryFn: fetchStoreData });
 
   const filteredStore = storeData?.filter((data) => data.location.includes(guName) && data.id !== Number(id));
+  const columnCount = filteredStore ? filteredStore.length : 0;
 
   useEffect(() => {
     setNearbyStoreMarker(filteredStore);
@@ -171,27 +172,17 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
         </SlideContainer>
       )}
       {filteredStore && filteredStore.length < 4 && filteredStore.length > 0 && (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}
-        >
-          <div
-            style={{
-              width: '100%',
-              display: 'grid',
-              placeItems: 'center',
-              gridTemplateColumns: `repeat(${filteredStore && filteredStore.length}, 1fr)`
-            }}
-          >
+        <GridContainer>
+          <GridWrapper columnCount={columnCount}>
             {filteredStore?.map((data) => {
               return (
                 <div key={data.id}>
-                  <Card key={data.id}>
-                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${data.images[0]}`} />
-                    <InfoBox>
+                  <Card key={data.id} className="custom-card">
+                    <Img
+                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${data.images[0]}`}
+                      className="custom-img"
+                    />
+                    <InfoBox className="custom-info">
                       <div>
                         {data.location.split(' ').slice(0, 1)} {data.location.split(' ').slice(1, 2)}
                         <StoreName>{data.title}</StoreName>
@@ -203,8 +194,8 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
                 </div>
               );
             })}
-          </div>
-        </div>
+          </GridWrapper>
+        </GridContainer>
       )}
       {filteredStore && filteredStore?.length === 0 && (
         <div
@@ -338,4 +329,69 @@ const StoreName = styled.div`
 const DetailBtn = styled.button`
   background-color: var(--second-color);
   color: white;
+`;
+
+const GridContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+// const GridWrapper = styled.div<{ columnCount: number }>`
+//   width: 100%;
+//   display: grid;
+//   justify-content: center;
+//   align-items: center;
+//   place-items: center;
+
+//   grid-template-columns: ${({ columnCount }) => `repeat(${columnCount}, 1fr)`};
+
+//   @media (max-width: 844px) {
+//     width: 744px;
+
+//     div > ${Card} {
+//       width: 300px;
+//     }
+
+//     img > ${Img} {
+//       width: 280px;
+//       height: 339px;
+//     }
+//   }
+// `;
+
+const GridWrapper = styled.div<{ columnCount: number }>`
+  width: 100%;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  place-items: center;
+  grid-template-columns: ${({ columnCount }) => `repeat(${columnCount}, 1fr)`};
+
+  @media (max-width: 1800px) {
+    width: 744px;
+
+    /* div > ${Card} {
+      width: 300px;
+    }
+
+    img > ${Img} {
+      width: 280px;
+      height: 339px;
+    } */
+
+    .custom-card {
+      width: 290px !important ;
+      margin-right: 5px;
+    }
+
+    .custom-info {
+      width: 280px;
+    }
+
+    .custom-img {
+      width: 265px;
+      height: 349px;
+    }
+  }
 `;
