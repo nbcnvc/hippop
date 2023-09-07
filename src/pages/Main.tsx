@@ -61,33 +61,23 @@ const Main = () => {
 
   const allStores = storesData?.pages.flatMap((page) => page) || [];
 
-  // 언제 다음 페이지를 가져올 것
-  const { ref } = useInView({
-    threshold: 1, // 맨 아래에 교차될 때
-    onChange: (inView) => {}
-  });
-
-  const [imagesLoaded, setImagesLoaded] = useState(false);
-
-  const handleImagesLoaded = () => {
-    setImagesLoaded(true);
-  };
+  // // 언제 다음 페이지를 가져올 것
+  // const { ref } = useInView({
+  //   threshold: 1, // 맨 아래에 교차될 때
+  //   onChange: (inView) => {}
+  // });
 
   if (isLoading) {
     // 로딩 중일 때 스켈레톤을 렌더링합니다.
     return (
       <MainContainer>
         <header>
-          <img
-            src="/asset/mainBanner.png"
-            alt="Banner-img"
-            onLoad={handleImagesLoaded} // 이미지 로드 이벤트를 사용하여 이미지 로딩 상태를 변경합니다.
-          />
+          <img src="/asset/mainBanner.png" alt="Banner-img" />
           <h4 style={{ textAlign: 'center' }}>
             <span>당신</span>에게 맞는 <span>힙한 팝업스토어</span>를 찾아보세요! XD
           </h4>
         </header>
-        <Masonry columns={3} spacing={2} sx={{ maxWidth: '1920px', width: '50%', margin: '0 auto' }}>
+        <Masonry columns={3} spacing={1} sx={{ maxWidth: '1920px', width: '50%', margin: '0 auto' }}>
           {Array.from({ length: PAGE_SIZE }, (_, index) => (
             <Link to="/" key={index}>
               {/* <Link to="/" key={index} ref={index === PAGE_SIZE - 1 ? observerRef : null}> */}
