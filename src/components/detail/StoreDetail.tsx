@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 // 라이브러리
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -19,11 +19,10 @@ import StoreMap from './StoreMap';
 // mui
 import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import Menu from '@mui/material/Menu';
 //alert
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Skeleton } from '@mui/material';
 
@@ -91,7 +90,6 @@ const StoreDetail = () => {
   if (isLoading) {
     return (
       <div>
-        {' '}
         <DetailContainer>
           <div>
             <div className="store-detail">
@@ -134,7 +132,6 @@ const StoreDetail = () => {
             </div>
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-            {' '}
             <Skeleton variant="text" width={400} height={30} />
             <div style={{ display: 'flex' }}>
               <Skeleton variant="text" width={90} height={30} />
@@ -146,7 +143,6 @@ const StoreDetail = () => {
             </div>
             <Skeleton variant="text" width={`100%`} height={800} />
           </div>
-
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
             <Skeleton variant="text" width={90} height={30} />
             <div style={{ display: 'flex' }}>
@@ -189,7 +185,7 @@ const StoreDetail = () => {
                 <div>{storeData.body}</div>
               </div>
               <div style={{ position: 'relative', fontSize: '18px' }} className="store-text">
-                <div style={{ display: 'flex', alignItems: 'center', margin: '15px 0', fontSize: '18px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0 15px 0', fontSize: '18px' }}>
                   <span>위치</span> {storeData.location}
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', margin: '15px 0', fontSize: '18px' }}>
@@ -227,19 +223,19 @@ const StoreDetail = () => {
               </div>
               <div className="button-box">
                 <button
-                  style={{ margin: '10px', padding: '16px 25px' }}
+                  style={{ margin: '10px 5px', padding: '14px 25px' }}
                   onClick={() => navigate('/review', { state: { storeId: id } })}
                 >
                   후기 보러가기
                 </button>
                 <button
-                  style={{ margin: '10px', padding: '16px 25px' }}
+                  style={{ margin: '10px 15px', padding: '14px 25px' }}
                   onClick={() => navigate('/mate', { state: { storeId: id } })}
                 >
                   팝업 메이트 구하기
                 </button>
                 <ShareBtn
-                  style={{ margin: '10px', padding: '16px 25px' }}
+                  style={{ margin: '10px 5px' }}
                   id="basic-button"
                   aria-controls={open ? 'basic-menu' : undefined}
                   aria-haspopup="true"
@@ -274,7 +270,8 @@ export default StoreDetail;
 
 const DetailContainer = styled.div`
   max-width: 1920px;
-  min-width: 900px;
+  /* min-width: 800px; */
+  min-width: 764px;
   width: 50%;
   height: 100%;
   margin: 90px auto;
@@ -304,6 +301,7 @@ const DetailContainer = styled.div`
 
     .store-info {
       width: 100%;
+      /* width: 620px; */
       height: auto;
       display: flex;
       flex-direction: column;
@@ -325,8 +323,7 @@ const DetailContainer = styled.div`
 
         div {
           max-height: 100px;
-          min-height: 100px;
-          height: 100px;
+          min-height: 80px;
 
           font-size: 18px;
           line-height: 26px;
@@ -337,14 +334,17 @@ const DetailContainer = styled.div`
       }
 
       .store-text {
+        width: 620px;
+        /* width: 100%; */
         display: flex;
         justify-content: center;
         flex-direction: column;
+        padding-left: 5px;
 
         span {
           font-size: 18px;
           font-weight: 600;
-          margin-right: 15px;
+          margin-right: 12px;
         }
 
         p {
@@ -367,6 +367,48 @@ const DetailContainer = styled.div`
       }
     }
   }
+
+  @media (max-width: 2200px) {
+    .store-detail {
+      width: 100%;
+      flex-direction: column;
+      gap: 80px;
+      margin: 120px auto;
+
+      .image-slider {
+        width: 100%;
+      }
+
+      .store-info {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* text-align: left; */
+        text-align: center;
+
+        .store-body {
+          width: 95%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          div {
+            width: 90%;
+          }
+        }
+
+        .store-text {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .button-box {
+          margin-top: 20px;
+        }
+      }
+    }
+  }
 `;
 
 const TopBox = styled.div`
@@ -374,6 +416,12 @@ const TopBox = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media (max-width: 2200px) {
+    /* flex-direction: row; */
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 const ShareBtn = styled.button`

@@ -5,16 +5,16 @@ const Footer = () => {
   return (
     <FooterTag>
       <div>
-        <img src="./asset/nyb_logo.png" alt="logo img" width={200} />
+        <img src="/asset/nyb_logo.png" alt="logo img" width={200} />
         <ul>
           <li>
-            <img src="./asset/google.png" alt="provider img" width={40} />
+            <img src="/asset/google.png" alt="provider img" width={40} />
           </li>
           <li>
-            <img src="./asset/kakao.png" alt="provider img" width={40} />
+            <img src="/asset/kakao.png" alt="provider img" width={40} />
           </li>
           <li>
-            <img src="./asset/facebook.png" alt="provider img" width={40} />
+            <img src="/asset/facebook.png" alt="provider img" width={40} />
           </li>
         </ul>
         <ul>
