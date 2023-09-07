@@ -11,19 +11,21 @@ import { SubscribeType } from '../../../types/types';
 //alert
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useEffect } from 'react';
 
 const Subscribe = ({ writerId }: SubscribeProps) => {
   // 로그인한 유저 정보 가져오기 (From)
   const currentUser = useCurrentUser();
 
   // 작성자 && 구독자
+  useEffect(() => {});
   const subscribe: SubscribeType = {
     subscribe_from: currentUser?.id,
     subscribe_to: writerId
   };
 
   // 구독 확인하기
-  const { data: subscribed } = useQuery(['subscribe'], async () => {
+  const { data: subscribed } = useQuery(['subscribe', writerId], async () => {
     if (currentUser) {
       return await isSubscribe(subscribe);
     }
