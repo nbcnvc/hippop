@@ -34,23 +34,28 @@ const MySubModal = ({ setIsSubModal }: MySubModalProps) => {
     <>
       <ModalContainer>
         <ModalBox>
-          <ButtonBox>
-            <XButton onClick={closeSubModal} />
-          </ButtonBox>
-          <UserContainer>
-            {sublistData?.map((sub) => {
-              return (
-                <UserBox key={sub.id} onClick={() => naviSubPage(sub.subscribe_to)}>
-                  <div>
-                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${sub.to.avatar_url}`} alt="User Avatar" />
-                  </div>
-                  <Name>
-                    팝업메이트 <NameLine>{sub.to.name}</NameLine> 님
-                  </Name>
-                </UserBox>
-              );
-            })}
-          </UserContainer>
+          <div style={{ padding: '20px' }}>
+            <ButtonBox>
+              <XButton onClick={closeSubModal} />
+            </ButtonBox>
+            <UserContainer>
+              {sublistData?.map((sub) => {
+                return (
+                  <UserBox key={sub.id} onClick={() => naviSubPage(sub.subscribe_to)}>
+                    <div>
+                      <Img
+                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${sub.to.avatar_url}`}
+                        alt="User Avatar"
+                      />
+                    </div>
+                    <Name>
+                      팝업메이트 <NameLine>{sub.to.name}</NameLine> 님
+                    </Name>
+                  </UserBox>
+                );
+              })}
+            </UserContainer>
+          </div>
         </ModalBox>
       </ModalContainer>
     </>
@@ -74,13 +79,9 @@ const ModalContainer = styled.div`
 `;
 
 const ModalBox = styled.div`
-  width: 400px;
-  height: 600px;
-  padding: 20px;
-  background-color: #fff;
+  background: rgba(183, 79, 231, 0.71);
   border-radius: 18px;
   border: 3px solid var(--fifth-color);
-  overflow: scroll;
 `;
 
 const ButtonBox = styled.div`
@@ -93,20 +94,37 @@ const XButton = styled(CloseRoundedIcon)`
 `;
 
 const UserContainer = styled.div`
+  width: 300px;
+  max-height: 600px;
   margin: 10px 0;
+  padding: 24px 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow: scroll;
 `;
 
 const UserBox = styled.div`
   padding: 10px;
   margin: 10px;
   border: 3px solid var(--fifth-color);
+  background-color: var(--fourth-color);
   border-radius: 18px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease, font-weight 0.3s ease;
+
+  &:hover {
+    border: 3px solid var(--primary-color);
+    background-color: var(--sixth-color);
+    font-weight: 600;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
 `;
 
 const Img = styled.img`
@@ -117,12 +135,15 @@ const Img = styled.img`
 `;
 
 const Name = styled.div`
-  font-size: 18px;
+  font-size: 12px;
   font-weight: 600;
   margin: 0 0 5px 10px;
+  color: var(--primary-color);
 `;
 
 const NameLine = styled.span`
+  font-size: 18px;
+  color: var(--fifth-color);
   padding: 2px;
   background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
 `;

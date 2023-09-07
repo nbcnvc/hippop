@@ -88,12 +88,12 @@ function Bookmark({ activeSection }: BookmarkProps) {
                         width={200}
                       />
                       <div className="info-box">
-                        <div>
+                        <span>
                           <h2>{store.title}</h2>
                           <p>
                             {store.period_start} ~ {store.period_end}
                           </p>
-                        </div>
+                        </span>
                         <Link to={`/detail/${store.id}`} key={store.id}>
                           <button>상세보기</button>
                         </Link>
