@@ -262,7 +262,7 @@ const MapContainer = styled.div`
     }
   }
 
-  @media (max-width: 844px) {
+  @media (max-width: 1800px) {
     .map-iframe {
       iframe {
         width: 48%;
@@ -277,7 +277,7 @@ const KaKaoMap = styled.div<{ isSelected: HotPlaceInfo | undefined; category: st
   border-radius: 10px;
   border: 3px solid #333333;
 
-  @media (max-width: 844px) {
+  @media (max-width: 1800px) {
     width: ${(props) => (props.isSelected && props.category ? '48%' : '100%')};
   }
 `;

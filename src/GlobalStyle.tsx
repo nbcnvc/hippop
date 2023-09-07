@@ -58,7 +58,7 @@ body {
   margin: 0 auto;
   background-color:var(--fourth-color);
   
-  
+
   .react-confirm-alert-overlay {
     background-color: transparent;
     bottom: 900px;

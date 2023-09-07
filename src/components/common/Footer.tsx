@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <FooterTag>
       <div>
-        <img src="/asset/nyb_logo.png" alt="logo img" width={200} />
+        <img src="/asset/nyb_logo.png" className="hover-logo" alt="logo img" />
         <ul>
           <li>
             <img src="/asset/google.png" alt="provider img" width={40} />
@@ -41,6 +41,15 @@ const Footer = () => {
 export default Footer;
 
 const FooterTag = styled.div`
+  .hover-logo {
+    width: 160px;
+    filter: grayscale(100%); /* 초기에 회색조로 설정 */
+    transition: filter 0.3s ease; /* 효과에 애니메이션 추가 */
+
+    &:hover {
+      filter: grayscale(0%); /* 호버 시 회색조 해제 */
+    }
+  }
   margin: 0 auto;
   background-color: var(--fifth-color);
   height: 200px;
@@ -62,7 +71,7 @@ const FooterTag = styled.div`
   }
   ul {
     color: white;
-    margin-top: 20px;
+    margin: 8px 0 10px 0;
     display: flex;
     justify-content: center;
     align-items: center;
