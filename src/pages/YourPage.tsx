@@ -90,9 +90,7 @@ const YourPage = () => {
   useEffect(() => {
     setUserData(user || null); // Use null as a fallback when user is undefined
   }, [user]);
-  // console.log('userId', userId);
-  // console.log('stateId', stateId);
-  // console.log('currentUser', currentUser);
+
   // 인피니티 스크롤로 필터된 게시글 또는 북마크 가져오기
   const getYourSectionItems = ({
     pageParam,
@@ -163,6 +161,12 @@ const YourPage = () => {
       fetchProfileImage();
     }
   }, [userData]);
+
+  useEffect(() => {
+    return () => {
+      window.scrollTo(0, 0);
+    };
+  }, []);
 
   if (isLoading || isUserLoading || isBookMarkLoading) {
     // 로딩 중일 때 스켈레톤 표시
