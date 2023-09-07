@@ -62,7 +62,58 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
     infinite: true,
     pauseOnFocus: true,
     pauseOnHover: true,
-    speed: 500
+    speed: 500,
+    responsive: [
+      {
+        breakpoint: 2100,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      },
+      {
+        breakpoint: 1800,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      },
+      {
+        breakpoint: 1440,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      },
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      },
+      {
+        breakpoint: 720,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2
+        }
+      },
+      {
+        breakpoint: 320,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      }
+    ]
   };
 
   // detail page 이동
@@ -132,8 +183,7 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
               width: '100%',
               display: 'grid',
               placeItems: 'center',
-              gridTemplateColumns: `repeat(${filteredStore && filteredStore.length}, 1fr)`,
-              margin: '70px 0'
+              gridTemplateColumns: `repeat(${filteredStore && filteredStore.length}, 1fr)`
             }}
           >
             {filteredStore?.map((data) => {
@@ -163,7 +213,7 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
             justifyContent: 'center',
             alignItems: 'center',
             flexDirection: 'column',
-            margin: '70px',
+            margin: '100px 0 150px 0',
             fontSize: '20px'
           }}
         >
@@ -182,7 +232,7 @@ const NearbyStoreContainer = styled.div`
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin: 150px 0 40px 0;
+    margin: 150px 0 100px 0;
 
     h1 {
       color: var(--fifth-color);
@@ -202,7 +252,14 @@ const StyledSlider = styled(Slider)`
   display: flex !important;
   justify-content: center;
   align-items: center;
-  width: 1300px;
+  max-width: 1920px;
+  /* min-width: 800px; */
+  min-width: 764px;
+  /* width: 1200px; */
+
+  @media (max-width: 844px) {
+    width: 744px;
+  }
 
   .slick-slide {
     display: flex;
@@ -215,7 +272,8 @@ const StyledSlider = styled(Slider)`
 `;
 
 const Card = styled.div`
-  width: 370px !important ;
+  /* width: 370px !important ; */
+  width: 330px !important ;
 
   height: 500px;
   border-radius: 18px;
@@ -239,7 +297,8 @@ const Card = styled.div`
 `;
 
 const InfoBox = styled.div`
-  width: 330px;
+  /* width: 330px; */
+  width: 290px;
 
   display: flex;
   justify-content: space-between;
@@ -249,8 +308,10 @@ const InfoBox = styled.div`
 `;
 
 const Img = styled.img`
-  width: 340px;
-  height: 369px;
+  /* width: 340px;
+  height: 369px; */
+  width: 300px;
+  height: 359px;
 
   object-fit: cover;
   border-radius: 10px;
@@ -266,7 +327,7 @@ const StoreName = styled.div`
   font-size: 20px;
   font-weight: bold;
 
-  width: 235px;
+  width: 200px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

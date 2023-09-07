@@ -225,8 +225,7 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
 export default StoreMap;
 
 const MapContainer = styled.div`
-  max-width: 1920px;
-  min-width: 900px;
+  width: 100%;
 
   .info-title {
     /* background-color: none;
@@ -253,23 +252,32 @@ const MapContainer = styled.div`
     justify-content: center;
     align-items: center;
     margin-top: 30px;
-    gap: 20px;
+    gap: 15px;
 
     iframe {
-      width: 35%;
+      width: 38%;
       height: 600px;
-      /* margin-right: 20px; */
       border-radius: 10px;
-      /* border: 2px solid #c9c9c9ff; */
       border: 3px solid #333333;
+    }
+  }
+
+  @media (max-width: 1800px) {
+    .map-iframe {
+      iframe {
+        width: 48%;
+      }
     }
   }
 `;
 
 const KaKaoMap = styled.div<{ isSelected: HotPlaceInfo | undefined; category: string }>`
-  width: ${(props) => (props.isSelected && props.category ? '65%' : '100%')};
+  width: ${(props) => (props.isSelected && props.category ? '60%' : '100%')};
   height: 600px;
   border-radius: 10px;
-  /* border: 2px solid #c9c9c9ff; */
   border: 3px solid #333333;
+
+  @media (max-width: 1800px) {
+    width: ${(props) => (props.isSelected && props.category ? '48%' : '100%')};
+  }
 `;
