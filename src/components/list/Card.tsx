@@ -1,29 +1,12 @@
-import { useEffect, useState } from 'react';
-// 라이브러리
+import { useEffect, useState, useCallback } from 'react';
+
 import 'keen-slider/keen-slider.min.css';
-import { useKeenSlider } from 'keen-slider/react';
 import styled from 'styled-components';
+import { useKeenSlider } from 'keen-slider/react';
+
 import './styles.css';
-// 타입
 import { CardProps } from '../../types/props';
-// api
 import { supabaseStorageUrl } from '../../api/supabase';
-
-const showStoreInfo = () => {
-  const storeInfo = document.querySelector('.store-info');
-  if (storeInfo) {
-    (storeInfo as HTMLElement).style.opacity = '1';
-    (storeInfo as HTMLElement).style.maxHeight = '100%';
-  }
-};
-
-const hideStoreInfo = () => {
-  const storeInfo = document.querySelector('.store-info');
-  if (storeInfo) {
-    (storeInfo as HTMLElement).style.opacity = '0';
-    (storeInfo as HTMLElement).style.maxHeight = '0';
-  }
-};
 
 const heights = [300, 550, 450, 330, 600, 720];
 
@@ -53,6 +36,14 @@ const Card = (props: CardProps) => {
     setCardHeight(getRandomElement(heights));
   }, []);
 
+  const handleMouseOver = useCallback(() => {
+    setIsHovered(true);
+  }, []);
+
+  const handleMouseOut = useCallback(() => {
+    setIsHovered(false);
+  }, []);
+
   return (
     <>
       {isClosed ? (
@@ -60,12 +51,8 @@ const Card = (props: CardProps) => {
           ref={sliderRef}
           className="keen-slider"
           style={{ height: cardHeight }}
-          onMouseOver={() => {
-            setIsHovered(true);
-          }}
-          onMouseOut={() => {
-            setIsHovered(false);
-          }}
+          onMouseOver={handleMouseOver}
+          onMouseOut={handleMouseOut}
         >
           {images.map((image) => (
             <img src={`${supabaseStorageUrl}/${image}`} className="keen-slider__slide" key={image} />
@@ -105,12 +92,8 @@ const Card = (props: CardProps) => {
           ref={sliderRef}
           className="keen-slider"
           style={{ height: cardHeight }}
-          onMouseOver={() => {
-            setIsHovered(true);
-          }}
-          onMouseOut={() => {
-            setIsHovered(false);
-          }}
+          onMouseOver={handleMouseOver}
+          onMouseOut={handleMouseOut}
         >
           {images.map((image) => (
             <img src={`${supabaseStorageUrl}/${image}`} className="keen-slider__slide" key={image} />
@@ -149,7 +132,6 @@ export default Card;
 
 const CardContainerClosed = styled.div`
   position: relative;
-  // border-radius: 7px;
   overflow: hidden;
   border-radius: 18px;
 
@@ -174,10 +156,6 @@ const CardContainerClosed = styled.div`
 `;
 
 const CLosed = styled.div`
-  // position: absolute;
-  /* top: 46.3%;
-  left: 35%; */
-
   font-size: 40px;
   font-weight: bold;
   color: white;
