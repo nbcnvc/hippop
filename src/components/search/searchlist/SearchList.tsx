@@ -423,8 +423,8 @@ const SearchList = () => {
             <Reset onClick={handleReset} />
           </SearchBox>
           <div style={{ display: 'flex', marginTop: '30px', gap: '30px' }}>
-            <Skeleton variant="text" width={150} height={20} />
-            <Skeleton variant="text" width={150} height={20} />
+            <Skeleton variant="text" width={150} height={60} />
+            <Skeleton variant="text" width={150} height={60} />
           </div>
 
           <div style={{ display: 'flex', gap: '30px', flexDirection: 'column' }}>
@@ -433,7 +433,7 @@ const SearchList = () => {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginTop: '100px',
+                marginTop: '200px',
                 marginBottom: '30px'
               }}
             >
@@ -441,7 +441,7 @@ const SearchList = () => {
             </div>
             <div style={{ display: 'flex', gap: '30px' }}>
               <Card>
-                <Skeleton variant="rectangular" width={340} height={369} />
+                <Skeleton variant="rectangular" width={280} height={369} />
                 <InfoBox>
                   <div>
                     <Skeleton variant="text" width={150} height={20} />
@@ -453,10 +453,10 @@ const SearchList = () => {
               </Card>
 
               <Card>
-                <Skeleton variant="rectangular" width={340} height={369} />
+                <Skeleton variant="rectangular" width={280} height={369} />
                 <InfoBox>
                   <div>
-                    <Skeleton variant="text" width={150} height={20} />
+                    <Skeleton variant="text" width={120} height={20} />
                     <Skeleton variant="text" width={100} height={15} />
                     <Skeleton variant="text" width={100} height={15} />
                   </div>
@@ -465,10 +465,10 @@ const SearchList = () => {
               </Card>
 
               <Card>
-                <Skeleton variant="rectangular" width={340} height={369} />
+                <Skeleton variant="rectangular" width={280} height={369} />
                 <InfoBox>
                   <div>
-                    <Skeleton variant="text" width={150} height={20} />
+                    <Skeleton variant="text" width={120} height={20} />
                     <Skeleton variant="text" width={100} height={15} />
                     <Skeleton variant="text" width={100} height={15} />
                   </div>
@@ -489,10 +489,10 @@ const SearchList = () => {
             </div>
             <div style={{ display: 'flex', gap: '30px', marginTop: '30px' }}>
               <Card>
-                <Skeleton variant="rectangular" width={340} height={369} />
+                <Skeleton variant="rectangular" width={280} height={369} />
                 <InfoBox>
                   <div>
-                    <Skeleton variant="text" width={150} height={20} />
+                    <Skeleton variant="text" width={120} height={20} />
                     <Skeleton variant="text" width={100} height={15} />
                     <Skeleton variant="text" width={100} height={15} />
                   </div>
@@ -500,10 +500,10 @@ const SearchList = () => {
                 </InfoBox>
               </Card>
               <Card>
-                <Skeleton variant="rectangular" width={340} height={369} />
+                <Skeleton variant="rectangular" width={280} height={369} />
                 <InfoBox>
                   <div>
-                    <Skeleton variant="text" width={150} height={20} />
+                    <Skeleton variant="text" width={120} height={20} />
                     <Skeleton variant="text" width={100} height={15} />
                     <Skeleton variant="text" width={100} height={15} />
                   </div>
@@ -511,10 +511,10 @@ const SearchList = () => {
                 </InfoBox>
               </Card>
               <Card>
-                <Skeleton variant="rectangular" width={340} height={369} />
+                <Skeleton variant="rectangular" width={280} height={369} />
                 <InfoBox>
                   <div>
-                    <Skeleton variant="text" width={150} height={20} />
+                    <Skeleton variant="text" width={120} height={20} />
                     <Skeleton variant="text" width={100} height={15} />
                     <Skeleton variant="text" width={100} height={15} />
                   </div>

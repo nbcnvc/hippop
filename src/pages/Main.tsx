@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Masonry } from '@mui/lab';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -16,7 +16,7 @@ const fetchStores = async ({ pageParam = 0 }) => {
   const { data } = await supabase
     .from('store')
     .select()
-    // .order('period_start', { ascending: false }) // 내림차순
+    .order('period_end', { ascending: false }) // 내림차순
     .range(pageParam, pageParam + PAGE_SIZE - 1);
   return data || [];
 };
@@ -61,11 +61,11 @@ const Main = () => {
 
   const allStores = storesData?.pages.flatMap((page) => page) || [];
 
-  // 언제 다음 페이지를 가져올 것
-  const { ref } = useInView({
-    threshold: 1, // 맨 아래에 교차될 때
-    onChange: (inView) => {}
-  });
+  // // 언제 다음 페이지를 가져올 것
+  // const { ref } = useInView({
+  //   threshold: 1, // 맨 아래에 교차될 때
+  //   onChange: (inView) => {}
+  // });
 
   if (isLoading) {
     // 로딩 중일 때 스켈레톤을 렌더링합니다.
@@ -77,11 +77,15 @@ const Main = () => {
             <span>당신</span>에게 맞는 <span>힙한 팝업스토어</span>를 찾아보세요! XD
           </h4>
         </header>
-        <Masonry columns={3} spacing={2} sx={{ maxWidth: '1920px', width: '50%', margin: '0 auto' }}>
+        <Masonry columns={3} spacing={1} sx={{ maxWidth: '1920px', width: '50%', margin: '0 auto' }}>
           {Array.from({ length: PAGE_SIZE }, (_, index) => (
             <Link to="/" key={index}>
               {/* <Link to="/" key={index} ref={index === PAGE_SIZE - 1 ? observerRef : null}> */}
-              <Skeleton variant="rectangular" width="100%" height={300} animation="wave" />
+              <Skeleton variant="rectangular" width="100%" height={500} animation="wave" />
+              <div style={{ marginTop: '15px' }}>
+                {' '}
+                <Skeleton variant="rectangular" width="100%" height={300} animation="wave" />
+              </div>
             </Link>
           ))}
           {isFetchingNextPage && <p>Loading...</p>}
@@ -102,7 +106,7 @@ const Main = () => {
           <span>당신</span>에게 맞는 <span>힙한 팝업스토어</span>를 찾아보세요! XD
         </h4>
       </header>
-      <Masonry columns={3} spacing={2} sx={{ maxWidth: '1920px', width: '50%', margin: '0 auto' }}>
+      <Masonry columns={3} spacing={1} sx={{ maxWidth: '1920px', width: '50%', margin: '0 auto', minWidth: '744px' }}>
         {allStores.map((store, index) => (
           <Link to={`detail/${store.id}`} key={store.id}>
             <Card store={store} />

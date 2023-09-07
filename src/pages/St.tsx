@@ -8,13 +8,21 @@ export const MypageTag = styled.div`
   margin: 0 auto;
   margin-top: 10rem;
   width: 50%;
+  
   header {
+    width: 100%;
+    margin: 0 auto;
     margin-top: 4rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 20px;
-
+    @media (max-width: 1580px) {
+      width: 97%;
+    }
+    @media (max-width: 1310px) {
+      width: 94%;
+    }
     .avatar-container {
       position: relative;
       margin: 0 auto;
@@ -234,14 +242,25 @@ export const MypageTag = styled.div`
     background-color: white;
     width: 65%;
     height: 300px;
-
+    @media (max-width: 1820px) {
+      width: 62%;
+    }
+    @media (max-width: 1820px) {
+      width: 60%;
+    }
     .alram-wrapper {
+      margin: 0 auto;
       width: 100%;
       height: 240px;
       margin-top: 14px;
-      // border: 1px dotted gray;
       display: flex;
       justify-content: flex-end;
+      @media (max-width: 2200px) {
+        width: 98%;
+      }
+      @media (max-width: 1820px) {
+        width: 98%;
+      }
       button {
         width: 120px;
         height: 22px;
@@ -300,7 +319,14 @@ export const MypageTag = styled.div`
     max-width: 1920px;
     width: 99%;
     margin-top: 50px;
+    @media (max-width: 1850px) {
+      gap: 36px;
 
+      margin-bottom: 60px;
+    }
+    @media (max-width: 1596px) {
+      gap: 22px;
+    }
     .fid {
       margin: 0 auto;
       width: 100%;
@@ -314,6 +340,7 @@ export const MypageTag = styled.div`
       background-color: #ffffff;
       box-sizing: border-box;
       transition: color 0.3s ease, transform 0.3s ease;
+
       &:hover {
         border: 6px solid var(--primary-color);
       }
@@ -336,14 +363,19 @@ export const MypageTag = styled.div`
         margin: 0 auto;
         display: flex;
         justify-content: space-between;
-        align-items: flex-end;
+        align-items: center;
         margin-top: 20px;
-        &:first-child {
-          width: 80%;
-        }
-        h2 {
-          height: 16px;
-          overflow: hidden;
+        span {
+          h2 {
+            font-size: 18px;
+            height: 18px;
+            overflow: hidden;
+            margin-bottom: 20px;
+          }
+          p {
+            margin-top: 20px;
+            font-size: 14px;
+          }
         }
         button {
           width: 130px;
@@ -351,6 +383,91 @@ export const MypageTag = styled.div`
           background-color: var(--second-color);
           color: white;
           margin-right: 0;
+          margin-top: 20px;
+
+          @media (max-width: 1850px) {
+            width: 100px;
+            padding: 8px 10px;
+          }
+          @media (max-width: 1850px) {
+            width: 100px;
+            padding: 8px 10px;
+            font-size: 14px;
+          }
+          @media (max-width: 1596px) {
+            width: 70px;
+            padding: 8px 12px;
+
+            font-size: 10px;
+          }
+        }
+      }
+      .btn-div{
+        float:right;
+        text-align:center;
+        position: relative;
+        
+        .review-tag{
+          position: absolute;
+          top: -10px;
+          left: 62px;
+          width:65px;
+          border-radius: 6px;
+          padding: 4px 0;
+          background-color: pink;
+          animation: blink 3s infinite;
+          @media (max-width: 1850px) {
+            left: 32px;
+          }
+          @media (max-width: 1596px) {
+            left: 8px;
+          }
+        }
+
+        .mate-tag{
+          position: absolute;
+          top: -10px;
+          left: 76px;
+          width:50px;
+          border-radius: 6px;
+          padding: 4px 0;
+          background-color: var(--third-color);
+          animation: blink 3s infinite;
+          @media (max-width: 1850px) {
+            left: 46px;
+          }
+          @media (max-width: 1596px) {
+            left: 16px;
+          }
+        }
+    }
+    @keyframes blink {
+      0% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+      @media (max-width: 1850px) {
+        width: 97%;
+        height: 400px;
+
+        img {
+          width: 84%;
+          height: 290px;
+        }
+      }
+      @media (max-width: 1596px) {
+        width: 92%;
+        height: 320px;
+
+        img {
+          width: 90%;
+          height: 210px;
         }
       }
     }
@@ -366,7 +483,14 @@ export const MypageTag = styled.div`
     max-width: 1920px;
     width: 99%;
     margin-top: 50px;
+    @media (max-width: 1850px) {
+      gap: 36px;
 
+      margin-bottom: 60px;
+    }
+    @media (max-width: 1596px) {
+      gap: 22px;
+    }
     .user-subs {
       margin: 0 auto;
       width: 100%;
@@ -387,6 +511,25 @@ export const MypageTag = styled.div`
         background-color: rgb(215, 215, 219);
         transform: scale(0.98);
       }
+      @media (max-width: 1850px) {
+        width: 97%;
+        height: 400px;
+  
+        img {
+          width: 84%;
+          height: 290px;
+        }
+      }
+      @media (max-width: 1596px) {
+        width: 92%;
+        height: 320px;
+  
+        img {
+          width: 90%;
+          height: 210px;
+        }
+      }
+    }
       img {
         margin: 0 auto;
         display: flex;
@@ -402,14 +545,19 @@ export const MypageTag = styled.div`
         margin: 0 auto;
         display: flex;
         justify-content: space-between;
-        align-items: flex-end;
+        align-items: center;
         margin-top: 20px;
-        &:first-child {
-          width: 80%;
-        }
-        h2 {
-          height: 16px;
-          overflow: hidden;
+        span {
+          h2 {
+            font-size: 18px;
+            height: 18px;
+            overflow: hidden;
+            margin-bottom: 20px;
+          }
+          p {
+            margin-top: 20px;
+            font-size: 14px;
+          }
         }
         button {
           width: 130px;
@@ -417,7 +565,23 @@ export const MypageTag = styled.div`
           background-color: var(--second-color);
           color: white;
           margin-right: 0;
+          @media (max-width: 1850px) {
+            width: 100px;
+            padding: 8px 10px;
+          }
+          @media (max-width: 1850px) {
+            width: 100px;
+            padding: 8px 10px;
+            font-size: 14px;
+          }
+          @media (max-width: 1596px) {
+            width: 70px;
+            padding: 8px 12px;
+
+            font-size: 10px;
+          }
         }
+      }
       }
     }
   }

@@ -66,7 +66,7 @@ const MyReview = ({ activeSection }: MyReviewProps) => {
       fetchNextPage();
     }
   });
-
+  console.log(selectItems);
   // 작성 날짜 잘라내기
   function formatDate(dateTimeString: string) {
     const options: Intl.DateTimeFormatOptions = {
@@ -96,7 +96,6 @@ const MyReview = ({ activeSection }: MyReviewProps) => {
   if (isLoading) {
     return (
       <div>
-        {' '}
         <div className="skeleton-container">
           <div style={{ margin: '0 auto' }}>
             <div className="post-wrapper">
@@ -142,13 +141,18 @@ const MyReview = ({ activeSection }: MyReviewProps) => {
                   </div>
                 )}
                 <div className="info-box">
-                  <div>
+                  <span>
                     <h2>{post.title}</h2>
                     <p>{formatDate(post.created_at)}</p>
+                  </span>
+                  <div className="btn-div">
+                    <div className={`${post.ctg_index === 1 ? 'review-tag' : post.ctg_index === 2 ? 'mate-tag' : ''}`}>
+                      {post.ctg_index === 1 ? 'REVIEW' : post.ctg_index === 2 ? 'MATE' : ''}
+                    </div>
+                    <Link to={`/rdetail/${post.id}`}>
+                      <button>상세보기</button>
+                    </Link>
                   </div>
-                  <Link to={`/rdetail/${post.id}`}>
-                    <button>상세보기</button>
-                  </Link>
                 </div>
               </div>
             );

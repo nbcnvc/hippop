@@ -114,7 +114,10 @@ const ReceiveBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProp
               {sortedMessages?.map((message) => {
                 return (
                   <Wrapper key={message.id} onClick={() => handleClickMsg(message)}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }} onClick={handleShowDetail}>
+                    <div
+                      style={{ display: 'flex', alignItems: 'center', gap: '15px', width: '70%' }}
+                      onClick={handleShowDetail}
+                    >
                       <ProfileBox>
                         {message?.to.avatar_url && (
                           <Img
@@ -193,6 +196,11 @@ const Wrapper = styled.div`
   p {
     width: 160px;
     text-align: center;
+    @media (max-width: 1060px) {
+      display: inline-block;
+      // animation: marquee 7s linear infinite;
+      overflow: hidden;
+    }
   }
 `;
 
@@ -215,6 +223,12 @@ const Body = styled.div`
   white-space: nowrap;
   overflow: hidden;
   position: relative;
+  @media (max-width: 1960px) {
+    width: 20%;
+  }
+  @media (max-width: 1360px) {
+    display: none;
+  }
 
   span {
     display: inline-block;
