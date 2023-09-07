@@ -27,6 +27,7 @@ import DefaultImg from '../images/defaultImg.png';
 import { Skeleton } from '@mui/material';
 
 import { useCurrentUser } from '../store/userStore';
+import { toast } from 'react-toastify';
 
 const YourPage = () => {
   // 현재 유저
@@ -36,6 +37,13 @@ const YourPage = () => {
   const [stateId, setStateId] = useState<string>('');
 
   const openMsgModal = () => {
+    if (!currentUser) {
+      toast.info('로그인을 해주세요.', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+      return;
+    }
     setMsgModal(true);
   };
 

@@ -59,6 +59,7 @@ const StoreDetail = () => {
     window.addEventListener('click', handleAlarmWindowClick);
     return () => {
       window.removeEventListener('click', handleAlarmWindowClick);
+      window.scrollTo(0, 0);
     };
   }, [id]);
 
