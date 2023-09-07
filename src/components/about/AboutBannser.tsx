@@ -6,10 +6,14 @@ const AboutBannser = () => {
     <BannerContainer>
       <Img src="/asset/about_1.jpg" />
       <BannerText>
-        <TitleText> 힙팝은 팝업스토어를 좋아하는 사람들을 위해 탄생했어요!</TitleText>
-        <Text> 힙-팝에 오신걸 환영해요:) </Text>
-        <Text>힙팝은 팝업스토어를 좋아하는 사람들을 위해, 데이트를 위해,</Text>
-        <Text> 또는 친구들과 즐길 거리를 찾기 위해 만들어졌어요.</Text>
+        <TitleText> "힙팝, 팝업 스토어와 함께하는 라이프 스타일"</TitleText>
+        <Text> 힙팝에 오신 여러분 환영합니다. </Text>
+        <Text> 힙팝은 팝업 스토어를 통해 여러분의 라이프 스타일에 새로운 의미를 부여하고자 합니다. </Text>
+        <Text>
+          {' '}
+          힙팝이 드리는 다양한 서비스들이 팝업스토어와 함께하는 여러분의 일상을 더욱 풍부하게 만들어드릴 수 있길
+          기대합니다!
+        </Text>
       </BannerText>
     </BannerContainer>
   );
@@ -38,7 +42,7 @@ const Img = styled.img`
 const BannerText = styled.div`
   position: absolute;
   top: 40%;
-  left: 37%;
+  left: 32%;
 
   font-size: 30px;
   font-weight: bold;
@@ -52,6 +56,7 @@ const BannerText = styled.div`
 
 const TitleText = styled.p`
   margin-bottom: 60px;
+  font-size: 35px;
 `;
 
 const Text = styled.p`
