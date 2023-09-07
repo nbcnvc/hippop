@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 // 타입
 import { FetchPost, PostType } from '../../../../types/types';
 // api
@@ -124,11 +124,11 @@ const RStorePosts = () => {
         return (
           <PostBox key={post.id}>
             {imageTags.length > 0 ? (
-              <div>
+              <div className="img-div">
                 <ImageBox src={imageTags[0]} />
               </div>
             ) : (
-              <div>
+              <div className="img-div">
                 <ImageBox src="/asset/defaultImg.png" alt="Default Image" width={250} height={140} />
               </div>
             )}
@@ -153,6 +153,7 @@ const RStorePosts = () => {
           </PostBox>
         );
       })}
+      {selectPosts && selectPosts.length === 0 && <NoResult>아직 작성된 후기가 없습니다 :(</NoResult>}
       <Trigger ref={ref} />
     </PostContainer>
   );
@@ -160,17 +161,28 @@ const RStorePosts = () => {
 
 export default RStorePosts;
 
+// 미디어 쿼리 세팅
+const mediaQuery = (maxWidth: number) => css`
+  @media (max-width: ${maxWidth}px) {
+    width: 40%;
+  }
+`;
+
 const PostContainer = styled.div`
+  max-width: 1920px;
+  min-width: 744px;
+  width: 50%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin-bottom: 30px;
+
+  ${mediaQuery(900)}
 `;
 
 const PostBox = styled.div`
-  width: 870px;
-  height: 200px;
+  height: 240px;
   background-color: #fff;
   border: 3px solid var(--fifth-color);
   border-radius: 18px;
@@ -186,19 +198,28 @@ const PostBox = styled.div`
     background-color: rgb(215, 215, 219);
     transform: scale(0.98);
   }
+  .img-div {
+    width: 40%;
+    padding: 10px;
+  }
 `;
 
 const ContentBox = styled.div`
-  width: 515px;
+  // width: 515px;
+  width: 60%;
   padding: 10px 20px;
 `;
 
 const ImageBox = styled.img`
-  width: 310px;
-  height: 190px;
+  // width: 310px;
+  max-width: 600px;
+  min-width: 200px;
+  width: 99%;
+  // height: 190px;
+  height: 98%;
   border: 2px solid var(--fifth-color);
   border-radius: 10px;
-  margin: 5px 0 5px 3px;
+  // margin: 5px 0 5px 3px;
   object-fit: cover;
 `;
 
@@ -206,6 +227,9 @@ const Between = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  &:last-child {
+    margin-top: 30px;
+  }
 `;
 
 const Store = styled.div`
@@ -248,6 +272,15 @@ const Button = styled.button`
 const Trigger = styled.div`
   width: 100%;
   align-items: center;
+`;
+
+const NoResult = styled.h1`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 500px;
+  font-size: 24px;
+  font-weight: 700px;
 `;
 
 // 스켈레톤

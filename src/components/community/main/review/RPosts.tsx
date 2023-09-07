@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
-import { styled } from 'styled-components';
+import styled, { css } from 'styled-components';
 // 타입
 import { FetchPost, PostType } from '../../../../types/types';
 // api
@@ -112,7 +112,6 @@ const RPosts = () => {
   const naviDetail = (post: PostType) => {
     navigate(`/rdetail/${post.id}`);
   };
-
   if (isLoading) {
     // 로딩 중일 때 스켈레톤을 렌더링합니다.
     return (
@@ -178,18 +177,20 @@ const RPosts = () => {
       {sortName === '최신순' && <RNewPosts />}
       {sortName === '인기순' && <RPopularPosts />}
       <PostContainer>
-        {sortName === '팝업스토어 검색' && selectPosts && selectPosts.length > 0 ? (
+        {sortName === '팝업스토어 검색' &&
+          selectPosts &&
+          selectPosts.length > 0 &&
           selectPosts?.map((post) => {
             const imageTags = extractImageTags(post.body);
             const postText = post.body.replace(/<img.*?>/g, '');
             return (
               <PostBox key={post.id}>
                 {imageTags.length > 0 ? (
-                  <div>
+                  <div className="img-div">
                     <ImageBox src={imageTags[0]} />
                   </div>
                 ) : (
-                  <div>
+                  <div className="img-div">
                     <ImageBox src="/asset/defaultImg.png" alt="Default Image" width={250} height={140} />
                   </div>
                 )}
@@ -213,8 +214,8 @@ const RPosts = () => {
                 </ContentBox>
               </PostBox>
             );
-          })
-        ) : (
+          })}
+        {sortName === '팝업스토어 검색' && selectPosts && selectPosts.length === 0 && (
           <NoResult>아직 작성된 후기가 없습니다 :(</NoResult>
         )}
         <Trigger ref={ref} />
@@ -225,8 +226,17 @@ const RPosts = () => {
 
 export default RPosts;
 
+const mediaBarQuery = (maxWidth: number) => css`
+  @media (max-width: ${maxWidth}px) {
+    width: 60%;
+  }
+`;
+
 const ButtonContainer = styled.div`
-  width: 870px;
+  max-width: 1920px;
+  min-width: 764px;
+  width: 51%;
+  ${mediaBarQuery(900)}
 `;
 
 const Between = styled.div`
@@ -263,26 +273,35 @@ const Search = styled(SearchRoundedIcon)`
   margin: 8px 10px 0 10px;
 `;
 
+// 미디어 쿼리 세팅
+const mediaQuery = (maxWidth: number) => css`
+  @media (max-width: ${maxWidth}px) {
+    width: 40%;
+  }
+`;
 const PostContainer = styled.div`
+  max-width: 1920px;
+  min-width: 744px;
+  width: 50%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin-bottom: 30px;
+
+  ${mediaQuery(900)}
 `;
 
 const PostBox = styled.div`
-  width: 870px;
-  height: 200px;
+  width: 100%;
+  height: 240px;
   background-color: #fff;
   border: 3px solid var(--fifth-color);
   border-radius: 18px;
   padding: 10px;
   margin: 10px;
   display: flex;
-
   // box-sizing: border-box;
-
   transition: color 0.3s ease, transform 0.3s ease;
   &:hover {
     border: 6px solid var(--primary-color);
@@ -291,19 +310,28 @@ const PostBox = styled.div`
     background-color: rgb(215, 215, 219);
     transform: scale(0.98);
   }
+  .img-div {
+    width: 40%;
+    padding: 10px;
+  }
 `;
 
 const ContentBox = styled.div`
-  width: 515px;
+  // width: 515px;
+  width: 60%;
   padding: 10px 20px;
 `;
 
 const ImageBox = styled.img`
-  width: 310px;
-  height: 190px;
+  // width: 310px;
+  max-width: 600px;
+  min-width: 200px;
+  width: 99%;
+  // height: 190px;
+  height: 98%;
   border: 2px solid var(--fifth-color);
   border-radius: 10px;
-  margin: 5px 0 5px 3px;
+  // margin: 5px 0 5px 3px;
   object-fit: cover;
 `;
 

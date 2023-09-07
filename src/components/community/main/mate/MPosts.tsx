@@ -5,7 +5,7 @@ import shortid from 'shortid';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 // 타입
 import { FetchPost } from '../../../../types/types';
 // api
@@ -100,7 +100,6 @@ const MPosts = () => {
 
   // 프로필로 넘어가기
   const naviProfile = (userId: string) => {
-    // navigate(`/yourpage/${userId}`);
     navigate(`/yourpage/${shortid.generate()}`, { state: { userId: userId } });
   };
 
@@ -179,7 +178,9 @@ const MPosts = () => {
       {sortName === '팝업메이트 구하기' && <MStorePosts />}
       {sortName === '전체보기' && <MNewPosts />}
       <PostContainer>
-        {sortName === '팝업스토어 검색' && selectPosts && selectPosts.length > 0 ? (
+        {sortName === '팝업스토어 검색' &&
+          selectPosts &&
+          selectPosts.length > 0 &&
           selectPosts?.map((post) => {
             const postText = post.body.replace(/<img.*?>/g, '');
             return (
@@ -195,28 +196,31 @@ const MPosts = () => {
                   &nbsp;<Title>{post.title}</Title>
                   <Between>
                     <Body dangerouslySetInnerHTML={{ __html: postText }} />
-                    <DetailButton onClick={() => naviDetail(post)}>상세보기</DetailButton>
                   </Between>
+                  <DetailButton onClick={() => naviDetail(post)}>상세보기</DetailButton>
                 </ContentBox>
                 <ProfileBox>
-                  <Between>
+                  <Betweens>
                     <Img
                       src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${post.user.avatar_url}`}
                       alt="User Avatar"
                     />
                     <div>
                       <Name>
-                        <NameLine>{post.user.name}</NameLine>
+                        <NameLine>
+                          <span>{post.user.name}</span>
+                          님과
+                        </NameLine>
                       </Name>
-                      <Name>님과 함께 하기</Name>
+                      <Name>함께 하기</Name>
                     </div>
-                  </Between>
+                  </Betweens>
                   <ProfileButton onClick={() => naviProfile(post.user.id)}>프로필</ProfileButton>
                 </ProfileBox>
               </PostBox>
             );
-          })
-        ) : (
+          })}
+        {sortName === '팝업스토어 검색' && selectPosts && selectPosts.length === 0 && (
           <NoResult>함께 할 팝업메이트를 구해보세요!</NoResult>
         )}
         <Trigger ref={ref} />
@@ -227,11 +231,21 @@ const MPosts = () => {
 
 export default MPosts;
 
+const mediaBarQuery = (maxWidth: number) => css`
+  @media (max-width: ${maxWidth}px) {
+    width: 60%;
+  }
+`;
+
 const ButtonContainer = styled.div`
-  width: 870px;
+  max-width: 1920px;
+  min-width: 764px;
+  width: 51%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  ${mediaBarQuery(900)}
 `;
 
 const ButtonBox = styled.div`
@@ -242,9 +256,9 @@ const ButtonBox = styled.div`
 `;
 
 const Button = styled.button`
+  float: right;
   width: 80px;
   font-size: 14px;
-  margin: 2px;
   background-color: var(--second-color);
 `;
 
@@ -262,17 +276,28 @@ const Search = styled(SearchRoundedIcon)`
   margin: 8px 10px 0 10px;
 `;
 
+// 미디어 쿼리 세팅
+const mediaQuery = (maxWidth: number) => css`
+  @media (max-width: ${maxWidth}px) {
+    width: 40%;
+  }
+`;
 const PostContainer = styled.div`
+  max-width: 1920px;
+  min-width: 744px;
+  width: 50%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin-bottom: 30px;
+
+  ${mediaQuery(900)}
 `;
 
 const PostBox = styled.div`
-  width: 870px;
-  height: 160px;
+  width: 100%;
+  height: 240px;
   background-color: #fff;
   border: 3px solid var(--fifth-color);
   border-radius: 18px;
@@ -291,7 +316,7 @@ const PostBox = styled.div`
 `;
 
 const ContentBox = styled.div`
-  width: 590px;
+  width: 70%;
   padding: 10px 25px 10px 20px;
   border-right: 2px dashed var(--fifth-color);
 `;
@@ -300,6 +325,18 @@ const Between = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+`;
+const Betweens = styled.div`
+  gap: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  // margin-bottom: 50px;
+  @media (max-width: 1600px) {
+    justify-content: center;
+    flex-direction: column;
+    margin-top: -10px;
+  }
 `;
 
 const Store = styled.div`
@@ -314,7 +351,7 @@ const Title = styled.span`
 `;
 
 const Body = styled.div`
-  height: 43px;
+  height: 63px;
   width: 430px;
   color: black;
   font-size: 14px;
@@ -323,7 +360,7 @@ const Body = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* 표시할 줄 수 설정 */
+  -webkit-line-clamp: 3; /* 표시할 줄 수 설정 */
   -webkit-box-orient: vertical; /* 텍스트의 방향 설정 */
 `;
 
@@ -334,17 +371,19 @@ const Date = styled.div`
 `;
 
 const DetailButton = styled.button`
+  float: right;
   width: 80px;
   font-size: 14px;
-  margin-top: 45px;
+  margin-top: 42px;
 `;
 
 const ProfileBox = styled.div`
-  width: 230px;
+  width: 30%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
 `;
 
 const Name = styled.div`
@@ -353,14 +392,20 @@ const Name = styled.div`
   margin: 0 0 5px 10px;
 `;
 
-const NameLine = styled.span`
-  padding: 2px;
-  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+const NameLine = styled.div`
+  font-size: 14px;
+  // background-color: white;
+  // padding: 4px 6px;
+  span {
+    font-size: 18px;
+    padding: 2px;
+    background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+  }
 `;
 
 const Img = styled.img`
-  width: 70px;
-  height: 70px;
+  width: 100px;
+  height: 100px;
   margin: 10px 10px 10px 20px;
   object-fit: cover;
   border-radius: 50%;
@@ -372,9 +417,22 @@ const Trigger = styled.div`
 `;
 
 const ProfileButton = styled.button`
+  float: right;
   width: 80px;
   font-size: 14px;
-  margin: 13px 0 0 150px;
+  margin-right: 0;
+
+  position: absolute;
+  top: 185px;
+  right: 20px;
+  @media (max-width: 1600px) {
+    position: relative;
+    justify-content: center;
+    top: 0;
+    // margin-bottom: 50px;
+    right: 0;
+    // flex-direction: column;
+  }
 `;
 
 const NoResult = styled.h1`

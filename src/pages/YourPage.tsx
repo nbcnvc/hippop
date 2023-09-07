@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
+
+// 컴포넌트
+import Subscribe from '../components/community/detail/Subscribe';
+import Message from '../components/message/Message';
 // 라이브러리
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import format from 'date-fns/format';
 import { Parser } from 'htmlparser2'; // 문서를 분석해주는 (div, p tag) 라이브러리
@@ -16,13 +20,34 @@ import { UserInfo, PostType } from '../types/types';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
+
 // img
 import DefaultImg from '../images/defaultImg.png';
 import { Skeleton } from '@mui/material';
 
-const YourPage = () => {
-  // const { id } = useParams();
+import { useCurrentUser } from '../store/userStore';
+import { toast } from 'react-toastify';
 
+const YourPage = () => {
+  // 현재 유저
+  const currentUser = useCurrentUser();
+  // 쪽지 보내기
+  const [msgModal, setMsgModal] = useState<boolean>(false);
+  const [stateId, setStateId] = useState<string>('');
+
+  const openMsgModal = () => {
+    if (!currentUser) {
+      toast.info('로그인을 해주세요.', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+      return;
+    }
+    setMsgModal(true);
+  };
+
+  // const { id } = useParams();
   const { state } = useLocation();
   const userId: string = state?.userId || '';
 
@@ -34,13 +59,13 @@ const YourPage = () => {
     data: user,
     isLoading: isUserLoading,
     isError: isUserError
-  } = useQuery(['user', userId], () => getUser(userId));
+  } = useQuery(['user', stateId], () => getUser(stateId));
 
   const {
     data: bookMarkStore,
     isLoading: isBookMarkLoading,
     isError: isBookMarkError
-  } = useQuery(['BookMarkStore', userId], () => fetchBookMarkStore(userId));
+  } = useQuery(['BookMarkStore', stateId], () => fetchBookMarkStore(stateId));
 
   const handleSectionChange = (e: React.MouseEvent<HTMLButtonElement>) => {
     const button = e.target as HTMLButtonElement;
@@ -50,6 +75,21 @@ const YourPage = () => {
       setActiveSection(section);
     }
   };
+
+  // userId가 state로 최초에 들어오면 토큰을 생성하고
+  // 생성한 토큰을 setStateId 담아줌
+  useEffect(() => {
+    if (user || userId) {
+      localStorage.setItem('YourToken', userId);
+    }
+
+    setStateId(localStorage.getItem('YourToken') ?? '');
+  }, []);
+
+  // stateId를 가지고 getUser => user가 들어오면 setUserData해주기
+  useEffect(() => {
+    setUserData(user || null); // Use null as a fallback when user is undefined
+  }, [user]);
 
   // 인피니티 스크롤로 필터된 게시글 또는 북마크 가져오기
   const getYourSectionItems = ({
@@ -78,8 +118,8 @@ const YourPage = () => {
     fetchNextPage,
     isFetchingNextPage
   } = useInfiniteQuery({
-    queryKey: ['yourpage', userId, activeSection],
-    queryFn: ({ pageParam }) => getYourSectionItems({ pageParam, activeSection, userId: userId }),
+    queryKey: ['yourpage', stateId, activeSection],
+    queryFn: ({ pageParam }) => getYourSectionItems({ pageParam, activeSection, userId: stateId }),
     getNextPageParam: (lastPage) => {
       if (lastPage.page < lastPage.totalPages) {
         return lastPage.page + 1;
@@ -121,6 +161,12 @@ const YourPage = () => {
       fetchProfileImage();
     }
   }, [userData]);
+
+  useEffect(() => {
+    return () => {
+      window.scrollTo(0, 0);
+    };
+  }, []);
 
   if (isLoading || isUserLoading || isBookMarkLoading) {
     // 로딩 중일 때 스켈레톤 표시
@@ -236,6 +282,7 @@ const YourPage = () => {
 
   return (
     <>
+      {msgModal && <Message msgModal={msgModal} setMsgModal={setMsgModal} writer={user!} />}
       <Container>
         <UserWrapper>
           <UserBox>
@@ -245,110 +292,122 @@ const YourPage = () => {
             </Htag>
             <BoxLine></BoxLine>
             <UserProfile>
-              <div>
+              <Between>
                 {user?.avatar_url?.startsWith('profile/') ? (
                   <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${user?.avatar_url}`} alt="User Avatar" />
                 ) : (
                   <Img src={user?.avatar_url} alt="User Avatar" />
                 )}
-              </div>
-              <div>
-                <Ptag>힙팝메이트</Ptag>
-                <Ptag>
-                  <SpanLine>{user?.name}</SpanLine>님
-                </Ptag>
-                {/* <Ptage>{user?.email}</Ptage> */}
-              </div>
+                <NameBox>
+                  <Ptag>힙팝메이트</Ptag>
+                  <Ptag>
+                    <SpanLine>{user?.name}</SpanLine>님
+                  </Ptag>
+                </NameBox>
+              </Between>
+              <Between1>
+                <Subscribe writerId={stateId} />
+                {currentUser?.id !== user?.id && <MsgButton onClick={openMsgModal}>쪽지 보내기</MsgButton>}
+              </Between1>
             </UserProfile>
           </UserBox>
-          <div></div>
+          {/* <div></div> */}
           <StoreListBox>
-            <Htag>
-              <HtagLine>북마크한 팝업스토어</HtagLine>
-            </Htag>
-            <BookMarkList>
-              {bookMarkStore?.map((bookMark) => {
-                return (
-                  <BookMarkWraaper>
-                    <BookMarkBox>
-                      <div>
-                        <StoreList>
-                          <p>
-                            <RoomRoundedIcon fontSize="large" />
-                          </p>
-                          <StoreInfo>
-                            <div>
-                              <div>
+            <div>
+              <Htag>
+                <HtagLine>북마크한 팝업스토어</HtagLine>
+              </Htag>
+              <BookMarkList>
+                <div style={{ paddingRight: '1rem' }}>
+                  {bookMarkStore?.map((bookMark) => {
+                    return (
+                      <BookMarkWraaper>
+                        <BookMarkBox>
+                          <div>
+                            <StoreList>
+                              <p>
+                                <RoomRoundedIcon fontSize="large" />
+                              </p>
+                              <StoreInfo>
                                 <Location>
                                   {bookMark.store?.location.split(' ').slice(0, 1)}{' '}
                                   {bookMark.store?.location.split(' ').slice(1, 2)}
                                 </Location>
-                              </div>
-                              <TitleBox>
-                                <StoreTitle>{bookMark.store?.title}</StoreTitle>
-                              </TitleBox>
-                            </div>
-                            <StoreDetailArrow
-                              onClick={() => {
-                                BookMarkDetail(bookMark.store.id);
-                              }}
-                            >
-                              <ArrowForwardIosIcon />
-                            </StoreDetailArrow>
-                          </StoreInfo>
-                        </StoreList>
-                      </div>
-                    </BookMarkBox>
-                    <Line></Line>
-                  </BookMarkWraaper>
-                );
-              })}
-            </BookMarkList>
+
+                                <TitleBox>
+                                  <StoreTitle>{bookMark.store?.title}</StoreTitle>
+                                </TitleBox>
+
+                                <StoreDetailArrow
+                                  onClick={() => {
+                                    BookMarkDetail(bookMark.store.id);
+                                  }}
+                                >
+                                  <ArrowForwardIosIcon />
+                                </StoreDetailArrow>
+                              </StoreInfo>
+                            </StoreList>
+                          </div>
+                        </BookMarkBox>
+                        <Line></Line>
+                      </BookMarkWraaper>
+                    );
+                  })}
+                </div>
+              </BookMarkList>
+            </div>
           </StoreListBox>
         </UserWrapper>
 
         <ReviewWrapper>
           <Htag2>
+            <EditNoteRoundedIcon fontSize="large" />
             <HtagLine>작성한 게시글</HtagLine>
           </Htag2>
-          <GridContainer>
-            {selectItems?.map((post: PostType) => {
-              const imageTags: string[] = [];
-              const parser = new Parser({
-                onopentag(name, attribs) {
-                  if (name === 'img' && attribs.src) {
-                    imageTags.push(attribs.src);
+          {userData && (
+            <GridContainer>
+              {selectItems?.map((post: PostType) => {
+                const imageTags: string[] = [];
+                const parser = new Parser({
+                  onopentag(name, attribs) {
+                    if (name === 'img' && attribs.src) {
+                      imageTags.push(attribs.src);
+                    }
                   }
-                }
-              });
+                });
 
-              parser.write(post.body);
-              parser.end();
+                parser.write(post.body);
+                parser.end();
 
-              return (
-                <Card>
-                  <div key={post.id}>
-                    {imageTags.length > 0 ? <PostImg src={imageTags[0]} alt={`Image`} /> : <PostImg src={DefaultImg} />}
-                    <HtagTttle>{post.store?.title}</HtagTttle>
-                    <CardInfo>
-                      <div>
-                        <PtagDate>{format(new Date(post.created_at), 'yyyy-MM-dd')}</PtagDate>
-                      </div>
-                      <BtnBox>
-                        <DetailBtn
-                          onClick={() => {
-                            PostDetail(post.id);
-                          }}
-                        >
-                          상세보기
-                        </DetailBtn>
-                      </BtnBox>
-                    </CardInfo>
-                  </div>
-                </Card>
-              );
-            })}
-          </GridContainer>
+                return (
+                  <Card>
+                    <div key={post.id}>
+                      {imageTags.length > 0 ? (
+                        <PostImg src={imageTags[0]} alt={`Image`} />
+                      ) : (
+                        <PostImg src={DefaultImg} />
+                      )}
+                      <HtagTttle>{post.store?.title}</HtagTttle>
+                      <CardInfo>
+                        <div>
+                          <PtagDate>{format(new Date(post.created_at), 'yyyy-MM-dd')}</PtagDate>
+                        </div>
+                        <BtnBox>
+                          <DetailBtn
+                            onClick={() => {
+                              PostDetail(post.id);
+                            }}
+                          >
+                            상세보기
+                          </DetailBtn>
+                        </BtnBox>
+                      </CardInfo>
+                    </div>
+                  </Card>
+                );
+              })}
+            </GridContainer>
+          )}
         </ReviewWrapper>
       </Container>
       <div ref={ref}></div>
@@ -360,8 +419,9 @@ export default YourPage;
 
 const Container = styled.div`
   display: flex;
-
+  flex-direction: column;
   max-width: 1920px;
+  min-width: 744px;
   width: 50%;
   height: 100%;
   margin: 0 auto;
@@ -372,23 +432,24 @@ const Container = styled.div`
 
 const UserWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  margin-top: 50px;
-  width: 300px;
+  justify-content: center;
+  align-items: center;
 
-  position: fixed; /* 화면에 고정 */
-  /* top: 0; 상단에 고정 */
+  width: 100%;
   overflow-y: auto;
 `;
 
 const UserBox = styled.div`
   display: flex;
   flex-direction: column;
-
+  min-width: 230px;
+  width: 30%;
   height: 250px;
+  padding: 5px;
 
   border: 3px solid #333333;
   border-radius: 18px;
+  margin-right: 30px;
 `;
 
 const Htag = styled.h2`
@@ -403,19 +464,42 @@ const Htag = styled.h2`
 
 const HtagLine = styled.h2`
   background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+  display: flex;
+  /* justify-content: flex-start; */
+  align-items: center;
+
+  margin-left: 5px;
+  /* width: 50%; */
 `;
+
 const BoxLine = styled.div`
   border-bottom: 2px dashed #333333;
 
-  margin: 25px 10px 40px 10px;
+  margin: 15px 10px 5px 10px;
 `;
 
 const UserProfile = styled.div`
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+`;
 
-  margin-bottom: 20px;
+const Between = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  margin: 10px 0;
+`;
+
+const Between1 = styled.div`
+  display: flex;
+  justify-content: space-between;
+
+  margin: 10px 0;
+
+  width: 200px;
+  font-size: 12px;
 `;
 
 const Img = styled.img`
@@ -425,8 +509,16 @@ const Img = styled.img`
   border-radius: 50%;
 `;
 
+const NameBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Ptag = styled.p`
   font-size: 20px;
+  font-weight: 700;
   color: #333333;
 
   padding: 5px;
@@ -438,24 +530,33 @@ const SpanLine = styled.span`
   background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
 `;
 
+const MsgButton = styled.button`
+  width: 120px;
+  height: 40px;
+  margin-left: 10px;
+  font-weight: 600;
+  font-size: 15px;
+`;
+
 const StoreListBox = styled.div`
   background-color: var(--fourth-color);
-  margin-top: 80px;
 
+  min-width: 330px;
   border: 3px solid #333333;
   border-radius: 18px;
-
-  height: 720px;
+  width: 100%;
+  height: 250px;
   /* height: 100%; */
   /* overflow: hidden; */
   overflow-y: scroll;
-
+  display: flex;
+  flex-direction: column;
   padding: 5px;
 `;
 
 const BookMarkList = styled.div`
   margin-top: 24px;
-  max-height: inherit;
+  /* max-height: inherit; */
 `;
 
 const BookMarkWraaper = styled.div`
@@ -464,7 +565,7 @@ const BookMarkWraaper = styled.div`
 `;
 
 const BookMarkBox = styled.div`
-  display: flex;
+  /* display: flex; */
 
   padding: 5px;
 `;
@@ -473,29 +574,44 @@ const StoreList = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+
+  margin-left: 10px;
 `;
 
 const StoreInfo = styled.div`
   margin-bottom: 6px;
+
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  width: 230px;
+
+  align-items: center;
+  width: 100%;
 `;
 
 const Location = styled.span`
-  font-size: 12px;
+  font-size: 14px;
+  /* width: 30%; */
+  flex: 0.8;
+  margin-left: 20px;
 `;
 
 const TitleBox = styled.div`
-  max-width: 200px;
+  display: flex;
+  flex: 3;
+  justify-content: flex-start;
+  /* overflow-x: hidden; */
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
+  margin-left: 20px;
+  /* width: 100%; */
 `;
 
 const StoreTitle = styled.span`
+  display: flex;
+  justify-content: flex-start;
   font-size: 15px;
+  /* width: 100%; */
 `;
 
 const StoreDetailArrow = styled.div`
@@ -503,19 +619,21 @@ const StoreDetailArrow = styled.div`
 `;
 
 const Line = styled.div`
-  width: 92%;
+  width: 99%;
   margin: 5px 15px;
   border-bottom: 1px dashed #333333;
 `;
 
 const ReviewWrapper = styled.div`
-  margin: 50px 0 0 390px;
+  margin: 50px 0 0 0;
+  min-height: 750px;
 `;
 
 const Htag2 = styled.h2`
   margin-bottom: 55px;
   display: flex;
-  align-items: flex-start;
+  /* justify-content: center;
+  align-items: center; */
   font-size: 25px;
 `;
 
@@ -524,24 +642,27 @@ const GridContainer = styled.div`
 
   display: grid;
   justify-content: center;
-  grid-template-columns: repeat(2, 1fr); // 한 줄에 두 개의 열
-  gap: 60px;
+  grid-template-columns: repeat(3, 1fr); // 한 줄에 두 개의 열
+  gap: 30px;
 
-  /* max-width: 500px; // 그리드가 너무 넓어지는 것을 제한 */
-  width: 50%;
+  width: 100%;
 
   margin-top: 28px;
-  /* margin-left: 160px; */
-  /* margin-top: 50px; */
+  @media (max-width: 1600px) {
+    grid-template-columns: repeat(2, 1fr); // Three columns per row
+  }
+  @media (max-width: 1000px) {
+    grid-template-columns: repeat(2, 1fr); // Three columns per row
+  }
 `;
 
 const Card = styled.div`
-  width: 400px !important ;
-
-  height: 460px;
+  width: 100%;
+  /* height: 460px; */
   border-radius: 18px;
   border: 3px solid var(--fifth-color);
 
+  padding: 10px;
   display: flex !important;
   flex-direction: column;
   justify-content: center;
@@ -551,6 +672,7 @@ const Card = styled.div`
   position: relative;
 
   box-sizing: border-box;
+
   transition: color 0.3s ease, transform 0.3s ease;
   &:hover {
     border: 6px solid var(--primary-color);
@@ -561,32 +683,22 @@ const Card = styled.div`
   }
 `;
 
-const PostImgBox1 = styled.div`
-  /* border: 2px solid black;
-  border-radius: 18px;
-  object-fit: cover;
+// const PostImgBox = styled.div`
+//   border: 2px solid black;
+//   border-radius: 18px;
+//   object-fit: cover;
 
-  width: 330px;
-  height: 310px;
-  margin-bottom: 15px; */
-`;
-
-const PostImgBox = styled.div`
-  border: 2px solid black;
-  border-radius: 18px;
-  object-fit: cover;
-
-  width: 330px;
-  height: 310px;
-  /* margin-bottom: 15px; */
-`;
+//   width: ;
+//   height: 310px;
+//   /* margin-bottom: 15px; */
+// `;
 
 const PostImg = styled.img`
   border: 2px solid black;
   border-radius: 18px;
   object-fit: cover;
 
-  width: 330px;
+  width: 365px;
   height: 310px;
   margin-bottom: 15px;
 `;
@@ -596,14 +708,19 @@ const CardInfo = styled.div`
   justify-content: space-between;
   align-items: ceoter;
 
-  width: 330px;
+  width: 100%;
 `;
 
 const HtagTttle = styled.h3`
   margin-top: 10px;
   margin-left: 5px;
+  margin: 10px 0 5px 5px;
   font-size: 20px;
-  width: 225px;
+  /* width: 225px; */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 369px;
 `;
 
 const PtagDate = styled.p`
@@ -624,7 +741,7 @@ const DetailBtn = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100px;
+  /* width: 100px; */
   height: 35px;
 
   font-size: 15px;

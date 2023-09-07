@@ -34,6 +34,7 @@ const SearchModal = ({
   const closeSearch = () => {
     setKeyword('');
     setSearchModal(false);
+    document.body.style.overflow = 'auto';
     // 검색 결과가 있을 경우 검색 결과 초기화
     if (result) {
       setResult(null);

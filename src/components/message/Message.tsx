@@ -9,7 +9,7 @@ import { useCurrentUser } from '../../store/userStore';
 import { MessageProps } from '../../types/props';
 import { MessageType } from '../../types/types';
 //alert
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import SendSharpIcon from '@mui/icons-material/SendSharp';
@@ -105,7 +105,7 @@ const Container = styled.div`
   /* position: absolute;
   z-index: 0; */
   position: fixed;
-  z-index: 9;
+  z-index: 99;
   top: 0;
   left: 0;
   width: 100%;
@@ -131,6 +131,7 @@ const Wrapper = styled.div`
   align-items: center;
   flex-direction: column;
 `;
+
 const TopTitle = styled.span`
   margin-bottom: 30px;
 
