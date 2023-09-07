@@ -107,7 +107,10 @@ const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) 
               {sortedMessages?.map((message) => {
                 return (
                   <Wrapper key={message.id} onClick={() => handleClickMsg(message)}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }} onClick={handleShowDetail}>
+                    <div
+                      style={{ display: 'flex', alignItems: 'center', gap: '15px', width: '70%' }}
+                      onClick={handleShowDetail}
+                    >
                       <ProfileBox>
                         {message?.to.avatar_url && (
                           <Img
@@ -118,11 +121,9 @@ const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) 
                         <h4>{message.to.name}</h4>
                       </ProfileBox>
                       <p> {moment(message.created_at).format('YYYY-MM-DD HH:mm:ss')}</p>
-                      <div>
-                        <Body>
-                          <span>{message.body}</span>
-                        </Body>
-                      </div>
+                      <Body>
+                        <span>{message.body}</span>
+                      </Body>
                     </div>
                     <h5>{message.isRead ? <DraftsOutlinedIcon /> : <EmailOutlinedIcon />}</h5>
                     <button className="deleteBtn" onClick={() => handleDeleteMsg(message)} style={{ width: '60px' }}>
@@ -157,14 +158,12 @@ const Wrapper = styled.div`
   align-items: center;
   width: 99%;
   height: 50px;
-  // padding-right: 8px;
   border-radius: 14px;
   margin: 6px 0 0;
   color: var(--fifth-color);
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, padding-right 0.3s ease;
   &:hover {
-    // padding-right: 0px;
     background-color: var(--sixth-color);
   }
   &:active {
@@ -172,13 +171,11 @@ const Wrapper = styled.div`
   }
   h4 {
     margin-left: 8px;
-    /* width: 80px; */
     width: 100px;
     text-align: center;
   }
   span {
     display: block;
-    /* width: 170px; */
     width: 180px;
     text-align: center;
   }
@@ -190,9 +187,19 @@ const Wrapper = styled.div`
     border-bottom: 4px solid var(--fifth-color);
   }
   p {
-    /* width: 200px; */
-    width: 160px;
+    width: 180px;
+    margin-left: 20px;
     text-align: center;
+    @media (max-width: 1360px) {
+      width: 220px;
+      margin-left: 0px;
+    }
+    @media (max-width: 1060px) {
+      display: inline-block;
+      // animation: marquee 7s linear infinite;
+      overflow: hidden;
+      width: 180px;
+    }
   }
 `;
 
@@ -210,12 +217,18 @@ const Img = styled.img`
   border-radius: 50%;
 `;
 const Body = styled.div`
-  width: 100%;
-  white-space: nowrap;
+  width: 30%;
   overflow: hidden;
-  text-overflow: ellipsis;
-
+  margin-right: 0;
+  @media (max-width: 1960px) {
+    width: 40%;
+  }
+  @media (max-width: 1360px) {
+    display: none;
+  }
   span {
+    margin: 0 auto;
+    margin-right: -10px;
     display: inline-block;
     animation: marquee 7s linear infinite;
   }
