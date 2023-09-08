@@ -64,22 +64,32 @@ const MyPage = () => {
   const handleSaveChanges = async () => {
     let nameChanged = false;
     let imageChanged = false;
-    let alertMessages = []; // 알림 메시지를 저장할 배열
+    let alertMessages = [];
 
-    if (newName.trim() !== '' && newName.length <= 4 && newName !== currentUser?.name) {
-      // 이름 변경 처리
-      const { error: nameError } = await supabase.from('user').update({ name: newName }).eq('id', currentUser?.id);
-      if (!nameError) {
-        const userData = await getUser(currentUser?.id ?? '');
-        setCurrentUser(userData);
-        setEditingName(false); // 수정 모드 해제
-        nameChanged = true;
+    // 정규표현식을 사용하여 특수문자 여부를 검사
+    const specialCharacters = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\]/;
+
+    if (newName.trim() !== '' && newName !== currentUser?.name) {
+      if (newName.length <= 4) {
+        if (!specialCharacters.test(newName)) {
+          // 특수문자를 포함하지 않는 경우에만 처리
+          // 이름 변경 처리
+          const { error: nameError } = await supabase.from('user').update({ name: newName }).eq('id', currentUser?.id);
+          if (!nameError) {
+            const userData = await getUser(currentUser?.id ?? '');
+            setCurrentUser(userData);
+            setEditingName(false);
+            nameChanged = true;
+          } else {
+            console.error(nameError);
+            alertMessages.push('닉네임 변경 중 오류가 발생했습니다 :(');
+          }
+        } else {
+          alertMessages.push('닉네임에는 특수문자를 포함할 수 없어요.');
+        }
       } else {
-        console.error(nameError);
-        alertMessages.push('닉네임 변경 중 오류가 발생했습니다 :(');
+        alertMessages.push('닉네임은 네 글자 이하로 입력해주세요.');
       }
-    } else if (newName.trim() !== '' && newName.length > 4) {
-      alertMessages.push('닉네임은 네 글자 이하로 입력해주세요.');
     }
 
     // 나머지 조건에 대한 else 추가
@@ -104,15 +114,16 @@ const MyPage = () => {
       }
     }
 
-    if (nameChanged || imageChanged) {
+    if ((nameChanged || imageChanged) && alertMessages.length === 0) {
+      // 변경된 내용이 있는 경우
       alertMessages.push('프로필 변경이 완료됐습니다 ! :)');
-      setEditingName(false); // 수정 모드 해제
+      setEditingName(false);
       setImageUploadVisible(false);
-    } else if (!nameChanged && !imageChanged) {
+    } else if (!nameChanged && !imageChanged && alertMessages.length === 0) {
+      // 변경된 내용이 없는 경우
       alertMessages.push('변경된 부분이 없어요 :( [취소] 버튼을 눌러주세요 ! :)');
     }
 
-    // alertMessages 배열에 있는 모든 메시지를 표시
     alertMessages.forEach((message) => {
       toast.info(message, {
         className: 'custom-toast',

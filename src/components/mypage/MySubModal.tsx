@@ -39,21 +39,25 @@ const MySubModal = ({ setIsSubModal }: MySubModalProps) => {
               <XButton onClick={closeSubModal} />
             </ButtonBox>
             <UserContainer>
-              {sublistData?.map((sub) => {
-                return (
-                  <UserBox key={sub.id} onClick={() => naviSubPage(sub.subscribe_to)}>
-                    <div>
-                      <Img
-                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${sub.to.avatar_url}`}
-                        alt="User Avatar"
-                      />
-                    </div>
-                    <Name>
-                      팝업메이트 <NameLine>{sub.to.name}</NameLine> 님
-                    </Name>
-                  </UserBox>
-                );
-              })}
+              {sublistData?.length === 0 ? (
+                <div className="none-subs">아직 구독한 사람이 없어요 !</div>
+              ) : (
+                sublistData?.map((sub) => {
+                  return (
+                    <UserBox key={sub.id} onClick={() => naviSubPage(sub.subscribe_to)}>
+                      <div>
+                        <Img
+                          src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${sub.to.avatar_url}`}
+                          alt="User Avatar"
+                        />
+                      </div>
+                      <Name>
+                        팝업메이트 <NameLine>{sub.to.name}</NameLine> 님
+                      </Name>
+                    </UserBox>
+                  );
+                })
+              )}
             </UserContainer>
           </div>
         </ModalBox>
@@ -102,6 +106,13 @@ const UserContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   overflow: scroll;
+  .none-subs {
+    background-color: white;
+    padding: 10px;
+    text-align: center;
+    border-radius: 8px;
+    border: 3px solid var(--fifth-color);
+  }
 `;
 
 const UserBox = styled.div`
