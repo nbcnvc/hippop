@@ -169,7 +169,10 @@ export const MypageTag = styled.div`
         span {
           height: 22px;
           color: var(--primary-color);
-          font-size: 20px !important;
+          font-size: 20px;
+          @media (max-width: 844px) {
+            font-size: 16px;
+          }
         }
       }
       span {
@@ -179,9 +182,9 @@ export const MypageTag = styled.div`
         display: flex;
         justify-content: center;
         align-items: center;
-        @media (max-width: 844px) {
-          font-size:
-        }
+        // @media (max-width: 844px) {
+        //   font-size:
+        // }
         input {
           width: 55px !important;
           border-radius: 6px;
@@ -310,7 +313,19 @@ export const MypageTag = styled.div`
     color: var(--fifth-color);
     font-weight: 600;
   }
-  .post-wrapper {
+
+  .post-wrapper-flex {
+    display: flex;
+    justify-content: center;
+    padding: 80px 0;
+    text-align: center;
+    font-size: 2rem;
+    @media (max-width: 844px) {
+      padding: 200px 0;
+    }
+  }
+
+  .post-wrapper-grid {
     margin: 0 auto;
     padding: 0;
     display: grid;
@@ -328,6 +343,12 @@ export const MypageTag = styled.div`
     }
     @media (max-width: 1596px) {
       gap: 22px;
+    }
+    .none-review{
+      margin: 0 auto;
+    }
+    .none-bookmark{
+      margin: 0 auto;
     }
     .fid {
       margin: 0 auto;

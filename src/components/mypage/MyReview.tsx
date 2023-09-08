@@ -66,7 +66,6 @@ const MyReview = ({ activeSection }: MyReviewProps) => {
       fetchNextPage();
     }
   });
-  console.log(selectItems);
   // 작성 날짜 잘라내기
   function formatDate(dateTimeString: string) {
     const options: Intl.DateTimeFormatOptions = {
@@ -125,19 +124,27 @@ const MyReview = ({ activeSection }: MyReviewProps) => {
   }
   return (
     <div style={{ margin: '0 auto' }}>
-      <div className="post-wrapper">
-        {selectItems &&
-          selectItems.map((post: PostType) => {
+      <div
+        className={`post-wrapper ${
+          selectItems && selectItems.length === 0 ? 'post-wrapper-flex' : 'post-wrapper-grid'
+        }`}
+      >
+        {selectItems && selectItems.length === 0 ? (
+          <>
+            <div className="none-review">작성한 글이 없어요😅. 후기를 남기러 가볼까요?</div>
+          </>
+        ) : (
+          selectItems?.map((post: PostType) => {
             const imageTags = extractImageTags(post.body);
             return (
               <div className="fid" key={post.id}>
                 {imageTags.length > 0 ? (
                   <div>
-                    <img src={imageTags[0]} alt={`Image 0`} width={250} />
+                    <img src={imageTags[0]} alt={`Image 0`} />
                   </div>
                 ) : (
                   <div>
-                    <img src="/asset/defaultImg.png" alt="Default Image" width={250} />
+                    <img src="/asset/defaultImg.png" alt="Default Image" />
                   </div>
                 )}
                 <div className="info-box">
@@ -156,7 +163,8 @@ const MyReview = ({ activeSection }: MyReviewProps) => {
                 </div>
               </div>
             );
-          })}
+          })
+        )}
       </div>
       <div
         style={{
