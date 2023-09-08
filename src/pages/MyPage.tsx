@@ -158,6 +158,12 @@ const MyPage = () => {
     setToggleMsgBox(name);
   };
 
+  useEffect(() => {
+    return () => {
+      window.scrollTo(0, 0);
+    };
+  }, []);
+
   return (
     <MypageTag>
       <header>
