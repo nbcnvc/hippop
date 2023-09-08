@@ -6,6 +6,8 @@ import { HotPlaceProps } from '../../types/props';
 // mui
 import Switch, { SwitchProps } from '@mui/material/Switch';
 import { styled as muiStyled } from '@mui/material/styles';
+import TipsAndUpdatesOutlinedIcon from '@mui/icons-material/TipsAndUpdatesOutlined';
+import { FaRegLightbulb } from 'react-icons/fa';
 
 const HotPlace = ({ setCategory, setIsSelected }: HotPlaceProps) => {
   const [isOpened, setIsOpened] = useState<boolean>(false);
@@ -27,20 +29,28 @@ const HotPlace = ({ setCategory, setIsSelected }: HotPlaceProps) => {
     <HotPlaceContainer>
       <div className="hotplace-title">
         <h1>함께 갈만한 핫플레이스 추천!</h1>
-        <div className="noti-box"> 카테고리 클릭 후 마커핀을 클릭해 보세요 :)</div>
+        <div className="noti-box">
+          <span className="info-tip">
+            <FaRegLightbulb />
+            이용 Tip
+          </span>
+          카테고리 클릭 후 마커핀을 클릭해 보세요 :)
+        </div>
         <div className="button-box">
           <button name="맛집" onClick={handleHotPlaceCategory}>
-            # 맛집
+            맛집
           </button>
           <button name="카페" onClick={handleHotPlaceCategory}>
-            # 카페
+            카페
           </button>
           <button name="술집" onClick={handleHotPlaceCategory}>
-            # 술집
+            술집
           </button>
         </div>
       </div>
       <div className="toggle-button">
+        {/* {isOpened && <IOSSwitch checked={isOpened} onClick={handleShowMarker} />} */}
+        {isOpened && <span className="marker-info">마커핀 off →</span>}
         <IOSSwitch checked={isOpened} onClick={handleShowMarker} />
       </div>
     </HotPlaceContainer>
@@ -66,15 +76,25 @@ const HotPlaceContainer = styled.div`
     }
 
     .noti-box {
+      display: flex;
+      align-items: center;
       margin-top: 20px;
       font-size: 18px;
+
+      .info-tip {
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        margin-right: 13px;
+      }
     }
 
     .button-box {
       button {
-        margin: 40px 15px;
-        padding: 7px 25px;
+        font-weight: 600;
         background-color: var(--second-color);
+        margin: 35px 15px;
+        padding: 10px 22px;
       }
     }
   }
@@ -83,6 +103,26 @@ const HotPlaceContainer = styled.div`
     width: 100%;
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+
+    .marker-info {
+      margin-right: 10px;
+      padding-top: 10px;
+
+      animation: blink 5s infinite; /* 깜빡거리는 애니메이션 적용 */
+
+      @keyframes blink {
+        0% {
+          opacity: 1; /* 시작 시 fully visible */
+        }
+        50% {
+          opacity: 0; /* 중간에 투명 */
+        }
+        100% {
+          opacity: 1; /* 다시 fully visible */
+        }
+      }
+    }
   }
 `;
 
@@ -90,7 +130,7 @@ const IOSSwitch = muiStyled((props: SwitchProps) => (
   <Switch focusVisibleClassName=".Mui-focusVisible" disableRipple {...props} />
 ))(({ theme }) => ({
   width: 63,
-  height: 35,
+  height: 34,
   padding: 0,
   overflow: 'unset',
 
@@ -109,9 +149,8 @@ const IOSSwitch = muiStyled((props: SwitchProps) => (
       color: 'var(--primary-color)',
 
       '& + .MuiSwitch-track': {
-        backgroundColor: theme.palette.mode === 'dark' ? '#39393D' : '#e7e7e7cb',
+        backgroundColor: theme.palette.mode === 'dark' ? '#39393D' : '#edededbc',
         opacity: 1,
-
         border: '3px solid var(--fifth-color)'
       },
       '&.Mui-disabled + .MuiSwitch-track': {
@@ -142,7 +181,7 @@ const IOSSwitch = muiStyled((props: SwitchProps) => (
   '& .MuiSwitch-track': {
     border: '3px solid var(--fifth-color)',
     borderRadius: 26,
-    backgroundColor: theme.palette.mode === 'light' ? '#e7e7e7cb' : '#39393D',
+    backgroundColor: theme.palette.mode === 'light' ? '#edededbc' : '#39393D',
     opacity: 1,
     transition: theme.transitions.create(['background-color'], {
       duration: 500

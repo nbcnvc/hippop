@@ -29,7 +29,7 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
 
   useEffect(() => {
     setNearbyStoreMarker(filteredStore);
-  }, [guName]);
+  }, [guName, storeData]);
 
   const PrevArrow = ({ onClick }: SliderButton) => {
     return (

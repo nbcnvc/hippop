@@ -224,13 +224,13 @@ const StoreDetail = () => {
               </div>
               <div className="button-box">
                 <button
-                  style={{ margin: '10px 5px', padding: '14px 25px' }}
+                  style={{ fontWeight: '600', margin: '10px 5px', padding: '14px 25px' }}
                   onClick={() => navigate('/review', { state: { storeId: id } })}
                 >
                   후기 보러가기
                 </button>
                 <button
-                  style={{ margin: '10px 15px', padding: '14px 25px' }}
+                  style={{ fontWeight: '600', margin: '10px 15px', padding: '14px 25px' }}
                   onClick={() => navigate('/mate', { state: { storeId: id } })}
                 >
                   팝업 메이트 구하기

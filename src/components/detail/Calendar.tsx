@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 // 라이브러리
-import Calendar1 from 'react-calendar';
+import Calendar1, { MonthView } from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import moment from 'moment';
 import { styled } from 'styled-components';
@@ -14,6 +14,10 @@ const Calendar = ({ storeData }: CalendarProps) => {
     setPeriod([date, date]);
   };
 
+  const tileDisabled = (date: any) => {
+    return true;
+  };
+
   return (
     <StyleCalendar
       calendarType="gregory"
@@ -24,6 +28,7 @@ const Calendar = ({ storeData }: CalendarProps) => {
       formatDay={(locale, date) => moment(date).format('D')}
       next2Label={null}
       prev2Label={null}
+      tileDisabled={tileDisabled}
     />
   );
 };

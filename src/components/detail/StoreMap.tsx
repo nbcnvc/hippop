@@ -228,16 +228,6 @@ const MapContainer = styled.div`
   width: 100%;
 
   .info-title {
-    /* background-color: none;
-    border: none;
-    width: 100%;
-    height: auto;
-    background: #458bfd;
-    color: #fff;
-    text-align: center;
-    border-radius: 4px;
-    padding: 0px 10px; */
-    cursor: default;
     position: absolute;
     background: rgb(255, 255, 255);
     border: 1px solid rgb(118, 129, 168);
@@ -245,6 +235,7 @@ const MapContainer = styled.div`
     display: block;
     width: 207px;
     height: 23px;
+    cursor: default;
   }
 
   .map-iframe {

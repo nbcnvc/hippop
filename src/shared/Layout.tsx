@@ -13,10 +13,9 @@ const Layout = () => {
   return (
     <>
       <Header />
-
       <ToastContainer
         position="top-center"
-        autoClose={3000}
+        autoClose={1500}
         // hideProgressBar={true}
         newestOnTop={true}
         // closeOnClick={true}
