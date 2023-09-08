@@ -165,7 +165,7 @@ const CardContainerClosed = styled.div`
   }
 
   &:hover {
-    border: 6px solid var(--primary-color);
+    border: 3px solid var(--primary-color);
   }
 
   &:active {
@@ -197,7 +197,7 @@ const CardContainer = styled.div`
   }
 
   &:hover {
-    border: 6px solid var(--primary-color);
+    border: 3px solid var(--primary-color);
   }
 
   &:active {

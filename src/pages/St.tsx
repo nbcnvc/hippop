@@ -179,7 +179,9 @@ export const MypageTag = styled.div`
         display: flex;
         justify-content: center;
         align-items: center;
-
+        @media (max-width: 844px) {
+          font-size:
+        }
         input {
           width: 55px !important;
           border-radius: 6px;
@@ -342,7 +344,7 @@ export const MypageTag = styled.div`
       transition: color 0.3s ease, transform 0.3s ease;
 
       &:hover {
-        border: 6px solid var(--primary-color);
+        border: 3px solid var(--primary-color);
       }
       &:active {
         background-color: rgb(215, 215, 219);
@@ -463,7 +465,7 @@ export const MypageTag = styled.div`
       }
       @media (max-width: 1596px) {
         width: 92%;
-        height: 320px;
+        height: 314px;
 
         img {
           width: 90%;
@@ -505,7 +507,7 @@ export const MypageTag = styled.div`
       background-color: #ffffff;
       transition: color 0.3s ease, transform 0.3s ease;
       &:hover {
-        border: 6px solid var(--primary-color);
+        border: 3px solid var(--primary-color);
       }
       &:active {
         background-color: rgb(215, 215, 219);
@@ -552,10 +554,12 @@ export const MypageTag = styled.div`
             font-size: 18px;
             height: 18px;
             overflow: hidden;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            @media (max-width: 2190px) {
+              margin-bottom: 10px;
+            }
           }
           p {
-            margin-top: 20px;
             font-size: 14px;
           }
         }
@@ -565,6 +569,7 @@ export const MypageTag = styled.div`
           background-color: var(--second-color);
           color: white;
           margin-right: 0;
+          margin-top: 20px;
           @media (max-width: 1850px) {
             width: 100px;
             padding: 8px 10px;
