@@ -216,7 +216,7 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
         </GridContainer>
       )}
       {filteredStore && filteredStore?.length === 0 && (
-        <NullContainer>아쉽게도 현재 운영중인 {guName}의 다른 팝업스토어는 없습니다🥲</NullContainer>
+        <NullContainer>아쉽게도 현재 운영중인 '{guName}'의 다른 팝업스토어는 없습니다🥲</NullContainer>
       )}
     </NearbyStoreContainer>
   );
@@ -385,11 +385,11 @@ const GridWrapper = styled.div<{ columnCount: number }>`
   }
 `;
 
-const NullContainer = styled.div`
+const NullContainer = styled.h1`
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  font-size: 20px;
+  font-size: 24px;
   margin: 100px 0 150px 0;
 `;
