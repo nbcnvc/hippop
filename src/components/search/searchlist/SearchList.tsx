@@ -35,7 +35,7 @@ const SearchList = () => {
   // 기간별 filter state
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-  console.log(typeof startDate);
+
   // filter된 storeList state
   const [filteredStoreList, setFilteredStoreList] = useState<Store[] | null>(null);
 
@@ -825,32 +825,21 @@ const GridContainer1 = styled.div`
 `;
 
 const GridContainer = styled.div`
-  /* display: flex !important; */
   margin: 0 auto;
   display: grid;
-  /* justify-content: center; */
-  /* align-items: center; */
   grid-template-columns: repeat(2 1fr); // 한 줄에 두 개의 열 */
   gap: 30px;
-  /* max-width: 1920px; // 그리드가 너무 넓어지는 것을 제한 */
-  /* width: 100%; */
   margin-top: 50px;
 `;
 
 const StyledSlider = styled(Slider)`
   display: flex !important;
-  /* position: relative; */
   justify-content: center;
   align-items: center;
-
-  /* padding: 5px; */
   width: 1200px;
-
   @media (max-width: 844px) {
     width: 740px;
   }
-
-  /* gap: 20px; */
   .slick-slide {
     display: flex;
     justify-content: center;
@@ -900,8 +889,6 @@ const RankingNumber = styled.div`
 
   border-radius: 18px;
   padding: 5px 15px;
-
-  /* transform: rotate(-45deg); Rotate the ribbon */
   transform-origin: left center;
 
   margin-top: 3px;
@@ -919,11 +906,6 @@ const InfoBox = styled.div`
 `;
 
 const Img = styled.img`
-  /* @media (max-width: 844px) {
-    width: 180px;
-    height: 400px;
-  } */
-
   width: 300px;
   height: 374px;
   /* margin-top: 20px; */
