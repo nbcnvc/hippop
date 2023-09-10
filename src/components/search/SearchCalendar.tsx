@@ -6,12 +6,14 @@ import { ko } from 'date-fns/esm/locale';
 import { getMonth, getYear } from 'date-fns';
 import { styled } from 'styled-components';
 // 타입
-import { SearchCalendarProps } from '../../../types/props';
-//alert
-import { ToastContainer, toast } from 'react-toastify';
+import { SearchCalendarProps } from '../../types/props';
+// alert
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+// mui
 import ManageSearchRoundedIcon from '@mui/icons-material/ManageSearchRounded';
+// 스타일
+import { St } from './style/St.SearchCalender';
 
 const SearchCalendar = ({ onSearch, resetStartDate, resetEndDate }: SearchCalendarProps) => {
   const [startDate, setStartDate] = useState<Date | null>();
@@ -88,11 +90,11 @@ const SearchCalendar = ({ onSearch, resetStartDate, resetEndDate }: SearchCalend
   }, [resetStartDate, resetEndDate]);
 
   return (
-    <Container>
+    <St.Container>
       {/* <div>기간별</div> */}
 
-      <StartDateBox>
-        <StyledDatePicker // DatePicker의 styled-component명
+      <St.StartDateBox>
+        <St.StyledDatePicker // DatePicker의 styled-component명
           locale={ko} //한글
           placeholderText="시작일"
           dateFormat="yyyy.MM.dd"
@@ -108,31 +110,31 @@ const SearchCalendar = ({ onSearch, resetStartDate, resetEndDate }: SearchCalend
             prevMonthButtonDisabled,
             nextMonthButtonDisabled
           }) => (
-            <CalanderContainer>
-              <DirectBtn type="button" onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
+            <St.CalanderContainer>
+              <St.DirectBtn type="button" onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
                 {'<'}
-              </DirectBtn>
-              <Month>{MONTHS[getMonth(date)]}</Month>
-              <Year value={getYear(date)} onChange={({ target: { value } }) => changeYear(+value)}>
+              </St.DirectBtn>
+              <St.Month>{MONTHS[getMonth(date)]}</St.Month>
+              <St.Year value={getYear(date)} onChange={({ target: { value } }) => changeYear(+value)}>
                 {YEARS.map((option) => (
                   <option key={option} value={option}>
                     {option}
                   </option>
                 ))}
-              </Year>
+              </St.Year>
               <div>
-                <DirectBtn type="button" onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
+                <St.DirectBtn type="button" onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
                   {'>'}
-                </DirectBtn>
+                </St.DirectBtn>
               </div>
-            </CalanderContainer>
+            </St.CalanderContainer>
           )}
         />
-      </StartDateBox>
+      </St.StartDateBox>
 
-      <Ptag>~</Ptag>
-      <EndDateBox>
-        <StyledDatePicker
+      <St.Ptag>~</St.Ptag>
+      <St.EndDateBox>
+        <St.StyledDatePicker
           locale={ko} //한
           placeholderText="종료일"
           dateFormat="yyyy.MM.dd"
@@ -149,133 +151,34 @@ const SearchCalendar = ({ onSearch, resetStartDate, resetEndDate }: SearchCalend
             prevMonthButtonDisabled,
             nextMonthButtonDisabled
           }) => (
-            <CalanderContainer>
-              <DirectBtn type="button" onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
+            <St.CalanderContainer>
+              <St.DirectBtn type="button" onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
                 {/* <LeftArrow fill="#ffffff" /> */}
                 {'<'}
-              </DirectBtn>
-              <Month>{MONTHS[getMonth(date)]}</Month>
-              <Year value={getYear(date)} onChange={({ target: { value } }) => changeYear(+value)}>
+              </St.DirectBtn>
+              <St.Month>{MONTHS[getMonth(date)]}</St.Month>
+              <St.Year value={getYear(date)} onChange={({ target: { value } }) => changeYear(+value)}>
                 {YEARS.map((option) => (
                   <option key={option} value={option}>
                     {option}
                   </option>
                 ))}
-              </Year>
+              </St.Year>
               <div>
-                <DirectBtn type="button" onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
+                <St.DirectBtn type="button" onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
                   {/* <RightArrow fill="#ffffff" /> */}
                   {'>'}
-                </DirectBtn>
+                </St.DirectBtn>
               </div>
-            </CalanderContainer>
+            </St.CalanderContainer>
           )}
         />
-        <SearchBtn onClick={handleSearch}>
-          <SearchPeriodBtn />
-        </SearchBtn>
-      </EndDateBox>
-    </Container>
+        <St.SearchBtn onClick={handleSearch}>
+          <St.SearchPeriodBtn />
+        </St.SearchBtn>
+      </St.EndDateBox>
+    </St.Container>
   );
 };
 
 export default SearchCalendar;
-
-const Container = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 25px;
-
-  /* margin-bottom: 80px; */
-`;
-
-const StartDateBox = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  text-align: center;
-`;
-
-const Ptag = styled.p`
-  margin: 10px;
-`;
-const EndDateBox = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  text-align: center;
-`;
-
-const SearchBtn = styled.button`
-  margin-left: 10px;
-  background-color: #2b3467;
-`;
-
-const StyledDatePicker = styled(DatePicker)`
-  display: flex;
-  align-items: center;
-  text-align: center;
-  border-radius: 18px;
-
-  border: 2px solid black;
-
-  width: 200px;
-  height: 43px;
-
-  font-size: 15px;
-
-  /* 일요일 날짜: 빨간색 */
-  .fc-day-sun a {
-    color: red;
-  }
-
-  /* 토요일 날짜: 파란색 */
-  .fc-day-sat a {
-    color: blue;
-  }
-`;
-
-const CalanderContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  /* justify-content: center; */
-  align-items: center;
-
-  height: 100%;
-  /* margin-top: 8px; */
-  padding: 0 12px 0 24px;
-`;
-
-const Month = styled.div`
-  color: white;
-  font-size: 16px;
-  font-weight: 500;
-`;
-
-const Year = styled.select`
-  background-color: transparent;
-  /* color: colors.$WHITE; */
-  border: none;
-
-  font-size: 16px;
-
-  padding-right: 5px;
-  cursor: pointer;
-  /* font-family: 'Noto Sans KR', serif; */
-
-  appearance: none;
-  background: url('../');
-  color: white;
-`;
-
-const DirectBtn = styled.button`
-  border: none;
-  color: white;
-  background-color: transparent;
-`;
-
-const SearchPeriodBtn = styled(ManageSearchRoundedIcon)``;
