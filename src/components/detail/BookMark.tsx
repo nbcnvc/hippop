@@ -12,6 +12,8 @@ import { CalendarProps } from '../../types/props';
 import { Skeleton } from '@mui/material';
 // 스타일
 import { St } from './style/St.BookMark';
+// alert
+import { toast } from 'react-toastify';
 
 const BookMark = ({ storeData }: CalendarProps) => {
   // 북마크 전체 조회
@@ -42,6 +44,12 @@ const BookMark = ({ storeData }: CalendarProps) => {
         store_id: storeId
       };
       toggleMutation.mutate(toogleBookMark);
+    } else {
+      toast.info('로그인을 해주세요 ! :)', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+      return;
     }
   };
 

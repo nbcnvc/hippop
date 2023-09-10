@@ -6,32 +6,27 @@ export interface EditorProps {
   setBody: React.Dispatch<SetStateAction<string>>;
 }
 
-// 스토어 지도 props
 export interface StoreMapProps {
   storeLocation: string;
   title: string;
 }
 
-// 핫플레이스 props
 export interface HotPlaceProps {
   category: string;
   setCategory: React.Dispatch<SetStateAction<string>>;
   setIsSelected: React.Dispatch<SetStateAction<HotPlaceInfo | undefined>>;
 }
 
-// 주변 지역 팝업스토어 props
 export interface NearbyStoreProps {
   guName: string;
   setNearbyStoreMarker: React.Dispatch<SetStateAction<Store[] | undefined>>;
 }
 
-// share props
 export interface ShareProps {
   onClick: () => void;
   storeData: Store;
 }
 
-// 캘린더 props
 export interface CalendarProps {
   storeData: Store;
 }

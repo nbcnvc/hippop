@@ -19,19 +19,17 @@ export const fetchBookMarkStore = async (userId: string) => {
 
 // 북마크 토글
 export const toggleBookMark = async (bookmark: Bookmark): Promise<void> => {
-  const { data: isBookMark }: any = await supabase
+  const { data: isBookMark } = await supabase
     .from('bookmark')
     .select('*')
     .eq('user_id', bookmark.user_id)
     .eq('store_id', bookmark.store_id);
 
-  if (isBookMark.length > 0) {
+  if (isBookMark && isBookMark.length > 0) {
     await supabase.from('bookmark').delete().eq('user_id', bookmark.user_id).eq('store_id', bookmark.store_id);
   } else {
     await supabase.from('bookmark').insert([{ user_id: bookmark.user_id, store_id: bookmark.store_id }]);
   }
-
-  // console.log(isBookMark);
 };
 
 // 전체 북마크 count

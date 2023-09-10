@@ -22,6 +22,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import Menu from '@mui/material/Menu';
 import { styled as muiStyled } from '@mui/material/styles';
+import RoomIcon from '@mui/icons-material/Room';
 //alert
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -121,7 +122,6 @@ const StoreDetail = () => {
                     <Skeleton variant="text" width={300} height={30} />
                   </div>
                   <div>
-                    {' '}
                     <Skeleton variant="text" width={300} height={30} />
                   </div>
                   <div>
@@ -189,6 +189,17 @@ const StoreDetail = () => {
               <div style={{ position: 'relative', fontSize: '18px' }} className="store-text">
                 <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0 15px 0', fontSize: '18px' }}>
                   <span>위치</span> {storeData.location}
+                  <CopyToClipboard
+                    text={storeData.location}
+                    onCopy={() =>
+                      toast.info('주소가 복사되었습니다!', {
+                        className: 'custom-toast',
+                        theme: 'light'
+                      })
+                    }
+                  >
+                    <LocationIcon />
+                  </CopyToClipboard>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', margin: '15px 0', fontSize: '18px' }}>
                   <span>기간</span> {storeData.period_start} ~ {storeData.period_end}
@@ -213,7 +224,7 @@ const StoreDetail = () => {
                   <CopyToClipboard
                     text={storeData.link}
                     onCopy={() =>
-                      toast.info('주소가 복사되었습니다. 공식 페이지에서 더 자세한 정보를 확인하실 수 있습니다! :)', {
+                      toast.info('주소가 복사되었습니다. 공식 페이지에서 더 자세한 정보를 확인하실 수 있습니다!', {
                         className: 'custom-toast',
                         theme: 'light'
                       })
@@ -430,8 +441,18 @@ const ShareBtn = styled.button`
   margin: 10px 5px;
 `;
 
+const LocationIcon = styled(RoomIcon)`
+  margin-left: 10px;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--primary-color);
+    transform: scale(1.1);
+  }
+`;
+
 const LinkIcon = styled(InsertLinkIcon)`
-  margin-right: 20px;
+  margin-left: 3px;
   cursor: pointer;
 
   &:hover {

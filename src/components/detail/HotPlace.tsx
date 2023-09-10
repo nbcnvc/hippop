@@ -23,8 +23,6 @@ const HotPlace = ({ category, setCategory, setIsSelected }: HotPlaceProps) => {
     setIsOpened(false);
   };
 
-  console.log('category', category);
-
   return (
     <St.HotPlaceContainer>
       <div className="hotplace-title">
