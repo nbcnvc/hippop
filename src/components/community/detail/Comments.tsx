@@ -4,7 +4,7 @@ import moment from 'moment';
 import shortid from 'shortid';
 import { useNavigate } from 'react-router';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { styled } from 'styled-components';
+import styled, { css } from 'styled-components';
 // 타입
 import { Comment } from '../../../types/types';
 import { CommentProps } from '../../../types/props';
@@ -219,102 +219,121 @@ const Comments = ({ postId }: CommentProps) => {
       {/* 댓글 입력창 */}
       <CommentWrite>
         <Title>댓글</Title>
-        <Input
-          value={body}
-          onChange={onChangeBody}
-          onKeyPress={(e) => {
-            if (e.key === 'Enter') {
-              createButton();
-            }
-          }}
-          placeholder="댓글을 입력해주세요."
-        />
-        <button className="custom-btn" onClick={createButton}>
-          등록
-        </button>
+        <WriteBox>
+          <Input
+            value={body}
+            onChange={onChangeBody}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                createButton();
+              }
+            }}
+            placeholder="댓글을 입력해주세요."
+          />
+          <button className="custom-btn" onClick={createButton}>
+            등록
+          </button>
+        </WriteBox>
       </CommentWrite>
       {/* 댓글 목록 */}
-      <CommentContainer>
-        {selectComments?.map((comment) => {
-          return (
-            <div key={comment.id}>
-              {currentUser?.id === comment.user_id && (
-                <ButtonBox>
-                  <Button onClick={() => deleteButton(comment.id)}>삭제</Button>
-                  <Button onClick={() => editButton(comment)}>{isEditId ? '저장' : '수정'}</Button>
-                </ButtonBox>
-              )}
-              <CommentBox>
-                <DateBox>
-                  <Date>{moment(comment.created_at).format('YYYY.MM.DD HH:mm')}</Date>
-                </DateBox>
-                <ProfileBox>
-                  {comment.user.avatar_url && (
-                    <Img
-                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${comment.user.avatar_url}`}
-                      alt="User Avatar"
-                      onClick={() => {
-                        naviProfile(comment.user.id);
-                      }}
-                    />
-                  )}
-
-                  <Name
+      {selectComments?.map((comment) => {
+        return (
+          <CommentContainer key={comment.id}>
+            {currentUser?.id === comment.user_id && (
+              <ButtonBox>
+                <Button onClick={() => deleteButton(comment.id)}>삭제</Button>
+                <Button onClick={() => editButton(comment)}>{isEditId ? '저장' : '수정'}</Button>
+              </ButtonBox>
+            )}
+            <CommentBox>
+              <DateBox>
+                <Date>{moment(comment.created_at).format('YYYY.MM.DD HH:mm')}</Date>
+              </DateBox>
+              <ProfileBox>
+                {comment.user.avatar_url && (
+                  <Img
+                    src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${comment.user.avatar_url}`}
+                    alt="User Avatar"
                     onClick={() => {
                       naviProfile(comment.user.id);
                     }}
-                  >
-                    {comment.user.name}
-                  </Name>
-                </ProfileBox>
-                {isEditId === comment.id ? (
-                  <input value={edit} onChange={onChangeEdit} style={{ width: '50%' }} />
-                ) : (
-                  <Content>{comment.body}</Content>
+                  />
                 )}
-              </CommentBox>
-            </div>
-          );
-        })}
-      </CommentContainer>
+
+                <Name
+                  onClick={() => {
+                    naviProfile(comment.user.id);
+                  }}
+                >
+                  {comment.user.name}
+                </Name>
+              </ProfileBox>
+              {isEditId === comment.id ? (
+                <EditInput value={edit} onChange={onChangeEdit} />
+              ) : (
+                <Content>{comment.body}</Content>
+              )}
+            </CommentBox>
+          </CommentContainer>
+        );
+      })}
       {/* 더보기 버튼 */}
-      {showButton && hasNextPage && <MoreButton onClick={fetchMore}>더보기</MoreButton>}
+      <MoreButtonBox>{showButton && hasNextPage && <MoreButton onClick={fetchMore}>더보기</MoreButton>}</MoreButtonBox>
     </Layout>
   );
 };
 
 export default Comments;
 
+// 미디어 쿼리 세팅
+const mediaQuery = (maxWidth: number) => css`
+  @media (max-width: ${maxWidth}px) {
+    width: 40%;
+  }
+`;
+
 const Layout = styled.div`
-  min-width: 870px;
+  max-width: 1920px;
+  min-width: 744px;
+  width: 50%;
+  padding-bottom: 150px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+
+  ${mediaQuery(900)}
 
   .custom-btn {
-    width: 120px;
+    width: 10%;
     background-color: var(--second-color);
     border-radius: 0 18px 18px 0;
-    padding: 8px 16px 10.5px 16px;
+    padding: 8px 16px 10px 16px;
     font-size: 18px;
     font-weight: 700;
   }
 `;
 
 const CommentWrite = styled.div`
-  width: 890px;
-  padding: 20px 0;
+  width: 100%;
+  margin: 50px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 const Title = styled.div`
   font-size: 18px;
   font-weight: 700;
-  padding: 10px;
+  padding: 20px 25px;
+`;
+
+const WriteBox = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
 `;
 
 const Input = styled.input`
-  width: 734px;
+  width: 85%;
   height: 38px;
   padding: 2px 15px;
   outline: none;
@@ -323,33 +342,37 @@ const Input = styled.input`
 `;
 
 const CommentContainer = styled.div`
-  margin-bottom: 20px;
+  width: 100%;
 `;
 
 const ButtonBox = styled.div`
-  width: 890px;
   display: flex;
   justify-content: right;
-  margin: 5px 0px;
 `;
 
 const Button = styled.button`
   width: 60px;
   height: 32px;
+  margin-right: 10px;
   font-size: 14px;
   font-weight: 600;
   color: var(--second-color);
   background-color: var(--third-color);
-  margin-right: 5px;
 `;
 
 const CommentBox = styled.div`
-  width: 870px;
   padding: 10px;
-  margin: 5px 0;
+  margin: 10px 0;
   background-color: #fff;
   border-radius: 18px;
   border: 2px solid var(--fifth-color);
+`;
+
+const EditInput = styled.input`
+  width: 50%;
+  padding: 5.5px;
+  margin: 5px 0;
+  outline: none;
 `;
 
 const DateBox = styled.div`
@@ -394,8 +417,15 @@ const Content = styled.div`
   padding: 12px 0;
 `;
 
+const MoreButtonBox = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const MoreButton = styled.button`
   width: 100px;
   font-weight: 600;
-  margin: 10px 0 20px 0;
+  margin: 10px 0;
 `;

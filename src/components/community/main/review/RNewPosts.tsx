@@ -122,7 +122,7 @@ const RNewPosts = () => {
         const imageTags = extractImageTags(post.body);
         const postText = post.body.replace(/<img.*?>/g, '');
         return (
-          <PostBox key={post.id}>
+          <PostBox key={post.id} onClick={() => naviDetail(post)}>
             {imageTags.length > 0 ? (
               <div className="img-div">
                 <ImageBox src={imageTags[0]} />

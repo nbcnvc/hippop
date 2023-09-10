@@ -122,7 +122,7 @@ const MStorePosts = () => {
         {selectPosts?.map((post) => {
           const postText = post.body.replace(/<img.*?>/g, '');
           return (
-            <PostBox key={post.id}>
+            <PostBox key={post.id} onClick={() => naviDetail(post)}>
               <ContentBox>
                 <Between>
                   <Between>
