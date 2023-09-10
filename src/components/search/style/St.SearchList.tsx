@@ -13,7 +13,6 @@ export const St = {
     margin-top: 7rem;
 
     max-width: 1920px;
-    /* width: 1920px; */
     max-height: 100%;
   `,
 
@@ -236,7 +235,6 @@ export const St = {
 
   InfoBox: styled.div`
     width: 90%;
-    /* height: 30%; */
 
     display: flex;
     justify-content: space-between;
@@ -248,7 +246,6 @@ export const St = {
   Img: styled.img`
     width: 300px;
     height: 374px;
-    /* margin-top: 20px; */
     object-fit: cover;
     border-radius: 10px;
 

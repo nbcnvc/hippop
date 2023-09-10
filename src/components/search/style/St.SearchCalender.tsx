@@ -8,8 +8,6 @@ export const St = {
     justify-content: center;
 
     padding: 25px;
-
-    /* margin-bottom: 80px; */
   `,
 
   StartDateBox: styled.div`
@@ -62,11 +60,11 @@ export const St = {
   CalanderContainer: styled.div`
     display: flex;
     justify-content: space-between;
-    /* justify-content: center; */
+
     align-items: center;
 
     height: 100%;
-    /* margin-top: 8px; */
+
     padding: 0 12px 0 24px;
   `,
 
@@ -78,14 +76,12 @@ export const St = {
 
   Year: styled.select`
     background-color: transparent;
-    /* color: colors.$WHITE; */
     border: none;
 
     font-size: 16px;
 
     padding-right: 5px;
     cursor: pointer;
-    /* font-family: 'Noto Sans KR', serif; */
 
     appearance: none;
     background: url('../');
