@@ -64,10 +64,20 @@ export const MypageTag = styled.div`
         justify-content: space-between;
         align-items: center;
         position: relative;
+        
       }
       input {
         display: none;
       }
+    }
+    .receive-btn {
+      background-color: var(--sixth-color);
+      color: var(--fifth-color);
+    }
+    .send-btn {
+      margin-left: 10px;
+      background-color: var(--sixth-color);
+      color: var(--fifth-color);
     }
   }
   ul {
@@ -200,12 +210,14 @@ export const MypageTag = styled.div`
       color: var(--fifth-color);
       text-align: center;
       cursor: pointer;
+      display:flex;
+      justify-content: center;
     }
 
     .btn-mother {
       margin: 0 auto;
       padding: 0;
-      width: 210px;
+      // width: 210px;
       display: flex;
       justify-content: center;
       position: relative;
@@ -307,17 +319,11 @@ export const MypageTag = styled.div`
       }
     }
   }
-  .send-btn {
-    margin-left: 10px;
-    background-color: var(--sixth-color);
-    color: var(--fifth-color);
-    font-weight: 600;
-  }
 
   .post-wrapper-flex {
     display: flex;
     justify-content: center;
-    padding: 80px 0;
+    padding: 140px 0;
     text-align: center;
     font-size: 2rem;
     @media (max-width: 844px) {

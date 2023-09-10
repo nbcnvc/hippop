@@ -49,10 +49,10 @@ const AboutInfo = () => {
 export default AboutInfo;
 
 const Container = styled.div`
-  max-width: 1920px;
-  mix-width: 744px;
-  width: 50%;
   margin: 0 auto;
+  max-width: 1920px;
+  min-width: 744px;
+  width: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -80,8 +80,8 @@ const Box = styled.div`
 `;
 
 const FaceImg = styled.img`
-  width: 220px;
-  height: 220px;
+  width: 100%;
+  height: 100%;
 `;
 
 const ColorTag1 = styled.div`
@@ -145,31 +145,55 @@ const SecondTitle = styled.h1`
   margin-top: 100px;
 `;
 
-const SecondImg = styled.img`
-  width: 560;
-  height: 360px;
-  object-fit: cover;
-
-  border: 3px solid black;
-  border-radius: 18px;
-`;
-
 const SecondBox = styled.div`
   margin: 160px 0 200px 0;
-
-  width: 1200px;
+  max-width: 1920px;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  @media (max-width: 844px) {
+    justify-content: center;
+    flex-direction: column;
+    margin: 140px 0 140px 0;
+    & > div {
+      order: 1; /* 텍스트를 포함하는 div를 위로 이동 */
+    }
+
+    & > SecondImg {
+      order: 2; /* 이미지 태그를 아래로 이동 */
+      margin-top: 20px; /* 이미지와 텍스트 사이의 간격 조절 (선택 사항) */
+    }
+  }
+  }
+`;
+const SecondImg = styled.img`
+  width: 50%;
+  object-fit: cover;
+  border: 3px solid black;
+  border-radius: 18px;
+  @media (max-width: 844px) {
+    width: 80%;
+  }
 `;
 
 const SecondHtag = styled.h2`
   font-size: 24px;
 
   margin-bottom: 50px;
+  @media (max-width: 2100px) {
+    padding: 8px 14px 0 0;
+  }
+  @media (max-width: 844px) {
+    margin-top: 2rem;
+  }
 `;
 
 const SecondPtag = styled.p`
   font-size: 17px;
   padding: 8px 0 8px 0;
+  @media (max-width: 2100px) {
+    padding: 8px 14px 8px 0;
+  }
 `;

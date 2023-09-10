@@ -46,7 +46,9 @@ const MyPage = () => {
   const [toggleMsgBox, setToggleMsgBox] = useState<string>('받은 쪽지함');
   const imageInputRef = useRef(null);
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
-
+  //쪽지함 버튼 active
+  const [isReceivedMessagesActive, setIsReceivedMessagesActive] = useState(true);
+  const [isSentMessagesActive, setIsSentMessagesActive] = useState(false);
   // 구독목록 visible
   useEffect(() => {
     function handleOutsideClick(event: MouseEvent) {
@@ -60,38 +62,54 @@ const MyPage = () => {
     };
   }, []);
 
-  // 프로필 수정 저장
+  // 프로필 수정 저장 / 중복체크, 특수문자 방지, 네글자 초과 방지,
   const handleSaveChanges = async () => {
     let nameChanged = false;
     let imageChanged = false;
     let alertMessages = [];
 
-    // 정규표현식을 사용하여 특수문자 여부를 검사
     const specialCharacters = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\]/;
 
     if (newName.trim() !== '' && newName !== currentUser?.name) {
       if (newName.length <= 4) {
         if (!specialCharacters.test(newName)) {
-          // 특수문자를 포함하지 않는 경우에만 처리
-          // 이름 변경 처리
-          const { error: nameError } = await supabase.from('user').update({ name: newName }).eq('id', currentUser?.id);
+          // 이름 중복 확인
+          const { data: existingUsers, error: nameError } = await supabase
+            .from('user')
+            .select('name')
+            .eq('name', newName);
+
           if (!nameError) {
-            const userData = await getUser(currentUser?.id ?? '');
-            setCurrentUser(userData);
-            setEditingName(false);
-            nameChanged = true;
+            if (existingUsers.length === 0) {
+              // 중복되는 닉네임이 없는 경우에만 변경 처리
+              const { error: updateNameError } = await supabase
+                .from('user')
+                .update({ name: newName })
+                .eq('id', currentUser?.id);
+
+              if (!updateNameError) {
+                const userData = await getUser(currentUser?.id ?? '');
+                setCurrentUser(userData);
+                setEditingName(false);
+                nameChanged = true;
+              } else {
+                console.error(updateNameError);
+                alertMessages.push('닉네임 변경 중 오류가 발생했습니다 :(');
+              }
+            } else {
+              alertMessages.push('이미 사용 중인 닉네임입니다 :(');
+            }
           } else {
             console.error(nameError);
             alertMessages.push('닉네임 변경 중 오류가 발생했습니다 :(');
           }
         } else {
-          alertMessages.push('닉네임에는 특수문자를 포함할 수 없어요.');
+          alertMessages.push('닉네임에는 특수문자를 포함할 수 없어요 :(');
         }
       } else {
-        alertMessages.push('닉네임은 네 글자 이하로 입력해주세요.');
+        alertMessages.push('닉네임은 네 글자 이하로 입력해주세요 :(');
       }
     }
-
     // 나머지 조건에 대한 else 추가
     if (selectedImage) {
       try {
@@ -110,18 +128,18 @@ const MyPage = () => {
         }
       } catch (error) {
         console.error(error);
-        alertMessages.push('프로필 사진 변경 중 오류가 발생했습니다 ! :)');
+        alertMessages.push('프로필 사진 변경 중 오류가 발생했습니다! :)');
       }
     }
 
     if ((nameChanged || imageChanged) && alertMessages.length === 0) {
       // 변경된 내용이 있는 경우
-      alertMessages.push('프로필 변경이 완료됐습니다 ! :)');
+      alertMessages.push('프로필 변경이 완료됐습니다! :)');
       setEditingName(false);
       setImageUploadVisible(false);
     } else if (!nameChanged && !imageChanged && alertMessages.length === 0) {
       // 변경된 내용이 없는 경우
-      alertMessages.push('변경된 부분이 없어요 :( [취소] 버튼을 눌러주세요 ! :)');
+      alertMessages.push('변경된 부분이 없어요! "취소" 버튼을 눌러주세요 :)');
     }
 
     alertMessages.forEach((message) => {
@@ -174,6 +192,18 @@ const MyPage = () => {
       window.scrollTo(0, 0);
     };
   }, []);
+
+  const handleReceivedMessagesClick = () => {
+    setIsReceivedMessagesActive(true);
+    setIsSentMessagesActive(false);
+    setToggleMsgBox('받은 쪽지함');
+  };
+
+  const handleSentMessagesClick = () => {
+    setIsReceivedMessagesActive(false);
+    setIsSentMessagesActive(true);
+    setToggleMsgBox('보낸 쪽지함');
+  };
 
   return (
     <MypageTag>
@@ -253,10 +283,18 @@ const MyPage = () => {
         {/* message tab */}
         <div className="alram-mother">
           <div className="btn-wrapper">
-            <button name="받은 쪽지함" onClick={ClickToggleBox}>
+            <button
+              className={`receive-btn ${isReceivedMessagesActive ? 'active' : ''}`}
+              name="받은 쪽지함"
+              onClick={handleReceivedMessagesClick}
+            >
               받은 쪽지함
             </button>
-            <button className="send-btn" name="보낸 쪽지함" onClick={ClickToggleBox}>
+            <button
+              className={`send-btn ${isSentMessagesActive ? 'active' : ''}`}
+              name="보낸 쪽지함"
+              onClick={handleSentMessagesClick}
+            >
               보낸 쪽지함
             </button>
           </div>

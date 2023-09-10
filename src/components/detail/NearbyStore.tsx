@@ -29,7 +29,7 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
 
   useEffect(() => {
     setNearbyStoreMarker(filteredStore);
-  }, [guName]);
+  }, [guName, storeData]);
 
   const PrevArrow = ({ onClick }: SliderButton) => {
     return (
@@ -119,7 +119,6 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
 
   // detail page 이동
   const navDetail = (id: number) => {
-    // window.location.reload();
     navigate(`/detail/${id}`);
   };
 
@@ -149,29 +148,48 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
         <h1>{guName}의 다른 팝업스토어는 어때요?</h1>
       </div>
       {filteredStore && filteredStore?.length > 3 && (
-        <SlideContainer>
-          <StyledSlider {...settings}>
-            {filteredStore?.map((data) => {
-              return (
-                <div key={data.id}>
-                  <Card key={data.id}>
-                    <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${data.images[0]}`} />
-                    <InfoBox>
-                      <div>
-                        {data.location.split(' ').slice(0, 1)} {data.location.split(' ').slice(1, 2)}
-                        <StoreName>{data.title}</StoreName>
-                        {data.period_start} ~ {data.period_end}
-                      </div>
-                      <DetailBtn onClick={() => navDetail(data.id)}>상세보기</DetailBtn>
-                    </InfoBox>
-                  </Card>
-                </div>
-              );
-            })}
-          </StyledSlider>
-        </SlideContainer>
+        <StyledSlider {...settings}>
+          {filteredStore?.map((data) => {
+            return (
+              <div key={data.id}>
+                <Card key={data.id}>
+                  <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${data.images[0]}`} />
+                  <InfoBox>
+                    <div>
+                      {data.location.split(' ').slice(0, 1)} {data.location.split(' ').slice(1, 2)}
+                      <StoreName>{data.title}</StoreName>
+                      {data.period_start} ~ {data.period_end}
+                    </div>
+                    <DetailBtn onClick={() => navDetail(data.id)}>상세보기</DetailBtn>
+                  </InfoBox>
+                </Card>
+              </div>
+            );
+          })}
+        </StyledSlider>
       )}
-      {filteredStore && filteredStore.length < 4 && filteredStore.length > 0 && (
+      {filteredStore && filteredStore.length === 3 && (
+        <StyledSliderTriple {...settings}>
+          {filteredStore?.map((data) => {
+            return (
+              <div key={data.id}>
+                <Card key={data.id} className="custom-card">
+                  <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${data.images[0]}`} className="custom-img" />
+                  <InfoBox className="custom-info">
+                    <div>
+                      {data.location.split(' ').slice(0, 1)} {data.location.split(' ').slice(1, 2)}
+                      <StoreName>{data.title}</StoreName>
+                      {data.period_start} ~ {data.period_end}
+                    </div>
+                    <DetailBtn onClick={() => navDetail(data.id)}>상세보기</DetailBtn>
+                  </InfoBox>
+                </Card>
+              </div>
+            );
+          })}
+        </StyledSliderTriple>
+      )}
+      {filteredStore && filteredStore.length < 3 && filteredStore.length > 0 && (
         <GridContainer>
           <GridWrapper columnCount={columnCount}>
             {filteredStore?.map((data) => {
@@ -198,18 +216,7 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
         </GridContainer>
       )}
       {filteredStore && filteredStore?.length === 0 && (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'column',
-            margin: '100px 0 150px 0',
-            fontSize: '20px'
-          }}
-        >
-          아쉽게도 현재 운영중인 {guName}의 다른 팝업스토어는 없습니다🥲
-        </div>
+        <NullContainer>아쉽게도 현재 운영중인 '{guName}'의 다른 팝업스토어는 없습니다🥲</NullContainer>
       )}
     </NearbyStoreContainer>
   );
@@ -233,23 +240,37 @@ const NearbyStoreContainer = styled.div`
   }
 `;
 
-const SlideContainer = styled.div`
+const StyledSlider = styled(Slider)`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const StyledSlider = styled(Slider)`
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
   max-width: 1920px;
-  /* min-width: 800px; */
   min-width: 764px;
-  /* width: 1200px; */
+  margin: 0 auto;
 
   @media (max-width: 844px) {
-    width: 744px;
+    /* width: 744px; */
+  }
+
+  .slick-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .slick-list {
+    overflow: hidden;
+  }
+`;
+
+const StyledSliderTriple = styled(Slider)`
+  max-width: 1920px;
+  min-width: 764px;
+  margin: 0 auto;
+
+  @media (max-width: 2100px) {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
   }
 
   .slick-slide {
@@ -337,29 +358,6 @@ const GridContainer = styled.div`
   align-items: center;
 `;
 
-// const GridWrapper = styled.div<{ columnCount: number }>`
-//   width: 100%;
-//   display: grid;
-//   justify-content: center;
-//   align-items: center;
-//   place-items: center;
-
-//   grid-template-columns: ${({ columnCount }) => `repeat(${columnCount}, 1fr)`};
-
-//   @media (max-width: 844px) {
-//     width: 744px;
-
-//     div > ${Card} {
-//       width: 300px;
-//     }
-
-//     img > ${Img} {
-//       width: 280px;
-//       height: 339px;
-//     }
-//   }
-// `;
-
 const GridWrapper = styled.div<{ columnCount: number }>`
   width: 100%;
   display: grid;
@@ -371,27 +369,27 @@ const GridWrapper = styled.div<{ columnCount: number }>`
   @media (max-width: 1800px) {
     width: 744px;
 
-    /* div > ${Card} {
-      width: 300px;
-    }
-
-    img > ${Img} {
-      width: 280px;
-      height: 339px;
-    } */
-
     .custom-card {
-      width: 290px !important ;
+      width: 330px !important ;
       margin-right: 5px;
     }
 
     .custom-info {
-      width: 280px;
+      width: 290px;
     }
 
     .custom-img {
-      width: 265px;
-      height: 349px;
+      width: 300px;
+      height: 359px;
     }
   }
+`;
+
+const NullContainer = styled.h1`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 24px;
+  margin: 100px 0 150px 0;
 `;

@@ -80,7 +80,7 @@ const MyReview = ({ activeSection }: MyReviewProps) => {
     // return new Date(dateTimeString).toLocaleString('en-US', options); // 기본 년월일
   }
 
-  function extractImageTags(html: string) {
+  const extractImageTags = (html: string) => {
     const imageTags = [];
     const pattern = /<img.*?src=["'](.*?)["'].*?>/g;
     let match;
@@ -90,7 +90,7 @@ const MyReview = ({ activeSection }: MyReviewProps) => {
     }
 
     return imageTags;
-  }
+  };
 
   if (isLoading) {
     return (

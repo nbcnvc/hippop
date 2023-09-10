@@ -23,6 +23,10 @@ const MPosts = () => {
   const { state } = useLocation();
   const storeId: number = state?.storeId || 0; // state가 존재하지 않을 때 기본값으로 0 사용
   const [sortName, setSortName] = useState<string>('전체보기');
+  const [ctg, setCtg] = useState<string>('카테고리');
+  const onChangeCtg = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCtg(e.target.value);
+  };
   const toggleSortButton = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = (e.target as HTMLButtonElement).name;
     setSortName(name);
@@ -30,6 +34,9 @@ const MPosts = () => {
   useEffect(() => {
     if (storeId !== 0) {
       setSortName('팝업메이트 구하기');
+    }
+    if (storeId == 0) {
+      setSortName('전체보기');
     }
   }, [storeId]);
 
@@ -41,7 +48,7 @@ const MPosts = () => {
   };
 
   const handleSearch = () => {
-    setSortName('팝업스토어 검색');
+    setSortName('검색');
     fetchNextPage();
   };
 
@@ -49,7 +56,6 @@ const MPosts = () => {
     if (e.key === 'Enter') {
       setKeyword(inputValue);
       handleSearch();
-      setInputValue('');
     }
   };
 
@@ -63,9 +69,8 @@ const MPosts = () => {
     fetchNextPage,
     isFetchingNextPage
   } = useInfiniteQuery<FetchPost>({
-    queryKey: [`search${queryKey}`, pathname, keyword],
-    queryFn: ({ pageParam }) => getSearchPosts(pageParam, keyword, pathname),
-    // enabled: !keyword,
+    queryKey: [`search${queryKey}`, keyword, ctg, pathname],
+    queryFn: ({ pageParam }) => getSearchPosts(pageParam, keyword, ctg, pathname),
     getNextPageParam: (lastPage) => {
       // 전체 페이지 개수보다 작을 때
       if (lastPage.page < lastPage.totalPages) {
@@ -165,26 +170,35 @@ const MPosts = () => {
             전체보기
           </Button>
         </ButtonBox>
-        <div>
-          <Search />
-          <Input
-            value={inputValue}
-            onChange={onChangeInput}
-            onKeyPress={handleKeyPress}
-            placeholder="엔터로 팝업스토어를 검색해보세요!"
-          />
-        </div>
+        <Between>
+          <SelectBox value={ctg} onChange={onChangeCtg}>
+            <option value={'카테고리'}>카테고리</option>
+            <option value={'팝업스토어'}>팝업스토어</option>
+            <option value={'작성자'}>작성자</option>
+            <option value={'제목'}>제목</option>
+            <option value={'내용'}>내용</option>
+          </SelectBox>
+          <div>
+            {/* <Search /> */}
+            <Input
+              value={inputValue}
+              onChange={onChangeInput}
+              onKeyPress={handleKeyPress}
+              placeholder="검색어를 입력하세요."
+            />
+          </div>
+        </Between>
       </ButtonContainer>
       {sortName === '팝업메이트 구하기' && <MStorePosts />}
       {sortName === '전체보기' && <MNewPosts />}
       <PostContainer>
-        {sortName === '팝업스토어 검색' &&
+        {sortName === '검색' &&
           selectPosts &&
           selectPosts.length > 0 &&
           selectPosts?.map((post) => {
             const postText = post.body.replace(/<img.*?>/g, '');
             return (
-              <PostBox key={post.id}>
+              <PostBox key={post.id} onClick={() => naviDetail(post)}>
                 <ContentBox>
                   <Between>
                     <Between>
@@ -220,9 +234,7 @@ const MPosts = () => {
               </PostBox>
             );
           })}
-        {sortName === '팝업스토어 검색' && selectPosts && selectPosts.length === 0 && (
-          <NoResult>함께 할 팝업메이트를 구해보세요!</NoResult>
-        )}
+        {sortName === '검색' && selectPosts && selectPosts.length === 0 && <NoResult>검색 결과가 없습니다 :(</NoResult>}
         <Trigger ref={ref} />
       </PostContainer>
     </>
@@ -258,6 +270,7 @@ const ButtonBox = styled.div`
 const Button = styled.button`
   float: right;
   width: 80px;
+  margin-left: 10px;
   font-size: 14px;
   background-color: var(--second-color);
 `;
@@ -265,10 +278,25 @@ const Button = styled.button`
 const Input = styled.input`
   width: 200px;
   height: 33px;
-  padding: 0 20px 0 40px;
+  padding: 0 10px;
+  margin-right: 10px;
   outline: none;
   border-radius: 18px;
   border: 3px solid var(--fifth-color);
+`;
+
+const SelectBox = styled.select`
+  width: 120px;
+  height: 38px;
+  padding: 0 10px;
+  margin-right: 10px;
+  border-radius: 18px;
+  border: 3px solid var(--fifth-color);
+
+  outline: none;
+  /* -moz-appearance: none; */
+  /* -webkit-appearance: none; */
+  /* appearance: none; */
 `;
 
 const Search = styled(SearchRoundedIcon)`
@@ -326,6 +354,7 @@ const Between = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
+
 const Betweens = styled.div`
   gap: 14px;
   display: flex;
@@ -439,7 +468,7 @@ const NoResult = styled.h1`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 500px;
+  height: 800px;
   font-size: 24px;
   font-weight: 700px;
 `;

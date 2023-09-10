@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 // 라이브러리
 import { styled } from 'styled-components';
-
 // 타입
 import { Geocoder, HotPlaceInfo, Store } from '../../types/types';
 import { StoreMapProps } from '../../types/props';
@@ -9,8 +8,10 @@ import { StoreMapProps } from '../../types/props';
 import HotPlace from './HotPlace';
 import NearbyStore from './NearbyStore';
 //alert
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+// mui
+import DirectionsOutlinedIcon from '@mui/icons-material/DirectionsOutlined';
 
 declare global {
   interface Window {
@@ -129,10 +130,13 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
 
         // 메인 마커이미지의 주소
         const imageSrc = '/asset/mainMarker.png';
+
         // 마커이미지의 크기
         const imageSize = new kakao.maps.Size(80, 85);
+
         // 마커이미지의 옵션 // 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
         // const imageOption = { offset: new kakao.maps.Point(40, 70) };
+
         // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
         const mainMarkerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
@@ -142,14 +146,26 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
           position: coords,
           image: mainMarkerImage,
           clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
+          // zIndex: 9
         });
 
         // 인포윈도우로 장소에 대한 설명 표시
-        const infowindow = new kakao.maps.InfoWindow({
-          // content: `<div class="info-title">${title}의 위치</div>`
-          content: `<div style="width:150px; text-align:center; padding:10px 20px; z-index:99;">${title}</div>`
+        const customOverlay = new kakao.maps.CustomOverlay({
+          position: coords,
+          content: `<div class='customoverlay'>${title}</div>`,
+          yAnchor: 3.2
         });
-        infowindow.open(map, marker);
+
+        // 마커에 마우스오버 이벤트를 등록
+        kakao.maps.event.addListener(marker, 'mouseover', () => {
+          customOverlay.setMap(map);
+        });
+
+        // 마커에 마우스아웃 이벤트를 등록
+        kakao.maps.event.addListener(marker, 'mouseout', function () {
+          // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거
+          customOverlay.setMap(null);
+        });
 
         // 지도 타입 컨트롤
         const mapTypeControl = new kakao.maps.MapTypeControl();
@@ -185,22 +201,21 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
                 // };
 
                 // 마커에 커서가 오버됐을 때 마커 위에 표시할 인포윈도우를 생성
-                const nearbyStore = `<div style="width:150px; text-align:center; padding:10px 20px; z-index:99;">${data.title}</div>`;
-
-                const infowindow = new kakao.maps.InfoWindow({
-                  content: nearbyStore
+                const customOverlay = new kakao.maps.CustomOverlay({
+                  position: coords,
+                  content: `<div class='customoverlay-nearby'>${data.title}</div>`,
+                  yAnchor: 2.5
                 });
 
                 // 마커에 마우스오버 이벤트를 등록
-                kakao.maps.event.addListener(marker, 'mouseover', function () {
-                  // 마커에 마우스오버 이벤트가 발생하면 인포윈도우를 마커위에 표시
-                  infowindow.open(map, marker);
+                kakao.maps.event.addListener(marker, 'mouseover', () => {
+                  customOverlay.setMap(map);
                 });
 
                 // 마커에 마우스아웃 이벤트를 등록
                 kakao.maps.event.addListener(marker, 'mouseout', function () {
                   // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거
-                  infowindow.close();
+                  customOverlay.setMap(null);
                 });
               }
             });
@@ -228,16 +243,6 @@ const MapContainer = styled.div`
   width: 100%;
 
   .info-title {
-    /* background-color: none;
-    border: none;
-    width: 100%;
-    height: auto;
-    background: #458bfd;
-    color: #fff;
-    text-align: center;
-    border-radius: 4px;
-    padding: 0px 10px; */
-    cursor: default;
     position: absolute;
     background: rgb(255, 255, 255);
     border: 1px solid rgb(118, 129, 168);
@@ -245,6 +250,7 @@ const MapContainer = styled.div`
     display: block;
     width: 207px;
     height: 23px;
+    cursor: default;
   }
 
   .map-iframe {
@@ -254,6 +260,25 @@ const MapContainer = styled.div`
     margin-top: 30px;
     gap: 15px;
 
+    .customoverlay {
+      text-align: center;
+      color: #fff;
+      font-weight: 600;
+      background-color: var(--fifth-color);
+      border: 3px solid var(--fifth-color);
+      border-radius: 18px;
+      padding: 10px 20px;
+    }
+
+    .customoverlay-nearby {
+      text-align: center;
+      color: var(--fifth-color);
+      font-weight: 600;
+      background-color: #fff;
+      border: 3px solid var(--fifth-color);
+      border-radius: 18px;
+      padding: 10px 20px;
+    }
     iframe {
       width: 38%;
       height: 600px;
