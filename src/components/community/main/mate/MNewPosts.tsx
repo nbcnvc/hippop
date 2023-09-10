@@ -247,6 +247,7 @@ const Betweens = styled.div`
   align-items: center;
   // margin-bottom: 50px;
   @media (max-width: 1600px) {
+    margin-bottom: 24px;
     justify-content: center;
     flex-direction: column;
     margin-top: -10px;
@@ -339,11 +340,10 @@ const ProfileButton = styled.button`
   top: 185px;
   right: 20px;
   @media (max-width: 1600px) {
+    display: flex;
     position: relative;
     justify-content: center;
     top: 0;
-    // margin-bottom: 50px;
     right: 0;
-    // flex-direction: column;
   }
 `;
