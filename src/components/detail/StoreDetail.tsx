@@ -284,7 +284,7 @@ const DetailContainer = styled.div`
 
     .image-slider {
       width: 630px;
-      height: 100%;
+      height: 580px;
 
       div {
         display: flex;

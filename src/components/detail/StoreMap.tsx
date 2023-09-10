@@ -130,10 +130,13 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
 
         // 메인 마커이미지의 주소
         const imageSrc = '/asset/mainMarker.png';
+
         // 마커이미지의 크기
         const imageSize = new kakao.maps.Size(80, 85);
+
         // 마커이미지의 옵션 // 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
         // const imageOption = { offset: new kakao.maps.Point(40, 70) };
+
         // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
         const mainMarkerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
@@ -148,7 +151,6 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
 
         // 인포윈도우로 장소에 대한 설명 표시
         const customOverlay = new kakao.maps.CustomOverlay({
-          // map: map,
           position: coords,
           content: `<div class='customoverlay'>${title}</div>`,
           yAnchor: 3.2
@@ -199,9 +201,7 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
                 // };
 
                 // 마커에 커서가 오버됐을 때 마커 위에 표시할 인포윈도우를 생성
-                // const nearbyStore = `<div style="width:150px; text-align:center; padding:10px 20px; z-index:99;">${data.title}</div>`;
                 const customOverlay = new kakao.maps.CustomOverlay({
-                  // map: map,
                   position: coords,
                   content: `<div class='customoverlay-nearby'>${data.title}</div>`,
                   yAnchor: 2.5
