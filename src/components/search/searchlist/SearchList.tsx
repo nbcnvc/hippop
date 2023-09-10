@@ -19,6 +19,9 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
+import LightbulbRoundedIcon from '@mui/icons-material/LightbulbRounded';
+
+import { FaRegLightbulb } from 'react-icons/fa';
 //alert
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -32,7 +35,7 @@ const SearchList = () => {
   // 기간별 filter state
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-
+  console.log(typeof startDate);
   // filter된 storeList state
   const [filteredStoreList, setFilteredStoreList] = useState<Store[] | null>(null);
 
@@ -43,13 +46,16 @@ const SearchList = () => {
   // 검색결과 length state
   const [searchResultCount, setSearchResultCount] = useState<number>(0);
 
+  const [previousSearchTerms, setPreviousSearchTerms] = useState<string[]>([]);
+  // const [chipInputValue, setChipInputValue] = useState<string | null>('');
+
   // 쿼리
   const queryClient = useQueryClient();
 
   // 디바운싱
   const debouncedSearch = _debounce((value: string) => {
     setDebouncedInputValue(value);
-  }, 3000);
+  }, 86400000);
 
   useEffect(() => {
     debouncedSearch(inputValue);
@@ -173,28 +179,32 @@ const SearchList = () => {
   };
 
   // 검색 버튼 핸들러
-  const handleSearchButtonClick = () => {
-    setDebouncedInputValue(inputValue);
-    if (!inputValue) {
+  const handleSearchFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // Prevent default form submission behavior
+
+    if (!inputValue.trim()) {
       toast.info('검색어를 입력해주세요 ! :)', {
         className: 'custom-toast',
         theme: 'light'
       });
-      setDebouncedInputValue('');
+    } else {
+      // Add the inputValue to the previousSearchTerms array
+      setPreviousSearchTerms((prevTerms) => [...prevTerms, inputValue]);
+      setDebouncedInputValue(inputValue);
     }
-    refreshData();
   };
 
   // 데이터 필터링
   useEffect(() => {
-    if (debouncedInputValue || inputValue || startDate || endDate) {
+    if (debouncedInputValue || startDate || endDate) {
       const filteredStores = selectStores?.filter((store) => {
-        const lowercaseInputValue = debouncedInputValue.toLowerCase();
+        const lowercaseInputValue = debouncedInputValue?.toLowerCase();
         const storeStartDate = moment(store.period_start);
         const storeEndDate = moment(store.period_end);
 
         return (
-          (store.title.toLowerCase().includes(lowercaseInputValue) ||
+          (!debouncedInputValue || // 검색어가 없는 경우 모든 데이터 포함
+            store.title.toLowerCase().includes(lowercaseInputValue) ||
             store.body.toLowerCase().includes(lowercaseInputValue) ||
             store.location.toLowerCase().includes(lowercaseInputValue)) &&
           storeStartDate.isSameOrBefore(momentEnd) &&
@@ -230,26 +240,35 @@ const SearchList = () => {
   };
 
   // 검색어 칩 삭제
-  const handleInputDelete = () => {
+  const handleInputDelete = (term: string) => {
     setInputValue('');
+    const newPreviousSearchTerms = previousSearchTerms.filter((index) => index !== term);
+    setPreviousSearchTerms(newPreviousSearchTerms);
+
     if (startDate && endDate && (momentStart !== '0000.01.01' || momentEnd !== '9999.12.31')) {
-      setFilteredStoreList(filteredStoreList);
-    } else {
-      setFilteredStoreList(null);
+      setDebouncedInputValue(newPreviousSearchTerms[newPreviousSearchTerms.length - 1]);
+
+      if (newPreviousSearchTerms.length === 0) {
+        setDebouncedInputValue('');
+      }
+    } else if (momentStart === '0000.01.01' || momentEnd === '9999.12.31') {
+      setDebouncedInputValue(newPreviousSearchTerms[newPreviousSearchTerms.length - 1]);
+
+      if (newPreviousSearchTerms.length === 0) {
+        setFilteredStoreList(null);
+      }
     }
-    refreshData();
   };
 
   // 날짜 칩 삭제
   const handleDateDelete = () => {
     setFilteredStoreList(null);
+    setStartDate(null);
+    setEndDate(null);
     refreshData();
-  };
 
-  // 검색 초기화 handler
-  const handleReset = () => {
-    setInputValue('');
-    refreshData();
+    if (startDate && endDate && momentStart === '0000.01.01' && momentEnd === '9999.12.31') {
+    }
   };
 
   // detail page 이동
@@ -322,17 +341,22 @@ const SearchList = () => {
 
   const combinedLabel = `${momentStart} ~ ${momentEnd}`;
 
+  const latestChips = previousSearchTerms.slice(-5);
+
   if (isLoading) {
     return (
       <div>
         <Container>
           <TagBox>
-            <TagTitle>검색 TIP</TagTitle>
-            <Tag> "성수" or "제목 또는 내용" </Tag>
+            <TagTitle>
+              <FaRegLightbulb />
+              검색 Tip
+            </TagTitle>
+            <Tag> "성동구" or "제목 또는 내용" </Tag>
           </TagBox>
           <SearchBox>
             {/* <Search /> */}
-            <form onSubmit={handleSearchButtonClick}>
+            <form>
               <SearchInput
                 type="text"
                 value={inputValue}
@@ -343,7 +367,7 @@ const SearchList = () => {
                 검색
               </button>
             </form>
-            <Reset onClick={handleReset} />
+            {/* <Reset onClick={handleReset} /> */}
           </SearchBox>
           <div style={{ display: 'flex', marginTop: '30px', gap: '30px' }}>
             <Skeleton variant="text" width={150} height={20} />
@@ -404,12 +428,15 @@ const SearchList = () => {
       <div>
         <Container>
           <TagBox>
-            <TagTitle>검색 Tip</TagTitle>
-            <Tag> "성수" or "제목 또는 내용" </Tag>
+            <TagTitle>
+              <FaRegLightbulb />
+              검색 Tip
+            </TagTitle>
+            <Tag> "성동구" or "제목 또는 내용" </Tag>
           </TagBox>
           <SearchBox>
             {/* <Search /> */}
-            <form onSubmit={handleSearchButtonClick}>
+            <form>
               <SearchInput
                 type="text"
                 value={inputValue}
@@ -420,7 +447,7 @@ const SearchList = () => {
                 검색
               </button>
             </form>
-            <Reset onClick={handleReset} />
+            {/* <Reset onClick={handleReset} /> */}
           </SearchBox>
           <div style={{ display: 'flex', marginTop: '30px', gap: '30px' }}>
             <Skeleton variant="text" width={150} height={60} />
@@ -534,12 +561,17 @@ const SearchList = () => {
   return (
     <Container>
       <TagBox>
-        <TagTitle>검색 TIP</TagTitle>
-        <Tag> "성수" or "제목 또는 내용" </Tag>
+        <FaRegLightbulb />
+        <TagTitle>검색 Tip</TagTitle>
+        <Tag> "성동구" or "제목 또는 내용" </Tag>
       </TagBox>
       <SearchBox>
         {/* <Search /> */}
-        <form onSubmit={handleSearchButtonClick}>
+        <form
+          onSubmit={(e) => {
+            handleSearchFormSubmit(e);
+          }}
+        >
           <SearchInput
             type="text"
             value={inputValue}
@@ -550,13 +582,16 @@ const SearchList = () => {
             검색
           </button>
         </form>
-        <Reset onClick={handleReset} />
+        {/* <Reset onClick={handleReset} /> */}
       </SearchBox>
-      <SearchCalendar storeData={storeData} onSearch={handleSearch} />
+      <SearchCalendar storeData={storeData} onSearch={handleSearch} resetStartDate={startDate} resetEndDate={endDate} />
       {filteredStoreList ? (
         <ChipBoX>
           <Stack direction="row" spacing={1}>
-            {inputValue.length > 0 && <Chip label={debouncedInputValue} onDelete={handleInputDelete} />}
+            {latestChips.map((term) => (
+              // <Chip key={term} label={term}  />
+              <Chip key={term} label={term} onDelete={() => handleInputDelete(term)} />
+            ))}
 
             {(momentStart !== '0000.01.01' || momentEnd !== '9999.12.31') && (
               <>
@@ -577,7 +612,7 @@ const SearchList = () => {
                   <H1Tag>검색 결과 </H1Tag>
                   {searchResultCount > 0 && filteredStoreList && (
                     <SearchCountBox>
-                      총<SearchCount>{` ${searchResultCount}`}개</SearchCount>의 결과를 찾았어요! :)
+                      총 <SearchCount>{stores.pages[0].count}개</SearchCount>의 결과를 찾았어요! :)
                     </SearchCountBox>
                   )}
                 </Title>
@@ -687,6 +722,7 @@ const Container = styled.div`
 
 const TagBox = styled.div`
   display: flex;
+  align-items: center;
 
   margin-top: 40px;
 `;
@@ -694,6 +730,7 @@ const TagBox = styled.div`
 const TagTitle = styled.div`
   margin-right: 20px;
   font-weight: bold;
+  margin-left: 5px;
 `;
 
 const Tag = styled.div`
@@ -739,7 +776,7 @@ const SearchInput = styled.input`
 
 const ChipBoX = styled.div`
   display: flex;
-  margin-bottom: 100px;
+  /* margin-bottom: 100px; */
 `;
 
 const Title = styled.div`
@@ -750,7 +787,7 @@ const Title = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 50px;
+  margin-top: 150px;
 `;
 
 const H1Tag = styled.h1`
@@ -923,5 +960,5 @@ const DetailBtn = styled.button`
 `;
 
 const Ref = styled.div`
-  margin-bottom: 150px;
+  margin-bottom: 250px;
 `;
