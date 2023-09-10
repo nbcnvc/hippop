@@ -33,6 +33,9 @@ const RPosts = () => {
     if (storeId !== 0) {
       setSortName('후기보러 가기');
     }
+    if (storeId == 0) {
+      setSortName('최신순');
+    }
   }, [storeId]);
 
   // 검색 로직
@@ -95,6 +98,8 @@ const RPosts = () => {
     }
   });
 
+  console.log(selectPosts);
+
   // 대표이미지
   const extractImageTags = (html: string) => {
     const imageTags = [];
@@ -112,6 +117,7 @@ const RPosts = () => {
   const naviDetail = (post: PostType) => {
     navigate(`/rdetail/${post.id}`);
   };
+
   if (isLoading) {
     // 로딩 중일 때 스켈레톤을 렌더링합니다.
     return (
@@ -158,8 +164,8 @@ const RPosts = () => {
             <Button name="최신순" onClick={toggleSortButton}>
               최신순
             </Button>
-            <Button name="인기순" onClick={toggleSortButton}>
-              인기순
+            <Button name="댓글순" onClick={toggleSortButton}>
+              댓글순
             </Button>
           </ButtonBox>
           <div>
@@ -168,14 +174,14 @@ const RPosts = () => {
               value={inputValue}
               onChange={onChangeInput}
               onKeyPress={handleKeyPress}
-              placeholder="엔터로 팝업스토어를 검색해보세요!"
+              placeholder="팝업스토어 or 제목 Enter!"
             />
           </div>
         </Between>
       </ButtonContainer>
       {sortName === '후기보러 가기' && <RStorePosts />}
       {sortName === '최신순' && <RNewPosts />}
-      {sortName === '인기순' && <RPopularPosts />}
+      {sortName === '댓글순' && <RPopularPosts />}
       <PostContainer>
         {sortName === '팝업스토어 검색' &&
           selectPosts &&
@@ -216,7 +222,7 @@ const RPosts = () => {
             );
           })}
         {sortName === '팝업스토어 검색' && selectPosts && selectPosts.length === 0 && (
-          <NoResult>아직 작성된 후기가 없습니다 :(</NoResult>
+          <NoResult>검색 결과가 없습니다 :(</NoResult>
         )}
         <Trigger ref={ref} />
       </PostContainer>

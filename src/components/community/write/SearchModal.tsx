@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 
 import { SearchModalProps } from '../../../types/props';
 import { Store } from '../../../types/types';
-import { fetchStoreData } from '../../../api/store';
+import { getStoreData } from '../../../api/store';
 
 import { styled } from 'styled-components';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
@@ -47,8 +47,8 @@ const SearchModal = ({
     isLoading,
     isError
   } = useQuery<Store[]>({
-    queryKey: ['storeData'],
-    queryFn: () => fetchStoreData()
+    queryKey: ['stores', pathname],
+    queryFn: () => getStoreData(pathname)
   });
 
   // 검색 결과 리셋
@@ -146,7 +146,16 @@ const SearchModal = ({
                       {result?.map((store) => {
                         return (
                           <Card key={store.id} onClick={() => selectStore(store)}>
-                            <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                            {store.isClosed ? (
+                              <>
+                                <ClosedBox>
+                                  <Closed>Closed</Closed>
+                                </ClosedBox>
+                                <CImg src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                              </>
+                            ) : (
+                              <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                            )}
                             <StoreName>{store.title}</StoreName>
                           </Card>
                         );
@@ -283,9 +292,49 @@ const Card = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative; /* 부모 요소로부터 상대적인 위치 지정 */
+
+  /* ClosedBox를 가운데 정렬하기 위한 스타일 */
+  &::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 `;
 
 const Img = styled.img`
+  width: 210px;
+  height: 175px;
+  margin-top: 10px;
+  object-fit: cover;
+  border-radius: 10px;
+`;
+
+const ClosedBox = styled.div`
+  position: absolute;
+  width: 230px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 16px;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+`;
+
+const Closed = styled.div`
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+`;
+
+const CImg = styled.img`
   width: 210px;
   height: 175px;
   margin-top: 10px;

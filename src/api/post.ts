@@ -110,7 +110,7 @@ export const getStorePosts = async (pageParam: number = 1, storeId?: number, par
   return { posts: data as any, page: pageParam, totalPages, count };
 };
 
-// Post 스토어 검색 조회
+// Post 검색 조회
 export const getSearchPosts = async (pageParam: number = 1, keyword: string, param?: string) => {
   let data: any[] | null = [];
   let count: number | null = null;
