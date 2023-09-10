@@ -58,12 +58,24 @@ export const MypageTag = styled.div`
         align-items: center;
         position: relative;
       }
+      .btn-wrapper:first-child {
+        background-color: var(--sixth-color);
+      }
       .btn-wrapper {
         margin-top: 2rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
         position: relative;
+      }
+      
+      button.active {
+        background-color: var(--primary-color);
+      }
+      
+      .send-btn.active {
+        background-color: var(--primary-color);
+        /* 다른 스타일 속성들을 추가할 수 있습니다. */
       }
       input {
         display: none;

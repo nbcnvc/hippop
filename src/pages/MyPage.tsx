@@ -46,7 +46,9 @@ const MyPage = () => {
   const [toggleMsgBox, setToggleMsgBox] = useState<string>('받은 쪽지함');
   const imageInputRef = useRef(null);
   const setCurrentUser = setUserStore((state) => state.setCurrentUser);
-
+  //쪽지함 버튼 active
+  const [isReceivedMessagesActive, setIsReceivedMessagesActive] = useState(true);
+  const [isSentMessagesActive, setIsSentMessagesActive] = useState(false);
   // 구독목록 visible
   useEffect(() => {
     function handleOutsideClick(event: MouseEvent) {
@@ -66,13 +68,11 @@ const MyPage = () => {
     let imageChanged = false;
     let alertMessages = [];
 
-    // 정규표현식을 사용하여 특수문자 여부를 검사
     const specialCharacters = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\]/;
 
     if (newName.trim() !== '' && newName !== currentUser?.name) {
       if (newName.length <= 4) {
         if (!specialCharacters.test(newName)) {
-          // 특수문자를 포함하지 않는 경우에만 처리
           // 이름 변경 처리
           const { error: nameError } = await supabase.from('user').update({ name: newName }).eq('id', currentUser?.id);
           if (!nameError) {
@@ -91,7 +91,6 @@ const MyPage = () => {
         alertMessages.push('닉네임은 네 글자 이하로 입력해주세요.');
       }
     }
-
     // 나머지 조건에 대한 else 추가
     if (selectedImage) {
       try {
@@ -174,6 +173,16 @@ const MyPage = () => {
       window.scrollTo(0, 0);
     };
   }, []);
+
+  const handleReceivedMessagesClick = () => {
+    setIsReceivedMessagesActive(true);
+    setIsSentMessagesActive(false);
+  };
+
+  const handleSentMessagesClick = () => {
+    setIsReceivedMessagesActive(false);
+    setIsSentMessagesActive(true);
+  };
 
   return (
     <MypageTag>
