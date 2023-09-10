@@ -1,6 +1,6 @@
 // 라이브러리
 import moment from 'moment';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -21,6 +21,7 @@ const RStorePosts = () => {
   const { pathname } = useLocation();
   const { state } = useLocation();
   const storeId: number = state?.storeId || 0; // state가 존재하지 않을 때 기본값으로 0 사용
+  const storeTitle: string = state?.storeTitle;
 
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
   const {
@@ -153,7 +154,14 @@ const RStorePosts = () => {
           </PostBox>
         );
       })}
-      {selectPosts && selectPosts.length === 0 && <NoResult>아직 작성된 후기가 없습니다 :(</NoResult>}
+      {selectPosts && selectPosts.length === 0 && (
+        <NoResultBox>
+          <NoResult>
+            <span>'{storeTitle}'</span>에 대해 작성된 후기가 없습니다 :(
+          </NoResult>
+          <NoResult>후기를 작성해 주세요!</NoResult>
+        </NoResultBox>
+      )}
       <Trigger ref={ref} />
     </PostContainer>
   );
@@ -274,13 +282,25 @@ const Trigger = styled.div`
   align-items: center;
 `;
 
-const NoResult = styled.h1`
+const NoResultBox = styled.div`
+  height: 800px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 500px;
-  font-size: 24px;
+`;
+
+const NoResult = styled.h1`
+  margin-bottom: 20px;
+  color: var(--fifth-color);
+  font-size: 28px;
   font-weight: 700px;
+  text-align: center;
+
+  span {
+    padding: 2px;
+    background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+  }
 `;
 
 // 스켈레톤

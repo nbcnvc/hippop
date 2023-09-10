@@ -3,7 +3,24 @@ import { supabase } from './supabase';
 // 타입
 import { FetchsStore, Store } from '../types/types';
 
-// store 전체 조회
+// store 전체 조회 (글 작성 검색 모달)
+export const getStoreData = async (pathname: string) => {
+  let data: any[] | null = [];
+
+  if (pathname === '/review') {
+    const { data: review } = await supabase.from('store').select('*').order('period_end', { ascending: false });
+    data = review;
+  }
+
+  if (pathname === '/mate') {
+    const { data: mate } = await supabase.from('store').select('*').eq('isClosed', false);
+
+    data = mate;
+  }
+  return data as Store[];
+};
+
+// store 전체 조회 (isClosed, false인 것만)
 export const fetchStoreData = async () => {
   const { data } = await supabase.from('store').select('*').eq('isClosed', false);
   return data as Store[];
