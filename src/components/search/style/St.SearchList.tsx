@@ -149,7 +149,7 @@ export const St = {
   SliderBtn: styled.button`
     background-color: var(--primary-color);
   `,
-  Card: styled.div`
+  ClosedCard: styled.div`
     width: 330px;
     height: 500px;
     border-radius: 18px;
@@ -161,6 +161,50 @@ export const St = {
     align-items: center;
     background-color: #ffffff;
 
+    position: relative;
+    box-sizing: border-box;
+    transition: color 0.3s ease, transform 0.3s ease;
+    img {
+      filter: grayscale(100%); /* 이미지를 흑백으로 만듭니다. */
+      object-fit: cover;
+    }
+    &:hover {
+      border: 3px solid var(--primary-color);
+    }
+    &:active {
+      background-color: rgb(215, 215, 219);
+      transform: scale(0.98);
+    }
+  `,
+  ClosedStoreInfo: styled.div`
+    position: absolute;
+    top: 35%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* background-color: rgba(0, 0, 0, 0.3); */
+    color: white;
+    padding: 5px 10px;
+  `,
+
+  CLosed: styled.div`
+    font-size: 40px;
+    font-weight: bold;
+    color: #333333;
+  `,
+
+  Card: styled.div`
+    width: 330px;
+    height: 500px;
+    border-radius: 18px;
+    border: 3px solid var(--fifth-color);
+    /* padding: 5px; */
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
     position: relative;
     box-sizing: border-box;
     transition: color 0.3s ease, transform 0.3s ease;
