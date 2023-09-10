@@ -475,16 +475,16 @@ const CalendarBox = styled.div`
 
 const ShareMenu = styled(Menu)`
   .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
-    border-radius: 18px;
-    padding: 15px 22px;
-    margin-top: 10px;
+    border-radius: 18px !important;
+    padding: 15px 22px !important;
+    margin-top: 10px !important;
   }
 
   .css-6hp17o-MuiList-root-MuiMenu-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    position: relative;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative !important;
   }
 `;
 

@@ -111,48 +111,147 @@ export const getStorePosts = async (pageParam: number = 1, storeId?: number, par
 };
 
 // Post 검색 조회
-export const getSearchPosts = async (pageParam: number = 1, keyword: string, param?: string) => {
+export const getSearchPosts = async (pageParam: number = 1, keyword: string, ctg: string, param?: string) => {
   let data: any[] | null = [];
   let count: number | null = null;
 
   if (param === '/review') {
-    const { data: reviews } = await supabase
-      .from('post')
-      .select(`*, store!inner(title)`)
-      .eq('ctg_index', 1)
-      .eq('isdeleted', false)
-      .ilike('store.title', `%${keyword}%`)
-      .order('created_at', { ascending: false })
-      .range(pageParam * 10 - 10, pageParam * 10 - 1);
+    if (ctg === '팝업스토어') {
+      const { data: reviews } = await supabase
+        .from('post')
+        .select(`*, store!inner(title)`)
+        .eq('ctg_index', 1)
+        .eq('isdeleted', false)
+        .ilike('store.title', `%${keyword}%`)
+        .order('created_at', { ascending: false })
+        .range(pageParam * 10 - 10, pageParam * 10 - 1);
 
-    data = reviews;
+      data = reviews;
 
-    const { count: reviewCount } = await supabase
-      .from('post')
-      .select('count', { count: 'exact' })
-      .eq('ctg_index', 1)
-      .eq('isdeleted', false);
+      const { count: reviewCount } = await supabase
+        .from('post')
+        .select('count', { count: 'exact' })
+        .eq('ctg_index', 1)
+        .eq('isdeleted', false);
 
-    count = reviewCount;
+      count = reviewCount;
+    } else if (ctg === '제목') {
+      const { data: reviews } = await supabase
+        .from('post')
+        .select(`*, store!inner(title)`)
+        .eq('ctg_index', 1)
+        .eq('isdeleted', false)
+        .ilike('title', `%${keyword}%`)
+        .order('created_at', { ascending: false })
+        .range(pageParam * 10 - 10, pageParam * 10 - 1);
+
+      data = reviews;
+
+      const { count: reviewCount } = await supabase
+        .from('post')
+        .select('count', { count: 'exact' })
+        .eq('ctg_index', 1)
+        .eq('isdeleted', false);
+
+      count = reviewCount;
+    } else if (ctg === '내용') {
+      const { data: reviews } = await supabase
+        .from('post')
+        .select(`*, store!inner(title)`)
+        .eq('ctg_index', 1)
+        .eq('isdeleted', false)
+        .ilike('body', `%${keyword}%`)
+        .order('created_at', { ascending: false })
+        .range(pageParam * 10 - 10, pageParam * 10 - 1);
+
+      data = reviews;
+
+      const { count: reviewCount } = await supabase
+        .from('post')
+        .select('count', { count: 'exact' })
+        .eq('ctg_index', 1)
+        .eq('isdeleted', false);
+
+      count = reviewCount;
+    }
   } else if (param === '/mate') {
-    const { data: mates } = await supabase
-      .from('post')
-      .select(`*, user( * ), store!inner(title)`)
-      .eq('ctg_index', 2)
-      .eq('isdeleted', false)
-      .ilike('store.title', `%${keyword}%`)
-      .order('created_at', { ascending: false })
-      .range(pageParam * 10 - 10, pageParam * 10 - 1);
+    if (ctg === '팝업스토어') {
+      const { data: mates } = await supabase
+        .from('post')
+        .select(`*, user( * ), store!inner(title)`)
+        .eq('ctg_index', 2)
+        .eq('isdeleted', false)
+        .ilike('store.title', `%${keyword}%`)
+        .order('created_at', { ascending: false })
+        .range(pageParam * 10 - 10, pageParam * 10 - 1);
 
-    data = mates;
+      data = mates;
 
-    const { count: mateCount } = await supabase
-      .from('post')
-      .select('count', { count: 'exact' })
-      .eq('ctg_index', 2)
-      .eq('isdeleted', false);
+      const { count: mateCount } = await supabase
+        .from('post')
+        .select('count', { count: 'exact' })
+        .eq('ctg_index', 2)
+        .eq('isdeleted', false);
 
-    count = mateCount;
+      count = mateCount;
+    } else if (ctg === '작성자') {
+      const { data: mates } = await supabase
+        .from('post')
+        .select(`*, user!inner( * ), store!inner(title)`)
+        .eq('ctg_index', 2)
+        .eq('isdeleted', false)
+        .ilike('user.name', `%${keyword}%`)
+        .order('created_at', { ascending: false })
+        .range(pageParam * 10 - 10, pageParam * 10 - 1);
+
+      data = mates;
+
+      const { count: mateCount } = await supabase
+        .from('post')
+        .select('count', { count: 'exact' })
+        .eq('ctg_index', 2)
+        .eq('isdeleted', false);
+
+      count = mateCount;
+    } else if (ctg === '제목') {
+      const { data: mates } = await supabase
+        .from('post')
+        .select(`*, user( * ), store!inner(title)`)
+        .eq('ctg_index', 2)
+        .eq('isdeleted', false)
+        .ilike('title', `%${keyword}%`)
+        .order('created_at', { ascending: false })
+        .range(pageParam * 10 - 10, pageParam * 10 - 1);
+
+      data = mates;
+
+      const { count: mateCount } = await supabase
+        .from('post')
+        .select('count', { count: 'exact' })
+        .eq('ctg_index', 2)
+        .eq('isdeleted', false);
+
+      count = mateCount;
+    } else if (ctg === '내용') {
+      const { data: mates } = await supabase
+        .from('post')
+        .select(`*, user( * ), store!inner(title)`)
+        .eq('ctg_index', 2)
+        .eq('isdeleted', false)
+        .ilike('body', `%${keyword}%`)
+        .order('created_at', { ascending: false })
+        .range(pageParam * 10 - 10, pageParam * 10 - 1);
+
+      data = mates;
+
+      const { count: mateCount } = await supabase
+        .from('post')
+        .select('count', { count: 'exact' })
+        .eq('ctg_index', 2)
+        .eq('isdeleted', false);
+
+      count = mateCount;
+    }
   }
   // 총 페이지
   const totalPages = count ? Math.floor(count / 10) + (count % 10 === 0 ? 0 : 1) : 1;

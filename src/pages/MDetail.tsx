@@ -3,7 +3,7 @@ import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { styled } from 'styled-components';
+import styled, { css } from 'styled-components';
 // zustand
 import { useCurrentUser } from '../store/userStore';
 // api
@@ -142,21 +142,19 @@ const MDetail = () => {
         {post && (
           <>
             {/* 글 내용 */}
-            <div>
-              <div className="ql-snow">
-                <HeadContainer>
-                  <TextBox>
-                    <StoreBox>
-                      <RoomRoundedIcon /> &nbsp;
-                      <Text>{post.store.title}</Text>
-                    </StoreBox>
-                    <Text>{formatDate}</Text>
-                  </TextBox>
-                  <Title>{post.title}</Title>
-                </HeadContainer>
-                <Body className="ql-editor" dangerouslySetInnerHTML={{ __html: post.body }} />
-              </div>
-            </div>
+            <HeadContainer>
+              <TextBox>
+                <StoreBox>
+                  <RoomRoundedIcon /> &nbsp;
+                  <Text>{post.store.title}</Text>
+                </StoreBox>
+                <Text>{formatDate}</Text>
+              </TextBox>
+              <Title>{post.title}</Title>
+            </HeadContainer>
+            <BodyContainer className="ql-snow">
+              <Body className="ql-editor" dangerouslySetInnerHTML={{ __html: post.body }} />
+            </BodyContainer>
             {/* 작성자 */}
             <Writer writer={post.user} postId={postId} />
             {/* 댓글 */}
@@ -170,6 +168,13 @@ const MDetail = () => {
 
 export default MDetail;
 
+// 미디어 쿼리 세팅
+const mediaQuery = (maxWidth: number) => css`
+  @media (max-width: ${maxWidth}px) {
+    width: 40%;
+  }
+`;
+
 const Layout = styled.div`
   display: flex;
   flex-direction: column;
@@ -178,9 +183,14 @@ const Layout = styled.div`
 `;
 
 const CategoryBox = styled.div`
-  width: 900px;
+  max-width: 1920px;
+  min-width: 744px;
+  width: 50%;
+  margin-top: 50px;
   display: flex;
   justify-content: space-between;
+
+  ${mediaQuery(900)}
 `;
 
 const Category = styled.h1`
@@ -189,7 +199,6 @@ const Category = styled.h1`
   padding-bottom: 5px;
   font-size: 24px;
   float: left;
-  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
 `;
 
 const TitleLine = styled.span`
@@ -214,7 +223,11 @@ const Button = styled.button`
 `;
 
 const HeadContainer = styled.div`
-  width: 900px;
+  max-width: 1920px;
+  min-width: 744px;
+  width: 50%;
+
+  ${mediaQuery(900)}
 `;
 
 const StoreBox = styled.div`
@@ -224,6 +237,7 @@ const StoreBox = styled.div`
 `;
 
 const TextBox = styled.div`
+  width: 100%;
   display: flex;
   justify-content: space-between;
   padding: 30px 0 10px 0;
@@ -243,8 +257,16 @@ const Title = styled.div`
   padding: 10px 0 30px 10px;
 `;
 
+const BodyContainer = styled.div`
+  max-width: 1920px;
+  min-width: 744px;
+  width: 50%;
+
+  ${mediaQuery(900)}
+`;
+
 const Body = styled.div`
-  width: 900px;
-  margin: 20px 0;
+  width: 100%;
   min-height: 500px;
+  margin: 20px 0;
 `;

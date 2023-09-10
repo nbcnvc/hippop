@@ -1,6 +1,6 @@
 // 라이브러리
 import shortid from 'shortid';
-import { styled } from 'styled-components';
+import styled, { css } from 'styled-components';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 // zustand store
@@ -78,20 +78,31 @@ const Writer = ({ writer, postId }: WriterProps) => {
 
 export default Writer;
 
+// 미디어 쿼리 세팅
+const mediaQuery = (maxWidth: number) => css`
+  @media (max-width: ${maxWidth}px) {
+    width: 40%;
+  }
+`;
+
 const WriterContainer = styled.div`
-  width: 870px;
+  max-width: 1920px;
+  min-width: 744px;
+  width: 50%;
   display: flex;
   justify-content: space-between;
   border: 2px solid var(--fifth-color);
   border-radius: 14px;
   padding: 10px;
+
+  ${mediaQuery(900)}
 `;
 
 const ProfileBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 20px;
+  padding: 10px 50px;
 `;
 
 const Img = styled.img`
@@ -118,7 +129,7 @@ const ButtonBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 20px;
+  padding: 10px 50px;
 `;
 
 const Button = styled.button`

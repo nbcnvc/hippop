@@ -38,6 +38,8 @@ export interface CalendarProps {
 export interface SearchCalendarProps {
   storeData: Store[] | null;
   onSearch: (startDate: Date, endDate: Date) => void;
+  resetEndDate: Date | null;
+  resetStartDate: Date | null;
 }
 
 export interface SearchModalProps {

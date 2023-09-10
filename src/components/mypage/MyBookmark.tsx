@@ -66,6 +66,8 @@ function Bookmark({ activeSection }: BookmarkProps) {
     }
   });
 
+  // console.log(items);
+  // console.log(items.pages);
   if (isLoading) {
     return <div>로딩중입니다.</div>;
   }
@@ -74,37 +76,41 @@ function Bookmark({ activeSection }: BookmarkProps) {
   }
   return (
     <div style={{ margin: '0 auto' }}>
-      <div>
-        {items &&
-          items.pages.map((page: any, index: number) => {
-            return (
-              <div className="subs-wrapper" key={index}>
-                <div className="fids">
-                  {page.stores.slice(0, 3).map((store: Store) => (
-                    <div className="user-subs">
-                      <img
-                        src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`}
-                        alt={`Store Image`}
-                        width={200}
-                      />
-                      <div className="info-box">
-                        <span>
-                          <h2>{store.title}</h2>
-                          <p>
-                            {store.period_start} ~ {store.period_end}
-                          </p>
-                        </span>
-                        <Link to={`/detail/${store.id}`} key={store.id}>
-                          <button>상세보기</button>
-                        </Link>
+      {items.pages.length === 0 ? (
+        <div className="none-bookmark">작성한 글이 없어요😅. 후기를 남기러 가볼까요?</div>
+      ) : (
+        <div>
+          {items &&
+            items.pages.map((page: any, index: number) => {
+              return (
+                <div className="subs-wrapper" key={index}>
+                  <div className="fids">
+                    {page.stores.slice(0, 3).map((store: Store) => (
+                      <div className="user-subs" key={store.id}>
+                        <img
+                          src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`}
+                          alt={`Store Image`}
+                          width={200}
+                        />
+                        <div className="info-box">
+                          <span>
+                            <h2>{store.title}</h2>
+                            <p>
+                              {store.period_start} ~ {store.period_end}
+                            </p>
+                          </span>
+                          <Link to={`/detail/${store.id}`} key={store.id}>
+                            <button>상세보기</button>
+                          </Link>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-      </div>
+              );
+            })}
+        </div>
+      )}
       <div
         style={{
           backgroundColor: 'transparent',
