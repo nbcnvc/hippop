@@ -19,11 +19,12 @@ interface SliderButton {
 
 const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
   const { id } = useParams<{ id: string }>();
-
   const navigate = useNavigate();
 
+  // store 전체 조회 (isClosed, false인 것만)
   const { data: storeData, isLoading, isError } = useQuery({ queryKey: ['nearbyStoreData'], queryFn: fetchStoreData });
 
+  // 주변 지역 팝업스토어 filter
   const filteredStore = storeData?.filter((data) => data.location.includes(guName) && data.id !== Number(id));
   const columnCount = filteredStore ? filteredStore.length : 0;
 
@@ -31,6 +32,7 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
     setNearbyStoreMarker(filteredStore);
   }, [guName, storeData]);
 
+  // 슬라이드 화살표
   const PrevArrow = ({ onClick }: SliderButton) => {
     return (
       <button onClick={onClick} type="button">
@@ -38,7 +40,6 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
       </button>
     );
   };
-
   const NextArrow = ({ onClick }: SliderButton) => {
     return (
       <button onClick={onClick} type="button">
@@ -47,7 +48,7 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
     );
   };
 
-  // 위에서 계산한 값을 사용하여 설정 객체를 생성
+  // 슬라이드 세팅
   const settings = {
     slidesToShow: 3,
     slidesToScroll: 1,
@@ -64,6 +65,8 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
     pauseOnFocus: true,
     pauseOnHover: true,
     speed: 500,
+
+    // 반응형
     responsive: [
       {
         breakpoint: 2100,
@@ -124,16 +127,14 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
 
   if (isLoading) {
     return (
-      <div>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-          <Skeleton variant="text" width={90} height={30} />
-          <div style={{ display: 'flex' }}>
-            <Skeleton variant="text" width={400} height={800} />
-            <div style={{ margin: '0 15px 0 15px' }}>
-              <Skeleton variant="text" width={400} height={800} />
-            </div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+        <Skeleton variant="text" width={90} height={30} />
+        <div style={{ display: 'flex' }}>
+          <Skeleton variant="text" width={400} height={800} />
+          <div style={{ margin: '0 15px 0 15px' }}>
             <Skeleton variant="text" width={400} height={800} />
           </div>
+          <Skeleton variant="text" width={400} height={800} />
         </div>
       </div>
     );

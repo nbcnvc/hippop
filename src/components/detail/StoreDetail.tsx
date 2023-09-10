@@ -21,6 +21,7 @@ import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import Menu from '@mui/material/Menu';
+import { styled as muiStyled } from '@mui/material/styles';
 //alert
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -236,7 +237,6 @@ const StoreDetail = () => {
                   팝업 메이트 구하기
                 </button>
                 <ShareBtn
-                  style={{ margin: '10px 5px' }}
                   id="basic-button"
                   aria-controls={open ? 'basic-menu' : undefined}
                   aria-haspopup="true"
@@ -302,7 +302,6 @@ const DetailContainer = styled.div`
 
     .store-info {
       width: 100%;
-      /* width: 620px; */
       height: auto;
       display: flex;
       flex-direction: column;
@@ -324,7 +323,7 @@ const DetailContainer = styled.div`
 
         div {
           max-height: 100px;
-          min-height: 80px;
+          min-height: 60px;
 
           font-size: 18px;
           line-height: 26px;
@@ -335,8 +334,7 @@ const DetailContainer = styled.div`
       }
 
       .store-text {
-        width: 620px;
-        /* width: 100%; */
+        width: 635px;
         display: flex;
         justify-content: center;
         flex-direction: column;
@@ -429,6 +427,7 @@ const ShareBtn = styled.button`
   background-color: #fff;
   color: var(--fifth-color);
   padding: 14px 25px !important;
+  margin: 10px 5px;
 `;
 
 const LinkIcon = styled(InsertLinkIcon)`
@@ -473,20 +472,20 @@ const CalendarBox = styled.div`
   z-index: 3; /* 다른 요소 위에 나타나도록 설정 */
 `;
 
-const ShareMenu = styled(Menu)`
-  .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
-    border-radius: 18px !important;
-    padding: 15px 22px !important;
-    margin-top: 10px !important;
-  }
+const ShareMenu = muiStyled(Menu)(({ theme }) => ({
+  '& .MuiPaper-root': {
+    borderRadius: '18px',
+    padding: '15px 22px',
+    marginTop: '10px'
+  },
 
-  .css-6hp17o-MuiList-root-MuiMenu-list {
-    list-style: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    position: relative !important;
+  '& .MuiList-root': {
+    listStyle: 'none',
+    margin: '0',
+    padding: '0',
+    position: 'relative'
   }
-`;
+}));
 
 const ShareInfo = styled.div`
   margin-bottom: 15px;
