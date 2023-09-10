@@ -58,28 +58,26 @@ export const MypageTag = styled.div`
         align-items: center;
         position: relative;
       }
-      .btn-wrapper:first-child {
-        background-color: var(--sixth-color);
-      }
       .btn-wrapper {
         margin-top: 2rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
         position: relative;
-      }
-      
-      button.active {
-        background-color: var(--primary-color);
-      }
-      
-      .send-btn.active {
-        background-color: var(--primary-color);
-        /* 다른 스타일 속성들을 추가할 수 있습니다. */
+        
       }
       input {
         display: none;
       }
+    }
+    .receive-btn {
+      background-color: var(--sixth-color);
+      color: var(--fifth-color);
+    }
+    .send-btn {
+      margin-left: 10px;
+      background-color: var(--sixth-color);
+      color: var(--fifth-color);
     }
   }
   ul {
@@ -212,12 +210,14 @@ export const MypageTag = styled.div`
       color: var(--fifth-color);
       text-align: center;
       cursor: pointer;
+      display:flex;
+      justify-content: center;
     }
 
     .btn-mother {
       margin: 0 auto;
       padding: 0;
-      width: 210px;
+      // width: 210px;
       display: flex;
       justify-content: center;
       position: relative;
@@ -318,12 +318,6 @@ export const MypageTag = styled.div`
         background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
       }
     }
-  }
-  .send-btn {
-    margin-left: 10px;
-    background-color: var(--sixth-color);
-    color: var(--fifth-color);
-    font-weight: 600;
   }
 
   .post-wrapper-flex {
