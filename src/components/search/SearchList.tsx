@@ -3,26 +3,26 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
-import Slider from 'react-slick';
 import moment from 'moment';
 import _debounce from 'lodash/debounce';
-import { styled } from 'styled-components';
 // 컴포넌트
-import SearchCalendar from '../searchcalander/SearchCalendar';
+import SearchCalendar from './SearchCalendar';
 // api
-import { fetchStoreIdCount } from '../../../api/bookmark';
-import { fetchStoreData, getSearchStore } from '../../../api/store';
+import { fetchStoreIdCount } from '../../api/bookmark';
+import { fetchStoreData, getSearchStore } from '../../api/store';
 // 타입
-import { FetchsStore, SliderButton, Store } from '../../../types/types';
+import { FetchsStore, SliderButton, Store } from '../../types/types';
 // mui
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Skeleton from '@mui/material/Skeleton';
+// react-icons
+import { FaRegLightbulb } from 'react-icons/fa';
 //alert
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+// 스타일
+import { St } from './style/St.SearchList';
 const SearchList = () => {
   const navigate = useNavigate();
 
@@ -42,6 +42,8 @@ const SearchList = () => {
 
   // 검색결과 length state
   const [searchResultCount, setSearchResultCount] = useState<number>(0);
+  // 이전 검색어 state
+  const [previousSearchTerms, setPreviousSearchTerms] = useState<string[]>([]);
 
   // 쿼리
   const queryClient = useQueryClient();
@@ -49,7 +51,7 @@ const SearchList = () => {
   // 디바운싱
   const debouncedSearch = _debounce((value: string) => {
     setDebouncedInputValue(value);
-  }, 3000);
+  }, 86400000);
 
   useEffect(() => {
     debouncedSearch(inputValue);
@@ -173,28 +175,32 @@ const SearchList = () => {
   };
 
   // 검색 버튼 핸들러
-  const handleSearchButtonClick = () => {
-    setDebouncedInputValue(inputValue);
-    if (!inputValue) {
+  const handleSearchFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // Prevent default form submission behavior
+
+    if (!inputValue.trim()) {
       toast.info('검색어를 입력해주세요 ! :)', {
         className: 'custom-toast',
         theme: 'light'
       });
-      setDebouncedInputValue('');
+    } else {
+      // Add the inputValue to the previousSearchTerms array
+      setPreviousSearchTerms((prevTerms) => [...prevTerms, inputValue]);
+      setDebouncedInputValue(inputValue);
     }
-    refreshData();
   };
 
   // 데이터 필터링
   useEffect(() => {
-    if (debouncedInputValue || inputValue || startDate || endDate) {
+    if (debouncedInputValue || startDate || endDate) {
       const filteredStores = selectStores?.filter((store) => {
-        const lowercaseInputValue = debouncedInputValue.toLowerCase();
+        const lowercaseInputValue = debouncedInputValue?.toLowerCase();
         const storeStartDate = moment(store.period_start);
         const storeEndDate = moment(store.period_end);
 
         return (
-          (store.title.toLowerCase().includes(lowercaseInputValue) ||
+          (!debouncedInputValue || // 검색어가 없는 경우 모든 데이터 포함
+            store.title.toLowerCase().includes(lowercaseInputValue) ||
             store.body.toLowerCase().includes(lowercaseInputValue) ||
             store.location.toLowerCase().includes(lowercaseInputValue)) &&
           storeStartDate.isSameOrBefore(momentEnd) &&
@@ -230,26 +236,35 @@ const SearchList = () => {
   };
 
   // 검색어 칩 삭제
-  const handleInputDelete = () => {
+  const handleInputDelete = (term: string) => {
     setInputValue('');
+    const newPreviousSearchTerms = previousSearchTerms.filter((index) => index !== term);
+    setPreviousSearchTerms(newPreviousSearchTerms);
+
     if (startDate && endDate && (momentStart !== '0000.01.01' || momentEnd !== '9999.12.31')) {
-      setFilteredStoreList(filteredStoreList);
-    } else {
-      setFilteredStoreList(null);
+      setDebouncedInputValue(newPreviousSearchTerms[newPreviousSearchTerms.length - 1]);
+
+      if (newPreviousSearchTerms.length === 0) {
+        setDebouncedInputValue('');
+      }
+    } else if (momentStart === '0000.01.01' || momentEnd === '9999.12.31') {
+      setDebouncedInputValue(newPreviousSearchTerms[newPreviousSearchTerms.length - 1]);
+
+      if (newPreviousSearchTerms.length === 0) {
+        setFilteredStoreList(null);
+      }
     }
-    refreshData();
   };
 
   // 날짜 칩 삭제
   const handleDateDelete = () => {
     setFilteredStoreList(null);
+    setStartDate(null);
+    setEndDate(null);
     refreshData();
-  };
 
-  // 검색 초기화 handler
-  const handleReset = () => {
-    setInputValue('');
-    refreshData();
+    if (startDate && endDate && momentStart === '0000.01.01' && momentEnd === '9999.12.31') {
+    }
   };
 
   // detail page 이동
@@ -259,17 +274,17 @@ const SearchList = () => {
 
   const PrevArrow = ({ onClick }: SliderButton) => {
     return (
-      <SliderBtn onClick={onClick} type="button">
+      <St.SliderBtn onClick={onClick} type="button">
         ＜
-      </SliderBtn>
+      </St.SliderBtn>
     );
   };
 
   const NextArrow = ({ onClick }: SliderButton) => {
     return (
-      <SliderBtn onClick={onClick} type="button">
+      <St.SliderBtn onClick={onClick} type="button">
         ＞
-      </SliderBtn>
+      </St.SliderBtn>
     );
   };
 
@@ -322,18 +337,23 @@ const SearchList = () => {
 
   const combinedLabel = `${momentStart} ~ ${momentEnd}`;
 
+  const latestChips = previousSearchTerms.slice(-5);
+
   if (isLoading) {
     return (
       <div>
-        <Container>
-          <TagBox>
-            <TagTitle>검색 TIP</TagTitle>
-            <Tag> "성수" or "제목 또는 내용" </Tag>
-          </TagBox>
-          <SearchBox>
+        <St.Container>
+          <St.TagBox>
+            <St.TagTitle>
+              <FaRegLightbulb />
+              검색 Tip
+            </St.TagTitle>
+            <St.Tag> "성동구" or "제목 또는 내용" </St.Tag>
+          </St.TagBox>
+          <St.SearchBox>
             {/* <Search /> */}
-            <form onSubmit={handleSearchButtonClick}>
-              <SearchInput
+            <form>
+              <St.SearchInput
                 type="text"
                 value={inputValue}
                 placeholder="팝업스토어를 검색해보세요!"
@@ -343,8 +363,8 @@ const SearchList = () => {
                 검색
               </button>
             </form>
-            <Reset onClick={handleReset} />
-          </SearchBox>
+            {/* <Reset onClick={handleReset} /> */}
+          </St.SearchBox>
           <div style={{ display: 'flex', marginTop: '30px', gap: '30px' }}>
             <Skeleton variant="text" width={150} height={20} />
             <Skeleton variant="text" width={150} height={20} />
@@ -354,43 +374,43 @@ const SearchList = () => {
           </div>
 
           <div style={{ display: 'flex', gap: '30px' }}>
-            <Card>
+            <St.Card>
               <Skeleton variant="rectangular" width={340} height={369} />
-              <InfoBox>
+              <St.InfoBox>
                 <div>
                   <Skeleton variant="text" width={150} height={20} />
                   <Skeleton variant="text" width={100} height={15} />
                   <Skeleton variant="text" width={100} height={15} />
                 </div>
                 <Skeleton variant="rectangular" width={100} height={40} />
-              </InfoBox>
-            </Card>
+              </St.InfoBox>
+            </St.Card>
 
-            <Card>
+            <St.Card>
               <Skeleton variant="rectangular" width={340} height={369} />
-              <InfoBox>
+              <St.InfoBox>
                 <div>
                   <Skeleton variant="text" width={150} height={20} />
                   <Skeleton variant="text" width={100} height={15} />
                   <Skeleton variant="text" width={100} height={15} />
                 </div>
                 <Skeleton variant="rectangular" width={100} height={40} />
-              </InfoBox>
-            </Card>
+              </St.InfoBox>
+            </St.Card>
 
-            <Card>
+            <St.Card>
               <Skeleton variant="rectangular" width={340} height={369} />
-              <InfoBox>
+              <St.InfoBox>
                 <div>
                   <Skeleton variant="text" width={150} height={20} />
                   <Skeleton variant="text" width={100} height={15} />
                   <Skeleton variant="text" width={100} height={15} />
                 </div>
                 <Skeleton variant="rectangular" width={100} height={40} />
-              </InfoBox>
-            </Card>
+              </St.InfoBox>
+            </St.Card>
           </div>
-        </Container>
+        </St.Container>
       </div>
     );
   }
@@ -402,15 +422,18 @@ const SearchList = () => {
   if (isScrollLoding) {
     return (
       <div>
-        <Container>
-          <TagBox>
-            <TagTitle>검색 Tip</TagTitle>
-            <Tag> "성수" or "제목 또는 내용" </Tag>
-          </TagBox>
-          <SearchBox>
+        <St.Container>
+          <St.TagBox>
+            <St.TagTitle>
+              <FaRegLightbulb />
+              검색 Tip
+            </St.TagTitle>
+            <St.Tag> "성동구" or "제목 또는 내용" </St.Tag>
+          </St.TagBox>
+          <St.SearchBox>
             {/* <Search /> */}
-            <form onSubmit={handleSearchButtonClick}>
-              <SearchInput
+            <form>
+              <St.SearchInput
                 type="text"
                 value={inputValue}
                 placeholder="팝업스토어를 검색해보세요!"
@@ -420,8 +443,8 @@ const SearchList = () => {
                 검색
               </button>
             </form>
-            <Reset onClick={handleReset} />
-          </SearchBox>
+            {/* <Reset onClick={handleReset} /> */}
+          </St.SearchBox>
           <div style={{ display: 'flex', marginTop: '30px', gap: '30px' }}>
             <Skeleton variant="text" width={150} height={60} />
             <Skeleton variant="text" width={150} height={60} />
@@ -440,41 +463,41 @@ const SearchList = () => {
               <Skeleton variant="text" width={250} height={20} />
             </div>
             <div style={{ display: 'flex', gap: '30px' }}>
-              <Card>
+              <St.Card>
                 <Skeleton variant="rectangular" width={280} height={369} />
-                <InfoBox>
+                <St.InfoBox>
                   <div>
                     <Skeleton variant="text" width={150} height={20} />
                     <Skeleton variant="text" width={100} height={15} />
                     <Skeleton variant="text" width={100} height={15} />
                   </div>
                   <Skeleton variant="rectangular" width={100} height={40} />
-                </InfoBox>
-              </Card>
+                </St.InfoBox>
+              </St.Card>
 
-              <Card>
+              <St.Card>
                 <Skeleton variant="rectangular" width={280} height={369} />
-                <InfoBox>
+                <St.InfoBox>
                   <div>
                     <Skeleton variant="text" width={120} height={20} />
                     <Skeleton variant="text" width={100} height={15} />
                     <Skeleton variant="text" width={100} height={15} />
                   </div>
                   <Skeleton variant="rectangular" width={100} height={40} />
-                </InfoBox>
-              </Card>
+                </St.InfoBox>
+              </St.Card>
 
-              <Card>
+              <St.Card>
                 <Skeleton variant="rectangular" width={280} height={369} />
-                <InfoBox>
+                <St.InfoBox>
                   <div>
                     <Skeleton variant="text" width={120} height={20} />
                     <Skeleton variant="text" width={100} height={15} />
                     <Skeleton variant="text" width={100} height={15} />
                   </div>
                   <Skeleton variant="rectangular" width={100} height={40} />
-                </InfoBox>
-              </Card>
+                </St.InfoBox>
+              </St.Card>
             </div>
             <div
               style={{
@@ -488,42 +511,42 @@ const SearchList = () => {
               <Skeleton variant="text" width={250} height={20} />
             </div>
             <div style={{ display: 'flex', gap: '30px', marginTop: '30px' }}>
-              <Card>
+              <St.Card>
                 <Skeleton variant="rectangular" width={280} height={369} />
-                <InfoBox>
+                <St.InfoBox>
                   <div>
                     <Skeleton variant="text" width={120} height={20} />
                     <Skeleton variant="text" width={100} height={15} />
                     <Skeleton variant="text" width={100} height={15} />
                   </div>
                   <Skeleton variant="rectangular" width={100} height={40} />
-                </InfoBox>
-              </Card>
-              <Card>
+                </St.InfoBox>
+              </St.Card>
+              <St.Card>
                 <Skeleton variant="rectangular" width={280} height={369} />
-                <InfoBox>
+                <St.InfoBox>
                   <div>
                     <Skeleton variant="text" width={120} height={20} />
                     <Skeleton variant="text" width={100} height={15} />
                     <Skeleton variant="text" width={100} height={15} />
                   </div>
                   <Skeleton variant="rectangular" width={100} height={40} />
-                </InfoBox>
-              </Card>
-              <Card>
+                </St.InfoBox>
+              </St.Card>
+              <St.Card>
                 <Skeleton variant="rectangular" width={280} height={369} />
-                <InfoBox>
+                <St.InfoBox>
                   <div>
                     <Skeleton variant="text" width={120} height={20} />
                     <Skeleton variant="text" width={100} height={15} />
                     <Skeleton variant="text" width={100} height={15} />
                   </div>
                   <Skeleton variant="rectangular" width={100} height={40} />
-                </InfoBox>
-              </Card>
+                </St.InfoBox>
+              </St.Card>
             </div>
           </div>
-        </Container>
+        </St.Container>
       </div>
     );
   }
@@ -532,15 +555,20 @@ const SearchList = () => {
   }
 
   return (
-    <Container>
-      <TagBox>
-        <TagTitle>검색 TIP</TagTitle>
-        <Tag> "성수" or "제목 또는 내용" </Tag>
-      </TagBox>
-      <SearchBox>
+    <St.Container>
+      <St.TagBox>
+        <FaRegLightbulb />
+        <St.TagTitle>검색 Tip</St.TagTitle>
+        <St.Tag> "성동구" or "제목 또는 내용" </St.Tag>
+      </St.TagBox>
+      <St.SearchBox>
         {/* <Search /> */}
-        <form onSubmit={handleSearchButtonClick}>
-          <SearchInput
+        <form
+          onSubmit={(e) => {
+            handleSearchFormSubmit(e);
+          }}
+        >
+          <St.SearchInput
             type="text"
             value={inputValue}
             placeholder="팝업스토어를 검색해보세요!"
@@ -550,13 +578,16 @@ const SearchList = () => {
             검색
           </button>
         </form>
-        <Reset onClick={handleReset} />
-      </SearchBox>
-      <SearchCalendar storeData={storeData} onSearch={handleSearch} />
+        {/* <Reset onClick={handleReset} /> */}
+      </St.SearchBox>
+      <SearchCalendar storeData={storeData} onSearch={handleSearch} resetStartDate={startDate} resetEndDate={endDate} />
       {filteredStoreList ? (
-        <ChipBoX>
+        <St.ChipBoX>
           <Stack direction="row" spacing={1}>
-            {inputValue.length > 0 && <Chip label={debouncedInputValue} onDelete={handleInputDelete} />}
+            {latestChips.map((term) => (
+              // <Chip key={term} label={term}  />
+              <Chip key={term} label={term} onDelete={() => handleInputDelete(term)} />
+            ))}
 
             {(momentStart !== '0000.01.01' || momentEnd !== '9999.12.31') && (
               <>
@@ -564,39 +595,39 @@ const SearchList = () => {
               </>
             )}
           </Stack>
-        </ChipBoX>
+        </St.ChipBoX>
       ) : (
-        <ChipBoX></ChipBoX>
+        <St.ChipBoX></St.ChipBoX>
       )}
       <>
         {filteredStoreList ? (
           <div>
             {filteredStoreList.length > 0 ? (
               <>
-                <Title>
-                  <H1Tag>검색 결과 </H1Tag>
+                <St.Title>
+                  <St.H1Tag>검색 결과 </St.H1Tag>
                   {searchResultCount > 0 && filteredStoreList && (
-                    <SearchCountBox>
-                      총<SearchCount>{` ${searchResultCount}`}개</SearchCount>의 결과를 찾았어요! :)
-                    </SearchCountBox>
+                    <St.SearchCountBox>
+                      총 <St.SearchCount>{stores.pages[0].count}개</St.SearchCount>의 결과를 찾았어요! :)
+                    </St.SearchCountBox>
                   )}
-                </Title>
-                <GridContainer1>
+                </St.Title>
+                <St.GridContainer1>
                   {filteredStoreList?.map((store) => (
-                    <Card key={store.id}>
-                      <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-                      <InfoBox>
+                    <St.Card key={store.id}>
+                      <St.Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                      <St.InfoBox>
                         <div>
                           {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
-                          <StoreName>{store.title}</StoreName>
+                          <St.StoreName>{store.title}</St.StoreName>
                           {store.period_start} ~ {store.period_end}
                         </div>
 
-                        <DetailBtn onClick={() => navDetail(store.id)}>상세보기</DetailBtn>
-                      </InfoBox>
-                    </Card>
+                        <St.DetailBtn onClick={() => navDetail(store.id)}>상세보기</St.DetailBtn>
+                      </St.InfoBox>
+                    </St.Card>
                   ))}
-                </GridContainer1>
+                </St.GridContainer1>
               </>
             ) : (
               <div>검색 결과가 없습니다.</div>
@@ -605,323 +636,69 @@ const SearchList = () => {
         ) : (
           <>
             <div>
-              <Title>
-                <H1Tag>인기 팝업스토어는 어떨까요?</H1Tag>
-              </Title>
-              <GridContainer>
-                <StyledSlider {...settings}>
+              <St.Title>
+                <St.H1Tag>인기 팝업스토어는 어떨까요?</St.H1Tag>
+              </St.Title>
+              <St.GridContainer>
+                <St.StyledSlider {...settings}>
                   {popStores?.map((store: Store, index) => (
                     <>
-                      <Card key={store.id}>
-                        <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-                        <InfoBox>
+                      <St.Card key={store.id}>
+                        <St.Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                        <St.InfoBox>
                           <div>
                             {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
-                            <StoreName>{store.title}</StoreName>
-                            <Period>
+                            <St.StoreName>{store.title}</St.StoreName>
+                            <St.Period>
                               {' '}
                               {store.period_start} ~ {store.period_end}
-                            </Period>
+                            </St.Period>
                           </div>
-                          <RankingNumber>
+                          <St.RankingNumber>
                             {/* <Rank /> */}
                             {`${index + 1} 위`}
-                          </RankingNumber>
-                          <DetailBtn onClick={() => navDetail(store.id)}>상세보기</DetailBtn>
-                        </InfoBox>
-                      </Card>
+                          </St.RankingNumber>
+                          <St.DetailBtn onClick={() => navDetail(store.id)}>상세보기</St.DetailBtn>
+                        </St.InfoBox>
+                      </St.Card>
                     </>
                   ))}
-                </StyledSlider>
-              </GridContainer>
-              <Title>
-                <H1Tag>최신 팝업스토어를 소개합니다!</H1Tag>
-              </Title>
-              <GridContainer>
-                <StyledSlider {...settings}>
+                </St.StyledSlider>
+              </St.GridContainer>
+              <St.Title>
+                <St.H1Tag>최신 팝업스토어를 소개합니다!</St.H1Tag>
+              </St.Title>
+              <St.GridContainer>
+                <St.StyledSlider {...settings}>
                   {latStores?.map((store: Store) => (
-                    <Card key={store.id}>
-                      <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-                      <InfoBox>
+                    <St.Card key={store.id}>
+                      <St.Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                      <St.InfoBox>
                         <div>
                           {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
-                          <StoreName>{store.title}</StoreName>
-                          <Period>
+                          <St.StoreName>{store.title}</St.StoreName>
+                          <St.Period>
                             {' '}
                             {store.period_start} ~ {store.period_end}
-                          </Period>
+                          </St.Period>
                         </div>
-                        <RankingNumber>
+                        <St.RankingNumber>
                           {/* <Rank /> */}
                           NEW
-                        </RankingNumber>
-                        <DetailBtn onClick={() => navDetail(store.id)}>상세보기</DetailBtn>
-                      </InfoBox>
-                    </Card>
+                        </St.RankingNumber>
+                        <St.DetailBtn onClick={() => navDetail(store.id)}>상세보기</St.DetailBtn>
+                      </St.InfoBox>
+                    </St.Card>
                   ))}
-                </StyledSlider>
-              </GridContainer>{' '}
+                </St.StyledSlider>
+              </St.GridContainer>{' '}
             </div>
           </>
         )}
       </>
-      <Ref ref={ref}></Ref>
-    </Container>
+      <St.Ref ref={ref}></St.Ref>
+    </St.Container>
   );
 };
 
 export default SearchList;
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-
-  margin: 0 auto;
-  margin-top: 7rem;
-
-  max-width: 1920px;
-  /* width: 1920px; */
-  max-height: 100%;
-`;
-
-const TagBox = styled.div`
-  display: flex;
-
-  margin-top: 40px;
-`;
-
-const TagTitle = styled.div`
-  margin-right: 20px;
-  font-weight: bold;
-`;
-
-const Tag = styled.div`
-  margin-right: 5px;
-`;
-
-const SearchBox = styled.div`
-  position: relative;
-
-  margin-top: 20px;
-
-  .custom-btn {
-    border: 2px solid #333333;
-
-    border-bottom: 5.2px solid var(--fifth-color);
-    border-radius: 0 18px 18px 0;
-    padding: 13.2px 20px;
-  }
-`;
-
-const Reset = styled(RestartAltIcon)`
-  position: absolute;
-
-  top: 25%;
-  right: 15%;
-  cursor: pointer;
-`;
-
-const SearchInput = styled.input`
-  width: 450px;
-  height: 46.6px;
-
-  box-shadow: 1px;
-
-  border: px solid #333333;
-  border-right: none;
-  border-radius: 18px 0px 0px 18px;
-
-  outline: none;
-
-  padding-left: 35px;
-`;
-
-const ChipBoX = styled.div`
-  display: flex;
-  margin-bottom: 100px;
-`;
-
-const Title = styled.div`
-  font-size: 20px;
-  font-weight: bold;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 50px;
-`;
-
-const H1Tag = styled.h1`
-  font-size: 28px;
-  color: #333333;
-
-  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
-  padding: 4px;
-`;
-
-const SearchCountBox = styled.div`
-  font-size: 16px;
-
-  margin: 10px 0 35px 0;
-`;
-
-const SearchCount = styled.span`
-  color: var(--primary-color);
-`;
-
-const GridContainer1 = styled.div`
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); // Three columns per row
-  gap: 30px;
-  @media (max-width: 1600px) {
-    grid-template-columns: repeat(2, 1fr); // Three columns per row
-  }
-  @media (max-width: 1000px) {
-    grid-template-columns: repeat(2, 1fr); // Three columns per row
-  }
-
-  width: 100%;
-  margin-top: 50px;
-`;
-
-const GridContainer = styled.div`
-  /* display: flex !important; */
-  margin: 0 auto;
-  display: grid;
-  /* justify-content: center; */
-  /* align-items: center; */
-  grid-template-columns: repeat(2 1fr); // 한 줄에 두 개의 열 */
-  gap: 30px;
-  /* max-width: 1920px; // 그리드가 너무 넓어지는 것을 제한 */
-  /* width: 100%; */
-  margin-top: 50px;
-`;
-
-const StyledSlider = styled(Slider)`
-  display: flex !important;
-  /* position: relative; */
-  justify-content: center;
-  align-items: center;
-
-  /* padding: 5px; */
-  width: 1200px;
-
-  @media (max-width: 844px) {
-    width: 740px;
-  }
-
-  /* gap: 20px; */
-  .slick-slide {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .slick-list {
-    overflow: hidden;
-  }
-`;
-
-const SliderBtn = styled.button`
-  background-color: var(--primary-color);
-`;
-const Card = styled.div`
-  width: 330px;
-  height: 500px;
-  border-radius: 18px;
-  border: 3px solid var(--fifth-color);
-  /* padding: 5px; */
-  display: flex !important;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #ffffff;
-
-  position: relative;
-  box-sizing: border-box;
-  transition: color 0.3s ease, transform 0.3s ease;
-  &:hover {
-    border: 3px solid var(--primary-color);
-  }
-  &:active {
-    background-color: rgb(215, 215, 219);
-    transform: scale(0.98);
-  }
-`;
-
-const RankingNumber = styled.div`
-  font-size: 18px;
-  font-weight: bold;
-  position: absolute;
-
-  bottom: 60px;
-  right: 27px;
-
-  background-color: var(--third-color);
-
-  border-radius: 18px;
-  padding: 5px 15px;
-
-  /* transform: rotate(-45deg); Rotate the ribbon */
-  transform-origin: left center;
-
-  margin-top: 3px;
-`;
-
-const InfoBox = styled.div`
-  width: 90%;
-  /* height: 30%; */
-
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-
-  margin-top: 20px;
-`;
-
-const Img = styled.img`
-  /* @media (max-width: 844px) {
-    width: 180px;
-    height: 400px;
-  } */
-
-  width: 300px;
-  height: 374px;
-  /* margin-top: 20px; */
-  object-fit: cover;
-  border-radius: 10px;
-
-  border: 3px solid var(--fifth-color);
-`;
-
-const StoreName = styled.div`
-  display: flex;
-  align-items: center;
-  text-align: center;
-  line-height: 1.2;
-  font-size: 20px;
-  font-weight: bold;
-
-  width: 200px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  margin: 9px 0 9px 0;
-`;
-
-const Period = styled.div`
-  font-size: 14px;
-`;
-
-const DetailBtn = styled.button`
-  background-color: var(--second-color);
-  width: 120px;
-  color: white;
-`;
-
-const Ref = styled.div`
-  margin-bottom: 150px;
-`;
