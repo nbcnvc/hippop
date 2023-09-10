@@ -5,7 +5,7 @@ import { HotPlaceProps } from '../../types/props';
 import { FaRegLightbulb } from 'react-icons/fa';
 import { St } from './style/St.HotPlace';
 
-const HotPlace = ({ setCategory, setIsSelected }: HotPlaceProps) => {
+const HotPlace = ({ category, setCategory, setIsSelected }: HotPlaceProps) => {
   const [isOpened, setIsOpened] = useState<boolean>(false);
 
   // 핫플레이스 카테고리 클릭 감지 함수
@@ -23,6 +23,8 @@ const HotPlace = ({ setCategory, setIsSelected }: HotPlaceProps) => {
     setIsOpened(false);
   };
 
+  console.log('category', category);
+
   return (
     <St.HotPlaceContainer>
       <div className="hotplace-title">
@@ -35,13 +37,13 @@ const HotPlace = ({ setCategory, setIsSelected }: HotPlaceProps) => {
           카테고리 클릭 후 마커핀을 클릭해 보세요 :)
         </div>
         <div className="button-box">
-          <button name="맛집" onClick={handleHotPlaceCategory}>
+          <button className={category === '맛집' ? 'select' : ''} name="맛집" onClick={handleHotPlaceCategory}>
             맛집
           </button>
-          <button name="카페" onClick={handleHotPlaceCategory}>
+          <button className={category === '카페' ? 'select' : ''} name="카페" onClick={handleHotPlaceCategory}>
             카페
           </button>
-          <button name="술집" onClick={handleHotPlaceCategory}>
+          <button className={category === '술집' ? 'select' : ''} name="술집" onClick={handleHotPlaceCategory}>
             술집
           </button>
         </div>

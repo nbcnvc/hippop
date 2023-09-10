@@ -311,7 +311,7 @@ const Card = styled.div`
 
 const InfoBox = styled.div`
   /* width: 330px; */
-  width: 290px;
+  width: 295px;
 
   display: flex;
   justify-content: space-between;
@@ -349,6 +349,7 @@ const StoreName = styled.div`
 `;
 
 const DetailBtn = styled.button`
+  width: 85px;
   background-color: var(--second-color);
   color: white;
 `;
@@ -376,7 +377,7 @@ const GridWrapper = styled.div<{ columnCount: number }>`
     }
 
     .custom-info {
-      width: 290px;
+      width: 295px;
     }
 
     .custom-img {

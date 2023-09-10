@@ -30,6 +30,8 @@ export const toggleBookMark = async (bookmark: Bookmark): Promise<void> => {
   } else {
     await supabase.from('bookmark').insert([{ user_id: bookmark.user_id, store_id: bookmark.store_id }]);
   }
+
+  // console.log(isBookMark);
 };
 
 // 전체 북마크 count

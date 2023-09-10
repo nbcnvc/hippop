@@ -34,12 +34,16 @@ export const St = {
         }
       }
 
-      .button-box {
-        button {
-          font-weight: 600;
+      .button-box button {
+        font-weight: 600;
+        color: var(--fifth-color);
+        background-color: white;
+        margin: 35px 15px;
+        padding: 10px 22px;
+
+        &.select {
+          color: white;
           background-color: var(--second-color);
-          margin: 35px 15px;
-          padding: 10px 22px;
         }
       }
     }

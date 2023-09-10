@@ -14,6 +14,7 @@ export interface StoreMapProps {
 
 // 핫플레이스 props
 export interface HotPlaceProps {
+  category: string;
   setCategory: React.Dispatch<SetStateAction<string>>;
   setIsSelected: React.Dispatch<SetStateAction<HotPlaceInfo | undefined>>;
 }

@@ -47,12 +47,7 @@ const Share = ({ storeData }: ShareProps) => {
 
   return (
     <>
-      <St.KakaoBtn
-        className="grey-btn"
-        onClick={() => {
-          shareKakao();
-        }}
-      >
+      <St.KakaoBtn onClick={() => shareKakao()}>
         <St.Img src="/asset/kakaoIcon.png" alt="카카오톡 아이콘" />
       </St.KakaoBtn>
       <St.FacebookBtn url={currentUrl}>

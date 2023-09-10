@@ -227,7 +227,7 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
 
   return (
     <MapContainer>
-      {searchData && <HotPlace setCategory={setCategory} setIsSelected={setIsSelected} />}
+      {searchData && <HotPlace category={category} setCategory={setCategory} setIsSelected={setIsSelected} />}
       <div className="map-iframe">
         {isSelected && category && <iframe src={`https://place.map.kakao.com/m/${isSelected.id}`} />}
         <KaKaoMap ref={mapElement} isSelected={isSelected} category={category} />
