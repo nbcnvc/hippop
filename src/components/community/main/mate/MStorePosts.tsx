@@ -18,6 +18,7 @@ const MStorePosts = () => {
   const { pathname } = useLocation();
   const { state } = useLocation();
   const storeId: number = state?.storeId || 0; // state가 존재하지 않을 때 기본값으로 0 사용
+  const storeTitle: string = state?.storeTitle;
 
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
   const {
@@ -154,7 +155,14 @@ const MStorePosts = () => {
             </PostBox>
           );
         })}
-        {selectPosts && selectPosts.length === 0 && <NoResult>함께 할 팝업메이트를 구해보세요!</NoResult>}
+        {selectPosts && selectPosts.length === 0 && (
+          <NoResultBox>
+            <NoResult>
+              <span>'{storeTitle}'</span>을 함께 할 팝업메이트가 없어요 :(
+            </NoResult>
+            <NoResult>함께 할 팝업메이트를 구해보세요!</NoResult>
+          </NoResultBox>
+        )}
         <Trigger ref={ref} />
       </PostContainer>
     </>
@@ -194,7 +202,7 @@ const PostBox = styled.div`
 
   transition: color 0.3s ease, transform 0.3s ease;
   &:hover {
-    border: 6px solid var(--primary-color);
+    border: 3px solid var(--primary-color);
   }
   &:active {
     background-color: rgb(215, 215, 219);
@@ -323,11 +331,23 @@ const ProfileButton = styled.button`
   }
 `;
 
-const NoResult = styled.h1`
+const NoResultBox = styled.div`
+  height: 800px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 500px;
-  font-size: 24px;
+`;
+
+const NoResult = styled.h1`
+  margin-bottom: 20px;
+  color: var(--fifth-color);
+  font-size: 28px;
   font-weight: 700px;
+  text-align: center;
+
+  span {
+    padding: 2px;
+    background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
+  }
 `;

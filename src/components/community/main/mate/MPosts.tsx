@@ -31,6 +31,9 @@ const MPosts = () => {
     if (storeId !== 0) {
       setSortName('팝업메이트 구하기');
     }
+    if (storeId == 0) {
+      setSortName('전체보기');
+    }
   }, [storeId]);
 
   // 검색 로직
@@ -307,7 +310,7 @@ const PostBox = styled.div`
 
   transition: color 0.3s ease, transform 0.3s ease;
   &:hover {
-    border: 6px solid var(--primary-color);
+    border: 3px solid var(--primary-color);
   }
   &:active {
     background-color: rgb(215, 215, 219);
@@ -326,6 +329,7 @@ const Between = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
+
 const Betweens = styled.div`
   gap: 14px;
   display: flex;

@@ -64,10 +64,20 @@ export const MypageTag = styled.div`
         justify-content: space-between;
         align-items: center;
         position: relative;
+        
       }
       input {
         display: none;
       }
+    }
+    .receive-btn {
+      background-color: var(--sixth-color);
+      color: var(--fifth-color);
+    }
+    .send-btn {
+      margin-left: 10px;
+      background-color: var(--sixth-color);
+      color: var(--fifth-color);
     }
   }
   ul {
@@ -169,7 +179,10 @@ export const MypageTag = styled.div`
         span {
           height: 22px;
           color: var(--primary-color);
-          font-size: 20px !important;
+          font-size: 20px;
+          @media (max-width: 844px) {
+            font-size: 16px;
+          }
         }
       }
       span {
@@ -179,7 +192,9 @@ export const MypageTag = styled.div`
         display: flex;
         justify-content: center;
         align-items: center;
-
+        // @media (max-width: 844px) {
+        //   font-size:
+        // }
         input {
           width: 55px !important;
           border-radius: 6px;
@@ -195,12 +210,14 @@ export const MypageTag = styled.div`
       color: var(--fifth-color);
       text-align: center;
       cursor: pointer;
+      display:flex;
+      justify-content: center;
     }
 
     .btn-mother {
       margin: 0 auto;
       padding: 0;
-      width: 210px;
+      // width: 210px;
       display: flex;
       justify-content: center;
       position: relative;
@@ -302,13 +319,19 @@ export const MypageTag = styled.div`
       }
     }
   }
-  .send-btn {
-    margin-left: 10px;
-    background-color: var(--sixth-color);
-    color: var(--fifth-color);
-    font-weight: 600;
+
+  .post-wrapper-flex {
+    display: flex;
+    justify-content: center;
+    padding: 140px 0;
+    text-align: center;
+    font-size: 2rem;
+    @media (max-width: 844px) {
+      padding: 200px 0;
+    }
   }
-  .post-wrapper {
+
+  .post-wrapper-grid {
     margin: 0 auto;
     padding: 0;
     display: grid;
@@ -327,6 +350,12 @@ export const MypageTag = styled.div`
     @media (max-width: 1596px) {
       gap: 22px;
     }
+    .none-review{
+      margin: 0 auto;
+    }
+    .none-bookmark{
+      margin: 0 auto;
+    }
     .fid {
       margin: 0 auto;
       width: 100%;
@@ -342,7 +371,7 @@ export const MypageTag = styled.div`
       transition: color 0.3s ease, transform 0.3s ease;
 
       &:hover {
-        border: 6px solid var(--primary-color);
+        border: 3px solid var(--primary-color);
       }
       &:active {
         background-color: rgb(215, 215, 219);
@@ -463,7 +492,7 @@ export const MypageTag = styled.div`
       }
       @media (max-width: 1596px) {
         width: 92%;
-        height: 320px;
+        height: 314px;
 
         img {
           width: 90%;
@@ -505,7 +534,7 @@ export const MypageTag = styled.div`
       background-color: #ffffff;
       transition: color 0.3s ease, transform 0.3s ease;
       &:hover {
-        border: 6px solid var(--primary-color);
+        border: 3px solid var(--primary-color);
       }
       &:active {
         background-color: rgb(215, 215, 219);
@@ -552,10 +581,12 @@ export const MypageTag = styled.div`
             font-size: 18px;
             height: 18px;
             overflow: hidden;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            @media (max-width: 2190px) {
+              margin-bottom: 10px;
+            }
           }
           p {
-            margin-top: 20px;
             font-size: 14px;
           }
         }
@@ -565,6 +596,7 @@ export const MypageTag = styled.div`
           background-color: var(--second-color);
           color: white;
           margin-right: 0;
+          margin-top: 20px;
           @media (max-width: 1850px) {
             width: 100px;
             padding: 8px 10px;

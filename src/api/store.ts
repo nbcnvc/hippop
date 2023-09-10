@@ -3,7 +3,24 @@ import { supabase } from './supabase';
 // 타입
 import { FetchsStore, Store } from '../types/types';
 
-// store 전체 조회
+// store 전체 조회 (글 작성 검색 모달)
+export const getStoreData = async (pathname: string) => {
+  let data: any[] | null = [];
+
+  if (pathname === '/review') {
+    const { data: review } = await supabase.from('store').select('*').order('period_end', { ascending: false });
+    data = review;
+  }
+
+  if (pathname === '/mate') {
+    const { data: mate } = await supabase.from('store').select('*').eq('isClosed', false);
+
+    data = mate;
+  }
+  return data as Store[];
+};
+
+// store 전체 조회 (isClosed, false인 것만)
 export const fetchStoreData = async () => {
   const { data } = await supabase.from('store').select('*').eq('isClosed', false);
   return data as Store[];
@@ -31,6 +48,7 @@ export const getSearchStore = async (
   inputValue: string,
   startDate: string | null,
   endDate: string | null
+  // chipInputValue: string | null
 ): Promise<FetchsStore> => {
   let data: Store[] | null = [];
   let count: number | null = null;
@@ -43,16 +61,23 @@ export const getSearchStore = async (
     .order('created_at', { ascending: false })
     .range(pageParam * 3 - 3, pageParam * 3 - 1);
 
-  if (inputValue) {
-    query = query.or(`title.ilike.%${inputValue}%,body.ilike.%${inputValue}%,location.ilike.%${inputValue}%`);
+  if (inputValue && inputValue !== '') {
+    query = query.or(`title.ilike.%${inputValue}%,location.ilike.%${inputValue}%`);
   }
 
   const { data: stores } = await query;
 
   data = stores;
 
-  const { count: storeCount } = await supabase.from('store').select('count', { count: 'exact' });
+  const { count: storeCount } = await supabase
+    .from('store')
+    .select('count', { count: 'exact' })
+    .gte('period_end', startDate)
+    .lte('period_start', endDate)
+    .or(`title.ilike.%${inputValue}%,location.ilike.%${inputValue}%`);
+
   count = storeCount;
+
   const totalPages = count ? Math.floor(count / 3) + (count % 3 === 0 ? 0 : 1) : 1;
 
   return { stores: data as Store[], page: pageParam, totalPages, count };

@@ -225,13 +225,13 @@ const StoreDetail = () => {
               <div className="button-box">
                 <button
                   style={{ fontWeight: '600', margin: '10px 5px', padding: '14px 25px' }}
-                  onClick={() => navigate('/review', { state: { storeId: id } })}
+                  onClick={() => navigate('/review', { state: { storeId: id, storeTitle: storeData.title } })}
                 >
                   후기 보러가기
                 </button>
                 <button
                   style={{ fontWeight: '600', margin: '10px 15px', padding: '14px 25px' }}
-                  onClick={() => navigate('/mate', { state: { storeId: id } })}
+                  onClick={() => navigate('/mate', { state: { storeId: id, storeTitle: storeData.title } })}
                 >
                   팝업 메이트 구하기
                 </button>
@@ -475,16 +475,16 @@ const CalendarBox = styled.div`
 
 const ShareMenu = styled(Menu)`
   .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
-    border-radius: 18px;
-    padding: 15px 22px;
-    margin-top: 10px;
+    border-radius: 18px !important;
+    padding: 15px 22px !important;
+    margin-top: 10px !important;
   }
 
   .css-6hp17o-MuiList-root-MuiMenu-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    position: relative;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative !important;
   }
 `;
 
