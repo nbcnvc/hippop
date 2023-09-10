@@ -49,6 +49,10 @@ const AboutInfo = () => {
 export default AboutInfo;
 
 const Container = styled.div`
+  max-width: 1920px;
+  mix-width: 744px;
+  width: 50%;
+  margin: 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;

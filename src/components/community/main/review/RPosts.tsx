@@ -304,7 +304,7 @@ const PostBox = styled.div`
   // box-sizing: border-box;
   transition: color 0.3s ease, transform 0.3s ease;
   &:hover {
-    border: 6px solid var(--primary-color);
+    border: 3px solid var(--primary-color);
   }
   &:active {
     background-color: rgb(215, 215, 219);

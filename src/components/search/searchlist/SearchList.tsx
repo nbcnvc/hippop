@@ -880,7 +880,7 @@ const Card = styled.div`
   box-sizing: border-box;
   transition: color 0.3s ease, transform 0.3s ease;
   &:hover {
-    border: 6px solid var(--primary-color);
+    border: 3px solid var(--primary-color);
   }
   &:active {
     background-color: rgb(215, 215, 219);
@@ -893,7 +893,7 @@ const RankingNumber = styled.div`
   font-weight: bold;
   position: absolute;
 
-  bottom: 70px;
+  bottom: 60px;
   right: 27px;
 
   background-color: var(--third-color);
@@ -925,7 +925,7 @@ const Img = styled.img`
   } */
 
   width: 300px;
-  height: 350px;
+  height: 374px;
   /* margin-top: 20px; */
   object-fit: cover;
   border-radius: 10px;
