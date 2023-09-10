@@ -79,7 +79,7 @@ const Main = () => {
   return (
     <MainContainer>
       {header}
-      <Masonry columns={3} spacing={2} sx={{ maxWidth: '1920px', minWidth: '1200px', width: '50%', margin: '0 auto' }}>
+      <Masonry columns={3} spacing={2} sx={{ maxWidth: '1920px', minWidth: '844px', width: '50%', margin: '0 auto' }}>
         {allStores.map((store, idx) => (
           <Link to={`detail/${store.id}`} key={store.id}>
             <Card store={store} />
@@ -102,6 +102,7 @@ const Main = () => {
 };
 
 export default Main;
+
 const MainContainer = styled.div`
   margin: 0 auto;
   display: flex;
