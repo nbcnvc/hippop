@@ -323,7 +323,7 @@ export const MypageTag = styled.div`
   .post-wrapper-flex {
     display: flex;
     justify-content: center;
-    padding: 80px 0;
+    padding: 140px 0;
     text-align: center;
     font-size: 2rem;
     @media (max-width: 844px) {
