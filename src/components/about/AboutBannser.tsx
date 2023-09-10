@@ -1,4 +1,4 @@
-import { keyframes, styled } from 'styled-components';
+import { styled } from 'styled-components';
 import React, { useEffect, useState } from 'react';
 
 const AboutBannser = () => {

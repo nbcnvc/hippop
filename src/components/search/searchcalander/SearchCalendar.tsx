@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // 라이브러리
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -13,9 +13,9 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import ManageSearchRoundedIcon from '@mui/icons-material/ManageSearchRounded';
 
-const SearchCalendar = ({ onSearch }: SearchCalendarProps) => {
-  const [startDate, setStartDate] = useState<Date>(new Date());
-  const [endDate, setEndDate] = useState<Date>(new Date());
+const SearchCalendar = ({ onSearch, resetStartDate, resetEndDate }: SearchCalendarProps) => {
+  const [startDate, setStartDate] = useState<Date | null>();
+  const [endDate, setEndDate] = useState<Date | null>();
 
   const YEARS = Array.from({ length: getYear(new Date()) + 1 - 2000 }, (_, i) => getYear(new Date()) - i);
   const MONTHS = [
@@ -34,7 +34,7 @@ const SearchCalendar = ({ onSearch }: SearchCalendarProps) => {
   ];
 
   const handleStartDateChange = (date: Date) => {
-    if (endDate < date) {
+    if (endDate && endDate < date) {
       toast.info('종료일 보다 클 수는 없어요~ :)', {
         className: 'custom-toast',
         theme: 'light'
@@ -45,9 +45,8 @@ const SearchCalendar = ({ onSearch }: SearchCalendarProps) => {
       setStartDate(date);
     }
   };
-
   const handleEndDateChange = (date: Date) => {
-    if (startDate > date) {
+    if (startDate && startDate > date) {
       toast.info('시작일 보다 작을 수는 없어요~ :)', {
         className: 'custom-toast',
         theme: 'light'
@@ -58,16 +57,44 @@ const SearchCalendar = ({ onSearch }: SearchCalendarProps) => {
   };
 
   const handleSearch = () => {
-    setStartDate(startDate);
-    setEndDate(endDate);
-    onSearch(startDate, endDate);
+    if (startDate && endDate) {
+      onSearch(startDate, endDate);
+      const dateRange = { startDate, endDate };
+
+      // 객체를 JSON 문자열로 변환하여 로컬 스토리지에 저장
+      localStorage.setItem('DateRange', JSON.stringify(dateRange));
+      // setStartDate(localStorage.getItem("DateRange", JSON.stringify(startDate)))
+    } else {
+      // 시작일 또는 종료일이 선택되지 않은 경우에 대한 처리
+      toast.info('시작일과 종료일을 선택해주세요.', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+    }
   };
+
+  useEffect(() => {
+    // 페이지가 로드될 때 localStorage에서 DateRange 값을 가져와서 설정
+    const storedDateRange = localStorage.getItem('DateRange');
+    if (storedDateRange) {
+      const { startDate: storedStartDate, endDate: storedEndDate } = JSON.parse(storedDateRange);
+      setStartDate(new Date(storedStartDate));
+      setEndDate(new Date(storedEndDate));
+      localStorage.removeItem('DateRange');
+    } else if (resetStartDate === null || resetEndDate === null) {
+      setStartDate(null);
+      setEndDate(null);
+    }
+  }, [resetStartDate, resetEndDate]);
+
   return (
     <Container>
       {/* <div>기간별</div> */}
+
       <StartDateBox>
         <StyledDatePicker // DatePicker의 styled-component명
           locale={ko} //한글
+          placeholderText="시작일"
           dateFormat="yyyy.MM.dd"
           selected={startDate}
           closeOnScroll={true} // 스크롤을 움직였을 때 자동으로 닫히도록 설정 기본값 false
@@ -102,10 +129,12 @@ const SearchCalendar = ({ onSearch }: SearchCalendarProps) => {
           )}
         />
       </StartDateBox>
+
       <Ptag>~</Ptag>
       <EndDateBox>
         <StyledDatePicker
-          locale={ko} //한글
+          locale={ko} //한
+          placeholderText="종료일"
           dateFormat="yyyy.MM.dd"
           selected={endDate}
           closeOnScroll={true} // 스크롤을 움직였을 때 자동으로 닫히도록 설정 기본값 false

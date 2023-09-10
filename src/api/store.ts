@@ -31,6 +31,7 @@ export const getSearchStore = async (
   inputValue: string,
   startDate: string | null,
   endDate: string | null
+  // chipInputValue: string | null
 ): Promise<FetchsStore> => {
   let data: Store[] | null = [];
   let count: number | null = null;
@@ -43,16 +44,23 @@ export const getSearchStore = async (
     .order('created_at', { ascending: false })
     .range(pageParam * 3 - 3, pageParam * 3 - 1);
 
-  if (inputValue) {
-    query = query.or(`title.ilike.%${inputValue}%,body.ilike.%${inputValue}%,location.ilike.%${inputValue}%`);
+  if (inputValue && inputValue !== '') {
+    query = query.or(`title.ilike.%${inputValue}%,location.ilike.%${inputValue}%`);
   }
 
   const { data: stores } = await query;
 
   data = stores;
 
-  const { count: storeCount } = await supabase.from('store').select('count', { count: 'exact' });
+  const { count: storeCount } = await supabase
+    .from('store')
+    .select('count', { count: 'exact' })
+    .gte('period_end', startDate)
+    .lte('period_start', endDate)
+    .or(`title.ilike.%${inputValue}%,location.ilike.%${inputValue}%`);
+
   count = storeCount;
+
   const totalPages = count ? Math.floor(count / 3) + (count % 3 === 0 ? 0 : 1) : 1;
 
   return { stores: data as Store[], page: pageParam, totalPages, count };
