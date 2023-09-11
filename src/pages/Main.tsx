@@ -14,7 +14,7 @@ import Card from '../components/list/Card';
 import { Masonry } from '@mui/lab';
 import Skeleton from '@mui/material/Skeleton';
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 15;
 
 const fetchStores = async ({ pageParam = 0 }) => {
   const { data } = await supabase
@@ -43,11 +43,17 @@ const Main = () => {
       return allPages.flat().length;
     }
   });
-
-  console.log('storesData', storesData);
   const { ref, inView } = useInView({
-    threshold: 1
+    threshold: 0.5
   });
+
+  useEffect(() => {
+    console.log('=== call useEffect ===');
+    console.log('inView ===>', inView);
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView]);
 
   const allStores = storesData?.pages.flatMap((page) => page) || [];
   const header = (
@@ -90,13 +96,12 @@ const Main = () => {
       {header}
       <Masonry columns={3} spacing={2} sx={{ maxWidth: '1920px', minWidth: '844px', width: '50%', margin: '0 auto' }}>
         {allStores.map((store, idx) => (
-          <Link to={`detail/${store.id}`} key={store.id}>
+          <Link to={`detail/${store.id}`} key={idx} className="masonry-item">
             <Card store={store} />
           </Link>
         ))}
       </Masonry>
       <div
-        className="keen-slider"
         style={{
           backgroundColor: 'transparent',
           width: '90%',
@@ -117,6 +122,7 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
   header {
     margin: 8rem 8rem 12rem;
     display: flex;

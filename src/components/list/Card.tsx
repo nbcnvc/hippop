@@ -1,10 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
-
-import 'keen-slider/keen-slider.min.css';
 import styled from 'styled-components';
-import { useKeenSlider } from 'keen-slider/react';
 
-import './styles.css';
 import { CardProps } from '../../types/props';
 import { supabaseStorageUrl } from '../../api/supabase';
 
@@ -74,7 +70,6 @@ const CardContainerClosed = styled.div`
   overflow: hidden;
   border-radius: 18px;
 
-  transition: all 0.3s ease-in-out; /* 크기 변화에 대한 트랜지션 추가 */
   box-sizing: border-box;
 
   margin: 0 auto;
@@ -105,7 +100,6 @@ const CardContainer = styled.div`
   overflow: hidden;
   border-radius: 18px;
 
-  transition: all 0.3s ease-in-out; /* 크기 변화에 대한 트랜지션 추가 */
   box-sizing: border-box;
   img {
     object-fit: cover;
@@ -150,7 +144,6 @@ const StoreInfo = styled.div`
   justify-content: center;
   align-items: center;
   opacity: 0;
-  transition: opacity 0.3s ease-in-out;
   max-height: 100%;
   overflow: hidden;
   z-index: 1;

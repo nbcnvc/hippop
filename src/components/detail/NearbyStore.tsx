@@ -19,11 +19,12 @@ interface SliderButton {
 
 const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
   const { id } = useParams<{ id: string }>();
-
   const navigate = useNavigate();
 
+  // store 전체 조회 (isClosed, false인 것만)
   const { data: storeData, isLoading, isError } = useQuery({ queryKey: ['nearbyStoreData'], queryFn: fetchStoreData });
 
+  // 주변 지역 팝업스토어 filter
   const filteredStore = storeData?.filter((data) => data.location.includes(guName) && data.id !== Number(id));
   const columnCount = filteredStore ? filteredStore.length : 0;
 
@@ -31,6 +32,7 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
     setNearbyStoreMarker(filteredStore);
   }, [guName, storeData]);
 
+  // 슬라이드 화살표
   const PrevArrow = ({ onClick }: SliderButton) => {
     return (
       <button onClick={onClick} type="button">
@@ -38,7 +40,6 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
       </button>
     );
   };
-
   const NextArrow = ({ onClick }: SliderButton) => {
     return (
       <button onClick={onClick} type="button">
@@ -47,7 +48,7 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
     );
   };
 
-  // 위에서 계산한 값을 사용하여 설정 객체를 생성
+  // 슬라이드 세팅
   const settings = {
     slidesToShow: 3,
     slidesToScroll: 1,
@@ -64,6 +65,8 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
     pauseOnFocus: true,
     pauseOnHover: true,
     speed: 500,
+
+    // 반응형
     responsive: [
       {
         breakpoint: 2100,
@@ -124,16 +127,14 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
 
   if (isLoading) {
     return (
-      <div>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-          <Skeleton variant="text" width={90} height={30} />
-          <div style={{ display: 'flex' }}>
-            <Skeleton variant="text" width={400} height={800} />
-            <div style={{ margin: '0 15px 0 15px' }}>
-              <Skeleton variant="text" width={400} height={800} />
-            </div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+        <Skeleton variant="text" width={90} height={30} />
+        <div style={{ display: 'flex' }}>
+          <Skeleton variant="text" width={400} height={800} />
+          <div style={{ margin: '0 15px 0 15px' }}>
             <Skeleton variant="text" width={400} height={800} />
           </div>
+          <Skeleton variant="text" width={400} height={800} />
         </div>
       </div>
     );
@@ -151,19 +152,17 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
         <StyledSlider {...settings}>
           {filteredStore?.map((data) => {
             return (
-              <div key={data.id}>
-                <Card key={data.id}>
-                  <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${data.images[0]}`} />
-                  <InfoBox>
-                    <div>
-                      {data.location.split(' ').slice(0, 1)} {data.location.split(' ').slice(1, 2)}
-                      <StoreName>{data.title}</StoreName>
-                      {data.period_start} ~ {data.period_end}
-                    </div>
-                    <DetailBtn onClick={() => navDetail(data.id)}>상세보기</DetailBtn>
-                  </InfoBox>
-                </Card>
-              </div>
+              <Card onClick={() => navDetail(data.id)} key={data.id}>
+                <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${data.images[0]}`} />
+                <InfoBox>
+                  <div>
+                    {data.location.split(' ').slice(0, 1)} {data.location.split(' ').slice(1, 2)}
+                    <StoreName>{data.title}</StoreName>
+                    {data.period_start} ~ {data.period_end}
+                  </div>
+                  <DetailBtn>상세보기</DetailBtn>
+                </InfoBox>
+              </Card>
             );
           })}
         </StyledSlider>
@@ -172,8 +171,27 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
         <StyledSliderTriple {...settings}>
           {filteredStore?.map((data) => {
             return (
-              <div key={data.id}>
-                <Card key={data.id} className="custom-card">
+              <Card onClick={() => navDetail(data.id)} key={data.id} className="custom-card">
+                <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${data.images[0]}`} className="custom-img" />
+                <InfoBox className="custom-info">
+                  <div>
+                    {data.location.split(' ').slice(0, 1)} {data.location.split(' ').slice(1, 2)}
+                    <StoreName>{data.title}</StoreName>
+                    {data.period_start} ~ {data.period_end}
+                  </div>
+                  <DetailBtn onClick={() => navDetail(data.id)}>상세보기</DetailBtn>
+                </InfoBox>
+              </Card>
+            );
+          })}
+        </StyledSliderTriple>
+      )}
+      {filteredStore && filteredStore.length < 3 && filteredStore.length > 0 && (
+        <GridContainer>
+          <GridWrapper columnCount={columnCount}>
+            {filteredStore?.map((data) => {
+              return (
+                <Card onClick={() => navDetail(data.id)} key={data.id} className="custom-card">
                   <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${data.images[0]}`} className="custom-img" />
                   <InfoBox className="custom-info">
                     <div>
@@ -184,32 +202,6 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
                     <DetailBtn onClick={() => navDetail(data.id)}>상세보기</DetailBtn>
                   </InfoBox>
                 </Card>
-              </div>
-            );
-          })}
-        </StyledSliderTriple>
-      )}
-      {filteredStore && filteredStore.length < 3 && filteredStore.length > 0 && (
-        <GridContainer>
-          <GridWrapper columnCount={columnCount}>
-            {filteredStore?.map((data) => {
-              return (
-                <div key={data.id}>
-                  <Card key={data.id} className="custom-card">
-                    <Img
-                      src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${data.images[0]}`}
-                      className="custom-img"
-                    />
-                    <InfoBox className="custom-info">
-                      <div>
-                        {data.location.split(' ').slice(0, 1)} {data.location.split(' ').slice(1, 2)}
-                        <StoreName>{data.title}</StoreName>
-                        {data.period_start} ~ {data.period_end}
-                      </div>
-                      <DetailBtn onClick={() => navDetail(data.id)}>상세보기</DetailBtn>
-                    </InfoBox>
-                  </Card>
-                </div>
               );
             })}
           </GridWrapper>
@@ -286,19 +278,18 @@ const StyledSliderTriple = styled(Slider)`
 const Card = styled.div`
   /* width: 370px !important ; */
   width: 330px !important ;
-
   height: 500px;
   border-radius: 18px;
   border: 3px solid var(--fifth-color);
-
   display: flex !important;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: #ffffff;
-
+  cursor: pointer;
   box-sizing: border-box;
   transition: color 0.3s ease, transform 0.3s ease;
+
   &:hover {
     border: 3px solid var(--primary-color);
   }
@@ -310,7 +301,7 @@ const Card = styled.div`
 
 const InfoBox = styled.div`
   /* width: 330px; */
-  width: 290px;
+  width: 295px;
 
   display: flex;
   justify-content: space-between;
@@ -324,30 +315,27 @@ const Img = styled.img`
   height: 369px; */
   width: 300px;
   height: 359px;
-
   object-fit: cover;
   border-radius: 10px;
-
   border: 3px solid var(--fifth-color);
 `;
 
 const StoreName = styled.div`
+  width: 200px;
   display: flex;
   align-items: center;
-  text-align: center;
-  line-height: 1.2;
   font-size: 20px;
   font-weight: bold;
-
-  width: 200px;
+  text-align: center;
+  line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-
   margin: 13px 0 13px 0;
 `;
 
 const DetailBtn = styled.button`
+  width: 85px;
   background-color: var(--second-color);
   color: white;
 `;
@@ -375,7 +363,7 @@ const GridWrapper = styled.div<{ columnCount: number }>`
     }
 
     .custom-info {
-      width: 290px;
+      width: 295px;
     }
 
     .custom-img {
@@ -390,6 +378,6 @@ const NullContainer = styled.h1`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  font-size: 24px;
+  font-size: 26px;
   margin: 100px 0 150px 0;
 `;
