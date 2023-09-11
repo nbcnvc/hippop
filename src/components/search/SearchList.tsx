@@ -44,7 +44,8 @@ const SearchList = () => {
   const [searchResultCount, setSearchResultCount] = useState<number>(0);
   // 이전 검색어 state
   const [previousSearchTerms, setPreviousSearchTerms] = useState<string[]>([]);
-
+  // 종료된 store
+  const [isClosed, setIsClosed] = useState<boolean>(false);
   // 쿼리
   const queryClient = useQueryClient();
 
@@ -612,22 +613,42 @@ const SearchList = () => {
                     </St.SearchCountBox>
                   )}
                 </St.Title>
-                <St.GridContainer1>
-                  {filteredStoreList?.map((store) => (
-                    <St.Card key={store.id}>
-                      <St.Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-                      <St.InfoBox>
-                        <div>
-                          {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
-                          <St.StoreName>{store.title}</St.StoreName>
-                          {store.period_start} ~ {store.period_end}
-                        </div>
-
-                        <St.DetailBtn onClick={() => navDetail(store.id)}>상세보기</St.DetailBtn>
-                      </St.InfoBox>
-                    </St.Card>
-                  ))}
-                </St.GridContainer1>
+                <>
+                  <St.GridContainer1>
+                    {filteredStoreList?.map((store) => (
+                      <>
+                        {store.isClosed ? (
+                          <St.ClosedCard key={store.id}>
+                            <St.Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                            <St.ClosedStoreInfo>
+                              <St.CLosed>CLOSED</St.CLosed>
+                            </St.ClosedStoreInfo>
+                            <St.InfoBox>
+                              <div>
+                                {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
+                                <St.StoreName>{store.title}</St.StoreName>
+                                {store.period_start} ~ {store.period_end}
+                              </div>
+                              <St.DetailBtn onClick={() => navDetail(store.id)}>상세보기</St.DetailBtn>
+                            </St.InfoBox>
+                          </St.ClosedCard>
+                        ) : (
+                          <St.Card key={store.id}>
+                            <St.Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                            <St.InfoBox>
+                              <div>
+                                {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
+                                <St.StoreName>{store.title}</St.StoreName>
+                                {store.period_start} ~ {store.period_end}
+                              </div>
+                              <St.DetailBtn onClick={() => navDetail(store.id)}>상세보기</St.DetailBtn>
+                            </St.InfoBox>
+                          </St.Card>
+                        )}
+                      </>
+                    ))}
+                  </St.GridContainer1>
+                </>
               </>
             ) : (
               <div>검색 결과가 없습니다.</div>
