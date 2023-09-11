@@ -58,7 +58,7 @@ export const getSearchStore = async (
     .select()
     .gte('period_end', startDate)
     .lte('period_start', endDate)
-    .order('created_at', { ascending: false })
+    .order('period_end', { ascending: false }) // 내림차순
     .range(pageParam * 3 - 3, pageParam * 3 - 1);
 
   if (inputValue && inputValue !== '') {
@@ -96,7 +96,7 @@ export const getMyStores = async (userId: string, pageParam: number = 1): Promis
     .from('store')
     .select()
     .in('id', storeIds) // storeIds 배열에 포함된 id들을 가진 store 조회
-    .order('created_at', { ascending: false })
+    // .order('created_at', { ascending: false })
     .range((pageParam - 1) * PAGE_SIZE, pageParam * PAGE_SIZE - 1);
 
   const { count } = await supabase.from('store').select('count', { count: 'exact' });

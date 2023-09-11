@@ -15,7 +15,7 @@ const PAGE_SIZE = 5;
 const fetchStores = async ({ pageParam = 0 }) => {
   const { data } = await supabase
     .from('store')
-    .select()
+    .select('*')
     .order('period_end', { ascending: false }) // 내림차순
     .range(pageParam, pageParam + PAGE_SIZE - 1);
   return data || [];

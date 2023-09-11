@@ -190,6 +190,7 @@ const PostContainer = styled.div`
 `;
 
 const PostBox = styled.div`
+  width: 100%;
   height: 240px;
   background-color: #fff;
   border: 3px solid var(--fifth-color);
@@ -197,7 +198,7 @@ const PostBox = styled.div`
   padding: 10px;
   margin: 10px;
   display: flex;
-  // box-sizing: border-box;
+  cursor: pointer;
   transition: color 0.3s ease, transform 0.3s ease;
   &:hover {
     border: 3px solid var(--primary-color);

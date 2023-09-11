@@ -197,7 +197,7 @@ export const getSearchPosts = async (pageParam: number = 1, keyword: string, ctg
     } else if (ctg === '작성자') {
       const { data: mates } = await supabase
         .from('post')
-        .select(`*, user!inner( * ), store!inner(title)`)
+        .select(`*, user( * ), store!inner(title)`)
         .eq('ctg_index', 2)
         .eq('isdeleted', false)
         .ilike('user.name', `%${keyword}%`)

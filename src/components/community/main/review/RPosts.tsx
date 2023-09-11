@@ -33,6 +33,7 @@ const RPosts = () => {
     const name = (e.target as HTMLButtonElement).name;
     setSortName(name);
   };
+
   useEffect(() => {
     if (storeId !== 0) {
       setSortName('후기보러 가기');
@@ -72,14 +73,14 @@ const RPosts = () => {
     isFetchingNextPage
   } = useInfiniteQuery<FetchPost>({
     queryKey: [`search${queryKey}`, keyword, ctg, pathname],
-    queryFn: ({ pageParam }) => getSearchPosts(pageParam, keyword, ctg, pathname),
+    queryFn: ({ pageParam = 1 }) => getSearchPosts(pageParam, keyword, ctg, pathname),
     getNextPageParam: (lastPage) => {
       // 전체 페이지 개수보다 작을 때
       if (lastPage.page < lastPage.totalPages) {
         // 다음 페이지로 pageParam를 저장
         return lastPage.page + 1;
       }
-      return null; // 마지막 페이지인 경우
+      // return null; // 마지막 페이지인 경우
     }
   });
 
@@ -331,7 +332,8 @@ const PostBox = styled.div`
   padding: 10px;
   margin: 10px;
   display: flex;
-  // box-sizing: border-box;
+  cursor: pointer;
+
   transition: color 0.3s ease, transform 0.3s ease;
   &:hover {
     border: 3px solid var(--primary-color);

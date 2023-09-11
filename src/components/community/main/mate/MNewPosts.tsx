@@ -218,6 +218,7 @@ const PostBox = styled.div`
   padding: 10px;
   margin: 10px;
   display: flex;
+  cursor: pointer;
 
   transition: color 0.3s ease, transform 0.3s ease;
   &:hover {
