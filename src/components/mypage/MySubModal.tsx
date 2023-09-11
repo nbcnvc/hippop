@@ -1,4 +1,5 @@
 // 라이브러리
+import { useEffect, useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
@@ -42,19 +43,19 @@ const MySubModal = ({ setIsSubModal }: MySubModalProps) => {
               {sublistData?.length === 0 ? (
                 <div className="none-subs">아직 구독한 사람이 없어요 !</div>
               ) : (
-                sublistData?.map((sub) => {
+                sublistData?.map((sub, index) => {
                   return (
-                    <UserBox key={sub.id} onClick={() => naviSubPage(sub.subscribe_to)}>
-                      <div>
+                    <div key={sub.id} onClick={() => naviSubPage(sub.subscribe_to)}>
+                      <UserBox isFirst={index === 0 && sublistData.length >= 4}>
                         <Img
                           src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${sub.to.avatar_url}`}
                           alt="User Avatar"
                         />
-                      </div>
-                      <Name>
-                        팝업메이트 <NameLine>{sub.to.name}</NameLine> 님
-                      </Name>
-                    </UserBox>
+                        <Name>
+                          팝업메이트 <NameLine>{sub.to.name}</NameLine> 님
+                        </Name>
+                      </UserBox>
+                    </div>
                   );
                 })
               )}
@@ -115,7 +116,7 @@ const UserContainer = styled.div`
   }
 `;
 
-const UserBox = styled.div`
+const UserBox = styled.div<{ isFirst: boolean }>`
   padding: 10px;
   margin: 10px;
   border: 3px solid var(--fifth-color);
@@ -126,7 +127,11 @@ const UserBox = styled.div`
   align-items: center;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease, font-weight 0.3s ease;
-
+  ${(props) =>
+    props.isFirst &&
+    `
+    padding-top: 108px;
+  `}
   &:hover {
     border: 3px solid var(--primary-color);
     background-color: var(--sixth-color);
