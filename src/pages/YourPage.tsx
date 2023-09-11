@@ -10,6 +10,8 @@ import format from 'date-fns/format';
 import { Parser } from 'htmlparser2'; // 문서를 분석해주는 (div, p tag) 라이브러리
 import { useInView } from 'react-intersection-observer';
 import { styled } from 'styled-components';
+// zustand
+import { useCurrentUser } from '../store/userStore';
 // api
 import { getProfileImg, getUser } from '../api/user'; // 사용자 정보를 가져오는 함수
 import { getYourItems } from '../api/post'; // 게시글 가져오는 함수
@@ -21,12 +23,10 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
-
 // img
 import DefaultImg from '../images/defaultImg.png';
 import { Skeleton } from '@mui/material';
-
-import { useCurrentUser } from '../store/userStore';
+// alert
 import { toast } from 'react-toastify';
 
 const YourPage = () => {
@@ -382,7 +382,11 @@ const YourPage = () => {
                     parser.end();
 
                     return (
-                      <Card>
+                      <Card
+                        onClick={() => {
+                          PostDetail(post.id);
+                        }}
+                      >
                         <div key={post.id}>
                           {imageTags.length > 0 ? (
                             <PostImg src={imageTags[0]} alt={`Image`} />
@@ -395,13 +399,7 @@ const YourPage = () => {
                               <PtagDate>{format(new Date(post.created_at), 'yyyy-MM-dd')}</PtagDate>
                             </div>
                             <BtnBox>
-                              <DetailBtn
-                                onClick={() => {
-                                  PostDetail(post.id);
-                                }}
-                              >
-                                상세보기
-                              </DetailBtn>
+                              <DetailBtn>상세보기</DetailBtn>
                             </BtnBox>
                           </CardInfo>
                         </div>
@@ -676,7 +674,7 @@ const Card = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #ffffff;
-
+  cursor: pointer;
   position: relative;
 
   box-sizing: border-box;

@@ -1,14 +1,18 @@
+// 라이브러리
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useInView } from 'react-intersection-observer';
-import { Masonry } from '@mui/lab';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import Skeleton from '@mui/material/Skeleton';
 import styled from 'styled-components';
-
+import { useInView } from 'react-intersection-observer';
+// api
 import { supabase } from '../api/supabase';
+// 타입
 import { Store } from '../types/types';
+// 컴포넌트
 import Card from '../components/list/Card';
+//mui
+import { Masonry } from '@mui/lab';
+import Skeleton from '@mui/material/Skeleton';
 
 const PAGE_SIZE = 15;
 
@@ -16,11 +20,13 @@ const fetchStores = async ({ pageParam = 0 }) => {
   const { data } = await supabase
     .from('store')
     .select()
-    .order('period_end', { ascending: false })
+    .eq('isclosed', false)
     .range(pageParam, pageParam + PAGE_SIZE - 1);
+
   return data || [];
 };
 
+// next key 사용 시
 const Main = () => {
   const {
     data: storesData,
@@ -31,7 +37,9 @@ const Main = () => {
     isError
   } = useInfiniteQuery<Store[][], Error, Store[], [string]>(['stores'], fetchStores, {
     getNextPageParam: (lastPage, allPages) => {
-      if (!lastPage || lastPage.length < PAGE_SIZE) return undefined;
+      if (!lastPage || lastPage.length < PAGE_SIZE) {
+        return undefined;
+      }
       return allPages.flat().length;
     }
   });
@@ -56,6 +64,12 @@ const Main = () => {
       </h4>
     </header>
   );
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView]);
 
   if (isLoading) {
     return (

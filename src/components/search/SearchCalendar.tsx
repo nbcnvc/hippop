@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react';
 // 라이브러리
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
 import { getMonth, getYear } from 'date-fns';
-import { styled } from 'styled-components';
 // 타입
 import { SearchCalendarProps } from '../../types/props';
 // alert
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// mui
-import ManageSearchRoundedIcon from '@mui/icons-material/ManageSearchRounded';
 // 스타일
 import { St } from './style/St.SearchCalender';
 
@@ -19,7 +15,9 @@ const SearchCalendar = ({ onSearch, resetStartDate, resetEndDate }: SearchCalend
   const [startDate, setStartDate] = useState<Date | null>();
   const [endDate, setEndDate] = useState<Date | null>();
 
-  const YEARS = Array.from({ length: getYear(new Date()) + 1 - 2000 }, (_, i) => getYear(new Date()) - i);
+  const endYear = 2025; // 표시하려는 최대 연도
+  const YEARS = Array.from({ length: endYear - 2019 }, (_, i) => endYear - i);
+
   const MONTHS = [
     'January',
     'February',
@@ -92,7 +90,6 @@ const SearchCalendar = ({ onSearch, resetStartDate, resetEndDate }: SearchCalend
   return (
     <St.Container>
       {/* <div>기간별</div> */}
-
       <St.StartDateBox>
         <St.StyledDatePicker // DatePicker의 styled-component명
           locale={ko} //한글
