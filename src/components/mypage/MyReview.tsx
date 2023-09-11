@@ -131,36 +131,38 @@ const MyReview = ({ activeSection }: MyReviewProps) => {
       >
         {selectItems && selectItems.length === 0 ? (
           <>
-            <div className="none-review">작성한 글이 없어요😅. 후기를 남기러 가볼까요?</div>
+            <div className="none-review">작성한 글이 없어요😅 후기를 남기러 가볼까요?</div>
           </>
         ) : (
           selectItems?.map((post: PostType) => {
             const imageTags = extractImageTags(post.body);
             return (
               <div className="fid" key={post.id}>
-                {imageTags.length > 0 ? (
-                  <div>
-                    <img src={imageTags[0]} alt={`Image 0`} />
-                  </div>
-                ) : (
-                  <div>
-                    <img src="/asset/defaultImg.png" alt="Default Image" />
-                  </div>
-                )}
-                <div className="info-box">
-                  <span>
-                    <h2>{post.title}</h2>
-                    <p>{formatDate(post.created_at)}</p>
-                  </span>
-                  <div className="btn-div">
-                    <div className={`${post.ctg_index === 1 ? 'review-tag' : post.ctg_index === 2 ? 'mate-tag' : ''}`}>
-                      {post.ctg_index === 1 ? 'REVIEW' : post.ctg_index === 2 ? 'MATE' : ''}
+                <Link to={`/rdetail/${post.id}`}>
+                  {imageTags.length > 0 ? (
+                    <div>
+                      <img src={imageTags[0]} alt={`img 0`} />
                     </div>
-                    <Link to={`/rdetail/${post.id}`}>
+                  ) : (
+                    <div>
+                      <img src="/asset/defaultImg.png" alt="Default Img" />
+                    </div>
+                  )}
+                  <div className="info-box">
+                    <span>
+                      <h2>{post.title}</h2>
+                      <p>{formatDate(post.created_at)}</p>
+                    </span>
+                    <div className="btn-div">
+                      <div
+                        className={`${post.ctg_index === 1 ? 'review-tag' : post.ctg_index === 2 ? 'mate-tag' : ''}`}
+                      >
+                        {post.ctg_index === 1 ? 'REVIEW' : post.ctg_index === 2 ? 'MATE' : ''}
+                      </div>
                       <button>상세보기</button>
-                    </Link>
+                    </div>
                   </div>
-                </div>
+                </Link>
               </div>
             );
           })

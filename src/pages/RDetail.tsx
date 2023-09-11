@@ -15,7 +15,7 @@ import Comments from '../components/community/detail/Comments';
 // mui
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 //alert
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Skeleton from '@mui/material/Skeleton';
 
