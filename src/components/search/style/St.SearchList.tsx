@@ -71,7 +71,6 @@ export const St = {
   `,
   ChipBoX: styled.div`
     display: flex;
-    /* margin-bottom: 100px; */
   `,
 
   Title: styled.div`
@@ -125,6 +124,8 @@ export const St = {
     grid-template-columns: repeat(2 1fr); // 한 줄에 두 개의 열 */
     gap: 30px;
     margin-top: 50px;
+
+    margin-bottom: 250px;
   `,
 
   StyledSlider: styled(Slider)`
@@ -153,18 +154,18 @@ export const St = {
     height: 500px;
     border-radius: 18px;
     border: 3px solid var(--fifth-color);
-    /* padding: 5px; */
+
     display: flex !important;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: #ffffff;
-
+    cursor: pointer;
     position: relative;
     box-sizing: border-box;
     transition: color 0.3s ease, transform 0.3s ease;
     img {
-      filter: grayscale(100%); /* 이미지를 흑백으로 만듭니다. */
+      filter: grayscale(100%); //이미지를 흑백으로 만듭니다.
       object-fit: cover;
     }
     &:hover {
@@ -182,15 +183,17 @@ export const St = {
     justify-content: center;
     align-items: center;
 
-    /* background-color: rgba(0, 0, 0, 0.3); */
     color: white;
     padding: 5px 10px;
   `,
 
   CLosed: styled.div`
-    font-size: 40px;
+    font-size: 30px;
     font-weight: bold;
-    color: #333333;
+    color: var(--primary-color);
+    background-color: white;
+    border-radius: 18px;
+    padding: 5px 10px;
   `,
 
   Card: styled.div`
@@ -198,7 +201,6 @@ export const St = {
     height: 500px;
     border-radius: 18px;
     border: 3px solid var(--fifth-color);
-    /* padding: 5px; */
     display: flex !important;
     flex-direction: column;
     justify-content: center;
@@ -207,6 +209,8 @@ export const St = {
     position: relative;
     box-sizing: border-box;
     transition: color 0.3s ease, transform 0.3s ease;
+
+    cursor: pointer;
     &:hover {
       border: 3px solid var(--primary-color);
     }
@@ -279,6 +283,6 @@ export const St = {
   `,
 
   Ref: styled.div`
-    margin-bottom: 250px;
+    margin-top: 350px;
   `
 };

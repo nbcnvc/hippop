@@ -146,7 +146,7 @@ const SearchModal = ({
                       {result?.map((store) => {
                         return (
                           <Card key={store.id} onClick={() => selectStore(store)}>
-                            {store.isClosed ? (
+                            {store.isclosed ? (
                               <>
                                 <ClosedBox>
                                   <Closed>Closed</Closed>

@@ -13,16 +13,16 @@ export const getStoreData = async (pathname: string) => {
   }
 
   if (pathname === '/mate') {
-    const { data: mate } = await supabase.from('store').select('*').eq('isClosed', false);
+    const { data: mate } = await supabase.from('store').select('*').eq('isclosed', false);
 
     data = mate;
   }
   return data as Store[];
 };
 
-// store 전체 조회 (isClosed, false인 것만)
+// store 전체 조회 (isclosed, false인 것만)
 export const fetchStoreData = async () => {
-  const { data } = await supabase.from('store').select('*').eq('isClosed', false);
+  const { data } = await supabase.from('store').select('*').eq('isclosed', false);
   return data as Store[];
 };
 
@@ -59,7 +59,7 @@ export const getSearchStore = async (
     .gte('period_end', startDate)
     .lte('period_start', endDate)
     // .order('created_at', { ascending: false })
-    .order('period_end', { ascending: false }) // 내림차순
+    // .order('period_end', { ascending: false }) // 내림차순
     .range(pageParam * 3 - 3, pageParam * 3 - 1);
 
   if (inputValue && inputValue !== '') {
@@ -97,7 +97,7 @@ export const getMyStores = async (userId: string, pageParam: number = 1): Promis
     .from('store')
     .select()
     .in('id', storeIds) // storeIds 배열에 포함된 id들을 가진 store 조회
-    .order('created_at', { ascending: false })
+    // .order('created_at', { ascending: false })
     .range((pageParam - 1) * PAGE_SIZE, pageParam * PAGE_SIZE - 1);
 
   const { count } = await supabase.from('store').select('count', { count: 'exact' });

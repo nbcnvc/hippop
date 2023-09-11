@@ -10,7 +10,7 @@ export interface Store {
   opening: string;
   images: string[];
   link: string;
-  isClosed: boolean;
+  isclosed: boolean;
   reservation: boolean;
 }
 

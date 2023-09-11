@@ -16,7 +16,7 @@ function getRandomElement(arr: number[]) {
 }
 
 const Card = (props: CardProps) => {
-  const { title, images, location, period_start, period_end, isClosed } = props.store;
+  const { title, images, location, period_start, period_end, isclosed } = props.store;
 
   const [isHovered, setIsHovered] = useState(false);
   const [cardHeight, setCardHeight] = useState<number>(0);
@@ -35,7 +35,7 @@ const Card = (props: CardProps) => {
 
   return (
     <>
-      {isClosed ? (
+      {isclosed ? (
         <CardContainerClosed style={{ height: cardHeight }} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
           <img src={`${supabaseStorageUrl}/${images[0]}`} className="keen-slider__slide" />
           <ClosedStoreInfo>
