@@ -12,7 +12,6 @@ const Calendar = ({ storeData }: CalendarProps) => {
   // 팝업스토어 기간 지정 onChange
   const onChangeCalendar = (date: any) => {
     setPeriod([date, date]);
-    console.log('date', date);
   };
 
   // 캘린더 클릭 방지 함수
