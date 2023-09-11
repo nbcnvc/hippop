@@ -47,15 +47,16 @@ const Subscribe = ({ writerId }: SubscribeProps) => {
       });
       return;
     } else {
-      const confirm = await toast.promise(
-        new Promise((resolve) => {
-          window.confirm('구독하시겠습니까?') ? resolve(true) : resolve(false);
-        }),
-        {
-          // theme: 'light',
-          success: '구독이 완료되었습니다.'
-        }
-      );
+      const subConfirm = new Promise((resolve) => {
+        window.confirm('구독하시겠습니까?') ? resolve(true) : resolve(false);
+      });
+
+      const options = {
+        // theme: 'light',
+        success: (await subConfirm) ? '구독이 완료되었습니다.' : undefined
+      };
+
+      const confirm = await toast.promise(subConfirm, options);
 
       if (confirm) {
         createMutation.mutate(subscribe);

@@ -21,6 +21,8 @@ import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import Menu from '@mui/material/Menu';
+import { styled as muiStyled } from '@mui/material/styles';
+import RoomIcon from '@mui/icons-material/Room';
 //alert
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -120,7 +122,6 @@ const StoreDetail = () => {
                     <Skeleton variant="text" width={300} height={30} />
                   </div>
                   <div>
-                    {' '}
                     <Skeleton variant="text" width={300} height={30} />
                   </div>
                   <div>
@@ -188,6 +189,17 @@ const StoreDetail = () => {
               <div style={{ position: 'relative', fontSize: '18px' }} className="store-text">
                 <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0 15px 0', fontSize: '18px' }}>
                   <span>위치</span> {storeData.location}
+                  <CopyToClipboard
+                    text={storeData.location}
+                    onCopy={() =>
+                      toast.info('주소가 복사되었습니다!', {
+                        className: 'custom-toast',
+                        theme: 'light'
+                      })
+                    }
+                  >
+                    <LocationIcon />
+                  </CopyToClipboard>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', margin: '15px 0', fontSize: '18px' }}>
                   <span>기간</span> {storeData.period_start} ~ {storeData.period_end}
@@ -212,7 +224,7 @@ const StoreDetail = () => {
                   <CopyToClipboard
                     text={storeData.link}
                     onCopy={() =>
-                      toast.info('주소가 복사되었습니다. 공식 페이지에서 더 자세한 정보를 확인하실 수 있습니다! :)', {
+                      toast.info('주소가 복사되었습니다. 공식 페이지에서 더 자세한 정보를 확인하실 수 있습니다!', {
                         className: 'custom-toast',
                         theme: 'light'
                       })
@@ -224,19 +236,18 @@ const StoreDetail = () => {
               </div>
               <div className="button-box">
                 <button
-                  style={{ margin: '10px 5px', padding: '14px 25px' }}
+                  style={{ fontWeight: '600', margin: '10px 5px', padding: '14px 25px' }}
                   onClick={() => navigate('/review', { state: { storeId: id, storeTitle: storeData.title } })}
                 >
                   후기 보러가기
                 </button>
                 <button
-                  style={{ margin: '10px 15px', padding: '14px 25px' }}
+                  style={{ fontWeight: '600', margin: '10px 15px', padding: '14px 25px' }}
                   onClick={() => navigate('/mate', { state: { storeId: id, storeTitle: storeData.title } })}
                 >
                   팝업 메이트 구하기
                 </button>
                 <ShareBtn
-                  style={{ margin: '10px 5px' }}
                   id="basic-button"
                   aria-controls={open ? 'basic-menu' : undefined}
                   aria-haspopup="true"
@@ -284,7 +295,7 @@ const DetailContainer = styled.div`
 
     .image-slider {
       width: 630px;
-      height: 100%;
+      height: 580px;
 
       div {
         display: flex;
@@ -302,7 +313,6 @@ const DetailContainer = styled.div`
 
     .store-info {
       width: 100%;
-      /* width: 620px; */
       height: auto;
       display: flex;
       flex-direction: column;
@@ -324,7 +334,7 @@ const DetailContainer = styled.div`
 
         div {
           max-height: 100px;
-          min-height: 80px;
+          min-height: 60px;
 
           font-size: 18px;
           line-height: 26px;
@@ -335,8 +345,7 @@ const DetailContainer = styled.div`
       }
 
       .store-text {
-        width: 620px;
-        /* width: 100%; */
+        width: 635px;
         display: flex;
         justify-content: center;
         flex-direction: column;
@@ -429,10 +438,21 @@ const ShareBtn = styled.button`
   background-color: #fff;
   color: var(--fifth-color);
   padding: 14px 25px !important;
+  margin: 10px 5px;
+`;
+
+const LocationIcon = styled(RoomIcon)`
+  margin-left: 10px;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--primary-color);
+    transform: scale(1.1);
+  }
 `;
 
 const LinkIcon = styled(InsertLinkIcon)`
-  margin-right: 20px;
+  margin-left: 3px;
   cursor: pointer;
 
   &:hover {
@@ -473,20 +493,20 @@ const CalendarBox = styled.div`
   z-index: 3; /* 다른 요소 위에 나타나도록 설정 */
 `;
 
-const ShareMenu = styled(Menu)`
-  .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
-    border-radius: 18px !important;
-    padding: 15px 22px !important;
-    margin-top: 10px !important;
-  }
+const ShareMenu = muiStyled(Menu)(({ theme }) => ({
+  '& .MuiPaper-root': {
+    borderRadius: '18px',
+    padding: '15px 22px',
+    marginTop: '10px'
+  },
 
-  .css-6hp17o-MuiList-root-MuiMenu-list {
-    list-style: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    position: relative !important;
+  '& .MuiList-root': {
+    listStyle: 'none',
+    margin: '0',
+    padding: '0',
+    position: 'relative'
   }
-`;
+}));
 
 const ShareInfo = styled.div`
   margin-bottom: 15px;

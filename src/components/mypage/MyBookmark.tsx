@@ -65,8 +65,6 @@ const MyBookmark = ({ activeSection }: BookmarkProps) => {
     }
   });
 
-  console.log(items);
-  // console.log(items.pages);
   if (isLoading) {
     return <div>로딩중입니다.</div>;
   }
@@ -84,26 +82,26 @@ const MyBookmark = ({ activeSection }: BookmarkProps) => {
               return (
                 <div className="subs-wrapper" key={index}>
                   <div className="fids">
-                    {page.stoers &&
+                    {page.stores &&
                       page.stores.slice(0, 3).map((store: Store) => (
-                        <div className="user-subs" key={store.id}>
-                          <img
-                            src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`}
-                            alt={`Store Image`}
-                            width={200}
-                          />
-                          <div className="info-box">
-                            <span>
-                              <h2>{store.title}</h2>
-                              <p>
-                                {store.period_start} ~ {store.period_end}
-                              </p>
-                            </span>
-                            <Link to={`/detail/${store.id}`} key={store.id}>
+                        <Link to={`/detail/${store.id}`} key={store.id}>
+                          <div className="user-subs" key={store.id}>
+                            <img
+                              src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`}
+                              alt={`Store Image`}
+                              width={200}
+                            />
+                            <div className="info-box">
+                              <span>
+                                <h2>{store.title}</h2>
+                                <p>
+                                  {store.period_start} ~ {store.period_end}
+                                </p>
+                              </span>
                               <button>상세보기</button>
-                            </Link>
+                            </div>
                           </div>
-                        </div>
+                        </Link>
                       ))}
                   </div>
                 </div>

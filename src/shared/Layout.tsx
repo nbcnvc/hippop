@@ -13,7 +13,6 @@ const Layout = () => {
   return (
     <>
       <Header />
-
       <ToastContainer
         position="top-center"
         autoClose={1500}

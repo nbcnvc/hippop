@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 // 라이브러리
 import { styled } from 'styled-components';
-
 // 타입
 import { Geocoder, HotPlaceInfo, Store } from '../../types/types';
 import { StoreMapProps } from '../../types/props';
@@ -40,8 +39,8 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
       if (status === kakao.maps.services.Status.OK) {
         const coords = new kakao.maps.LatLng(Number(result[0].y), Number(result[0].x));
 
-        const dongName = result[0].address.region_3depth_h_name;
-        setGuName(result[0].address.region_2depth_name);
+        const location = result[0].road_address.address_name;
+        setGuName(result[0].road_address.region_2depth_name);
 
         // 지도 옵션
         const mapOption = {
@@ -56,7 +55,7 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
         // 지도 생성
         const map = new window.kakao.maps.Map(mapElement.current, mapOption);
 
-        // 장소 검색 객체를 생성합니다
+        // 장소 검색 객체를 생성
         const ps = new kakao.maps.services.Places();
 
         // 지도의 중심을 결과값으로 받은 위치로 이동
@@ -65,8 +64,8 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
         // 장소검색이 완료됐을 때 호출되는 콜백함수
         const placesSearchCB = async (data: HotPlaceInfo[], status: string) => {
           if (status === kakao.maps.services.Status.OK) {
-            // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-            // LatLngBounds 객체에 좌표를 추가합니다
+            // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기 위해
+            // LatLngBounds 객체에 좌표를 추가
             const bounds = new kakao.maps.LatLngBounds();
 
             if (category) {
@@ -93,14 +92,17 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
           }
         };
 
-        // 키워드로 장소를 검색합니다
+        // 키워드로 장소를 검색
         for (let i = 1; i < 3; i++) {
-          ps.keywordSearch(`${dongName} ${category}`, placesSearchCB, { size: 15, page: i });
+          ps.keywordSearch(`${location} ${category}`, placesSearchCB, {
+            location: coords,
+            radius: 800,
+            size: 15,
+            page: i
+          });
         }
 
         const displayMarker = (place: HotPlaceInfo) => {
-          // 메인 마커이미지의 주소
-
           if (category && category === '맛집') {
             setHImageSrc('/asset/rMarker.png');
           } else if (category && category === '카페') {
@@ -117,23 +119,58 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
             map: map,
             position: new kakao.maps.LatLng(place.y, place.x),
             image: hpMarkerImage,
-            clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
+            clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정
           });
 
-          // 마커에 클릭이벤트를 등록합니다
           kakao.maps.event.addListener(marker, 'click', function () {
-            // 마커 위에 인포윈도우를 표시합니다
             setIsSelected(place);
           });
+
+          // 핫플레이스 커스텀 인포윈도우
+          const hotPlaceCustomOverlay = new kakao.maps.CustomOverlay({
+            position: new kakao.maps.LatLng(place.y, place.x),
+            content: `<div class='customoverlay-nearby'>${place.place_name}</div>`,
+            yAnchor: 2
+          });
+
+          // 핫플레이스 마커에 클릭이벤트를 등록
+          kakao.maps.event.addListener(marker, 'click', function () {
+            setIsSelected(place);
+
+            // console.log('isSelected ===>', isSelected);
+          });
+
+          // // 핫플레이스 마커에 클릭이벤트를 등록
+          // kakao.maps.event.addListener(marker, 'click', function () {
+          //   if (isSelected?.id !== place.id) {
+          //     kakao.maps.event.removeListener(map, 'click', customOverlay.setMap(null));
+          //   }
+
+          //   // 커스텀 인포윈도우 on
+          //   customOverlay.setMap(map);
+          //   setIsSelected(place);
+          //   console.log('isSelected ===>', isSelected);
+
+          //   console.log('isSelected ===>', isSelected);
+          // });
+
+          // // 핫플레이스 마커에 마우스아웃 이벤트
+          // kakao.maps.event.addListener(marker, 'mouseout', function () {
+          //   // 커스텀 인포윈도우 off
+          //   customOverlay.setMap(null);
+          // });
         };
 
         // 메인 마커이미지의 주소
         const imageSrc = '/asset/mainMarker.png';
-        // 마커이미지의 크기
+
+        // 메인 마커이미지의 크기
         const imageSize = new kakao.maps.Size(80, 85);
-        // 마커이미지의 옵션 // 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+        // 메인 마커이미지의 옵션 // 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
         // const imageOption = { offset: new kakao.maps.Point(40, 70) };
-        // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+
+        // 메인 마커의 이미지정보를 가지고 있는 마커이미지를 생성
         const mainMarkerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
         // 마커로 표시
@@ -141,15 +178,28 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
           map: map,
           position: coords,
           image: mainMarkerImage,
-          clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
+          clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정
+          // zIndex: 9
         });
 
-        // 인포윈도우로 장소에 대한 설명 표시
-        const infowindow = new kakao.maps.InfoWindow({
-          // content: `<div class="info-title">${title}의 위치</div>`
-          content: `<div style="width:150px; text-align:center; padding:10px 20px; z-index:99;">${title}</div>`
+        // 메인 커스텀 인포윈도우
+        const mainCustomOverlay = new kakao.maps.CustomOverlay({
+          position: coords,
+          content: `<div class='customoverlay'>${title}</div>`,
+          yAnchor: 3.2
         });
-        infowindow.open(map, marker);
+
+        // 마커에 마우스오버 이벤트
+        kakao.maps.event.addListener(marker, 'mouseover', () => {
+          // 메인 커스텀 인포윈도우 on
+          mainCustomOverlay.setMap(map);
+        });
+
+        // 마커에 마우스아웃 이벤트
+        kakao.maps.event.addListener(marker, 'mouseout', function () {
+          // 메인 커스텀 인포윈도우 off
+          mainCustomOverlay.setMap(null);
+        });
 
         // 지도 타입 컨트롤
         const mapTypeControl = new kakao.maps.MapTypeControl();
@@ -161,7 +211,7 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
         // 지도 줌 컨트롤 위치
         map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
-        // nearbyStore marker
+        // nearbyStore 마커
         if (nearbyStoreMarker) {
           const geocoder = new kakao.maps.services.Geocoder();
 
@@ -170,9 +220,9 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
               // 정상적으로 검색이 완료됐으면
               if (status === kakao.maps.services.Status.OK) {
                 const coords = new kakao.maps.LatLng(Number(result[0].y), Number(result[0].x));
-                // 메인 마커이미지의 주소
+                // nearbyStore 마커이미지의 주소
                 const imageSrc = '/asset/nearbyMarker.png';
-                // // 마커이미지의 크기
+                // nearbyStore 마커이미지의 크기
                 const imageSize = new kakao.maps.Size(55, 60);
                 const nearbyMarkerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
@@ -184,23 +234,23 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
                 });
                 // };
 
-                // 마커에 커서가 오버됐을 때 마커 위에 표시할 인포윈도우를 생성
-                const nearbyStore = `<div style="width:150px; text-align:center; padding:10px 20px; z-index:99;">${data.title}</div>`;
-
-                const infowindow = new kakao.maps.InfoWindow({
-                  content: nearbyStore
+                // nearbyStore 커스텀 인포윈도우
+                const nearCustomOverlay = new kakao.maps.CustomOverlay({
+                  position: coords,
+                  content: `<div class='customoverlay-nearby'>${data.title}</div>`,
+                  yAnchor: 2.5
                 });
 
-                // 마커에 마우스오버 이벤트를 등록
-                kakao.maps.event.addListener(marker, 'mouseover', function () {
-                  // 마커에 마우스오버 이벤트가 발생하면 인포윈도우를 마커위에 표시
-                  infowindow.open(map, marker);
+                // nearbyStore 마커에 마우스오버 이벤트
+                kakao.maps.event.addListener(marker, 'mouseover', () => {
+                  // 커스텀 인포윈도우 on
+                  nearCustomOverlay.setMap(map);
                 });
 
-                // 마커에 마우스아웃 이벤트를 등록
+                // nearbyStore 마커에 마우스아웃 이벤트
                 kakao.maps.event.addListener(marker, 'mouseout', function () {
-                  // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거
-                  infowindow.close();
+                  // 커스텀 인포윈도우 off
+                  nearCustomOverlay.setMap(null);
                 });
               }
             });
@@ -212,7 +262,7 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
 
   return (
     <MapContainer>
-      {searchData && <HotPlace setCategory={setCategory} setIsSelected={setIsSelected} />}
+      {searchData && <HotPlace category={category} setCategory={setCategory} setIsSelected={setIsSelected} />}
       <div className="map-iframe">
         {isSelected && category && <iframe src={`https://place.map.kakao.com/m/${isSelected.id}`} />}
         <KaKaoMap ref={mapElement} isSelected={isSelected} category={category} />
@@ -228,16 +278,6 @@ const MapContainer = styled.div`
   width: 100%;
 
   .info-title {
-    /* background-color: none;
-    border: none;
-    width: 100%;
-    height: auto;
-    background: #458bfd;
-    color: #fff;
-    text-align: center;
-    border-radius: 4px;
-    padding: 0px 10px; */
-    cursor: default;
     position: absolute;
     background: rgb(255, 255, 255);
     border: 1px solid rgb(118, 129, 168);
@@ -245,6 +285,7 @@ const MapContainer = styled.div`
     display: block;
     width: 207px;
     height: 23px;
+    cursor: default;
   }
 
   .map-iframe {
@@ -253,6 +294,26 @@ const MapContainer = styled.div`
     align-items: center;
     margin-top: 30px;
     gap: 15px;
+
+    .customoverlay {
+      text-align: center;
+      color: #fff;
+      font-weight: 600;
+      background-color: var(--fifth-color);
+      border: 3px solid var(--fifth-color);
+      border-radius: 18px;
+      padding: 10px 20px;
+    }
+
+    .customoverlay-nearby {
+      text-align: center;
+      color: var(--fifth-color);
+      font-weight: 600;
+      background-color: #fff;
+      border: 3px solid var(--fifth-color);
+      border-radius: 18px;
+      padding: 10px 20px;
+    }
 
     iframe {
       width: 38%;
