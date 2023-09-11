@@ -29,4 +29,7 @@ const Top = styled.button`
   @media (max-width: 980px) {
     right: 10%;
   }
+  @media (max-width: 844px) {
+    right: 0.8%;
+  }
 `;
