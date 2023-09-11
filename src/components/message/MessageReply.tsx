@@ -11,7 +11,7 @@ import { MessageReplyProps } from '../../types/props';
 // mui
 import SendSharpIcon from '@mui/icons-material/SendSharp';
 //alert
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const MessageReply = ({ sendMsgUser, setOpenReply }: MessageReplyProps) => {

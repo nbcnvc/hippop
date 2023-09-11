@@ -153,6 +153,7 @@ button {
   }
   ::-webkit-scrollbar-thumb {
     background-color: var(--sixth-color);
+    color: transparent;
     border-radius: 5px;
   }
 

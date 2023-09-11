@@ -1,4 +1,3 @@
-import React, { useMemo } from 'react';
 // 라이브러리
 import { Link } from 'react-router-dom';
 import { useInfiniteQuery } from '@tanstack/react-query';
@@ -13,7 +12,7 @@ import { useCurrentUser } from '../../store/userStore';
 import { getMyItems } from '../../api/post';
 import { getMyStores } from '../../api/store';
 
-function Bookmark({ activeSection }: BookmarkProps) {
+const MyBookmark = ({ activeSection }: BookmarkProps) => {
   const currentUser = useCurrentUser();
   // 인피니티 스크롤을 위한 데이터 조회
   const getMySectionItems = ({
@@ -66,7 +65,7 @@ function Bookmark({ activeSection }: BookmarkProps) {
     }
   });
 
-  // console.log(items);
+  console.log(items);
   // console.log(items.pages);
   if (isLoading) {
     return <div>로딩중입니다.</div>;
@@ -77,7 +76,7 @@ function Bookmark({ activeSection }: BookmarkProps) {
   return (
     <div style={{ margin: '0 auto' }}>
       {items.pages.length === 0 ? (
-        <div className="none-bookmark">작성한 글이 없어요😅. 후기를 남기러 가볼까요?</div>
+        <div className="none-bookmark">북마크한 스토어가 없어요😅</div>
       ) : (
         <div>
           {items &&
@@ -85,26 +84,27 @@ function Bookmark({ activeSection }: BookmarkProps) {
               return (
                 <div className="subs-wrapper" key={index}>
                   <div className="fids">
-                    {page.stores.slice(0, 3).map((store: Store) => (
-                      <div className="user-subs" key={store.id}>
-                        <img
-                          src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`}
-                          alt={`Store Image`}
-                          width={200}
-                        />
-                        <div className="info-box">
-                          <span>
-                            <h2>{store.title}</h2>
-                            <p>
-                              {store.period_start} ~ {store.period_end}
-                            </p>
-                          </span>
-                          <Link to={`/detail/${store.id}`} key={store.id}>
-                            <button>상세보기</button>
-                          </Link>
+                    {page.stoers &&
+                      page.stores.slice(0, 3).map((store: Store) => (
+                        <div className="user-subs" key={store.id}>
+                          <img
+                            src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`}
+                            alt={`Store Image`}
+                            width={200}
+                          />
+                          <div className="info-box">
+                            <span>
+                              <h2>{store.title}</h2>
+                              <p>
+                                {store.period_start} ~ {store.period_end}
+                              </p>
+                            </span>
+                            <Link to={`/detail/${store.id}`} key={store.id}>
+                              <button>상세보기</button>
+                            </Link>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
                   </div>
                 </div>
               );
@@ -123,6 +123,6 @@ function Bookmark({ activeSection }: BookmarkProps) {
       />
     </div>
   );
-}
+};
 
-export default Bookmark;
+export default MyBookmark;

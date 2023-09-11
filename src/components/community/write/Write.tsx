@@ -14,7 +14,7 @@ import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
 //alert
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Write = ({

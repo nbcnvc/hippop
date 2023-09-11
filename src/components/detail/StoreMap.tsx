@@ -9,7 +9,7 @@ import { StoreMapProps } from '../../types/props';
 import HotPlace from './HotPlace';
 import NearbyStore from './NearbyStore';
 //alert
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 declare global {

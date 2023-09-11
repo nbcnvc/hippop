@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 // 라이브러리
 import { useLocation, useNavigate } from 'react-router-dom';
 import shortid from 'shortid';
@@ -13,7 +13,7 @@ import { randomFileName } from '../../hooks/useHandleImageName';
 // mui
 import PartyModeIcon from '@mui/icons-material/PartyMode';
 //alert
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const UserInfo = () => {
