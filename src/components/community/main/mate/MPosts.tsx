@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 import moment from 'moment';
 import shortid from 'shortid';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { css, styled } from 'styled-components';
 // 타입
@@ -20,7 +20,7 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 
 const MPosts = () => {
   const navigate = useNavigate();
-  const { state } = useLocation();
+  const { state, pathname } = useLocation();
   const storeId: number = state?.storeId || 0; // state가 존재하지 않을 때 기본값으로 0 사용
   const [sortName, setSortName] = useState<string>('전체보기');
   const [ctg, setCtg] = useState<string>('카테고리');
@@ -59,7 +59,6 @@ const MPosts = () => {
     }
   };
 
-  const { pathname } = useLocation();
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
   const {
     data: posts,
@@ -332,6 +331,7 @@ const PostBox = styled.div`
   padding: 10px;
   margin: 10px;
   display: flex;
+  cursor: pointer;
 
   transition: color 0.3s ease, transform 0.3s ease;
   &:hover {

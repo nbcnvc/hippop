@@ -42,10 +42,10 @@ const SearchList = () => {
 
   // 검색결과 length state
   const [searchResultCount, setSearchResultCount] = useState<number>(0);
+
   // 이전 검색어 state
   const [previousSearchTerms, setPreviousSearchTerms] = useState<string[]>([]);
-  // 종료된 store
-  const [isClosed, setIsClosed] = useState<boolean>(false);
+
   // 쿼리
   const queryClient = useQueryClient();
 
@@ -85,10 +85,9 @@ const SearchList = () => {
     // Pass filter values
     getNextPageParam: (lastPage) => {
       // 전체 페이지 개수보다 작을 때
-      if (lastPage.page < lastPage.totalPages) {
+      if (lastPage.page < lastPage.totalPages)
         // 다음 페이지로 pageParam를 저장
         return lastPage.page + 1;
-      }
     }
   });
 
@@ -339,6 +338,11 @@ const SearchList = () => {
   const combinedLabel = `${momentStart} ~ ${momentEnd}`;
 
   const latestChips = previousSearchTerms.slice(-5);
+  useEffect(() => {
+    return () => {
+      window.scrollTo(0, 0);
+    };
+  }, []);
 
   if (isLoading) {
     return (
@@ -617,8 +621,8 @@ const SearchList = () => {
                   <St.GridContainer1>
                     {filteredStoreList?.map((store) => (
                       <>
-                        {store.isClosed ? (
-                          <St.ClosedCard key={store.id}>
+                        {store.isclosed ? (
+                          <St.ClosedCard key={store.id} onClick={() => navDetail(store.id)}>
                             <St.Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
                             <St.ClosedStoreInfo>
                               <St.CLosed>CLOSED</St.CLosed>
@@ -629,11 +633,11 @@ const SearchList = () => {
                                 <St.StoreName>{store.title}</St.StoreName>
                                 {store.period_start} ~ {store.period_end}
                               </div>
-                              <St.DetailBtn onClick={() => navDetail(store.id)}>상세보기</St.DetailBtn>
+                              <St.DetailBtn>상세보기</St.DetailBtn>
                             </St.InfoBox>
                           </St.ClosedCard>
                         ) : (
-                          <St.Card key={store.id}>
+                          <St.Card onClick={() => navDetail(store.id)} key={store.id}>
                             <St.Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
                             <St.InfoBox>
                               <div>
@@ -641,7 +645,7 @@ const SearchList = () => {
                                 <St.StoreName>{store.title}</St.StoreName>
                                 {store.period_start} ~ {store.period_end}
                               </div>
-                              <St.DetailBtn onClick={() => navDetail(store.id)}>상세보기</St.DetailBtn>
+                              <St.DetailBtn>상세보기</St.DetailBtn>
                             </St.InfoBox>
                           </St.Card>
                         )}
@@ -663,26 +667,24 @@ const SearchList = () => {
               <St.GridContainer>
                 <St.StyledSlider {...settings}>
                   {popStores?.map((store: Store, index) => (
-                    <>
-                      <St.Card key={store.id}>
-                        <St.Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-                        <St.InfoBox>
-                          <div>
-                            {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
-                            <St.StoreName>{store.title}</St.StoreName>
-                            <St.Period>
-                              {' '}
-                              {store.period_start} ~ {store.period_end}
-                            </St.Period>
-                          </div>
-                          <St.RankingNumber>
-                            {/* <Rank /> */}
-                            {`${index + 1} 위`}
-                          </St.RankingNumber>
-                          <St.DetailBtn onClick={() => navDetail(store.id)}>상세보기</St.DetailBtn>
-                        </St.InfoBox>
-                      </St.Card>
-                    </>
+                    <St.Card key={store.id} onClick={() => navDetail(store.id)}>
+                      <St.Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                      <St.InfoBox>
+                        <div>
+                          {store.location.split(' ').slice(0, 1)} {store.location.split(' ').slice(1, 2)}
+                          <St.StoreName>{store.title}</St.StoreName>
+                          <St.Period>
+                            {' '}
+                            {store.period_start} ~ {store.period_end}
+                          </St.Period>
+                        </div>
+                        <St.RankingNumber>
+                          {/* <Rank /> */}
+                          {`${index + 1} 위`}
+                        </St.RankingNumber>
+                        <St.DetailBtn>상세보기</St.DetailBtn>
+                      </St.InfoBox>
+                    </St.Card>
                   ))}
                 </St.StyledSlider>
               </St.GridContainer>
@@ -692,7 +694,7 @@ const SearchList = () => {
               <St.GridContainer>
                 <St.StyledSlider {...settings}>
                   {latStores?.map((store: Store) => (
-                    <St.Card key={store.id}>
+                    <St.Card key={store.id} onClick={() => navDetail(store.id)}>
                       <St.Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
                       <St.InfoBox>
                         <div>
@@ -707,7 +709,7 @@ const SearchList = () => {
                           {/* <Rank /> */}
                           NEW
                         </St.RankingNumber>
-                        <St.DetailBtn onClick={() => navDetail(store.id)}>상세보기</St.DetailBtn>
+                        <St.DetailBtn>상세보기</St.DetailBtn>
                       </St.InfoBox>
                     </St.Card>
                   ))}

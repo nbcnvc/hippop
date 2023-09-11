@@ -1,26 +1,32 @@
-import { useEffect, useRef, useState } from 'react';
+// 라이브러리
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Masonry } from '@mui/lab';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import styled from 'styled-components';
+import { useInView } from 'react-intersection-observer';
+// api
+import { supabase } from '../api/supabase';
+// 타입
+import { Store } from '../types/types';
+// 컴포넌트
+import Card from '../components/list/Card';
+//mui
+import { Masonry } from '@mui/lab';
 import Skeleton from '@mui/material/Skeleton';
 
-import { supabase } from '../api/supabase';
-import { Store } from '../types/types';
-import Card from '../components/list/Card';
-import { useInView } from 'react-intersection-observer';
-
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 15;
 
 const fetchStores = async ({ pageParam = 0 }) => {
   const { data } = await supabase
     .from('store')
     .select()
-    .order('period_end', { ascending: false }) // 내림차순
+    .eq('isclosed', false)
     .range(pageParam, pageParam + PAGE_SIZE - 1);
+
   return data || [];
 };
 
+// next key 사용 시
 const Main = () => {
   const {
     data: storesData,
@@ -31,16 +37,19 @@ const Main = () => {
     isError
   } = useInfiniteQuery<Store[][], Error, Store[], [string]>(['stores'], fetchStores, {
     getNextPageParam: (lastPage, allPages) => {
-      if (!lastPage || lastPage.length < PAGE_SIZE) return undefined;
+      if (!lastPage || lastPage.length < PAGE_SIZE) {
+        return undefined;
+      }
       return allPages.flat().length;
     }
   });
-
   const { ref, inView } = useInView({
-    threshold: 1
+    threshold: 0.5
   });
 
   useEffect(() => {
+    console.log('=== call useEffect ===');
+    console.log('inView ===>', inView);
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
@@ -55,6 +64,12 @@ const Main = () => {
       </h4>
     </header>
   );
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView]);
 
   if (isLoading) {
     return (
@@ -81,13 +96,12 @@ const Main = () => {
       {header}
       <Masonry columns={3} spacing={2} sx={{ maxWidth: '1920px', minWidth: '844px', width: '50%', margin: '0 auto' }}>
         {allStores.map((store, idx) => (
-          <Link to={`detail/${store.id}`} key={store.id}>
+          <Link to={`detail/${store.id}`} key={idx} className="masonry-item">
             <Card store={store} />
           </Link>
         ))}
       </Masonry>
       <div
-        className="keen-slider"
         style={{
           backgroundColor: 'transparent',
           width: '90%',
@@ -108,6 +122,7 @@ const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
   header {
     margin: 8rem 8rem 12rem;
     display: flex;

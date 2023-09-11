@@ -1,10 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
-
-import 'keen-slider/keen-slider.min.css';
 import styled from 'styled-components';
-import { useKeenSlider } from 'keen-slider/react';
 
-import './styles.css';
 import { CardProps } from '../../types/props';
 import { supabaseStorageUrl } from '../../api/supabase';
 
@@ -16,7 +12,7 @@ function getRandomElement(arr: number[]) {
 }
 
 const Card = (props: CardProps) => {
-  const { title, images, location, period_start, period_end, isClosed } = props.store;
+  const { title, images, location, period_start, period_end, isclosed } = props.store;
 
   const [isHovered, setIsHovered] = useState(false);
   const [cardHeight, setCardHeight] = useState<number>(0);
@@ -35,7 +31,7 @@ const Card = (props: CardProps) => {
 
   return (
     <>
-      {isClosed ? (
+      {isclosed ? (
         <CardContainerClosed style={{ height: cardHeight }} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
           <img src={`${supabaseStorageUrl}/${images[0]}`} className="keen-slider__slide" />
           <ClosedStoreInfo>
@@ -73,11 +69,9 @@ const CardContainerClosed = styled.div`
   position: relative;
   overflow: hidden;
   border-radius: 18px;
-
-  transition: all 0.3s ease-in-out; /* 크기 변화에 대한 트랜지션 추가 */
   box-sizing: border-box;
-
   margin: 0 auto;
+  transition: transform 0.3s ease;
   img {
     filter: grayscale(100%); /* 이미지를 흑백으로 만듭니다. */
     object-fit: cover;
@@ -104,9 +98,9 @@ const CardContainer = styled.div`
   position: relative;
   overflow: hidden;
   border-radius: 18px;
-
-  transition: all 0.3s ease-in-out; /* 크기 변화에 대한 트랜지션 추가 */
   box-sizing: border-box;
+  transition: transform 0.3s ease;
+
   img {
     object-fit: cover;
     width: 100%;
@@ -150,10 +144,10 @@ const StoreInfo = styled.div`
   justify-content: center;
   align-items: center;
   opacity: 0;
-  transition: opacity 0.3s ease-in-out;
   max-height: 100%;
   overflow: hidden;
   z-index: 1;
+  transition: opacity 0.3s ease, transform 0.3s ease; /* opacity와 transform에 transition 효과 추가 */
 
   .closed-wrap {
     padding: 2rem;
