@@ -10,7 +10,7 @@ export interface Store {
   opening: string;
   images: string[];
   link: string;
-  isClosed: boolean;
+  isclosed: boolean;
   reservation: boolean;
 }
 
@@ -123,7 +123,6 @@ export interface AlarmType {
   ctg_index: number;
 }
 
-// 지오코딩 타입 선언
 export interface Geocoder {
   address: AddressInfo;
   address_name: string;
@@ -133,7 +132,6 @@ export interface Geocoder {
   y: string;
 }
 
-// 번지수 주소 타입 선언
 export interface AddressInfo {
   address_name: string;
   b_code: string;
@@ -146,7 +144,6 @@ export interface AddressInfo {
   region_3depth_name: string;
 }
 
-// 도로명 주소 타입 선언
 export interface RoadAddress {
   address_name: string;
   building_name: string;
@@ -160,7 +157,6 @@ export interface RoadAddress {
   zone_no: string;
 }
 
-// 핫플레이스 타입 선언
 export interface HotPlaceInfo {
   address_name: string;
   category_group_code: string;

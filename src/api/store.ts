@@ -13,16 +13,16 @@ export const getStoreData = async (pathname: string) => {
   }
 
   if (pathname === '/mate') {
-    const { data: mate } = await supabase.from('store').select('*').eq('isClosed', false);
+    const { data: mate } = await supabase.from('store').select('*').eq('isclosed', false);
 
     data = mate;
   }
   return data as Store[];
 };
 
-// store 전체 조회 (isClosed, false인 것만)
+// store 전체 조회 (isclosed, false인 것만)
 export const fetchStoreData = async () => {
-  const { data } = await supabase.from('store').select('*').eq('isClosed', false);
+  const { data } = await supabase.from('store').select('*').eq('isclosed', false);
   return data as Store[];
 };
 
@@ -58,7 +58,8 @@ export const getSearchStore = async (
     .select()
     .gte('period_end', startDate)
     .lte('period_start', endDate)
-    .order('period_end', { ascending: false }) // 내림차순
+    // .order('created_at', { ascending: false })
+    // .order('period_end', { ascending: false }) // 내림차순
     .range(pageParam * 3 - 3, pageParam * 3 - 1);
 
   if (inputValue && inputValue !== '') {

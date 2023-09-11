@@ -1,10 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
-
-import 'keen-slider/keen-slider.min.css';
 import styled from 'styled-components';
-import { useKeenSlider } from 'keen-slider/react';
 
-import './styles.css';
 import { CardProps } from '../../types/props';
 import { supabaseStorageUrl } from '../../api/supabase';
 
@@ -16,7 +12,7 @@ function getRandomElement(arr: number[]) {
 }
 
 const Card = (props: CardProps) => {
-  const { title, images, location, period_start, period_end, isClosed } = props.store;
+  const { title, images, location, period_start, period_end, isclosed } = props.store;
 
   const [isHovered, setIsHovered] = useState(false);
   const [cardHeight, setCardHeight] = useState<number>(0);
@@ -35,7 +31,7 @@ const Card = (props: CardProps) => {
 
   return (
     <>
-      {isClosed ? (
+      {isclosed ? (
         <CardContainerClosed style={{ height: cardHeight }} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
           <img src={`${supabaseStorageUrl}/${images[0]}`} className="keen-slider__slide" />
           <ClosedStoreInfo>
@@ -74,7 +70,6 @@ const CardContainerClosed = styled.div`
   overflow: hidden;
   border-radius: 18px;
 
-  transition: all 0.3s ease-in-out; /* 크기 변화에 대한 트랜지션 추가 */
   box-sizing: border-box;
 
   margin: 0 auto;
@@ -105,7 +100,6 @@ const CardContainer = styled.div`
   overflow: hidden;
   border-radius: 18px;
 
-  transition: all 0.3s ease-in-out; /* 크기 변화에 대한 트랜지션 추가 */
   box-sizing: border-box;
   img {
     object-fit: cover;
@@ -150,7 +144,6 @@ const StoreInfo = styled.div`
   justify-content: center;
   align-items: center;
   opacity: 0;
-  transition: opacity 0.3s ease-in-out;
   max-height: 100%;
   overflow: hidden;
   z-index: 1;
@@ -179,26 +172,3 @@ const StoreInfo = styled.div`
     }
   }
 `;
-
-// const Arrow = (props: { disabled: boolean; left?: boolean; onClick: (e: any) => void }) => {
-//   const disabeld = props.disabled ? ' arrow--disabled' : '';
-//   const zIndex = 4;
-//
-//   const handleClick = (e: any) => {
-//     e.preventDefault();
-//     props.onClick(e);
-//   };
-//
-//   return (
-//     <svg
-//       onClick={handleClick}
-//       style={{ zIndex }}
-//       className={`arrow ${props.left ? 'arrow--left' : 'arrow--right'} ${disabeld}`}
-//       xmlns="http://www.w3.org/2000/svg"
-//       viewBox="0 0 24 24"
-//     >
-//       {props.left && <path d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z" />}
-//       {!props.left && <path d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z" />}
-//     </svg>
-//   );
-// };

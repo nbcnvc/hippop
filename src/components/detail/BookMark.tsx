@@ -1,7 +1,6 @@
 import React from 'react';
 // 라이브러리
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { styled } from 'styled-components';
 // api
 import { fetchAllBookMark, toggleBookMark } from '../../api/bookmark';
 // zustand store
@@ -10,9 +9,11 @@ import { useCurrentUser } from '../../store/userStore';
 import { Bookmark } from '../../types/types';
 import { CalendarProps } from '../../types/props';
 // mui
-import BookmarkIcon from '@mui/icons-material/Bookmark';
-import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 import { Skeleton } from '@mui/material';
+// 스타일
+import { St } from './style/St.BookMark';
+// alert
+import { toast } from 'react-toastify';
 
 const BookMark = ({ storeData }: CalendarProps) => {
   // 북마크 전체 조회
@@ -43,6 +44,12 @@ const BookMark = ({ storeData }: CalendarProps) => {
         store_id: storeId
       };
       toggleMutation.mutate(toogleBookMark);
+    } else {
+      toast.info('로그인을 해주세요 ! :)', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
+      return;
     }
   };
 
@@ -53,11 +60,8 @@ const BookMark = ({ storeData }: CalendarProps) => {
 
   if (isLoading) {
     return (
-      <div>
-        {' '}
-        <div style={{ marginLeft: '30px' }}>
-          <Skeleton variant="text" width={70} height={50} />
-        </div>
+      <div style={{ marginLeft: '30px' }}>
+        <Skeleton variant="text" width={70} height={50} />
       </div>
     );
   }
@@ -71,13 +75,13 @@ const BookMark = ({ storeData }: CalendarProps) => {
       {CountMyBookMark !== undefined && (
         <>
           {CountMyBookMark > 0 ? (
-            <BookMarkBtn onClick={onClickToggle}>
-              <BookMarkOn sx={{ fontSize: 50 }} />
-            </BookMarkBtn>
+            <St.BookMarkBtn onClick={onClickToggle}>
+              <St.BookMarkOn sx={{ fontSize: 50 }} />
+            </St.BookMarkBtn>
           ) : (
-            <BookMarkBtn onClick={onClickToggle}>
-              <BookMarkOff sx={{ fontSize: 50 }} />
-            </BookMarkBtn>
+            <St.BookMarkBtn onClick={onClickToggle}>
+              <St.BookMarkOff sx={{ fontSize: 50 }} />
+            </St.BookMarkBtn>
           )}
         </>
       )}
@@ -86,17 +90,3 @@ const BookMark = ({ storeData }: CalendarProps) => {
 };
 
 export default BookMark;
-
-const BookMarkBtn = styled.div`
-  color: #2b3467;
-`;
-
-const BookMarkOn = styled(BookmarkIcon)`
-  font-size: large;
-  cursor: pointer;
-`;
-
-const BookMarkOff = styled(TurnedInNotIcon)`
-  font-size: large;
-  cursor: pointer;
-`;

@@ -10,6 +10,8 @@ import format from 'date-fns/format';
 import { Parser } from 'htmlparser2'; // 문서를 분석해주는 (div, p tag) 라이브러리
 import { useInView } from 'react-intersection-observer';
 import { styled } from 'styled-components';
+// zustand
+import { useCurrentUser } from '../store/userStore';
 // api
 import { getProfileImg, getUser } from '../api/user'; // 사용자 정보를 가져오는 함수
 import { getYourItems } from '../api/post'; // 게시글 가져오는 함수
@@ -21,12 +23,10 @@ import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
-
 // img
 import DefaultImg from '../images/defaultImg.png';
 import { Skeleton } from '@mui/material';
-
-import { useCurrentUser } from '../store/userStore';
+// alert
 import { toast } from 'react-toastify';
 
 const YourPage = () => {
@@ -364,49 +364,55 @@ const YourPage = () => {
             <EditNoteRoundedIcon fontSize="large" />
             <HtagLine>작성한 게시글</HtagLine>
           </Htag2>
-          {userData && (
-            <GridContainer>
-              {selectItems?.map((post: PostType) => {
-                const imageTags: string[] = [];
-                const parser = new Parser({
-                  onopentag(name, attribs) {
-                    if (name === 'img' && attribs.src) {
-                      imageTags.push(attribs.src);
-                    }
-                  }
-                });
+          {selectItems && selectItems.length > 0 ? (
+            <>
+              {' '}
+              {userData && (
+                <GridContainer>
+                  {selectItems?.map((post: PostType) => {
+                    const imageTags: string[] = [];
+                    const parser = new Parser({
+                      onopentag(name, attribs) {
+                        if (name === 'img' && attribs.src) {
+                          imageTags.push(attribs.src);
+                        }
+                      }
+                    });
+                    parser.write(post.body);
+                    parser.end();
 
-                parser.write(post.body);
-                parser.end();
-
-                return (
-                  <Card>
-                    <div key={post.id}>
-                      {imageTags.length > 0 ? (
-                        <PostImg src={imageTags[0]} alt={`Image`} />
-                      ) : (
-                        <PostImg src={DefaultImg} />
-                      )}
-                      <HtagTttle>{post.store?.title}</HtagTttle>
-                      <CardInfo>
-                        <div>
-                          <PtagDate>{format(new Date(post.created_at), 'yyyy-MM-dd')}</PtagDate>
+                    return (
+                      <Card
+                        onClick={() => {
+                          PostDetail(post.id);
+                        }}
+                      >
+                        <div key={post.id}>
+                          {imageTags.length > 0 ? (
+                            <PostImg src={imageTags[0]} alt={`Image`} />
+                          ) : (
+                            <PostImg src={DefaultImg} />
+                          )}
+                          <HtagTttle>{post.store?.title}</HtagTttle>
+                          <CardInfo>
+                            <div>
+                              <PtagDate>{format(new Date(post.created_at), 'yyyy-MM-dd')}</PtagDate>
+                            </div>
+                            <BtnBox>
+                              <DetailBtn>상세보기</DetailBtn>
+                            </BtnBox>
+                          </CardInfo>
                         </div>
-                        <BtnBox>
-                          <DetailBtn
-                            onClick={() => {
-                              PostDetail(post.id);
-                            }}
-                          >
-                            상세보기
-                          </DetailBtn>
-                        </BtnBox>
-                      </CardInfo>
-                    </div>
-                  </Card>
-                );
-              })}
-            </GridContainer>
+                      </Card>
+                    );
+                  })}
+                </GridContainer>
+              )}
+            </>
+          ) : (
+            <H1TagDiv>
+              <H1tagLine>작성한 글이 없습니다!</H1tagLine>
+            </H1TagDiv>
           )}
         </ReviewWrapper>
       </Container>
@@ -586,6 +592,8 @@ const StoreInfo = styled.div`
   justify-content: space-between;
 
   align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
   width: 100%;
 `;
 
@@ -632,8 +640,6 @@ const ReviewWrapper = styled.div`
 const Htag2 = styled.h2`
   margin-bottom: 55px;
   display: flex;
-  /* justify-content: center;
-  align-items: center; */
   font-size: 25px;
 `;
 
@@ -668,7 +674,7 @@ const Card = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #ffffff;
-
+  cursor: pointer;
   position: relative;
 
   box-sizing: border-box;
@@ -682,16 +688,6 @@ const Card = styled.div`
     transform: scale(0.98);
   }
 `;
-
-// const PostImgBox = styled.div`
-//   border: 2px solid black;
-//   border-radius: 18px;
-//   object-fit: cover;
-
-//   width: ;
-//   height: 310px;
-//   /* margin-bottom: 15px; */
-// `;
 
 const PostImg = styled.img`
   border: 2px solid black;
@@ -747,4 +743,24 @@ const DetailBtn = styled.button`
   font-size: 15px;
 
   background-color: var(--second-color);
+`;
+
+const H1TagDiv = styled.div`
+  width: 100%;
+  height: 450px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const H1tagLine = styled.h1`
+  /* background: linear-gradient(to top, var(--third-color) 50%, transparent 50%); */
+  display: flex;
+  /* justify-content: flex-start; */
+  align-items: center;
+
+  margin-left: 5px;
+
+  font-size: 30px;
+  /* width: 50%; */
 `;
