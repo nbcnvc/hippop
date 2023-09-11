@@ -101,7 +101,7 @@ const UserContainer = styled.div`
   width: 300px;
   max-height: 360px;
   margin: 10px 0;
-  padding: 46px 0 0;
+  padding: 4px 0 0;
   display: flex;
   flex-direction: column;
   justify-content: center;

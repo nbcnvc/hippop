@@ -69,10 +69,9 @@ const CardContainerClosed = styled.div`
   position: relative;
   overflow: hidden;
   border-radius: 18px;
-
   box-sizing: border-box;
-
   margin: 0 auto;
+  transition: transform 0.3s ease;
   img {
     filter: grayscale(100%); /* 이미지를 흑백으로 만듭니다. */
     object-fit: cover;
@@ -99,8 +98,9 @@ const CardContainer = styled.div`
   position: relative;
   overflow: hidden;
   border-radius: 18px;
-
   box-sizing: border-box;
+  transition: transform 0.3s ease;
+
   img {
     object-fit: cover;
     width: 100%;
@@ -147,6 +147,7 @@ const StoreInfo = styled.div`
   max-height: 100%;
   overflow: hidden;
   z-index: 1;
+  transition: opacity 0.3s ease, transform 0.3s ease; /* opacity와 transform에 transition 효과 추가 */
 
   .closed-wrap {
     padding: 2rem;

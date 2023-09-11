@@ -182,10 +182,6 @@ const MyPage = () => {
       setActiveSection(section);
     }
   };
-  const ClickToggleBox = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const name = (e.target as HTMLButtonElement).name;
-    setToggleMsgBox(name);
-  };
 
   useEffect(() => {
     return () => {

@@ -58,7 +58,6 @@ export const getSearchStore = async (
     .select()
     .gte('period_end', startDate)
     .lte('period_start', endDate)
-    // .order('created_at', { ascending: false })
     // .order('period_end', { ascending: false }) // 내림차순
     .range(pageParam * 3 - 3, pageParam * 3 - 1);
 
