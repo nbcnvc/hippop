@@ -366,7 +366,6 @@ const YourPage = () => {
           </Htag2>
           {selectItems && selectItems.length > 0 ? (
             <>
-              {' '}
               {userData && (
                 <GridContainer>
                   {selectItems?.map((post: PostType) => {
