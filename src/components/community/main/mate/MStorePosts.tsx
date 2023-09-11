@@ -122,8 +122,8 @@ const MStorePosts = () => {
         {selectPosts?.map((post) => {
           const postText = post.body.replace(/<img.*?>/g, '');
           return (
-            <PostBox key={post.id} onClick={() => naviDetail(post)}>
-              <ContentBox>
+            <PostBox key={post.id}>
+              <ContentBox onClick={() => naviDetail(post)}>
                 <Between>
                   <Between>
                     <RoomRoundedIcon /> &nbsp;
@@ -137,7 +137,7 @@ const MStorePosts = () => {
                 </Between>
                 <Button onClick={() => naviDetail(post)}>상세보기</Button>
               </ContentBox>
-              <ProfileBox>
+              <ProfileBox onClick={() => naviProfile(post.user.id)}>
                 <Betweens>
                   <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${post.user.avatar_url}`} alt="User Avatar" />
                   <div>
