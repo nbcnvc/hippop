@@ -78,7 +78,7 @@ const Main = () => {
         <Masonry columns={3} spacing={2} sx={{ maxWidth: '1920px', width: '50%', margin: '0 auto' }}>
           {Array.from({ length: PAGE_SIZE }, (_, index) => (
             <Link to="/" key={index}>
-              <Skeleton variant="rectangular" width="100%" height={300} animation="wave" />
+              <Skeleton variant="rectangular" width={'100%'} height={'100%'} animation="wave" />
             </Link>
           ))}
           {isFetchingNextPage && <p>Loading...</p>}
