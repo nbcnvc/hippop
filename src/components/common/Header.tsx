@@ -278,6 +278,7 @@ const HeaderTag = styled.header`
   height: 80px;
   top: 0;
   z-index: 5;
+
   .header-wrapper {
     margin: 0 auto;
     height: 100%;
@@ -287,6 +288,9 @@ const HeaderTag = styled.header`
     display: flex;
     justify-content: center;
     align-items: center;
+    @media (max-width: 390px) {
+      width: 390px;
+    }
     ul {
       margin: 0 auto;
       width: 40%;

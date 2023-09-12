@@ -1,5 +1,4 @@
 // 라이브러리
-import { useEffect, useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
@@ -12,12 +11,21 @@ import { getSubInfo } from '../../api/subscribe';
 import { MySubModalProps } from '../../types/props';
 // mui
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import { useEffect } from 'react';
 
 const MySubModal = ({ setIsSubModal }: MySubModalProps) => {
   const navigate = useNavigate();
   const currentUser = useCurrentUser();
   const currentUserId = currentUser?.id;
   const { data: sublistData, isLoading, isError } = useQuery(['subinfo'], () => getSubInfo(currentUserId ?? ''));
+
+  useEffect(() => {
+    const userContainer = document.querySelector('.user-container'); // 클래스 이름을 정확히 맞춰야 합니다.
+    if (userContainer) {
+      userContainer.scrollTop = 0; // 스크롤 위치를 맨 위로 이동
+    }
+  }, []);
+
   const closeSubModal = () => {
     setIsSubModal(false);
   };
@@ -39,23 +47,23 @@ const MySubModal = ({ setIsSubModal }: MySubModalProps) => {
             <ButtonBox>
               <XButton onClick={closeSubModal} />
             </ButtonBox>
-            <UserContainer>
+            <UserContainer className="user-container">
               {sublistData?.length === 0 ? (
                 <div className="none-subs">아직 구독한 사람이 없어요 !</div>
               ) : (
-                sublistData?.map((sub, index) => {
+                sublistData?.map((sub) => {
                   return (
-                    <div key={sub.id} onClick={() => naviSubPage(sub.subscribe_to)}>
-                      <UserBox isFirst={index === 0 && sublistData.length >= 4}>
+                    <UserBox key={sub.id} onClick={() => naviSubPage(sub.subscribe_to)}>
+                      <div>
                         <Img
                           src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${sub.to.avatar_url}`}
                           alt="User Avatar"
                         />
-                        <Name>
-                          팝업메이트 <NameLine>{sub.to.name}</NameLine> 님
-                        </Name>
-                      </UserBox>
-                    </div>
+                      </div>
+                      <Name>
+                        팝업메이트 <NameLine>{sub.to.name}</NameLine> 님
+                      </Name>
+                    </UserBox>
                   );
                 })
               )}
@@ -102,11 +110,11 @@ const UserContainer = styled.div`
   width: 300px;
   max-height: 360px;
   margin: 10px 0;
-  padding: 4px 0 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  overflow: scroll;
+  justify-content: flex-start;
+  overflow-y: scroll;
   .none-subs {
     background-color: white;
     padding: 10px;
@@ -116,7 +124,7 @@ const UserContainer = styled.div`
   }
 `;
 
-const UserBox = styled.div<{ isFirst: boolean }>`
+const UserBox = styled.div`
   padding: 10px;
   margin: 10px;
   border: 3px solid var(--fifth-color);
@@ -127,11 +135,9 @@ const UserBox = styled.div<{ isFirst: boolean }>`
   align-items: center;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease, font-weight 0.3s ease;
-  ${(props) =>
-    props.isFirst &&
-    `
-    padding-top: 108px;
-  `}
+  // &:first-child {
+  //   margin-top: 94px;
+  // }
   &:hover {
     border: 3px solid var(--primary-color);
     background-color: var(--sixth-color);
