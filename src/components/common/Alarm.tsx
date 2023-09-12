@@ -1,16 +1,12 @@
 import { useEffect, useState } from 'react';
-// 라이브러리
 import { useQuery } from '@tanstack/react-query';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-// api
+
 import { supabase } from '../../api/supabase';
 import { getSubList } from '../../api/subscribe';
-// zustand 상태관리 hook
 import { useCurrentUser } from '../../store/userStore';
-// 스타일
-import { styled } from 'styled-components';
-// mui
+
 import TextsmsIcon from '@mui/icons-material/Textsms';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
@@ -206,7 +202,11 @@ const Alarm = () => {
     }
   }, [msgData, currentUserId]);
 
+<<<<<<< HEAD
+  return <></>;
+=======
   return <div></div>;
+>>>>>>> 3f2d9b02d82f5cbca7bb3f0cd9573fa123182bf4
 };
 
 export default Alarm;

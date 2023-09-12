@@ -1,21 +1,15 @@
-import React from 'react';
-// 라이브러리
+import 'moment/locale/ko'; // 한국어 설정
+import moment from 'moment';
+import shortid from 'shortid';
 import { useNavigate } from 'react-router';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import moment from 'moment';
-import 'moment/locale/ko'; // 한국어 설정
-import shortid from 'shortid';
-// api
-import { deleteAlarm } from '../../api/alarm';
-// zustand
-import { useCurrentUser } from '../../store/userStore';
-// 타입
+
 import { AlarmType } from '../../types/types';
-// 스타일
-import { styled } from 'styled-components';
-// mui
-import DeleteIcon from '@mui/icons-material/Delete';
 import { AlarmBoxProps } from '../../types/props';
+import { deleteAlarm } from '../../api/alarm';
+import { useCurrentUser } from '../../store/userStore';
+
+import { St } from './style/St.AlarmBox';
 
 const AlarmBox = ({ alarms }: AlarmBoxProps) => {
   const navigate = useNavigate();
@@ -79,74 +73,22 @@ const AlarmBox = ({ alarms }: AlarmBoxProps) => {
 
   return (
     <>
-      <AlarmContainer>
+      <St.AlarmContainer>
         {AlarmList?.map((alarm) => {
           const timeAgo = formatTimeAgo(alarm.created_at);
           return (
-            <AlarmContents key={alarm.id}>
-              <AlarmTime>{timeAgo}</AlarmTime>
-              <AlarmInfo>
+            <St.AlarmContents key={alarm.id}>
+              <St.AlarmTime>{timeAgo}</St.AlarmTime>
+              <St.AlarmInfo>
                 <div onClick={() => naviAlarm(alarm)}>{alarm.content}</div>
-                <AlarmDeleteIcon onClick={() => deleteButton(alarm.id)} />
-              </AlarmInfo>
-            </AlarmContents>
+                <St.AlarmDeleteIcon onClick={() => deleteButton(alarm.id)} />
+              </St.AlarmInfo>
+            </St.AlarmContents>
           );
         })}
-      </AlarmContainer>
+      </St.AlarmContainer>
     </>
   );
 };
 
 export default AlarmBox;
-
-const AlarmContainer = styled.li`
-  position: absolute;
-  top: 19px;
-  right: -285px;
-  list-style: none;
-  color: black;
-  background-color: white;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  border: 1px solid var(--fifth-color);
-  border-radius: 6px;
-  z-index: 1;
-`;
-
-const AlarmContents = styled.div`
-  width: 280px;
-  /* border-bottom: 1px solid #a7a7a79d; */
-  font-size: 14px;
-  text-align: left;
-  padding: 10px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: var(--sixth-color);
-    font-weight: 600;
-  }
-
-  &:first-child {
-    border-radius: 6px 6px 0 0;
-  }
-
-  &:last-child {
-    border-radius: 0 0 6px 6px;
-  }
-`;
-
-const AlarmTime = styled.span`
-  font-size: 10px;
-  color: #686868;
-`;
-
-const AlarmInfo = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const AlarmDeleteIcon = styled(DeleteIcon)`
-  &:hover {
-    color: var(--primary-color);
-  }
-`;
