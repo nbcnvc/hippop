@@ -9,7 +9,6 @@ import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import format from 'date-fns/format';
 import { Parser } from 'htmlparser2'; // 문서를 분석해주는 (div, p tag) 라이브러리
 import { useInView } from 'react-intersection-observer';
-import { styled } from 'styled-components';
 // zustand
 import { useCurrentUser } from '../store/userStore';
 // api
@@ -24,10 +23,11 @@ import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 // img
-import DefaultImg from '../images/defaultImg.png';
 import { Skeleton } from '@mui/material';
 // alert
 import { toast } from 'react-toastify';
+// style
+import { St } from './style/St.YourPage';
 
 const YourPage = () => {
   // 현재 유저
@@ -47,11 +47,9 @@ const YourPage = () => {
     setMsgModal(true);
   };
 
-  // const { id } = useParams();
   const { state } = useLocation();
   const userId: string = state?.userId || '';
 
-  // const userId: string = id as string;
   const [userData, setUserData] = useState<UserInfo | null>(null);
   const [activeSection, setActiveSection] = useState('myReview'); // 기본값 설정
   const navigate = useNavigate();
@@ -66,15 +64,6 @@ const YourPage = () => {
     isLoading: isBookMarkLoading,
     isError: isBookMarkError
   } = useQuery(['BookMarkStore', stateId], () => fetchBookMarkStore(stateId));
-
-  const handleSectionChange = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const button = e.target as HTMLButtonElement;
-    const section = button.getAttribute('data-section');
-
-    if (section !== null) {
-      setActiveSection(section);
-    }
-  };
 
   // userId가 state로 최초에 들어오면 토큰을 생성하고
   // 생성한 토큰을 setStateId 담아줌
@@ -172,77 +161,77 @@ const YourPage = () => {
     // 로딩 중일 때 스켈레톤 표시
     return (
       <>
-        <Container>
-          <UserWrapper>
-            <UserBox>
-              <Htag>
+        <St.Container>
+          <St.UserWrapper>
+            <St.UserBox>
+              <St.Htag>
                 <Skeleton width={24} height={24} /> {/* You can adjust the size */}
                 {/* <HtagLine> */}
                 <Skeleton width={100} height={24} /> {/* Adjust size */}
                 {/* 님의 프로필 */}
                 {/* </HtagLine> */}
-              </Htag>
-              <BoxLine></BoxLine>
-              <UserProfile>
+              </St.Htag>
+              <St.BoxLine></St.BoxLine>
+              <St.UserProfile>
                 <div>
                   <Skeleton variant="circular" width={70} height={70} /> {/* Circular skeleton */}
                 </div>
                 <div>
                   {/* <Ptag>힙팝메이트</Ptag> */}
 
-                  <Ptag>
-                    <SpanLine>
+                  <St.Ptag>
+                    <St.SpanLine>
                       <Skeleton width={80} height={14} /> {/* Adjust size */}
                       <Skeleton width={80} height={14} /> {/* Adjust size */}
-                    </SpanLine>
+                    </St.SpanLine>
                     {/* 님 */}
-                  </Ptag>
+                  </St.Ptag>
                 </div>
-              </UserProfile>
-            </UserBox>
+              </St.UserProfile>
+            </St.UserBox>
             <div></div>
-            <StoreListBox>
-              <Htag>
+            <St.StoreListBox>
+              <St.Htag>
                 <Skeleton width={160} height={24} /> {/* Adjust size */}
-              </Htag>
-              <BookMarkList>
+              </St.Htag>
+              <St.BookMarkList>
                 {Array.from({ length: 5 }).map((_, index) => (
-                  <BookMarkWraaper key={index}>
-                    <BookMarkBox>
+                  <St.BookMarkWraaper key={index}>
+                    <St.BookMarkBox>
                       <div>
-                        <StoreList>
+                        <St.StoreList>
                           <p>
                             <Skeleton width={40} height={40} /> {/* Adjust size */}
                           </p>
-                          <StoreInfo>
+                          <St.StoreInfo>
                             <div>
-                              <Location>
+                              <St.Location>
                                 <Skeleton width={100} height={12} /> {/* Adjust size */}
-                              </Location>
+                              </St.Location>
                             </div>
-                            <TitleBox>
-                              <StoreTitle>
+                            <St.TitleBox>
+                              <St.StoreTitle>
                                 <Skeleton width={200} height={20} /> {/* Adjust size */}
-                              </StoreTitle>
-                            </TitleBox>
-                          </StoreInfo>
-                        </StoreList>
+                              </St.StoreTitle>
+                            </St.TitleBox>
+                          </St.StoreInfo>
+                        </St.StoreList>
                       </div>
-                    </BookMarkBox>
-                    <Line></Line>
-                  </BookMarkWraaper>
+                    </St.BookMarkBox>
+                    <St.Line></St.Line>
+                  </St.BookMarkWraaper>
                 ))}
-              </BookMarkList>
-            </StoreListBox>
-          </UserWrapper>
+              </St.BookMarkList>
+            </St.StoreListBox>
+          </St.UserWrapper>
 
-          <ReviewWrapper>
-            <Htag2>
+          <St.ReviewWrapper>
+            <St.Htag2>
               <Skeleton width={160} height={20} /> {/* Adjust size */}
-            </Htag2>
-            <GridContainer>
+            </St.Htag2>
+            <St.GridContainer>
               {Array.from({ length: 5 }).map((_, index) => (
-                <Card key={index}>
+                <St.Card key={index}>
                   {' '}
                   <div>
                     {/* <PostImgBox> */}
@@ -250,27 +239,27 @@ const YourPage = () => {
                     <Skeleton width={340} height={310} />
                     {/* </PostImgBox> */}
 
-                    <HtagTttle>
+                    <St.HtagTttle>
                       <Skeleton width={200} height={20} /> {/* Adjust size */}
-                    </HtagTttle>
-                    <CardInfo>
+                    </St.HtagTttle>
+                    <St.CardInfo>
                       <div>
-                        <PtagDate>
+                        <St.PtagDate>
                           <Skeleton width={100} height={12} /> {/* Adjust size */}
-                        </PtagDate>
+                        </St.PtagDate>
                       </div>
-                      <BtnBox>
-                        <DetailBtn>
+                      <St.BtnBox>
+                        <St.DetailBtn>
                           <Skeleton width={80} height={32} /> {/* Adjust size */}
-                        </DetailBtn>
-                      </BtnBox>
-                    </CardInfo>
+                        </St.DetailBtn>
+                      </St.BtnBox>
+                    </St.CardInfo>
                   </div>
-                </Card>
+                </St.Card>
               ))}
-            </GridContainer>
-          </ReviewWrapper>
-        </Container>
+            </St.GridContainer>
+          </St.ReviewWrapper>
+        </St.Container>
         <div ref={ref}></div>
       </>
     );
@@ -283,91 +272,91 @@ const YourPage = () => {
   return (
     <>
       {msgModal && <Message msgModal={msgModal} setMsgModal={setMsgModal} writer={user!} />}
-      <Container>
-        <UserWrapper>
-          <UserBox>
-            <Htag>
+      <St.Container>
+        <St.UserWrapper>
+          <St.UserBox>
+            <St.Htag>
               <HomeRoundedIcon />
-              <HtagLine>{user?.name} </HtagLine>님의 프로필
-            </Htag>
-            <BoxLine></BoxLine>
-            <UserProfile>
-              <Between>
+              <St.HtagLine>{user?.name} </St.HtagLine>님의 프로필
+            </St.Htag>
+            <St.BoxLine></St.BoxLine>
+            <St.UserProfile>
+              <St.Between>
                 {user?.avatar_url?.startsWith('profile/') ? (
-                  <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${user?.avatar_url}`} alt="User Avatar" />
+                  <St.Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${user?.avatar_url}`} alt="User Avatar" />
                 ) : (
-                  <Img src={user?.avatar_url} alt="User Avatar" />
+                  <St.Img src={user?.avatar_url} alt="User Avatar" />
                 )}
-                <NameBox>
-                  <Ptag>힙팝메이트</Ptag>
-                  <Ptag>
-                    <SpanLine>{user?.name}</SpanLine>님
-                  </Ptag>
-                </NameBox>
-              </Between>
-              <Between1>
+                <St.NameBox>
+                  <St.Ptag>힙팝메이트</St.Ptag>
+                  <St.Ptag>
+                    <St.SpanLine>{user?.name}</St.SpanLine>님
+                  </St.Ptag>
+                </St.NameBox>
+              </St.Between>
+              <St.Between1>
                 <Subscribe writerId={stateId} />
-                {currentUser?.id !== user?.id && <MsgButton onClick={openMsgModal}>쪽지 보내기</MsgButton>}
-              </Between1>
-            </UserProfile>
-          </UserBox>
+                {currentUser?.id !== user?.id && <St.MsgButton onClick={openMsgModal}>쪽지 보내기</St.MsgButton>}
+              </St.Between1>
+            </St.UserProfile>
+          </St.UserBox>
           {/* <div></div> */}
-          <StoreListBox>
+          <St.StoreListBox>
             <div>
-              <Htag>
-                <HtagLine>북마크한 팝업스토어</HtagLine>
-              </Htag>
-              <BookMarkList>
+              <St.Htag>
+                <St.HtagLine>북마크한 팝업스토어</St.HtagLine>
+              </St.Htag>
+              <St.BookMarkList>
                 <div style={{ paddingRight: '1rem' }}>
                   {bookMarkStore?.map((bookMark) => {
                     return (
-                      <BookMarkWraaper>
-                        <BookMarkBox>
+                      <St.BookMarkWraaper>
+                        <St.BookMarkBox>
                           <div>
-                            <StoreList>
+                            <St.StoreList>
                               <p>
                                 <RoomRoundedIcon fontSize="large" />
                               </p>
-                              <StoreInfo>
-                                <Location>
+                              <St.StoreInfo>
+                                <St.Location>
                                   {bookMark.store?.location.split(' ').slice(0, 1)}{' '}
                                   {bookMark.store?.location.split(' ').slice(1, 2)}
-                                </Location>
+                                </St.Location>
 
-                                <TitleBox>
-                                  <StoreTitle>{bookMark.store?.title}</StoreTitle>
-                                </TitleBox>
+                                <St.TitleBox>
+                                  <St.StoreTitle>{bookMark.store?.title}</St.StoreTitle>
+                                </St.TitleBox>
 
-                                <StoreDetailArrow
+                                <St.StoreDetailArrow
                                   onClick={() => {
                                     BookMarkDetail(bookMark.store.id);
                                   }}
                                 >
                                   <ArrowForwardIosIcon />
-                                </StoreDetailArrow>
-                              </StoreInfo>
-                            </StoreList>
+                                </St.StoreDetailArrow>
+                              </St.StoreInfo>
+                            </St.StoreList>
                           </div>
-                        </BookMarkBox>
-                        <Line></Line>
-                      </BookMarkWraaper>
+                        </St.BookMarkBox>
+                        <St.Line></St.Line>
+                      </St.BookMarkWraaper>
                     );
                   })}
                 </div>
-              </BookMarkList>
+              </St.BookMarkList>
             </div>
-          </StoreListBox>
-        </UserWrapper>
+          </St.StoreListBox>
+        </St.UserWrapper>
 
-        <ReviewWrapper>
-          <Htag2>
+        <St.ReviewWrapper>
+          <St.Htag2>
             <EditNoteRoundedIcon fontSize="large" />
-            <HtagLine>작성한 게시글</HtagLine>
-          </Htag2>
+            <St.HtagLine>작성한 게시글</St.HtagLine>
+          </St.Htag2>
           {selectItems && selectItems.length > 0 ? (
             <>
               {userData && (
-                <GridContainer>
+                <St.GridContainer>
                   {selectItems?.map((post: PostType) => {
                     const imageTags: string[] = [];
                     const parser = new Parser({
@@ -381,385 +370,43 @@ const YourPage = () => {
                     parser.end();
 
                     return (
-                      <Card
+                      <St.Card
                         onClick={() => {
                           PostDetail(post.id);
                         }}
                       >
                         <div key={post.id}>
                           {imageTags.length > 0 ? (
-                            <PostImg src={imageTags[0]} alt={`Image`} />
+                            <St.PostImg src={imageTags[0]} alt={`Image`} />
                           ) : (
-                            <PostImg src="/asset/defaultImg.png" />
+                            <St.PostImg src="/asset/defaultImg.png" />
                           )}
-                          <HtagTttle>{post.store?.title}</HtagTttle>
-                          <CardInfo>
+                          <St.HtagTttle>{post.store?.title}</St.HtagTttle>
+                          <St.CardInfo>
                             <div>
-                              <PtagDate>{format(new Date(post.created_at), 'yyyy-MM-dd')}</PtagDate>
+                              <St.PtagDate>{format(new Date(post.created_at), 'yyyy-MM-dd')}</St.PtagDate>
                             </div>
-                            <BtnBox>
-                              <DetailBtn>상세보기</DetailBtn>
-                            </BtnBox>
-                          </CardInfo>
+                            <St.BtnBox>
+                              <St.DetailBtn>상세보기</St.DetailBtn>
+                            </St.BtnBox>
+                          </St.CardInfo>
                         </div>
-                      </Card>
+                      </St.Card>
                     );
                   })}
-                </GridContainer>
+                </St.GridContainer>
               )}
             </>
           ) : (
-            <H1TagDiv>
-              <H1tagLine>작성한 글이 없습니다!</H1tagLine>
-            </H1TagDiv>
+            <St.H1TagDiv>
+              <St.H1tagLine>작성한 글이 없습니다!</St.H1tagLine>
+            </St.H1TagDiv>
           )}
-        </ReviewWrapper>
-      </Container>
+        </St.ReviewWrapper>
+      </St.Container>
       <div ref={ref}></div>
     </>
   );
 };
 
 export default YourPage;
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-width: 1920px;
-  min-width: 744px;
-  width: 50%;
-  height: 100%;
-  margin: 0 auto;
-
-  margin-top: 120px;
-  margin-bottom: 100px;
-`;
-
-const UserWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  width: 100%;
-  overflow-y: auto;
-`;
-
-const UserBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-width: 230px;
-  width: 30%;
-  height: 250px;
-  padding: 5px;
-
-  border: 3px solid #333333;
-  border-radius: 18px;
-  margin-right: 30px;
-`;
-
-const Htag = styled.h2`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  margin-top: 30px;
-
-  font-size: 22px;
-`;
-
-const HtagLine = styled.h2`
-  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
-  display: flex;
-  /* justify-content: flex-start; */
-  align-items: center;
-
-  margin-left: 5px;
-  /* width: 50%; */
-`;
-
-const BoxLine = styled.div`
-  border-bottom: 2px dashed #333333;
-
-  margin: 15px 10px 5px 10px;
-`;
-
-const UserProfile = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Between = styled.div`
-  display: flex;
-  justify-content: space-between;
-
-  margin: 10px 0;
-`;
-
-const Between1 = styled.div`
-  display: flex;
-  justify-content: space-between;
-
-  margin: 10px 0;
-
-  width: 200px;
-  font-size: 12px;
-`;
-
-const Img = styled.img`
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 50%;
-`;
-
-const NameBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Ptag = styled.p`
-  font-size: 20px;
-  font-weight: 700;
-  color: #333333;
-
-  padding: 5px;
-
-  margin-left: 15px;
-`;
-
-const SpanLine = styled.span`
-  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
-`;
-
-const MsgButton = styled.button`
-  width: 120px;
-  height: 40px;
-  margin-left: 10px;
-  font-weight: 600;
-  font-size: 15px;
-`;
-
-const StoreListBox = styled.div`
-  background-color: var(--fourth-color);
-
-  min-width: 330px;
-  border: 3px solid #333333;
-  border-radius: 18px;
-  width: 100%;
-  height: 250px;
-  /* height: 100%; */
-  /* overflow: hidden; */
-  overflow-y: scroll;
-  display: flex;
-  flex-direction: column;
-  padding: 5px;
-`;
-
-const BookMarkList = styled.div`
-  margin-top: 24px;
-  /* max-height: inherit; */
-`;
-
-const BookMarkWraaper = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const BookMarkBox = styled.div`
-  /* display: flex; */
-
-  padding: 5px;
-`;
-
-const StoreList = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-
-  margin-left: 10px;
-`;
-
-const StoreInfo = styled.div`
-  margin-bottom: 6px;
-
-  display: flex;
-  justify-content: space-between;
-
-  align-items: center;
-  white-space: nowrap;
-  overflow: hidden;
-  width: 100%;
-`;
-
-const Location = styled.span`
-  font-size: 14px;
-  /* width: 30%; */
-  flex: 0.8;
-  margin-left: 20px;
-`;
-
-const TitleBox = styled.div`
-  display: flex;
-  flex: 3;
-  justify-content: flex-start;
-  /* overflow-x: hidden; */
-  white-space: nowrap;
-  overflow: hidden;
-  margin-left: 20px;
-  /* width: 100%; */
-`;
-
-const StoreTitle = styled.span`
-  display: flex;
-  justify-content: flex-start;
-  font-size: 15px;
-  /* width: 100%; */
-`;
-
-const StoreDetailArrow = styled.div`
-  cursor: pointer;
-`;
-
-const Line = styled.div`
-  width: 99%;
-  margin: 5px 15px;
-  border-bottom: 1px dashed #333333;
-`;
-
-const ReviewWrapper = styled.div`
-  margin: 50px 0 0 0;
-  min-height: 750px;
-`;
-
-const Htag2 = styled.h2`
-  margin-bottom: 55px;
-  display: flex;
-  font-size: 25px;
-`;
-
-const GridContainer = styled.div`
-  margin: 0 auto;
-
-  display: grid;
-  justify-content: center;
-  grid-template-columns: repeat(3, 1fr); // 한 줄에 두 개의 열
-  gap: 30px;
-
-  width: 100%;
-
-  margin-top: 28px;
-  @media (max-width: 1600px) {
-    grid-template-columns: repeat(2, 1fr); // Three columns per row
-  }
-  @media (max-width: 1000px) {
-    grid-template-columns: repeat(2, 1fr); // Three columns per row
-  }
-`;
-
-const Card = styled.div`
-  width: 100%;
-  /* height: 460px; */
-  border-radius: 18px;
-  border: 3px solid var(--fifth-color);
-
-  padding: 10px;
-  display: flex !important;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #ffffff;
-  cursor: pointer;
-  position: relative;
-
-  box-sizing: border-box;
-
-  transition: color 0.3s ease, transform 0.3s ease;
-  &:hover {
-    border: 3px solid var(--primary-color);
-  }
-  &:active {
-    background-color: rgb(215, 215, 219);
-    transform: scale(0.98);
-  }
-`;
-
-const PostImg = styled.img`
-  border: 2px solid black;
-  border-radius: 18px;
-  object-fit: cover;
-
-  width: 365px;
-  height: 310px;
-  margin-bottom: 15px;
-`;
-
-const CardInfo = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: ceoter;
-
-  width: 100%;
-`;
-
-const HtagTttle = styled.h3`
-  margin-top: 10px;
-  margin-left: 5px;
-  margin: 10px 0 5px 5px;
-  font-size: 20px;
-  /* width: 225px; */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 369px;
-`;
-
-const PtagDate = styled.p`
-  margin-top: 12px;
-  margin-left: 5px;
-  width: 100px;
-  display: flex;
-  justify-content: flex-start;
-`;
-
-const BtnBox = styled.div`
-  display: flex;
-  align-items: flex-end;
-`;
-
-const DetailBtn = styled.button`
-  margin-top: 4px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  /* width: 100px; */
-  height: 35px;
-
-  font-size: 15px;
-
-  background-color: var(--second-color);
-`;
-
-const H1TagDiv = styled.div`
-  width: 100%;
-  height: 450px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const H1tagLine = styled.h1`
-  /* background: linear-gradient(to top, var(--third-color) 50%, transparent 50%); */
-  display: flex;
-  /* justify-content: flex-start; */
-  align-items: center;
-
-  margin-left: 5px;
-
-  font-size: 30px;
-  /* width: 50%; */
-`;
