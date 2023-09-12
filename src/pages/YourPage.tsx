@@ -23,7 +23,6 @@ import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import EditNoteRoundedIcon from '@mui/icons-material/EditNoteRounded';
 // img
-import DefaultImg from '../images/defaultImg.png';
 import { Skeleton } from '@mui/material';
 // alert
 import { toast } from 'react-toastify';
@@ -380,7 +379,7 @@ const YourPage = () => {
                           {imageTags.length > 0 ? (
                             <St.PostImg src={imageTags[0]} alt={`Image`} />
                           ) : (
-                            <St.PostImg src={DefaultImg} />
+                            <St.PostImg src="/asset/defaultImg.png" />
                           )}
                           <St.HtagTttle>{post.store?.title}</St.HtagTttle>
                           <St.CardInfo>
