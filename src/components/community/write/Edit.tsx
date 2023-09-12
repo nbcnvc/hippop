@@ -1,17 +1,15 @@
 import Editor from './Editor';
 
 import { useState } from 'react';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
+import { useParams } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { EditProps } from '../../../types/props';
 import { updatePost } from '../../../api/post';
-import { useParams } from 'react-router-dom';
 
-import { styled } from 'styled-components';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { St } from './style/St.Edit';
 
 const Edit = ({ postId, postTitle, postBody, isEdit, setIsEdit }: EditProps) => {
   const { id } = useParams();
@@ -44,7 +42,6 @@ const Edit = ({ postId, postTitle, postBody, isEdit, setIsEdit }: EditProps) => 
         className: 'custom-toast',
         theme: 'light'
       });
-      // alert('제목을 입력해주세요.');
       return;
     }
     if (title.length > 30) {
@@ -52,7 +49,6 @@ const Edit = ({ postId, postTitle, postBody, isEdit, setIsEdit }: EditProps) => 
         className: 'custom-toast',
         theme: 'light'
       });
-      // alert('제목은 30글자 이하로 입력해주세요.');
       return;
     }
     if (!body) {
@@ -60,7 +56,6 @@ const Edit = ({ postId, postTitle, postBody, isEdit, setIsEdit }: EditProps) => 
         className: 'custom-toast',
         theme: 'light'
       });
-      // alert('내용을 입력해주세요.');
       return;
     }
     if (body === `<p><br></p>`) {
@@ -68,7 +63,6 @@ const Edit = ({ postId, postTitle, postBody, isEdit, setIsEdit }: EditProps) => 
         className: 'custom-toast',
         theme: 'light'
       });
-      // alert('내용을 입력해주세요.');
       return;
     }
 
@@ -87,101 +81,31 @@ const Edit = ({ postId, postTitle, postBody, isEdit, setIsEdit }: EditProps) => 
   };
 
   return (
-    <ModalContainer>
+    <St.ModalContainer>
       <ToastContainer
         position="top-center"
         autoClose={3000}
-        // hideProgressBar={true}
         newestOnTop={true}
-        // closeOnClick={true}
-        // rtl={true}
         pauseOnFocusLoss={false}
         draggable={true}
         pauseOnHover={true}
         limit={1}
         style={{ zIndex: 9999 }}
       />
-      <ModalBox>
-        <ButtonBox>
-          <XButton onClick={cancelButton} />
-          <Button onClick={saveButton}>저장</Button>
-        </ButtonBox>
-        <ContentBox>
-          <Title>제목</Title>
-          <Input value={title} onChange={onChangeTitle} />
-          <Title>내용</Title>
+      <St.ModalBox>
+        <St.ButtonBox>
+          <St.XButton onClick={cancelButton} />
+          <St.Button onClick={saveButton}>저장</St.Button>
+        </St.ButtonBox>
+        <St.ContentBox>
+          <St.Title>제목</St.Title>
+          <St.Input value={title} onChange={onChangeTitle} />
+          <St.Title>내용</St.Title>
           <Editor body={body} setBody={setBody} />
-        </ContentBox>
-      </ModalBox>
-    </ModalContainer>
+        </St.ContentBox>
+      </St.ModalBox>
+    </St.ModalContainer>
   );
 };
 
 export default Edit;
-
-const ModalContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  z-index: 9;
-  top: 0;
-  left: 0;
-  backdrop-filter: blur(5px);
-  background-color: rgb(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const ModalBox = styled.div`
-  width: 780px;
-  height: 730px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 18px;
-  border: 3px solid var(--fifth-color);
-  position: relative;
-`;
-
-const ButtonBox = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const Button = styled.button`
-  width: 80px;
-  height: 35px;
-  font-weight: 600;
-  color: var(--second-color);
-  background-color: var(--third-color);
-`;
-
-const ContentBox = styled.div`
-  margin: 10px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  flex-direction: column;
-`;
-
-const Title = styled.div`
-  font-weight: 700;
-  padding: 10px;
-`;
-
-const Input = styled.input`
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  width: 715px;
-  height: 30px;
-  padding: 2px 20px;
-  margin-bottom: 10px;
-  outline: none;
-  border-radius: 18px;
-  border: 2px solid var(--fifth-color);
-`;
-
-const XButton = styled(CloseRoundedIcon)`
-  cursor: pointer;
-`;

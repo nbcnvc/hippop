@@ -1,18 +1,14 @@
-import { useState } from 'react';
-// 라이브러리
-import { styled } from 'styled-components';
-// 타입
-import { Store } from '../types/types';
-// 컴포넌트
 import MPosts from '../components/community/main/mate/MPosts';
 import Write from '../components/community/write/Write';
 import SearchModal from '../components/community/write/SearchModal';
-// zustand
-import { useCurrentUser } from '../store/userStore';
 
-//alert
+import { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import { St } from './style/St.Mate';
+import { Store } from '../types/types';
+import { useCurrentUser } from '../store/userStore';
 
 const Mate = () => {
   const [writeModal, setWriteModal] = useState<boolean>(false);
@@ -37,13 +33,13 @@ const Mate = () => {
   };
 
   return (
-    <Layout>
-      <TitleBox>
-        <Title>같이 팝업스토어 가실 분! XD</Title>
-      </TitleBox>
-      <ButtonBox>
-        <Button onClick={searcButton}>팝업메이트 찾기</Button>
-      </ButtonBox>
+    <St.Layout>
+      <St.TitleBox>
+        <St.Title>같이 팝업스토어 가실 분! XD</St.Title>
+      </St.TitleBox>
+      <St.ButtonBox>
+        <St.Button onClick={searcButton}>팝업메이트 찾기</St.Button>
+      </St.ButtonBox>
       <SearchModal
         keyword={keyword}
         setKeyword={setKeyword}
@@ -65,45 +61,8 @@ const Mate = () => {
         setResult={setResult}
       />
       <MPosts />
-    </Layout>
+    </St.Layout>
   );
 };
 
 export default Mate;
-
-const Layout = styled.div`
-  min-width: 744px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const TitleBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Title = styled.h1`
-  color: var(--fifth-color);
-  font-size: 28px;
-  font-style: normal;
-  font-weight: 400;
-  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
-  margin: 70px 0 20px 0;
-  padding-bottom: 5px;
-`;
-
-const ButtonBox = styled.div`
-  min-width: 744px;
-  display: flex;
-  justify-content: center;
-`;
-
-const Button = styled.button`
-  width: 150px;
-  height: 40px;
-  font-weight: 700;
-  margin-bottom: 80px;
-`;

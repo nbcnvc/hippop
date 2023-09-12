@@ -1,19 +1,17 @@
-// 라이브러리
 import moment from 'moment';
 import shortid from 'shortid';
 import { useEffect, useMemo } from 'react';
+import { ToastContainer } from 'react-toastify';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { css, styled } from 'styled-components';
-// 타입
+
 import { FetchPost } from '../../../../types/types';
-// api
 import { getPosts } from '../../../../api/post';
-// mui
+
+import { St } from './style/St.MPosts';
 import Skeleton from '@mui/material/Skeleton';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
-import { ToastContainer } from 'react-toastify';
 
 const MNewPosts = () => {
   const navigate = useNavigate();
@@ -72,21 +70,17 @@ const MNewPosts = () => {
 
   // 프로필로 넘어가기
   const naviProfile = (userId: string) => {
-    // navigate(`/yourpage/${userId}`);
     navigate(`/yourpage/${shortid.generate()}`, { state: { userId: userId } });
   };
 
   if (isLoading) {
     // 로딩 중일 때 스켈레톤 표시
     return (
-      <PostContainer>
+      <St.PostContainer>
         <ToastContainer
           position="top-center"
           autoClose={3000}
-          // hideProgressBar={true}
           newestOnTop={true}
-          // closeOnClick={true}
-          // rtl={true}
           pauseOnFocusLoss={false}
           draggable={true}
           pauseOnHover={true}
@@ -94,50 +88,50 @@ const MNewPosts = () => {
           style={{ zIndex: 9999 }}
         />
         {Array.from({ length: 5 }).map((_, index) => (
-          <PostBox key={index}>
-            <ContentBox>
-              <Between>
-                <Between>
+          <St.PostBox key={index}>
+            <St.ContentBox>
+              <St.Between>
+                <St.Between>
                   <Skeleton variant="circular" width={24} height={24} /> &nbsp;
                   <Skeleton width={100} height={24} />
-                </Between>
-                <Date>
+                </St.Between>
+                <St.Date>
                   <Skeleton width={100} height={12} />
-                </Date>
-              </Between>
+                </St.Date>
+              </St.Between>
               &nbsp;
-              <Title>
+              <St.Title>
                 <Skeleton width={400} height={20} />
-              </Title>
-              <Between>
-                <Body>
+              </St.Title>
+              <St.Between>
+                <St.Body>
                   <Skeleton width={400} height={30} />
-                </Body>
+                </St.Body>
                 <div style={{ marginTop: '46px', marginRight: '12px' }}>
                   <Skeleton width={60} height={16} />
                 </div>
-              </Between>
-            </ContentBox>
-            <ProfileBox>
-              <Between>
+              </St.Between>
+            </St.ContentBox>
+            <St.ProfileBox>
+              <St.Between>
                 <Skeleton variant="circular" width={70} height={70} />
                 <div>
-                  <Name style={{ marginBottom: '5px' }}>
+                  <St.Name style={{ marginBottom: '5px' }}>
                     <Skeleton width={80} height={20} />
-                  </Name>
-                  <Name>
+                  </St.Name>
+                  <St.Name>
                     <Skeleton width={80} height={14} />
-                  </Name>
+                  </St.Name>
                 </div>
-              </Between>
+              </St.Between>
               <div style={{ marginTop: '32px', marginLeft: '145px' }}>
                 <Skeleton width={60} height={16} />
               </div>
-            </ProfileBox>
-          </PostBox>
+            </St.ProfileBox>
+          </St.PostBox>
         ))}
-        <Trigger ref={ref} />
-      </PostContainer>
+        <St.Trigger ref={ref} />
+      </St.PostContainer>
     );
   }
   if (isError) {
@@ -145,206 +139,50 @@ const MNewPosts = () => {
   }
   return (
     <>
-      <PostContainer>
+      <St.PostContainer>
         {selectPosts?.map((post) => {
           const postText = post.body.replace(/<img.*?>/g, '');
           return (
-            <PostBox key={post.id}>
-              <ContentBox onClick={() => naviDetail(post)}>
-                <Between>
-                  <Between>
+            <St.PostBox key={post.id}>
+              <St.ContentBox onClick={() => naviDetail(post)}>
+                <St.Between>
+                  <St.Between>
                     <RoomRoundedIcon /> &nbsp;
-                    <Store>{post.store.title}</Store>
-                  </Between>
-                  <Date>{moment(post?.created_at).format('YYYY.MM.DD HH:mm')}</Date>
-                </Between>
-                &nbsp;<Title>{post.title}</Title>
-                <Between>
-                  <Body dangerouslySetInnerHTML={{ __html: postText }} />
-                </Between>
-                <Button onClick={() => naviDetail(post)}>상세보기</Button>
-              </ContentBox>
-              <ProfileBox onClick={() => naviProfile(post.user.id)}>
-                <Betweens>
-                  <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${post.user.avatar_url}`} alt="User Avatar" />
+                    <St.Store>{post.store.title}</St.Store>
+                  </St.Between>
+                  <St.Date>{moment(post?.created_at).format('YYYY.MM.DD HH:mm')}</St.Date>
+                </St.Between>
+                &nbsp;<St.Title>{post.title}</St.Title>
+                <St.Between>
+                  <St.Body dangerouslySetInnerHTML={{ __html: postText }} />
+                </St.Between>
+                <St.DetailButton onClick={() => naviDetail(post)}>상세보기</St.DetailButton>
+              </St.ContentBox>
+              <St.ProfileBox onClick={() => naviProfile(post.user.id)}>
+                <St.Betweens>
+                  <St.Img
+                    src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${post.user.avatar_url}`}
+                    alt="User Avatar"
+                  />
                   <div>
-                    <Name>
-                      <NameLine>
+                    <St.Name>
+                      <St.NameLine>
                         <span>{post.user.name}</span>
                         님과
-                      </NameLine>
-                    </Name>
-                    <Name>함께 하기</Name>
+                      </St.NameLine>
+                    </St.Name>
+                    <St.Name>함께 하기</St.Name>
                   </div>
-                </Betweens>
-                <ProfileButton onClick={() => naviProfile(post.user.id)}>프로필</ProfileButton>
-              </ProfileBox>
-            </PostBox>
+                </St.Betweens>
+                <St.ProfileButton onClick={() => naviProfile(post.user.id)}>프로필</St.ProfileButton>
+              </St.ProfileBox>
+            </St.PostBox>
           );
         })}
-        <Trigger ref={ref} />
-      </PostContainer>
+        <St.Trigger ref={ref} />
+      </St.PostContainer>
     </>
   );
 };
 
 export default MNewPosts;
-
-// 미디어 쿼리 세팅
-const mediaQuery = (maxWidth: number) => css`
-  @media (max-width: ${maxWidth}px) {
-    width: 40%;
-  }
-`;
-const PostContainer = styled.div`
-  max-width: 1920px;
-  min-width: 744px;
-  width: 50%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 30px;
-
-  ${mediaQuery(900)}
-`;
-
-const PostBox = styled.div`
-  width: 100%;
-  height: 240px;
-  background-color: #fff;
-  border: 3px solid var(--fifth-color);
-  border-radius: 18px;
-  padding: 10px;
-  margin: 10px;
-  display: flex;
-  cursor: pointer;
-
-  transition: color 0.3s ease, transform 0.3s ease;
-  &:hover {
-    border: 3px solid var(--primary-color);
-  }
-  &:active {
-    background-color: rgb(215, 215, 219);
-    transform: scale(0.98);
-  }
-`;
-
-const ContentBox = styled.div`
-  width: 70%;
-  padding: 10px 25px 10px 20px;
-  border-right: 2px dashed var(--fifth-color);
-`;
-
-const Between = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-const Betweens = styled.div`
-  gap: 14px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  // margin-bottom: 50px;
-  @media (max-width: 1600px) {
-    margin-bottom: 24px;
-    justify-content: center;
-    flex-direction: column;
-    margin-top: -10px;
-  }
-`;
-
-const Store = styled.div`
-  font-weight: 600;
-  padding: 10px 0;
-`;
-
-const Title = styled.span`
-  font-size: 20px;
-  font-weight: 700;
-  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
-`;
-
-const Body = styled.div`
-  height: 63px;
-  width: 430px;
-  color: black;
-  font-size: 14px;
-  line-height: 1.5;
-  padding: 15px 0 0 5px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3; /* 표시할 줄 수 설정 */
-  -webkit-box-orient: vertical; /* 텍스트의 방향 설정 */
-`;
-
-const Date = styled.div`
-  margin: 0 0 0 5px;
-  font-size: 14px;
-  font-weight: 400;
-`;
-
-const Button = styled.button`
-  float: right;
-  width: 80px;
-  font-size: 14px;
-  margin-top: 42px;
-`;
-
-const ProfileBox = styled.div`
-  width: 30%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-`;
-
-const Name = styled.div`
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0 0 5px 10px;
-`;
-
-const NameLine = styled.div`
-  font-size: 14px;
-  // background-color: white;
-  // padding: 4px 6px;
-  span {
-    font-size: 18px;
-    padding: 2px;
-    background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
-  }
-`;
-const Img = styled.img`
-  width: 70px;
-  height: 70px;
-  margin: 10px 10px 10px 20px;
-  object-fit: cover;
-  border-radius: 50%;
-`;
-
-const Trigger = styled.div`
-  width: 100%;
-  align-items: center;
-`;
-
-const ProfileButton = styled.button`
-  float: right;
-  width: 80px;
-  font-size: 14px;
-  margin-right: 0;
-
-  position: absolute;
-  top: 185px;
-  right: 20px;
-  @media (max-width: 1600px) {
-    display: flex;
-    position: relative;
-    justify-content: center;
-    top: 0;
-    right: 0;
-  }
-`;

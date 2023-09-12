@@ -1,23 +1,20 @@
-// 라이브러리
-import moment from 'moment';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import styled, { css } from 'styled-components';
-// zustand
-import { useCurrentUser } from '../store/userStore';
-// api
-import { deletePost, getPost } from '../api/post';
-// 컴포넌트
 import Edit from '../components/community/write/Edit';
 import Writer from '../components/community/detail/Writer';
 import Comments from '../components/community/detail/Comments';
-// mui
-import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
-//alert
+
+import moment from 'moment';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { deletePost, getPost } from '../api/post';
+import { useCurrentUser } from '../store/userStore';
+
+import { St } from './style/St.MDetail';
 import { Skeleton } from '@mui/material';
+import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
 
 const MDetail = () => {
   const { id } = useParams();
@@ -72,48 +69,41 @@ const MDetail = () => {
     return (
       <div>
         {' '}
-        <Layout>
-          <CategoryBox>
+        <St.Layout>
+          <St.CategoryBox>
             <div>
               <Skeleton variant="text" width={100} height={30} />
             </div>
-            <ButtonBox>
-              <div style={{ marginRight: '20px', marginBottom: '23px' }}>
-                {/* <Skeleton variant="text" width={40} height={30} /> */}
-              </div>
-              <div style={{ marginRight: '12px', marginBottom: '23px' }}>
-                {/* <Skeleton variant="text" width={40} height={30} /> */}
-              </div>
-            </ButtonBox>
-          </CategoryBox>
-
+            <St.ButtonBox>
+              <div style={{ marginRight: '20px', marginBottom: '23px' }}></div>
+              <div style={{ marginRight: '12px', marginBottom: '23px' }}></div>
+            </St.ButtonBox>
+          </St.CategoryBox>
           {/* 글 내용 */}
           <div>
             <div className="ql-snow">
-              <HeadContainer>
-                <TextBox>
-                  <StoreBox>
-                    {/* <RoomRoundedIcon /> &nbsp; */}
+              <St.HeadContainer>
+                <St.TextBox>
+                  <St.StoreBox>
                     <Skeleton variant="text" width={300} height={30} />
-                  </StoreBox>
+                  </St.StoreBox>
                   <Skeleton variant="text" width={100} height={30} />
-                </TextBox>
+                </St.TextBox>
                 <Skeleton variant="text" width={300} height={30} />
-              </HeadContainer>
+              </St.HeadContainer>
               <Skeleton variant="text" width={850} height={500} />
             </div>
           </div>
           <Skeleton variant="text" width={850} height={100} />
           {/* 댓글 목록 */}
           <div>
-            <ButtonBox></ButtonBox>
+            <St.ButtonBox></St.ButtonBox>
             <Skeleton variant="text" width={870} height={80} />
-            <ButtonBox></ButtonBox>
+            <St.ButtonBox></St.ButtonBox>
             <Skeleton variant="text" width={870} height={80} />
-            {/* <CommentBox></CommentBox> */}
           </div>
           {/* 더보기 버튼 */}
-        </Layout>
+        </St.Layout>
       </div>
     );
   }
@@ -125,148 +115,45 @@ const MDetail = () => {
       {isEdit && (
         <Edit postId={post.id} postTitle={post.title} postBody={post.body} isEdit={isEdit} setIsEdit={setIsEdit} />
       )}
-      <Layout>
-        <CategoryBox>
-          <Category>
-            <TitleLine>Mate</TitleLine>
-          </Category>
+      <St.Layout>
+        <St.CategoryBox>
+          <St.Category>
+            <St.TitleLine>Mate</St.TitleLine>
+          </St.Category>
           {currentUser?.id === post.user_id && (
-            <ButtonBox>
-              <Button onClick={() => deleteButton(post.id)} style={{ marginRight: '10px' }}>
+            <St.ButtonBox>
+              <St.Button onClick={() => deleteButton(post.id)} style={{ marginRight: '10px' }}>
                 삭제
-              </Button>
-              <Button onClick={editButton}>수정</Button>
-            </ButtonBox>
+              </St.Button>
+              <St.Button onClick={editButton}>수정</St.Button>
+            </St.ButtonBox>
           )}
-        </CategoryBox>
+        </St.CategoryBox>
         {post && (
           <>
             {/* 글 내용 */}
-            <HeadContainer>
-              <TextBox>
-                <StoreBox>
+            <St.HeadContainer>
+              <St.TextBox>
+                <St.StoreBox>
                   <RoomRoundedIcon /> &nbsp;
-                  <Text>{post.store.title}</Text>
-                </StoreBox>
-                <Text>{formatDate}</Text>
-              </TextBox>
-              <Title>{post.title}</Title>
-            </HeadContainer>
-            <BodyContainer className="ql-snow">
-              <Body className="ql-editor" dangerouslySetInnerHTML={{ __html: post.body }} />
-            </BodyContainer>
+                  <St.Text>{post.store.title}</St.Text>
+                </St.StoreBox>
+                <St.Text>{formatDate}</St.Text>
+              </St.TextBox>
+              <St.Title>{post.title}</St.Title>
+            </St.HeadContainer>
+            <St.BodyContainer className="ql-snow">
+              <St.Body className="ql-editor" dangerouslySetInnerHTML={{ __html: post.body }} />
+            </St.BodyContainer>
             {/* 작성자 */}
             <Writer writer={post.user} postId={postId} />
             {/* 댓글 */}
             <Comments postId={post.id} />
           </>
         )}
-      </Layout>
+      </St.Layout>
     </>
   );
 };
 
 export default MDetail;
-
-// 미디어 쿼리 세팅
-const mediaQuery = (maxWidth: number) => css`
-  @media (max-width: ${maxWidth}px) {
-    width: 40%;
-  }
-`;
-
-const Layout = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const CategoryBox = styled.div`
-  max-width: 1920px;
-  min-width: 744px;
-  width: 50%;
-  margin-top: 50px;
-  display: flex;
-  justify-content: space-between;
-
-  ${mediaQuery(900)}
-`;
-
-const Category = styled.h1`
-  color: var(--fifth-color);
-  margin: 30px 0 10px 0;
-  padding-bottom: 5px;
-  font-size: 24px;
-  float: left;
-`;
-
-const TitleLine = styled.span`
-  padding: 2px;
-  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
-`;
-
-const ButtonBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 30px 0px;
-`;
-
-const Button = styled.button`
-  width: 60px;
-  height: 32px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--second-color);
-  background-color: var(--third-color);
-`;
-
-const HeadContainer = styled.div`
-  max-width: 1920px;
-  min-width: 744px;
-  width: 50%;
-
-  ${mediaQuery(900)}
-`;
-
-const StoreBox = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const TextBox = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding: 30px 0 10px 0;
-  border-bottom: 2px dashed var(--fifth-color);
-`;
-
-const Text = styled.div`
-  font-size: 16px;
-  font-weight: 600;
-  padding-right: 5px;
-`;
-
-const Title = styled.div`
-  font-size: 26px;
-  font-weight: 600;
-  float: left;
-  padding: 10px 0 30px 10px;
-`;
-
-const BodyContainer = styled.div`
-  max-width: 1920px;
-  min-width: 744px;
-  width: 50%;
-
-  ${mediaQuery(900)}
-`;
-
-const Body = styled.div`
-  width: 100%;
-  min-height: 500px;
-  margin: 20px 0;
-`;

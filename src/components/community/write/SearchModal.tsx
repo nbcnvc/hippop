@@ -1,5 +1,7 @@
 import SearchDefault from './SearchDefault';
 
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
 
@@ -7,12 +9,7 @@ import { SearchModalProps } from '../../../types/props';
 import { Store } from '../../../types/types';
 import { getStoreData } from '../../../api/store';
 
-import { styled } from 'styled-components';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import ReplayRoundedIcon from '@mui/icons-material/ReplayRounded';
-//alert
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { St } from './style/St.SearchModal';
 
 const SearchModal = ({
   keyword,
@@ -104,24 +101,24 @@ const SearchModal = ({
   return (
     <>
       {searchModal && (
-        <ModalContainer>
-          <ModalBox>
-            <ButtonBox>
-              <XButton onClick={closeSearch} />
-            </ButtonBox>
+        <St.ModalContainer>
+          <St.ModalBox>
+            <St.ButtonBox>
+              <St.XButton onClick={closeSearch} />
+            </St.ButtonBox>
             {pathname === '/review' && (
-              <Title>
-                <TitleLine>리뷰 남기기 :)</TitleLine> - 어떤 팝업스토어를 다녀오셨나요?
-              </Title>
+              <St.Title>
+                <St.TitleLine>리뷰 남기기 :)</St.TitleLine> - 어떤 팝업스토어를 다녀오셨나요?
+              </St.Title>
             )}
             {pathname === '/mate' && (
-              <Title>
-                <TitleLine>팝업메이트 구하기 :)</TitleLine> - 어떤 팝업스토어에 가실 예정인가요?
-              </Title>
+              <St.Title>
+                <St.TitleLine>팝업메이트 구하기 :)</St.TitleLine> - 어떤 팝업스토어에 가실 예정인가요?
+              </St.Title>
             )}
             {/* 검색 입력창 */}
-            <SearchBox>
-              <Input
+            <St.SearchBox>
+              <St.Input
                 value={keyword}
                 onChange={onChangeKeyword}
                 onKeyPress={(e) => {
@@ -131,41 +128,41 @@ const SearchModal = ({
                 }}
                 placeholder="팝업스토어를 검색하세요."
               />
-              <ResetButton onClick={ResetResult} />
+              <St.ResetButton onClick={ResetResult} />
               <button className="custom-btn" onClick={searchButton}>
                 검색
               </button>
-            </SearchBox>
+            </St.SearchBox>
             {/* 검색 결과창 */}
             {result ? (
-              <ResultBox>
+              <St.ResultBox>
                 {result.length > 0 ? (
                   <>
-                    <Comment>{result.length}개의 검색 결과가 있습니다.</Comment>
-                    <GridContainer>
+                    <St.Comment>{result.length}개의 검색 결과가 있습니다.</St.Comment>
+                    <St.GridContainer>
                       {result?.map((store) => {
                         return (
-                          <Card key={store.id} onClick={() => selectStore(store)}>
+                          <St.Card key={store.id} onClick={() => selectStore(store)}>
                             {store.isclosed ? (
                               <>
-                                <ClosedBox>
-                                  <Closed>Closed</Closed>
-                                </ClosedBox>
-                                <CImg src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                                <St.ClosedBox>
+                                  <St.Closed>Closed</St.Closed>
+                                </St.ClosedBox>
+                                <St.CImg src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
                               </>
                             ) : (
-                              <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+                              <St.Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
                             )}
-                            <StoreName>{store.title}</StoreName>
-                          </Card>
+                            <St.StoreName>{store.title}</St.StoreName>
+                          </St.Card>
                         );
                       })}
-                    </GridContainer>
+                    </St.GridContainer>
                   </>
                 ) : (
-                  <Comment>검색 결과가 없습니다.</Comment>
+                  <St.Comment>검색 결과가 없습니다.</St.Comment>
                 )}
-              </ResultBox>
+              </St.ResultBox>
             ) : (
               <SearchDefault
                 setId={setId}
@@ -174,181 +171,11 @@ const SearchModal = ({
                 setWriteModal={setWriteModal}
               />
             )}
-          </ModalBox>
-        </ModalContainer>
+          </St.ModalBox>
+        </St.ModalContainer>
       )}
     </>
   );
 };
 
 export default SearchModal;
-
-export const ElarmContainer = styled(ToastContainer)`
-  .custom-toast {
-    background-color: red;
-    color: black;
-  }
-`;
-
-const ModalContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  z-index: 9;
-  top: 0;
-  left: 0;
-  backdrop-filter: blur(5px);
-  background-color: rgb(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const ModalBox = styled.div`
-  width: 800px;
-  height: 720px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 18px;
-  border: 3px solid var(--fifth-color);
-  position: relative;
-
-  .custom-btn {
-    width: 100px;
-    background-color: var(--second-color);
-    border-radius: 0 18px 18px 0;
-    padding: 8.5px 16px;
-    font-size: 14px;
-    font-weight: 700;
-  }
-`;
-
-const XButton = styled(CloseRoundedIcon)`
-  cursor: pointer;
-`;
-
-const ResetButton = styled(ReplayRoundedIcon)`
-  position: absolute;
-  margin-left: 515px;
-  cursor: pointer;
-`;
-
-const ButtonBox = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`;
-
-const Title = styled.div`
-  font-size: 18px;
-  font-weight: 700;
-  margin: 20px 25px 25px 25px;
-`;
-
-const TitleLine = styled.span`
-  padding: 2px;
-  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
-`;
-
-const SearchBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0 10px;
-`;
-
-const Input = styled.input`
-  width: 630px;
-  height: 32px;
-  padding: 2px 15px;
-  outline: none;
-  border-radius: 18px 0 0 18px;
-  border: 2px solid var(--fifth-color);
-`;
-
-const ResultBox = styled.div`
-  height: 550px;
-  margin: 20px;
-  overflow: scroll;
-`;
-
-const Comment = styled.div`
-  font-weight: 600;
-  margin: 10px;
-`;
-
-const GridContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 한 줄에 두 개의 열 */
-  gap: 15px; /* 열 사이의 간격 조정 */
-  max-width: 800px; /* 그리드가 너무 넓어지는 것을 제한 */
-  margin: 0 auto; /* 가운데 정렬 */
-`;
-
-const Card = styled.div`
-  width: 230px;
-  border-radius: 18px;
-  border: 2px solid var(--fifth-color);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative; /* 부모 요소로부터 상대적인 위치 지정 */
-
-  /* ClosedBox를 가운데 정렬하기 위한 스타일 */
-  &::before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-`;
-
-const Img = styled.img`
-  width: 210px;
-  height: 175px;
-  margin-top: 10px;
-  object-fit: cover;
-  border-radius: 10px;
-`;
-
-const ClosedBox = styled.div`
-  position: absolute;
-  width: 230px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  border-radius: 16px;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 99;
-`;
-
-const Closed = styled.div`
-  font-size: 20px;
-  font-weight: 700;
-  color: white;
-`;
-
-const CImg = styled.img`
-  width: 210px;
-  height: 175px;
-  margin-top: 10px;
-  object-fit: cover;
-  border-radius: 10px;
-`;
-
-const StoreName = styled.div`
-  display: flex;
-  align-items: center;
-  text-align: center;
-  line-height: 1.2;
-  font-size: 14px;
-  font-weight: 500;
-  height: 30px;
-  padding: 10px 15px;
-`;
