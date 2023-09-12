@@ -196,6 +196,12 @@ export const St = {
     padding: 5px 10px;
   `,
 
+  SkeletonCard: styled.div`
+    @media (max-width: 390px) {
+      display: none;
+    }
+  `,
+
   Card: styled.div`
     width: 330px;
     height: 500px;
