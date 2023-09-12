@@ -2,7 +2,9 @@ import styled from 'styled-components';
 
 // My Page
 // + user info tab, message tab, toggle, tab css
-export const MypageTag = styled.div`
+export const St = {
+  MypageTag: styled.div`
+
   max-width: 1920px;
   min-width: 800px;
   margin: 0 auto;
@@ -17,6 +19,7 @@ export const MypageTag = styled.div`
     justify-content: space-between;
     align-items: center;
     gap: 20px;
+    
     @media (max-width: 1580px) {
       width: 97%;
     }
@@ -634,4 +637,5 @@ export const MypageTag = styled.div`
       }
     }
   }
-`;
+`
+};
