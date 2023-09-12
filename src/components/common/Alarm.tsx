@@ -206,53 +206,7 @@ const Alarm = () => {
     }
   }, [msgData, currentUserId]);
 
-  return (
-    <div>
-      {/* <AlarmContainer
-        position="top-right"
-        autoClose={3000}
-        // hideProgressBar={true}
-        newestOnTop={true}
-        // closeOnClick={true}
-        // rtl={true}
-        pauseOnFocusLoss={false}
-        draggable={true}
-        pauseOnHover={true}
-        // limit={3}
-      /> */}
-    </div>
-  );
+  return <div></div>;
 };
 
 export default Alarm;
-
-export const AlarmContainer = styled(ToastContainer)`
-  .custom-toast {
-    background-color: var(--sixth-color);
-    color: black;
-  }
-  .Toastify__toast {
-    font-size: 15px;
-    /* border-radius: 50px; */
-    padding: 15px 20px;
-    color: #ffffff;
-    /* background: rgba(107, 115, 135, 0.8); */
-  }
-
-  .Toastify__toast-icon {
-    width: 20px;
-    height: 20px;
-  }
-
-  .Toastify__toast--info {
-    background: #136e65;
-  }
-
-  /* .Toastify__toast--success {
-    background: rgba(48, 173, 120, 0.8);
-  } */
-
-  /* .Toastify__toast--error {
-    background: rgba(224, 72, 82, 0.8);
-  } */
-`;
