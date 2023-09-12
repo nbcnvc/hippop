@@ -20,9 +20,10 @@ declare global {
 const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
   const [guName, setGuName] = useState<string>('');
   const [category, setCategory] = useState<string>('');
-  const [hImageSrc, setHImageSrc] = useState<string>('');
   const [searchData, setSearchData] = useState<HotPlaceInfo[]>();
   const [isSelected, setIsSelected] = useState<HotPlaceInfo | undefined>();
+  // const [prevSelected, setPrevSelected] = useState<HotPlaceInfo | undefined>();
+  const [prevCustomOverlay, setPrevCustomOverlay] = useState<any>(null);
   const [nearbyStoreMarker, setNearbyStoreMarker] = useState<Store[] | undefined>();
 
   //  ref는 맵이 렌더링될 DOM 요소를 참조
@@ -102,13 +103,14 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
           });
         }
 
+        let hImageSrc = '';
         const displayMarker = (place: HotPlaceInfo) => {
           if (category && category === '맛집') {
-            setHImageSrc('/asset/rMarker.png');
+            hImageSrc = '/asset/rMarker.png';
           } else if (category && category === '카페') {
-            setHImageSrc('/asset/cMarker.png');
+            hImageSrc = '/asset/cMarker.png';
           } else if (category && category === '술집') {
-            setHImageSrc('/asset/bMarker.png');
+            hImageSrc = '/asset/bMarker.png';
           }
 
           // 마커이미지의 크기
@@ -122,10 +124,6 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
             clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정
           });
 
-          kakao.maps.event.addListener(marker, 'click', function () {
-            setIsSelected(place);
-          });
-
           // 핫플레이스 커스텀 인포윈도우
           const hotPlaceCustomOverlay = new kakao.maps.CustomOverlay({
             position: new kakao.maps.LatLng(place.y, place.x),
@@ -136,29 +134,7 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
           // 핫플레이스 마커에 클릭이벤트를 등록
           kakao.maps.event.addListener(marker, 'click', function () {
             setIsSelected(place);
-
-            // console.log('isSelected ===>', isSelected);
           });
-
-          // // 핫플레이스 마커에 클릭이벤트를 등록
-          // kakao.maps.event.addListener(marker, 'click', function () {
-          //   if (isSelected?.id !== place.id) {
-          //     kakao.maps.event.removeListener(map, 'click', customOverlay.setMap(null));
-          //   }
-
-          //   // 커스텀 인포윈도우 on
-          //   customOverlay.setMap(map);
-          //   setIsSelected(place);
-          //   console.log('isSelected ===>', isSelected);
-
-          //   console.log('isSelected ===>', isSelected);
-          // });
-
-          // // 핫플레이스 마커에 마우스아웃 이벤트
-          // kakao.maps.event.addListener(marker, 'mouseout', function () {
-          //   // 커스텀 인포윈도우 off
-          //   customOverlay.setMap(null);
-          // });
         };
 
         // 메인 마커이미지의 주소
@@ -258,7 +234,7 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
         }
       }
     });
-  }, [storeLocation, category, hImageSrc, nearbyStoreMarker]);
+  }, [category, nearbyStoreMarker]);
 
   return (
     <St.MapContainer>
