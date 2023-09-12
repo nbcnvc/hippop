@@ -501,6 +501,20 @@ export const MypageTag = styled.div`
       }
     }
   }
+  .skeleton-container1{
+    @media (max-width: 1596px) {
+        display : none;
+      }
+  }
+
+  .skeleton-container2 {
+    @media (max-width: 1596px) {
+      display : block;
+    }
+    @media (min-width: 1597px) {
+      display : none;
+    }
+  }
   .fids {
     margin: 0 auto;
     padding: 0;
