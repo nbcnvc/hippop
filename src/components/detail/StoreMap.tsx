@@ -1,6 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-// 라이브러리
-import { styled } from 'styled-components';
 // 타입
 import { Geocoder, HotPlaceInfo, Store } from '../../types/types';
 import { StoreMapProps } from '../../types/props';
@@ -10,6 +8,8 @@ import NearbyStore from './NearbyStore';
 //alert
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+// 스타일
+import { St } from './style/St.StoreMap';
 
 declare global {
   interface Window {
@@ -20,9 +20,10 @@ declare global {
 const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
   const [guName, setGuName] = useState<string>('');
   const [category, setCategory] = useState<string>('');
-  const [hImageSrc, setHImageSrc] = useState<string>('');
   const [searchData, setSearchData] = useState<HotPlaceInfo[]>();
   const [isSelected, setIsSelected] = useState<HotPlaceInfo | undefined>();
+  // const [prevSelected, setPrevSelected] = useState<HotPlaceInfo | undefined>();
+  const [prevCustomOverlay, setPrevCustomOverlay] = useState<any>(null);
   const [nearbyStoreMarker, setNearbyStoreMarker] = useState<Store[] | undefined>();
 
   //  ref는 맵이 렌더링될 DOM 요소를 참조
@@ -102,13 +103,14 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
           });
         }
 
+        let hImageSrc = '';
         const displayMarker = (place: HotPlaceInfo) => {
           if (category && category === '맛집') {
-            setHImageSrc('/asset/rMarker.png');
+            hImageSrc = '/asset/rMarker.png';
           } else if (category && category === '카페') {
-            setHImageSrc('/asset/cMarker.png');
+            hImageSrc = '/asset/cMarker.png';
           } else if (category && category === '술집') {
-            setHImageSrc('/asset/bMarker.png');
+            hImageSrc = '/asset/bMarker.png';
           }
 
           // 마커이미지의 크기
@@ -122,10 +124,6 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
             clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정
           });
 
-          kakao.maps.event.addListener(marker, 'click', function () {
-            setIsSelected(place);
-          });
-
           // 핫플레이스 커스텀 인포윈도우
           const hotPlaceCustomOverlay = new kakao.maps.CustomOverlay({
             position: new kakao.maps.LatLng(place.y, place.x),
@@ -136,29 +134,7 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
           // 핫플레이스 마커에 클릭이벤트를 등록
           kakao.maps.event.addListener(marker, 'click', function () {
             setIsSelected(place);
-
-            // console.log('isSelected ===>', isSelected);
           });
-
-          // // 핫플레이스 마커에 클릭이벤트를 등록
-          // kakao.maps.event.addListener(marker, 'click', function () {
-          //   if (isSelected?.id !== place.id) {
-          //     kakao.maps.event.removeListener(map, 'click', customOverlay.setMap(null));
-          //   }
-
-          //   // 커스텀 인포윈도우 on
-          //   customOverlay.setMap(map);
-          //   setIsSelected(place);
-          //   console.log('isSelected ===>', isSelected);
-
-          //   console.log('isSelected ===>', isSelected);
-          // });
-
-          // // 핫플레이스 마커에 마우스아웃 이벤트
-          // kakao.maps.event.addListener(marker, 'mouseout', function () {
-          //   // 커스텀 인포윈도우 off
-          //   customOverlay.setMap(null);
-          // });
         };
 
         // 메인 마커이미지의 주소
@@ -258,87 +234,18 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
         }
       }
     });
-  }, [storeLocation, category, hImageSrc, nearbyStoreMarker]);
+  }, [category, nearbyStoreMarker]);
 
   return (
-    <MapContainer>
+    <St.MapContainer>
       {searchData && <HotPlace category={category} setCategory={setCategory} setIsSelected={setIsSelected} />}
       <div className="map-iframe">
         {isSelected && category && <iframe src={`https://place.map.kakao.com/m/${isSelected.id}`} />}
-        <KaKaoMap ref={mapElement} isSelected={isSelected} category={category} />
+        <St.KaKaoMap ref={mapElement} isSelected={isSelected} category={category} />
       </div>
       <NearbyStore guName={guName} setNearbyStoreMarker={setNearbyStoreMarker} />
-    </MapContainer>
+    </St.MapContainer>
   );
 };
 
 export default StoreMap;
-
-const MapContainer = styled.div`
-  width: 100%;
-
-  .info-title {
-    position: absolute;
-    background: rgb(255, 255, 255);
-    border: 1px solid rgb(118, 129, 168);
-    z-index: 0;
-    display: block;
-    width: 207px;
-    height: 23px;
-    cursor: default;
-  }
-
-  .map-iframe {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 30px;
-    gap: 15px;
-
-    .customoverlay {
-      text-align: center;
-      color: #fff;
-      font-weight: 600;
-      background-color: var(--fifth-color);
-      border: 3px solid var(--fifth-color);
-      border-radius: 18px;
-      padding: 10px 20px;
-    }
-
-    .customoverlay-nearby {
-      text-align: center;
-      color: var(--fifth-color);
-      font-weight: 600;
-      background-color: #fff;
-      border: 3px solid var(--fifth-color);
-      border-radius: 18px;
-      padding: 10px 20px;
-    }
-
-    iframe {
-      width: 38%;
-      height: 600px;
-      border-radius: 10px;
-      border: 3px solid #333333;
-    }
-  }
-
-  @media (max-width: 1800px) {
-    .map-iframe {
-      iframe {
-        width: 48%;
-      }
-    }
-  }
-`;
-
-const KaKaoMap = styled.div<{ isSelected: HotPlaceInfo | undefined; category: string }>`
-  width: ${(props) => (props.isSelected && props.category ? '60%' : '100%')};
-  height: 600px;
-  border-radius: 10px;
-  border: 3px solid #333333;
-
-  @media (max-width: 1800px) {
-    width: ${(props) => (props.isSelected && props.category ? '48%' : '100%')};
-  }
-`;
