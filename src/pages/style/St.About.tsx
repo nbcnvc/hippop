@@ -179,14 +179,22 @@ export const St = {
     flex-direction: column;
     margin: 140px 0 140px 0;
     & > div {
-      order: 1; /* 텍스트를 포함하는 div를 위로 이동 */
+      order: 1;
+      width: 70%;
+      // display:flex;
+      margin: 0 auto;
     }
 
     & > SecondImg {
-      order: 2; /* 이미지 태그를 아래로 이동 */
-      margin-top: 20px; /* 이미지와 텍스트 사이의 간격 조절 (선택 사항) */
+      order: 2;
+      margin-top: 20px;
     }
   }
+  .sub-tag{
+    @media (max-width: 844px) {
+
+  }
+}
   }
 `,
   SecondImg: styled.img`
