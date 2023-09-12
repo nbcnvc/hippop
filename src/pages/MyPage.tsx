@@ -27,7 +27,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Skeleton } from '@mui/material';
 
 // style component
-import { MypageTag } from './St';
+import { St } from './style/St.MyPage';
+
 const MyPage = () => {
   // 유저 정보
   const currentUser = useCurrentUser();
@@ -202,7 +203,7 @@ const MyPage = () => {
   };
 
   return (
-    <MypageTag>
+    <St.MypageTag>
       <header>
         {/* user Info tab */}
         <div className="info-wrapper">
@@ -338,7 +339,7 @@ const MyPage = () => {
         {/* Bookmark tab */}
         {activeSection === 'myBookmark' && <MyBookmark activeSection={activeSection} />}
       </div>
-    </MypageTag>
+    </St.MypageTag>
   );
 };
 
