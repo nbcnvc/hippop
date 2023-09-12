@@ -120,9 +120,6 @@ function App() {
           }
         }
       }
-      // if (event === 'SIGNED_OUT' && currentUser) {
-      //   setCurrentUser(null);
-      // }
     });
   }, []);
 

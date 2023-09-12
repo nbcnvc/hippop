@@ -89,6 +89,7 @@ const WriterContainer = styled.div`
   max-width: 1920px;
   min-width: 744px;
   width: 50%;
+  margin-top: 50px;
   display: flex;
   justify-content: space-between;
   border: 2px solid var(--fifth-color);
