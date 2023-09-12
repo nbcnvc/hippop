@@ -577,12 +577,15 @@ export const MypageTag = styled.div`
         align-items: center;
         margin-top: 20px;
         span {
+          width: 60%;
           h2 {
             font-size: 18px;
             height: 18px;
             overflow: hidden;
             margin-bottom: 30px;
+
             @media (max-width: 2190px) {
+              height: 16px;
               margin-bottom: 10px;
             }
           }

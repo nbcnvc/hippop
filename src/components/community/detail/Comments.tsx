@@ -220,19 +220,41 @@ const Comments = ({ postId }: CommentProps) => {
       <CommentWrite>
         <Title>댓글</Title>
         <WriteBox>
-          <Input
-            value={body}
-            onChange={onChangeBody}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
-                createButton();
-              }
-            }}
-            placeholder="댓글을 입력해주세요."
-          />
-          <button className="custom-btn" onClick={createButton}>
-            등록
-          </button>
+          {currentUser ? (
+            <>
+              <Input
+                value={body}
+                onChange={onChangeBody}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    createButton();
+                  }
+                }}
+                placeholder="댓글을 입력해주세요."
+                disabled={!currentUser} // 로그인하지 않은 경우 input 비활성화
+              />
+              <button className="custom-btn" onClick={createButton}>
+                등록
+              </button>
+            </>
+          ) : (
+            <>
+              <Input
+                value={body}
+                onChange={onChangeBody}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    createButton();
+                  }
+                }}
+                placeholder="로그인 후 댓글을 입력해주세요."
+                disabled={!currentUser}
+              />
+              <button className="custom-btn" onClick={createButton}>
+                등록
+              </button>
+            </>
+          )}
         </WriteBox>
       </CommentWrite>
       {/* 댓글 목록 */}

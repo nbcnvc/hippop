@@ -83,7 +83,6 @@ const Main = () => {
           ))}
           {isFetchingNextPage && <p>Loading...</p>}
         </Masonry>
-        <div></div>
       </MainContainer>
     );
   }
@@ -102,7 +101,7 @@ const Main = () => {
           minWidth: '844px',
           width: '50%',
           margin: '0 auto',
-          '@media (min-width: 380px)': {
+          '@media (max-width: 390px)': {
             width: '40%'
           }
         }}
@@ -148,6 +147,9 @@ const MainContainer = styled.div`
       &:hover {
         filter: brightness(1.4);
       }
+      @media (max-width: 390px) {
+        width: 90%;
+      }
     }
     h4 {
       font-size: 1.1vw;
@@ -156,10 +158,17 @@ const MainContainer = styled.div`
       &:hover {
         transform: scale(0.98);
       }
+      @media (max-width: 390px) {
+        font-size: 5vw;
+      }
     }
     span {
       font-size: 1.5vw;
       color: var(--primary-color);
+      @media (max-width: 390px) {
+        font-size: 6vw;
+      }
+    }
     }
   }
 `;
