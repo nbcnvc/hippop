@@ -95,25 +95,78 @@ const MyReview = ({ activeSection }: MyReviewProps) => {
   if (isLoading) {
     return (
       <div>
-        <div className="skeleton-container">
-          <div style={{ margin: '0 auto' }}>
-            <div className="post-wrapper">
-              {Array.from({ length: 5 }).map((_, index) => (
-                <div className="fid" key={index}>
+        <div className="skeleton-container1">
+          <div className="post-wrapper1" style={{ margin: '0 auto', display: 'flex', gap: '220px', marginTop: '30px' }}>
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div className="fid" key={index}>
+                <div>
+                  <Skeleton variant="rectangular" width={'190%'} height={300} /> {/* Adjust size */}
+                </div>
+                <div className="info-box">
                   <div>
-                    <Skeleton variant="rectangular" width={270} height={300} /> {/* Adjust size */}
+                    <Skeleton width={200} height={24} /> {/* Adjust size */}
+                    <Skeleton width={100} height={16} /> {/* Adjust size */}
                   </div>
-                  <div className="info-box">
-                    <div>
-                      <Skeleton width={200} height={24} /> {/* Adjust size */}
-                      <Skeleton width={100} height={16} /> {/* Adjust size */}
-                    </div>
 
-                    <Skeleton width={120} height={60} />
+                  <Skeleton width={120} height={60} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="skeleton-container1">
+          <div className="post-wrapper1" style={{ margin: '0 auto', display: 'flex', gap: '220px', marginTop: '30px' }}>
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div className="fid" key={index}>
+                <div>
+                  <Skeleton variant="rectangular" width={'190%'} height={300} /> {/* Adjust size */}
+                </div>
+                <div className="info-box">
+                  <div>
+                    <Skeleton width={200} height={24} /> {/* Adjust size */}
+                    <Skeleton width={100} height={16} /> {/* Adjust size */}
+                  </div>
+
+                  <Skeleton width={120} height={60} />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="skeleton-container2">
+          <div className="post-wrapper2" style={{ margin: '0 auto', display: 'flex', gap: '80px', marginTop: '30px' }}>
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div className="fid" key={index}>
+                <div>
+                  <Skeleton variant="rectangular" width={'100%'} height={220} /> {/* Adjust size */}
+                </div>
+                <div className="info-box">
+                  <div>
+                    <Skeleton width={200} height={24} /> {/* Adjust size */}
+                    <Skeleton width={100} height={16} /> {/* Adjust size */}
+                    {/* <Skeleton width={'30%'} height={60} /> */}
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="skeleton-container2">
+          <div className="post-wrapper2" style={{ margin: '0 auto', display: 'flex', gap: '80px', marginTop: '30px' }}>
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div className="fid" key={index}>
+                <div>
+                  <Skeleton variant="rectangular" width={'100%'} height={220} /> {/* Adjust size */}
+                </div>
+                <div className="info-box">
+                  <div>
+                    <Skeleton width={200} height={24} /> {/* Adjust size */}
+                    <Skeleton width={100} height={16} /> {/* Adjust size */}
+                    {/* <Skeleton width={'30%'} height={60} /> */}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

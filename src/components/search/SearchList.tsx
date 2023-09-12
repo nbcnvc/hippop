@@ -23,6 +23,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 // 스타일
 import { St } from './style/St.SearchList';
+
 const SearchList = () => {
   const navigate = useNavigate();
 
@@ -402,18 +403,19 @@ const SearchList = () => {
                 <Skeleton variant="rectangular" width={100} height={40} />
               </St.InfoBox>
             </St.Card>
-
-            <St.Card>
-              <Skeleton variant="rectangular" width={340} height={369} />
-              <St.InfoBox>
-                <div>
-                  <Skeleton variant="text" width={150} height={20} />
-                  <Skeleton variant="text" width={100} height={15} />
-                  <Skeleton variant="text" width={100} height={15} />
-                </div>
-                <Skeleton variant="rectangular" width={100} height={40} />
-              </St.InfoBox>
-            </St.Card>
+            <St.SkeletonCard>
+              <St.Card>
+                <Skeleton variant="rectangular" width={340} height={369} />
+                <St.InfoBox>
+                  <div>
+                    <Skeleton variant="text" width={150} height={20} />
+                    <Skeleton variant="text" width={100} height={15} />
+                    <Skeleton variant="text" width={100} height={15} />
+                  </div>
+                  <Skeleton variant="rectangular" width={100} height={40} />
+                </St.InfoBox>
+              </St.Card>
+            </St.SkeletonCard>
           </div>
         </St.Container>
       </div>
@@ -492,17 +494,19 @@ const SearchList = () => {
                 </St.InfoBox>
               </St.Card>
 
-              <St.Card>
-                <Skeleton variant="rectangular" width={280} height={369} />
-                <St.InfoBox>
-                  <div>
-                    <Skeleton variant="text" width={120} height={20} />
-                    <Skeleton variant="text" width={100} height={15} />
-                    <Skeleton variant="text" width={100} height={15} />
-                  </div>
-                  <Skeleton variant="rectangular" width={100} height={40} />
-                </St.InfoBox>
-              </St.Card>
+              <St.SkeletonCard>
+                <St.Card>
+                  <Skeleton variant="rectangular" width={340} height={369} />
+                  <St.InfoBox>
+                    <div>
+                      <Skeleton variant="text" width={150} height={20} />
+                      <Skeleton variant="text" width={100} height={15} />
+                      <Skeleton variant="text" width={100} height={15} />
+                    </div>
+                    <Skeleton variant="rectangular" width={100} height={40} />
+                  </St.InfoBox>
+                </St.Card>
+              </St.SkeletonCard>
             </div>
             <div
               style={{
@@ -538,17 +542,19 @@ const SearchList = () => {
                   <Skeleton variant="rectangular" width={100} height={40} />
                 </St.InfoBox>
               </St.Card>
-              <St.Card>
-                <Skeleton variant="rectangular" width={280} height={369} />
-                <St.InfoBox>
-                  <div>
-                    <Skeleton variant="text" width={120} height={20} />
-                    <Skeleton variant="text" width={100} height={15} />
-                    <Skeleton variant="text" width={100} height={15} />
-                  </div>
-                  <Skeleton variant="rectangular" width={100} height={40} />
-                </St.InfoBox>
-              </St.Card>
+              <St.SkeletonCard>
+                <St.Card>
+                  <Skeleton variant="rectangular" width={340} height={369} />
+                  <St.InfoBox>
+                    <div>
+                      <Skeleton variant="text" width={150} height={20} />
+                      <Skeleton variant="text" width={100} height={15} />
+                      <Skeleton variant="text" width={100} height={15} />
+                    </div>
+                    <Skeleton variant="rectangular" width={100} height={40} />
+                  </St.InfoBox>
+                </St.Card>
+              </St.SkeletonCard>
             </div>
           </div>
         </St.Container>
