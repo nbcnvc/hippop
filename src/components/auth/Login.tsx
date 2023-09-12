@@ -4,7 +4,7 @@ import { supabase } from '../../api/supabase';
 //
 import { Link } from 'react-router-dom';
 // style
-import { LoginTag } from './St';
+import { St } from './style/St.Login';
 
 const Login = ({ closeModal }: { closeModal: () => void }) => {
   //google
@@ -51,7 +51,7 @@ const Login = ({ closeModal }: { closeModal: () => void }) => {
   };
 
   return (
-    <LoginTag>
+    <St.LoginTag>
       <div>
         <div className="login-content">
           <Link to="/">
@@ -75,7 +75,7 @@ const Login = ({ closeModal }: { closeModal: () => void }) => {
           <p>copyright by 'Our time, in that summer'</p>
         </div>
       </div>
-    </LoginTag>
+    </St.LoginTag>
   );
 };
 

@@ -9,9 +9,6 @@ export const St = {
     width: 100%;
     height: 1200px;
     position: relative;
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
   `,
   ImgContainer: styled.div`
     margin: 0 auto;
@@ -31,7 +28,6 @@ export const St = {
     object-fit: cover;
     filter: saturate(0.65);
     @media (max-width: 844px) {
-      // width: 844px;
       width: 100%;
     }
   `,
