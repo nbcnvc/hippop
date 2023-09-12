@@ -368,7 +368,6 @@ const YourPage = () => {
                     });
                     parser.write(post.body);
                     parser.end();
-
                     return (
                       <St.Card
                         onClick={() => {
