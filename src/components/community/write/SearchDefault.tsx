@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
+
 import { Store } from '../../../types/types';
+import { SearchDefaultProps } from '../../../types/props';
 import { fetchStoreData } from '../../../api/store';
 import { fetchStoreIdCount } from '../../../api/bookmark';
-import { styled } from 'styled-components';
-import { SearchDefaultProps } from '../../../types/props';
+
+import { St } from './style/St.SearchDefault';
 
 const SearchDefault = ({ setId, setTitle, setSearchModal, setWriteModal }: SearchDefaultProps) => {
   // 팝업스토어 선택
@@ -31,7 +33,7 @@ const SearchDefault = ({ setId, setTitle, setSearchModal, setWriteModal }: Searc
   const fetchBookmarkCounts = async () => {
     const storeIds = stores?.map((store) => store.id);
     if (!storeIds) {
-      return []; // stores가 없을 때는 빈 배열 반환
+      return [];
     }
     // storeIds 배열에 있는 각 스토어 id를 순회하면서 fetchCount를 실행하고
     // 각 스토어의 북마크 카운트를 가져와서 객체 형태로 배열에 저장
@@ -77,68 +79,19 @@ const SearchDefault = ({ setId, setTitle, setSearchModal, setWriteModal }: Searc
   }
   return (
     <>
-      <ResultBox>
-        <Comment>인기 팝업스토어</Comment>
-        <GridContainer>
+      <St.ResultBox>
+        <St.Comment>인기 팝업스토어</St.Comment>
+        <St.GridContainer>
           {popStores?.map((store: Store) => (
-            <Card key={store.id} onClick={() => selectStore(store)}>
-              <Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
-              <StoreName>{store.title}</StoreName>
-            </Card>
+            <St.Card key={store.id} onClick={() => selectStore(store)}>
+              <St.Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
+              <St.StoreName>{store.title}</St.StoreName>
+            </St.Card>
           ))}
-        </GridContainer>
-      </ResultBox>
+        </St.GridContainer>
+      </St.ResultBox>
     </>
   );
 };
 
 export default SearchDefault;
-
-const ResultBox = styled.div`
-  height: 550px;
-  margin: 20px;
-  overflow: scroll;
-`;
-
-const Comment = styled.div`
-  font-weight: 600;
-  margin: 10px;
-`;
-
-const GridContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 한 줄에 두 개의 열 */
-  gap: 15px; /* 열 사이의 간격 조정 */
-  max-width: 800px; /* 그리드가 너무 넓어지는 것을 제한 */
-  margin: 0 auto; /* 가운데 정렬 */
-`;
-
-const Card = styled.div`
-  width: 230px;
-  border-radius: 18px;
-  border: 2px solid var(--fifth-color);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Img = styled.img`
-  width: 210px;
-  height: 175px;
-  margin-top: 10px;
-  object-fit: cover;
-  border-radius: 10px;
-  /* border: 1.5px solid var(--fifth-color); */
-`;
-
-const StoreName = styled.div`
-  display: flex;
-  align-items: center;
-  text-align: center;
-  line-height: 1.2;
-  font-size: 14px;
-  font-weight: 500;
-  height: 30px;
-  margin: 10px 15px;
-`;

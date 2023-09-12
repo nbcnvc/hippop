@@ -1,11 +1,11 @@
 import React, { useRef } from 'react';
 
-import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import ReactQuill, { Quill } from 'react-quill';
 
 import { EditorProps } from '../../../types/props';
-import { randomFileName } from '../../../hooks/useHandleImageName';
 import { supabase } from '../../../api/supabase';
+import { randomFileName } from '../../../hooks/useHandleImageName';
 
 // 이미지 크기 조절
 import { ImageActions } from '@xeger/quill-image-actions';

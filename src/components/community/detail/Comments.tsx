@@ -1,22 +1,18 @@
-import React, { useMemo, useState } from 'react';
-// 라이브러리
 import moment from 'moment';
 import shortid from 'shortid';
 import { useNavigate } from 'react-router';
+import React, { useMemo, useState } from 'react';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import styled, { css } from 'styled-components';
-// 타입
+
 import { Comment } from '../../../types/types';
 import { CommentProps } from '../../../types/props';
-// api
-import { createComment, deleteComment, getComments, updateComment } from '../../../api/comment';
-// zustand store
 import { useCurrentUser } from '../../../store/userStore';
-// mui
-import { Skeleton } from '@mui/material';
+import { createComment, deleteComment, getComments, updateComment } from '../../../api/comment';
 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Skeleton } from '@mui/material';
+import { St } from './style/St.Comments';
 
 const Comments = ({ postId }: CommentProps) => {
   const navigate = useNavigate();
@@ -82,7 +78,6 @@ const Comments = ({ postId }: CommentProps) => {
         className: 'custom-toast',
         theme: 'light'
       });
-      // alert('로그인을 해주세요.');
       setBody('');
       return;
     }
@@ -91,7 +86,6 @@ const Comments = ({ postId }: CommentProps) => {
         className: 'custom-toast',
         theme: 'light'
       });
-      // alert('댓글을 입력해주세요.');
       return;
     }
     if (body.length > 35) {
@@ -99,7 +93,6 @@ const Comments = ({ postId }: CommentProps) => {
         className: 'custom-toast',
         theme: 'light'
       });
-      // alert('댓글은 35글자 미만으로 입력해주세요.');
       return;
     }
     // 새로운 댓글 객체 선언
@@ -167,10 +160,9 @@ const Comments = ({ postId }: CommentProps) => {
   if (isLoading) {
     return (
       <div>
-        {' '}
-        <Layout>
+        <St.Layout>
           {/* 댓글 입력창 */}
-          <CommentWrite>
+          <St.CommentWrite>
             <Skeleton variant="text" width={40} height={30} />
             <div style={{ display: 'flex' }}>
               <Skeleton variant="text" width={750} height={50} />
@@ -178,23 +170,23 @@ const Comments = ({ postId }: CommentProps) => {
                 <Skeleton variant="text" width={70} height={50} />
               </div>
             </div>
-          </CommentWrite>
+          </St.CommentWrite>
           {/* 댓글 목록 */}
-          <CommentContainer>
-            <ButtonBox>
+          <St.CommentContainer>
+            <St.ButtonBox>
               <div style={{ marginRight: '20px' }}></div>
               <div style={{ marginRight: '12px' }}></div>
-            </ButtonBox>
+            </St.ButtonBox>
             <Skeleton variant="text" width={870} height={80} />
-            <ButtonBox>
+            <St.ButtonBox>
               <div style={{ marginRight: '20px' }}></div>
               <div style={{ marginRight: '12px' }}></div>
-            </ButtonBox>
+            </St.ButtonBox>
             <Skeleton variant="text" width={870} height={80} />
             {/* <CommentBox></CommentBox> */}
-          </CommentContainer>
+          </St.CommentContainer>
           {/* 더보기 버튼 */}
-        </Layout>
+        </St.Layout>
       </div>
     );
   }
@@ -202,14 +194,11 @@ const Comments = ({ postId }: CommentProps) => {
     return <div>오류가 발생했습니다.</div>;
   }
   return (
-    <Layout>
+    <St.Layout>
       <ToastContainer
         position="top-center"
         autoClose={3000}
-        // hideProgressBar={true}
         newestOnTop={true}
-        // closeOnClick={true}
-        // rtl={true}
         pauseOnFocusLoss={false}
         draggable={true}
         pauseOnHover={true}
@@ -217,12 +206,12 @@ const Comments = ({ postId }: CommentProps) => {
         style={{ zIndex: 9999 }}
       />
       {/* 댓글 입력창 */}
-      <CommentWrite>
-        <Title>댓글</Title>
-        <WriteBox>
+      <St.CommentWrite>
+        <St.Title>댓글</St.Title>
+        <St.WriteBox>
           {currentUser ? (
             <>
-              <Input
+              <St.Input
                 value={body}
                 onChange={onChangeBody}
                 onKeyPress={(e) => {
@@ -239,7 +228,7 @@ const Comments = ({ postId }: CommentProps) => {
             </>
           ) : (
             <>
-              <Input
+              <St.Input
                 value={body}
                 onChange={onChangeBody}
                 onKeyPress={(e) => {
@@ -255,25 +244,25 @@ const Comments = ({ postId }: CommentProps) => {
               </button>
             </>
           )}
-        </WriteBox>
-      </CommentWrite>
+        </St.WriteBox>
+      </St.CommentWrite>
       {/* 댓글 목록 */}
       {selectComments?.map((comment) => {
         return (
-          <CommentContainer key={comment.id}>
+          <St.CommentContainer key={comment.id}>
             {currentUser?.id === comment.user_id && (
-              <ButtonBox>
-                <Button onClick={() => deleteButton(comment.id)}>삭제</Button>
-                <Button onClick={() => editButton(comment)}>{isEditId ? '저장' : '수정'}</Button>
-              </ButtonBox>
+              <St.ButtonBox>
+                <St.Button onClick={() => deleteButton(comment.id)}>삭제</St.Button>
+                <St.Button onClick={() => editButton(comment)}>{isEditId ? '저장' : '수정'}</St.Button>
+              </St.ButtonBox>
             )}
-            <CommentBox>
-              <DateBox>
-                <Date>{moment(comment.created_at).format('YYYY.MM.DD HH:mm')}</Date>
-              </DateBox>
-              <ProfileBox>
+            <St.CommentBox>
+              <St.DateBox>
+                <St.Date>{moment(comment.created_at).format('YYYY.MM.DD HH:mm')}</St.Date>
+              </St.DateBox>
+              <St.ProfileBox>
                 {comment.user.avatar_url && (
-                  <Img
+                  <St.Img
                     src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${comment.user.avatar_url}`}
                     alt="User Avatar"
                     onClick={() => {
@@ -282,172 +271,29 @@ const Comments = ({ postId }: CommentProps) => {
                   />
                 )}
 
-                <Name
+                <St.Name
                   onClick={() => {
                     naviProfile(comment.user.id);
                   }}
                 >
                   {comment.user.name}
-                </Name>
-              </ProfileBox>
+                </St.Name>
+              </St.ProfileBox>
               {isEditId === comment.id ? (
-                <EditInput value={edit} onChange={onChangeEdit} />
+                <St.EditInput value={edit} onChange={onChangeEdit} />
               ) : (
-                <Content>{comment.body}</Content>
+                <St.Content>{comment.body}</St.Content>
               )}
-            </CommentBox>
-          </CommentContainer>
+            </St.CommentBox>
+          </St.CommentContainer>
         );
       })}
       {/* 더보기 버튼 */}
-      <MoreButtonBox>{showButton && hasNextPage && <MoreButton onClick={fetchMore}>더보기</MoreButton>}</MoreButtonBox>
-    </Layout>
+      <St.MoreButtonBox>
+        {showButton && hasNextPage && <St.MoreButton onClick={fetchMore}>더보기</St.MoreButton>}
+      </St.MoreButtonBox>
+    </St.Layout>
   );
 };
 
 export default Comments;
-
-// 미디어 쿼리 세팅
-const mediaQuery = (maxWidth: number) => css`
-  @media (max-width: ${maxWidth}px) {
-    width: 40%;
-  }
-`;
-
-const Layout = styled.div`
-  max-width: 1920px;
-  min-width: 744px;
-  width: 50%;
-  padding-bottom: 150px;
-  display: flex;
-  flex-direction: column;
-
-  ${mediaQuery(900)}
-
-  .custom-btn {
-    width: 10%;
-    background-color: var(--second-color);
-    border-radius: 0 18px 18px 0;
-    padding: 8px 16px 10px 16px;
-    font-size: 18px;
-    font-weight: 700;
-  }
-`;
-
-const CommentWrite = styled.div`
-  width: 100%;
-  margin: 50px 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
-
-const Title = styled.div`
-  font-size: 18px;
-  font-weight: 700;
-  padding: 20px 25px;
-`;
-
-const WriteBox = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-`;
-
-const Input = styled.input`
-  width: 85%;
-  height: 38px;
-  padding: 2px 15px;
-  outline: none;
-  border-radius: 20px 0 0 20px;
-  border: 2px solid var(--fifth-color);
-`;
-
-const CommentContainer = styled.div`
-  width: 100%;
-`;
-
-const ButtonBox = styled.div`
-  display: flex;
-  justify-content: right;
-`;
-
-const Button = styled.button`
-  width: 60px;
-  height: 32px;
-  margin-right: 10px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--second-color);
-  background-color: var(--third-color);
-`;
-
-const CommentBox = styled.div`
-  padding: 10px;
-  margin: 10px 0;
-  background-color: #fff;
-  border-radius: 18px;
-  border: 2px solid var(--fifth-color);
-`;
-
-const EditInput = styled.input`
-  width: 50%;
-  padding: 5.5px;
-  margin: 5px 0;
-  outline: none;
-`;
-
-const DateBox = styled.div`
-  display: flex;
-  float: right;
-  align-items: center;
-  padding: 0 10px;
-`;
-
-const Date = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 14px 0;
-  font-size: 14px;
-`;
-
-const ProfileBox = styled.div`
-  width: 150px;
-  display: flex;
-  float: left;
-  align-items: center;
-  padding: 0 20px;
-`;
-
-const Img = styled.img`
-  width: 40px;
-  height: 40px;
-  object-fit: cover;
-  border-radius: 50%;
-  cursor: pointer;
-`;
-
-const Name = styled.div`
-  font-weight: 600;
-  padding: 0 20px;
-  cursor: pointer;
-`;
-
-const Content = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 12px 0;
-`;
-
-const MoreButtonBox = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const MoreButton = styled.button`
-  width: 100px;
-  font-weight: 600;
-  margin: 10px 0;
-`;

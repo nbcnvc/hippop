@@ -1,6 +1,8 @@
 import Editor from './Editor';
 
 import { useState } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useLocation } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -9,13 +11,7 @@ import { createPost } from '../../../api/post';
 import { WriteProps } from '../../../types/props';
 import { useCurrentUser } from '../../../store/userStore';
 
-import { styled } from 'styled-components';
-import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import ArrowBackRoundedIcon from '@mui/icons-material/ArrowBackRounded';
-//alert
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { St } from './style/St.Write';
 
 const Write = ({
   setKeyword,
@@ -28,7 +24,6 @@ const Write = ({
 }: WriteProps) => {
   const { pathname } = useLocation();
   const currentUser = useCurrentUser();
-  // const navigate = useNavigate()
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
   const [title, setTitle] = useState<string>('');
   const [body, setBody] = useState<string>('');
@@ -65,13 +60,11 @@ const Write = ({
 
   const createButton = () => {
     // 유효성 검사
-
     if (!title) {
       toast.info('제목을 먼저 입력해주세요 :)', {
         className: 'custom-toast',
         theme: 'light'
       });
-      // alert('제목을 입력해주세요.');
       return;
     }
     if (title.length > 25) {
@@ -79,7 +72,6 @@ const Write = ({
         className: 'custom-toast',
         theme: 'light'
       });
-      // alert('제목은 30글자 이하로 입력해주세요.');
       return;
     }
     if (!body) {
@@ -87,7 +79,6 @@ const Write = ({
         className: 'custom-toast',
         theme: 'light'
       });
-      // alert('내용을 입력해주세요.');
       return;
     }
     if (body === `<p><br></p>`) {
@@ -95,7 +86,6 @@ const Write = ({
         className: 'custom-toast',
         theme: 'light'
       });
-      // alert('내용을 입력해주세요.');
       return;
     }
 
@@ -133,129 +123,35 @@ const Write = ({
   return (
     <>
       {writeModal && (
-        <ModalContainer>
-          <ModalBox>
-            <ButtonBox1>
-              <BackButton onClick={closeWrite} />
-              <XButton onClick={closeButton} />
-            </ButtonBox1>
+        <St.ModalContainer>
+          <St.ModalBox>
+            <St.ButtonBox1>
+              <St.BackButton onClick={closeWrite} />
+              <St.XButton onClick={closeButton} />
+            </St.ButtonBox1>
             <div>
-              <StoreBox>
-                <Picker /> &nbsp;
-                <Store>{storeTitle}</Store>
-              </StoreBox>
-              <ContentBox>
-                <Title>제목</Title>
-                <Input value={title} onChange={onChangeTitle} placeholder="제목을 입력해주세요." />
-                <Title>내용</Title>
+              <St.StoreBox>
+                <St.Picker /> &nbsp;
+                <St.Store>{storeTitle}</St.Store>
+              </St.StoreBox>
+              <St.ContentBox>
+                <St.Title>제목</St.Title>
+                <St.Input value={title} onChange={onChangeTitle} placeholder="제목을 입력해주세요." />
+                <St.Title>내용</St.Title>
                 <Editor body={body} setBody={setBody} />
-              </ContentBox>
+              </St.ContentBox>
             </div>
-            <ButtonBox2>
-              <Button onClick={createButton}>등록</Button>
-              <Button onClick={closeButton} style={{ backgroundColor: '#2B3467' }}>
+            <St.ButtonBox2>
+              <St.Button onClick={createButton}>등록</St.Button>
+              <St.Button onClick={closeButton} style={{ backgroundColor: '#2B3467' }}>
                 취소
-              </Button>
-            </ButtonBox2>
-          </ModalBox>
-        </ModalContainer>
+              </St.Button>
+            </St.ButtonBox2>
+          </St.ModalBox>
+        </St.ModalContainer>
       )}
     </>
   );
 };
 
 export default Write;
-
-const ModalContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  z-index: 9;
-  top: 0;
-  left: 0;
-  backdrop-filter: blur(5px);
-  background-color: rgb(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const ModalBox = styled.div`
-  width: 800px;
-  height: 820px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 18px;
-  border: 3px solid var(--fifth-color);
-  position: relative;
-`;
-
-const ButtonBox1 = styled.div`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const XButton = styled(CloseRoundedIcon)`
-  cursor: pointer;
-`;
-
-const BackButton = styled(ArrowBackRoundedIcon)`
-  cursor: pointer;
-`;
-
-const StoreBox = styled.div`
-  margin: 20px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-`;
-
-const Picker = styled(RoomRoundedIcon)`
-  padding: 2px;
-`;
-
-const Store = styled.div`
-  font-size: 18px;
-  font-weight: 700;
-  padding: 2px;
-  background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
-`;
-
-const ContentBox = styled.div`
-  margin: 20px;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  flex-direction: column;
-`;
-
-const Title = styled.div`
-  font-weight: 700;
-  padding: 10px;
-`;
-
-const Input = styled.input`
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  width: 715px;
-  height: 30px;
-  padding: 2px 20px;
-  margin-bottom: 10px;
-  outline: none;
-  border-radius: 18px;
-  border: 2px solid var(--fifth-color);
-`;
-
-const ButtonBox2 = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Button = styled.button`
-  width: 100px;
-  margin: 0 10px;
-  font-size: 14px;
-  font-weight: 700;
-`;
