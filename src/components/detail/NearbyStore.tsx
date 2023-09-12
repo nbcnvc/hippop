@@ -21,7 +21,7 @@ const NearbyStore = ({ guName, setNearbyStoreMarker }: NearbyStoreProps) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  // store 전체 조회 (isClosed, false인 것만)
+  // store 전체 조회 (isclosed, false인 것만)
   const { data: storeData, isLoading, isError } = useQuery({ queryKey: ['nearbyStoreData'], queryFn: fetchStoreData });
 
   // 주변 지역 팝업스토어 filter

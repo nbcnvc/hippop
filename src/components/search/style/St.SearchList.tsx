@@ -81,7 +81,7 @@ export const St = {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 150px;
+    margin-top: 70px;
   `,
 
   H1Tag: styled.h1`
@@ -115,7 +115,7 @@ export const St = {
     }
 
     width: 100%;
-    margin-top: 50px;
+    /* margin-top: 50px; */
   `,
 
   GridContainer: styled.div`
@@ -123,9 +123,9 @@ export const St = {
     display: grid;
     grid-template-columns: repeat(2 1fr); // 한 줄에 두 개의 열 */
     gap: 30px;
-    margin-top: 50px;
+    margin-top: 70px;
 
-    margin-bottom: 250px;
+    /* margin-bottom: 250px; */
   `,
 
   StyledSlider: styled(Slider)`
