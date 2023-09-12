@@ -17,16 +17,13 @@ import Calendar from './Calendar';
 import BookMark from './BookMark';
 import StoreMap from './StoreMap';
 // mui
-import InsertLinkIcon from '@mui/icons-material/InsertLink';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import IosShareIcon from '@mui/icons-material/IosShare';
-import Menu from '@mui/material/Menu';
-import { styled as muiStyled } from '@mui/material/styles';
-import RoomIcon from '@mui/icons-material/Room';
 //alert
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Skeleton } from '@mui/material';
+// 스타일
+import { St } from './style/St.StoreDetail';
 
 const StoreDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -93,7 +90,7 @@ const StoreDetail = () => {
   if (isLoading) {
     return (
       <div>
-        <DetailContainer>
+        <St.DetailContainer>
           <div>
             <div className="store-detail">
               <div className="image-slider">
@@ -155,7 +152,7 @@ const StoreDetail = () => {
               <Skeleton variant="text" width={400} height={800} />
             </div>
           </div>
-        </DetailContainer>
+        </St.DetailContainer>
       </div>
     );
   }
@@ -165,7 +162,7 @@ const StoreDetail = () => {
   }
 
   return (
-    <DetailContainer>
+    <St.DetailContainer>
       {storeData && (
         <>
           <div className="store-detail">
@@ -179,10 +176,10 @@ const StoreDetail = () => {
               </Slider>
             </div>
             <div className="store-info">
-              <TopBox>
+              <St.TopBox>
                 <h1>{storeData.title}</h1>
                 <BookMark storeData={storeData} />
-              </TopBox>
+              </St.TopBox>
               <div className="store-body">
                 <div>{storeData.body}</div>
               </div>
@@ -198,7 +195,7 @@ const StoreDetail = () => {
                       })
                     }
                   >
-                    <LocationIcon />
+                    <St.LocationIcon />
                   </CopyToClipboard>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', margin: '15px 0', fontSize: '18px' }}>
@@ -207,9 +204,9 @@ const StoreDetail = () => {
                     style={{ display: 'flex', alignItems: 'center', margin: '0', fontSize: '18px' }}
                     ref={calendarRef}
                   >
-                    <CalendarIcon onClick={handleMouseEnter} />
-                    <CalendarClickInfo>← click !</CalendarClickInfo>
-                    <CalendarBox>{isClicked && <Calendar storeData={storeData} />}</CalendarBox>
+                    <St.CalendarIcon onClick={handleMouseEnter} />
+                    <St.CalendarClickInfo>← click !</St.CalendarClickInfo>
+                    <St.CalendarBox>{isClicked && <Calendar storeData={storeData} />}</St.CalendarBox>
                   </div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', margin: '15px 0', fontSize: '18px' }}>
@@ -230,7 +227,7 @@ const StoreDetail = () => {
                       })
                     }
                   >
-                    <LinkIcon />
+                    <St.LinkIcon />
                   </CopyToClipboard>
                 </div>
               </div>
@@ -247,7 +244,7 @@ const StoreDetail = () => {
                 >
                   팝업 메이트 구하기
                 </button>
-                <ShareBtn
+                <St.ShareBtn
                   id="basic-button"
                   aria-controls={open ? 'basic-menu' : undefined}
                   aria-haspopup="true"
@@ -255,8 +252,8 @@ const StoreDetail = () => {
                   onClick={handleClick}
                 >
                   <IosShareIcon fontSize="small" />
-                </ShareBtn>
-                <ShareMenu
+                </St.ShareBtn>
+                <St.ShareMenu
                   id="basic-menu"
                   anchorEl={anchorEl}
                   open={open}
@@ -265,250 +262,17 @@ const StoreDetail = () => {
                     'aria-labelledby': 'basic-button'
                   }}
                 >
-                  <ShareInfo>팝업스토어 정보 공유하기</ShareInfo>
+                  <St.ShareInfo>팝업스토어 정보 공유하기</St.ShareInfo>
                   <Share storeData={storeData} onClick={handleClose} />
-                </ShareMenu>
+                </St.ShareMenu>
               </div>
             </div>
           </div>
           <StoreMap storeLocation={storeData.location} title={storeData.title} />
         </>
       )}
-    </DetailContainer>
+    </St.DetailContainer>
   );
 };
 
 export default StoreDetail;
-
-const DetailContainer = styled.div`
-  max-width: 1920px;
-  /* min-width: 800px; */
-  min-width: 764px;
-  width: 50%;
-  height: 100%;
-  margin: 90px auto;
-
-  .store-detail {
-    display: flex;
-    gap: 30px;
-    margin-bottom: 150px;
-
-    .image-slider {
-      width: 630px;
-      height: 580px;
-
-      div {
-        display: flex;
-        justify-content: center;
-
-        img {
-          width: 610px;
-          height: 570px;
-          object-fit: cover;
-          border: 3px solid var(--fifth-color);
-          border-radius: 10px;
-        }
-      }
-    }
-
-    .store-info {
-      width: 100%;
-      height: auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 15px 0 10px 0;
-
-      h1 {
-        color: var(--fifth-color);
-        font-size: 32px;
-        background: linear-gradient(to top, var(--third-color) 50%, transparent 50%);
-      }
-
-      .store-body {
-        width: 100%;
-        height: auto;
-        border-bottom: 2px dashed #65656587;
-        margin-bottom: 10px;
-
-        div {
-          max-height: 100px;
-          min-height: 60px;
-
-          font-size: 18px;
-          line-height: 26px;
-          overflow: auto;
-          margin: 20px 0;
-          padding: 0 25px 0 5px;
-        }
-      }
-
-      .store-text {
-        width: 635px;
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        padding-left: 5px;
-
-        span {
-          font-size: 18px;
-          font-weight: 600;
-          margin-right: 12px;
-        }
-
-        p {
-          text-decoration: underline;
-          cursor: pointer;
-          margin-right: 15px;
-          &:hover {
-            color: var(--primary-color);
-          }
-        }
-      }
-
-      button {
-        padding: 13px;
-      }
-
-      .button-box {
-        display: flex;
-        align-items: center;
-      }
-    }
-  }
-
-  @media (max-width: 2200px) {
-    .store-detail {
-      width: 100%;
-      flex-direction: column;
-      gap: 80px;
-      margin: 120px auto;
-
-      .image-slider {
-        width: 100%;
-      }
-
-      .store-info {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        /* text-align: left; */
-        text-align: center;
-
-        .store-body {
-          width: 95%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-
-          div {
-            width: 90%;
-          }
-        }
-
-        .store-text {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        .button-box {
-          margin-top: 20px;
-        }
-      }
-    }
-  }
-`;
-
-const TopBox = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  @media (max-width: 2200px) {
-    /* flex-direction: row; */
-    justify-content: center;
-    align-items: center;
-  }
-`;
-
-const ShareBtn = styled.button`
-  background-color: #fff;
-  color: var(--fifth-color);
-  padding: 14px 25px !important;
-  margin: 10px 5px;
-`;
-
-const LocationIcon = styled(RoomIcon)`
-  margin-left: 10px;
-  cursor: pointer;
-
-  &:hover {
-    color: var(--primary-color);
-    transform: scale(1.1);
-  }
-`;
-
-const LinkIcon = styled(InsertLinkIcon)`
-  margin-left: 3px;
-  cursor: pointer;
-
-  &:hover {
-    color: var(--primary-color);
-    transform: scale(1.1);
-  }
-`;
-
-const CalendarIcon = styled(CalendarMonthIcon)`
-  margin: 0 7px 0 15px;
-  cursor: pointer;
-
-  &:hover {
-    color: var(--primary-color);
-    transform: scale(1.1);
-  }
-`;
-
-const CalendarClickInfo = styled.div`
-  animation: blink 5s infinite; /* 깜빡거리는 애니메이션 적용 */
-
-  @keyframes blink {
-    0% {
-      opacity: 1; /* 시작 시 fully visible */
-    }
-    50% {
-      opacity: 0; /* 중간에 투명 */
-    }
-    100% {
-      opacity: 1; /* 다시 fully visible */
-    }
-  }
-`;
-
-const CalendarBox = styled.div`
-  position: absolute;
-  top: 40%;
-  z-index: 3; /* 다른 요소 위에 나타나도록 설정 */
-`;
-
-const ShareMenu = muiStyled(Menu)(({ theme }) => ({
-  '& .MuiPaper-root': {
-    borderRadius: '18px',
-    padding: '15px 22px',
-    marginTop: '10px'
-  },
-
-  '& .MuiList-root': {
-    listStyle: 'none',
-    margin: '0',
-    padding: '0',
-    position: 'relative'
-  }
-}));
-
-const ShareInfo = styled.div`
-  margin-bottom: 15px;
-  font-weight: 600;
-`;
