@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 // 라이브러리
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { styled } from 'styled-components';
 import moment from 'moment';
 // api
 import { deleteSendMessage, mySendMessage, readMessage } from '../../api/message';
@@ -15,7 +14,8 @@ import MessageDetail from './MessageDetail';
 // mui
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import DraftsOutlinedIcon from '@mui/icons-material/DraftsOutlined';
-
+// style
+import { St } from './style/St.SendBox';
 const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) => {
   const [isClicked, setIsClicked] = useState<boolean>(false);
   const [selectedMessage, setSelectedMessage] = useState<MessageType | null>(null);
@@ -92,7 +92,7 @@ const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) 
   }
 
   return (
-    <Container>
+    <St.Container>
       {isClicked ? (
         <MessageDetail
           toggleMsgBox={toggleMsgBox}
@@ -106,149 +106,40 @@ const SendBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProps) 
             <>
               {sortedMessages?.map((message) => {
                 return (
-                  <Wrapper key={message.id} onClick={() => handleClickMsg(message)}>
+                  <St.Wrapper key={message.id} onClick={() => handleClickMsg(message)}>
                     <div
                       style={{ display: 'flex', alignItems: 'center', gap: '15px', width: '70%' }}
                       onClick={handleShowDetail}
                     >
-                      <ProfileBox>
+                      <St.ProfileBox>
                         {message?.to.avatar_url && (
-                          <Img
+                          <St.Img
                             src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${message.to.avatar_url}`}
                             alt="User Avatar"
                           />
                         )}
                         <h4>{message.to.name}</h4>
-                      </ProfileBox>
+                      </St.ProfileBox>
                       <p> {moment(message.created_at).format('YYYY-MM-DD HH:mm:ss')}</p>
-                      <Body>
+                      <St.Body>
                         <span>{message.body}</span>
-                      </Body>
+                      </St.Body>
                     </div>
                     <h5>{message.isRead ? <DraftsOutlinedIcon /> : <EmailOutlinedIcon />}</h5>
                     <button className="deleteBtn" onClick={() => handleDeleteMsg(message)} style={{ width: '60px' }}>
                       삭제
                     </button>
-                  </Wrapper>
+                  </St.Wrapper>
                 );
               })}
             </>
           ) : (
-            <NullBox> 보낸 쪽지가 없습니다! 쪽지를 보내볼까요? </NullBox>
+            <St.NullBox> 보낸 쪽지가 없습니다! 쪽지를 보내볼까요? </St.NullBox>
           )}
         </>
       )}
-    </Container>
+    </St.Container>
   );
 };
 
 export default SendBox;
-
-const Container = styled.div`
-  position: relative;
-  overflow-y: auto;
-  width: 100%;
-`;
-
-const Wrapper = styled.div`
-  display: flex;
-  margin: 0 auto;
-  justify-content: space-between;
-  background-color: var(--fourth-color);
-  align-items: center;
-  width: 99%;
-  height: 50px;
-  border-radius: 14px;
-  margin: 6px 0 0;
-  color: var(--fifth-color);
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease, padding-right 0.3s ease;
-  &:hover {
-    background-color: var(--sixth-color);
-  }
-  &:active {
-    transform: scale(0.988);
-  }
-  h4 {
-    margin-left: 8px;
-    width: 100px;
-    text-align: center;
-  }
-  span {
-    display: block;
-    width: 180px;
-    text-align: center;
-  }
-  .deleteBtn {
-    width: 60px;
-    height: 50px !important;
-    font-size: 14px;
-    border-radius: 0 14px 14px 0;
-    border-bottom: 4px solid var(--fifth-color);
-  }
-  p {
-    width: 180px;
-    margin-left: 20px;
-    text-align: center;
-    @media (max-width: 1360px) {
-      width: 220px;
-      margin-left: 0px;
-    }
-    @media (max-width: 1060px) {
-      display: inline-block;
-      // animation: marquee 7s linear infinite;
-      overflow: hidden;
-      width: 180px;
-    }
-  }
-`;
-
-const ProfileBox = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const Img = styled.img`
-  margin-left: 10px;
-  width: 40px;
-  height: 40px;
-  object-fit: cover;
-  border-radius: 50%;
-`;
-const Body = styled.div`
-  width: 30%;
-  overflow: hidden;
-  margin-right: 0;
-  @media (max-width: 1960px) {
-    width: 40%;
-  }
-  @media (max-width: 1360px) {
-    display: none;
-  }
-  span {
-    margin: 0 auto;
-    margin-right: -10px;
-    display: inline-block;
-    animation: marquee 7s linear infinite;
-  }
-
-  @keyframes marquee {
-    0% {
-      transform: translateX(100%);
-    }
-    100% {
-      transform: translateX(-100%);
-    }
-  }
-`;
-
-const NullBox = styled.div`
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 20px;
-  background-color: var(--fourth-color);
-  border-radius: 30px;
-`;

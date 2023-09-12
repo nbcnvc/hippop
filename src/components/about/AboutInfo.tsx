@@ -166,7 +166,6 @@ const SecondBox = styled.div`
       margin-top: 20px; /* 이미지와 텍스트 사이의 간격 조절 (선택 사항) */
     }
   }
-  }
 `;
 const SecondImg = styled.img`
   width: 50%;

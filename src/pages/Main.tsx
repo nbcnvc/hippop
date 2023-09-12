@@ -9,7 +9,7 @@ import { supabase } from '../api/supabase';
 // 타입
 import { Store } from '../types/types';
 // 컴포넌트
-import Card from '../components/list/Card';
+import Card from '../components/main/Card';
 //mui
 import { Masonry } from '@mui/lab';
 import Skeleton from '@mui/material/Skeleton';
