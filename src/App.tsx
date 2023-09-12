@@ -25,17 +25,22 @@ function App() {
     supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && !currentUser) {
         const { data } = await supabase.from('user').select(`*`).eq('id', session?.user.id).single();
+        console.log('data', data);
 
         if (data) {
           setCurrentUser(data);
         }
 
         if (event === 'SIGNED_IN' && !currentUser) {
-          // const imageUrl = session?.user.user_metadata.avatar_url
           async function uploadImageToStorage(imageUrl: any) {
             try {
               // 이미지 URL을 사용하여 이미지를 다운로드
-              const response = await fetch(imageUrl);
+              const response = await fetch(`${imageUrl}`); // 서버의 엔드포인트를 호출하여 이미지 다운로드
+
+              if (!response.ok) {
+                throw new Error('이미지 다운로드 실패');
+              }
+
               const blob = await response.blob();
 
               // 파일 이름 생성 (예: 랜덤 파일 이름)
@@ -51,7 +56,7 @@ function App() {
                 const imgUrl = data.path;
               }
 
-              return `profile/${newImg}`;
+              return data?.path;
             } catch (error) {
               console.error('이미지 업로드 오류:', error);
               return null;

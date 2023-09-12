@@ -94,7 +94,19 @@ const Main = () => {
   return (
     <MainContainer>
       {header}
-      <Masonry columns={3} spacing={2} sx={{ maxWidth: '1920px', minWidth: '844px', width: '50%', margin: '0 auto' }}>
+      <Masonry
+        columns={3}
+        spacing={2}
+        sx={{
+          maxWidth: '1920px',
+          minWidth: '844px',
+          width: '50%',
+          margin: '0 auto',
+          '@media (min-width: 380px)': {
+            width: '40%'
+          }
+        }}
+      >
         {allStores.map((store, idx) => (
           <Link to={`detail/${store.id}`} key={idx} className="masonry-item">
             <Card store={store} />
