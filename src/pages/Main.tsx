@@ -2,7 +2,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import styled from 'styled-components';
 import { useInView } from 'react-intersection-observer';
 // api
 import { supabase } from '../api/supabase';
@@ -10,6 +9,8 @@ import { supabase } from '../api/supabase';
 import { Store } from '../types/types';
 // 컴포넌트
 import Card from '../components/list/Card';
+// style component
+import { St } from './style/St.Main';
 //mui
 import { Masonry } from '@mui/lab';
 import Skeleton from '@mui/material/Skeleton';
@@ -48,8 +49,6 @@ const Main = () => {
   });
 
   useEffect(() => {
-    console.log('=== call useEffect ===');
-    console.log('inView ===>', inView);
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
@@ -73,7 +72,7 @@ const Main = () => {
 
   if (isLoading) {
     return (
-      <MainContainer>
+      <St.MainContainer>
         {header}
         <Masonry columns={3} spacing={2} sx={{ maxWidth: '1920px', width: '50%', margin: '0 auto' }}>
           {Array.from({ length: PAGE_SIZE }, (_, index) => (
@@ -83,7 +82,7 @@ const Main = () => {
           ))}
           {isFetchingNextPage && <p>Loading...</p>}
         </Masonry>
-      </MainContainer>
+      </St.MainContainer>
     );
   }
   if (isError) {
@@ -91,7 +90,7 @@ const Main = () => {
   }
 
   return (
-    <MainContainer>
+    <St.MainContainer>
       {header}
       <Masonry
         columns={3}
@@ -122,53 +121,8 @@ const Main = () => {
         }}
         ref={ref}
       ></div>
-    </MainContainer>
+    </St.MainContainer>
   );
 };
 
 export default Main;
-
-const MainContainer = styled.div`
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  header {
-    margin: 8rem 8rem 12rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    img {
-      margin: 0 auto;
-      max-width: 1400px;
-      width: 60%;
-      transition: filter 0.3s ease;
-      &:hover {
-        filter: brightness(1.4);
-      }
-      @media (max-width: 390px) {
-        width: 90%;
-      }
-    }
-    h4 {
-      font-size: 1.1vw;
-      margin-top: 2rem;
-      transition: transform 0.3s ease;
-      &:hover {
-        transform: scale(0.98);
-      }
-      @media (max-width: 390px) {
-        font-size: 5vw;
-      }
-    }
-    span {
-      font-size: 1.5vw;
-      color: var(--primary-color);
-      @media (max-width: 390px) {
-        font-size: 6vw;
-      }
-    }
-    }
-  }
-`;

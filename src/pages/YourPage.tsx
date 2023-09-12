@@ -390,7 +390,7 @@ const YourPage = () => {
                           {imageTags.length > 0 ? (
                             <PostImg src={imageTags[0]} alt={`Image`} />
                           ) : (
-                            <PostImg src={DefaultImg} />
+                            <PostImg src="/asset/defaultImg.png" />
                           )}
                           <HtagTttle>{post.store?.title}</HtagTttle>
                           <CardInfo>
