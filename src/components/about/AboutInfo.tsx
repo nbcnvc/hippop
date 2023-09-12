@@ -29,11 +29,12 @@ const AboutInfo = () => {
       </St.Wraaper>
       <St.SecondTitle>힙-팝은 다양한 팝업스토어를 한 눈에 소개해요.</St.SecondTitle>
       <St.SecondBox>
-        <div>
+        <div className="sub-tag">
           <St.SecondHtag>힙팝은 간편하게 팝업스토어를 찾게 해줘요.</St.SecondHtag>
-          <St.SecondPtag>일상에서 다양한 정보들에 손쉽게 접근 가능하지만, 우리가 원하는 정보를 찾는 것은</St.SecondPtag>
-          <St.SecondPtag>여전히 번거로운 경우가 많죠. 힙팝은 이런 번거로움을 해소하고자</St.SecondPtag>
-          <St.SecondPtag>팝업 스토어 뿐만 아니라 함께 갈만한 곳들도 같이 추천해요.</St.SecondPtag>
+          <St.SecondPtag>일상에서 다양한 정보들에 손쉽게 접근 가능하지만,</St.SecondPtag>
+          <St.SecondPtag>우리가 원하는 정보를 찾는 것은 여전히 번거로운 경우가 많죠.</St.SecondPtag>
+          <St.SecondPtag>힙팝은 이런 번거로움을 해소하고자,</St.SecondPtag>
+          <St.SecondPtag>팝업 스토어 뿐만 아니라 함께 갈만한 곳들도 같이 추천해 드려요.</St.SecondPtag>
         </div>
         <St.SecondImg src="/asset/Newjeans.png" />
       </St.SecondBox>

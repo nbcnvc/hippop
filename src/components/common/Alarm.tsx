@@ -202,11 +202,7 @@ const Alarm = () => {
     }
   }, [msgData, currentUserId]);
 
-<<<<<<< HEAD
   return <></>;
-=======
-  return <div></div>;
->>>>>>> 3f2d9b02d82f5cbca7bb3f0cd9573fa123182bf4
 };
 
 export default Alarm;
