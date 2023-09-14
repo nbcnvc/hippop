@@ -9,9 +9,6 @@ export const St = {
     width: 100%;
     height: 1200px;
     position: relative;
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
   `,
   ImgContainer: styled.div`
     margin: 0 auto;
@@ -31,7 +28,6 @@ export const St = {
     object-fit: cover;
     filter: saturate(0.65);
     @media (max-width: 844px) {
-      // width: 844px;
       width: 100%;
     }
   `,
@@ -105,8 +101,12 @@ export const St = {
   `,
 
   FaceImg: styled.img`
-    width: 100%;
-    height: 100%;
+    width: 80%;
+    height: 80%;
+    @media (max-width: 844px) {
+      width: 90px;
+      height: auto;
+    }
   `,
 
   ColorTag1: styled.div`
@@ -124,6 +124,9 @@ export const St = {
     margin: 25px 0 25px 0;
 
     padding: 0 5px;
+    @media (max-width: 844px) {
+      font-size: 20px;
+    }
   `,
 
   ColorTag2: styled.div`
@@ -140,6 +143,9 @@ export const St = {
 
     margin: 25px 0 25px 0;
     padding: 0 5px;
+    @media (max-width: 844px) {
+      font-size: 20px;
+    }
   `,
 
   ColorTag3: styled.div`
@@ -156,11 +162,19 @@ export const St = {
 
     margin: 25px 0 25px 0;
     padding: 0 5px;
+    @media (max-width: 844px) {
+      font-size: 20px;
+    }
   `,
 
   Ptag: styled.p`
     font-size: 16px;
     line-height: 20px;
+    text-align: center;
+    width: 96%;
+    @media (max-width: 844px) {
+      font-size: 12px;
+    }
   `,
 
   SecondTitle: styled.h1`
@@ -183,14 +197,22 @@ export const St = {
     flex-direction: column;
     margin: 140px 0 140px 0;
     & > div {
-      order: 1; /* 텍스트를 포함하는 div를 위로 이동 */
+      order: 1;
+      width: 70%;
+      // display:flex;
+      margin: 0 auto;
     }
 
     & > SecondImg {
-      order: 2; /* 이미지 태그를 아래로 이동 */
-      margin-top: 20px; /* 이미지와 텍스트 사이의 간격 조절 (선택 사항) */
+      order: 2;
+      margin-top: 20px;
     }
   }
+  .sub-tag{
+    @media (max-width: 844px) {
+
+  }
+}
   }
 `,
   SecondImg: styled.img`

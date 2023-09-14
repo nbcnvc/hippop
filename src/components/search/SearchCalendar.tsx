@@ -163,7 +163,6 @@ const SearchCalendar = ({ onSearch, resetStartDate, resetEndDate }: SearchCalend
               </St.Year>
               <div>
                 <St.DirectBtn type="button" onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
-                  {/* <RightArrow fill="#ffffff" /> */}
                   {'>'}
                 </St.DirectBtn>
               </div>
