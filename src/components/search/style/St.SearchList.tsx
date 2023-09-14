@@ -115,7 +115,6 @@ export const St = {
     }
 
     width: 100%;
-    /* margin-top: 50px; */
   `,
 
   GridContainer: styled.div`
@@ -125,7 +124,6 @@ export const St = {
     gap: 30px;
     margin-top: 70px;
 
-    /* margin-bottom: 250px; */
   `,
 
   StyledSlider: styled(Slider)`
