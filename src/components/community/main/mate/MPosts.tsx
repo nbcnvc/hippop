@@ -231,7 +231,9 @@ const MPosts = () => {
             );
           })}
         {sortName === '검색' && selectPosts && selectPosts.length === 0 && (
-          <St.NoResult>검색 결과가 없습니다 :(</St.NoResult>
+          <St.NoResultBox>
+            <St.NoResult>검색 결과가 없습니다 :(</St.NoResult>
+          </St.NoResultBox>
         )}
         <St.Trigger ref={ref} />
       </St.PostContainer>
