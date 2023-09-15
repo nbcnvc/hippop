@@ -72,7 +72,15 @@ const RPopularPosts = () => {
   const naviDetail = (post: PostType) => {
     navigate(`/rdetail/${post.id}`);
   };
-
+  useEffect(() => {
+    return () => {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    };
+  }, []);
   if (isLoading) {
     // 로딩 중일 때 스켈레톤을 렌더링합니다.
     return (

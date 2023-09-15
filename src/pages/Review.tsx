@@ -2,7 +2,7 @@ import Write from '../components/community/write/Write';
 import RPosts from '../components/community/main/review/RPosts';
 import SearchModal from '../components/community/write/SearchModal';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -32,6 +32,16 @@ const Review = () => {
     setSearchModal(true);
     document.body.style.overflow = 'hidden';
   };
+
+  useEffect(() => {
+    return () => {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    };
+  }, []);
 
   return (
     <St.Layout>
