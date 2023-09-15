@@ -75,7 +75,6 @@ const SearchModal = ({
         theme: 'light'
       });
       return;
-      // alert('검색어를 입력해주세요.');
     }
     // 검색 로직
     if (keyword) {

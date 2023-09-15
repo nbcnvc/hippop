@@ -220,7 +220,7 @@ export const St = {
 
   NoResult: styled.h1`
     font-size: 24px;
-    font-weight: 700px;
+    font-weight: 700;
     margin: 5px;
     display: flex;
     justify-content: center;

@@ -84,26 +84,28 @@ const Alarm = () => {
         const { data: user } = await supabase.from('user').select('*').eq('id', writerId).single();
 
         if (user) {
-          // 메세지에 들어갈 내용 세팅
+          // 알림 메시지에 들어갈 내용 세팅
           const writerName = user.name;
           const newAlarm = {
             ctg_index: 1,
             created_at: postData.commit_timestamp,
             targetUserId: currentUserId,
             content: `${writerName}님의 새 게시글: ${postData.new.title}`,
-            post_id: postData.new.id
+            post_id: postData.new.id,
+            post_isdeleted: postData.new.isdeleted
           };
 
-          // 메세지 테이블에 DB 추가
+          // 알림 테이블에 DB 추가
           await supabase.from('alarm').insert(newAlarm);
 
-          // 메세지 테이블에서 알람 데이터 가져오기
+          // 알림 테이블에서 알람 데이터 가져오기
           const { data: alarm } = await supabase
             .from('alarm')
             .select('*')
             .eq('targetUserId', currentUserId)
-            .order('created_at', { ascending: true });
+            .order('created_at', { ascending: true }); // 오름차순
 
+          // 가장 최신 데이터를 실시간 알림으로 전달하기
           if (alarm) {
             toast.info(alarm[alarm.length - 1]?.content, {
               theme: 'light',
