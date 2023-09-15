@@ -201,6 +201,21 @@ export const St = {
     border-bottom: 1px dashed #333333;
   `,
 
+  NoneBookMarkBox: styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 250%;
+  `,
+
+  NoneBookMark: styled.h1`
+    font-size: 25px;
+    color: lightgray;
+    @media (max-width: 1800px) {
+      font-size: 20px;
+    }
+  `,
+
   ReviewWrapper: styled.div`
     margin: 50px 0 0 0;
     min-height: 750px;
