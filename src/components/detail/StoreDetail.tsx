@@ -6,7 +6,6 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import { styled } from 'styled-components';
 // 타입
 import { Store } from '../../types/types';
 // api
@@ -18,10 +17,10 @@ import BookMark from './BookMark';
 import StoreMap from './StoreMap';
 // mui
 import IosShareIcon from '@mui/icons-material/IosShare';
+import { Skeleton } from '@mui/material';
 //alert
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Skeleton } from '@mui/material';
 // 스타일
 import { St } from './style/St.StoreDetail';
 
@@ -47,22 +46,26 @@ const StoreDetail = () => {
   useEffect(() => {
     // 컴포넌트가 마운트될 때 실행되는 부분
     refetch();
-    setIsClicked(false);
 
-    const handleAlarmWindowClick = (event: MouseEvent) => {
+    const handleCalendarWindowClick = (event: MouseEvent) => {
       if (!calendarRef.current?.contains(event.target as Node)) {
         setIsClicked(false);
       }
     };
 
-    window.addEventListener('click', handleAlarmWindowClick);
+    window.addEventListener('click', handleCalendarWindowClick);
     return () => {
-      window.removeEventListener('click', handleAlarmWindowClick);
-      window.scrollTo(0, 0);
+      window.removeEventListener('click', handleCalendarWindowClick);
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
     };
   }, [id]);
 
   const open = Boolean(anchorEl);
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -79,14 +82,22 @@ const StoreDetail = () => {
   const settings = {
     slidesToShow: 1,
     slidesToScroll: 1,
-    arrows: true,
+    arrows: false,
     dots: true,
     infinite: true,
     autoplay: true,
     autoplaySpeed: 2000,
     pauseOnFocus: true
   };
-
+  useEffect(() => {
+    return () => {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    };
+  }, []);
   if (isLoading) {
     return (
       <div>

@@ -119,6 +119,7 @@ export interface AlarmType {
   content: string;
   isRead: boolean;
   post_id: number | null;
+  post_isdeleted: boolean | null;
   sub_from: string | null;
   ctg_index: number;
 }

@@ -70,6 +70,16 @@ const Main = () => {
     }
   }, [inView]);
 
+  useEffect(() => {
+    return () => {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    };
+  }, []);
+
   if (isLoading) {
     return (
       <St.MainContainer>
@@ -97,11 +107,12 @@ const Main = () => {
         spacing={2}
         sx={{
           maxWidth: '1920px',
-          minWidth: '844px',
+          minWidth: '764px',
           width: '50%',
           margin: '0 auto',
+
           '@media (max-width: 390px)': {
-            width: '40%'
+            width: '85%'
           }
         }}
       >

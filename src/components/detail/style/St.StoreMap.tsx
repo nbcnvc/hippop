@@ -44,7 +44,7 @@ export const St = {
       }
 
       iframe {
-        width: 38%;
+        width: 40%;
         height: 600px;
         border-radius: 10px;
         border: 3px solid #333333;
@@ -54,7 +54,7 @@ export const St = {
     @media (max-width: 1800px) {
       .map-iframe {
         iframe {
-          width: 48%;
+          width: 50%;
         }
       }
     }
@@ -67,7 +67,7 @@ export const St = {
     border: 3px solid #333333;
 
     @media (max-width: 1800px) {
-      width: ${(props) => (props.isSelected && props.category ? '48%' : '100%')};
+      width: ${(props) => (props.isSelected && props.category ? '50%' : '100%')};
     }
   `
 };

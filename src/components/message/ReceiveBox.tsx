@@ -62,7 +62,7 @@ const ReceiveBox = ({ setSendMsgUser, setReplyModal, toggleMsgBox }: SendBoxProp
     setSendMsgUser(message);
   };
 
-  // 메세지 상세 handler
+  // 메세지 상세보기 handler
   const handleShowDetail = () => {
     setIsClicked(true);
   };

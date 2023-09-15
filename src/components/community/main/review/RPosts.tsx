@@ -54,10 +54,23 @@ const RPosts = () => {
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
+      if (ctg === '카테고리') {
+        alert('카테고리를 선택해주세요!');
+        setInputValue('');
+        return;
+      }
       setKeyword(inputValue);
       handleSearch();
     }
   };
+
+  useEffect(() => {
+    if (ctg === '카테고리' && inputValue) {
+      alert('카테고리를 선택해주세요!');
+      setInputValue('');
+      setSortName('최신순');
+    }
+  }, [ctg]);
 
   const { pathname } = useLocation();
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
@@ -77,7 +90,7 @@ const RPosts = () => {
         // 다음 페이지로 pageParam를 저장
         return lastPage.page + 1;
       }
-      // return null; // 마지막 페이지인 경우
+      // return null;
     }
   });
 
@@ -115,7 +128,15 @@ const RPosts = () => {
   const naviDetail = (post: PostType) => {
     navigate(`/rdetail/${post.id}`);
   };
-
+  useEffect(() => {
+    return () => {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    };
+  }, []);
   if (isLoading) {
     // 로딩 중일 때 스켈레톤을 렌더링합니다.
     return (

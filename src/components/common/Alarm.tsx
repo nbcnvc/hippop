@@ -91,7 +91,8 @@ const Alarm = () => {
             created_at: postData.commit_timestamp,
             targetUserId: currentUserId,
             content: `${writerName}님의 새 게시글: ${postData.new.title}`,
-            post_id: postData.new.id
+            post_id: postData.new.id,
+            post_isdeleted: postData.new.isdeleted
           };
 
           // 알림 테이블에 DB 추가

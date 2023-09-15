@@ -2,7 +2,7 @@ import MPosts from '../components/community/main/mate/MPosts';
 import Write from '../components/community/write/Write';
 import SearchModal from '../components/community/write/SearchModal';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -31,7 +31,15 @@ const Mate = () => {
     setSearchModal(true);
     document.body.style.overflow = 'hidden';
   };
-
+  useEffect(() => {
+    return () => {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    };
+  }, []);
   return (
     <St.Layout>
       <St.TitleBox>

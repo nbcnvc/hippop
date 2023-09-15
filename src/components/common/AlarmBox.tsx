@@ -39,9 +39,8 @@ const AlarmBox = ({ alarms }: AlarmBoxProps) => {
     }
   };
 
-  const queryClient = useQueryClient();
-
   // 알람 삭제
+  const queryClient = useQueryClient();
   const deleteMutation = useMutation(deleteAlarm, {
     onSuccess: () => {
       queryClient.invalidateQueries(['alarms']);
@@ -57,16 +56,16 @@ const AlarmBox = ({ alarms }: AlarmBoxProps) => {
   const naviAlarm = (alarm: AlarmType) => {
     // 새 게시글
     if (alarm.ctg_index === 1) {
-      return navigate(`rdetail/${alarm.post_id}`);
+      if (alarm.post_isdeleted === false) {
+        return alert('삭제된 게시물 입니다!');
+      } else return navigate(`rdetail/${alarm.post_id}`);
     }
     // 구독
     if (alarm.ctg_index === 2) {
-      // return navigate(`/yourpage/${alarm.sub_from}`);
       return navigate(`/yourpage/${shortid.generate()}`, { state: { userId: alarm.sub_from } });
     }
     // 쪽지
     if (alarm.ctg_index === 3) {
-      // return navigate(`/mypage/${alarm.targetUserId}`);
       return navigate(`/mypage/${shortid.generate()}`, { state: { userId: currentUser?.id } });
     }
   };

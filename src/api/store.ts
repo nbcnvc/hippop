@@ -22,7 +22,10 @@ export const getStoreData = async (pathname: string) => {
 
 // store 전체 조회 (isclosed, false인 것만)
 export const fetchStoreData = async () => {
-  const { data } = await supabase.from('store').select('*').eq('isclosed', false);
+  const { data, error } = await supabase.from('store').select('*').eq('isclosed', false);
+  if (error) {
+    console.log('error', error);
+  }
   return data as Store[];
 };
 
@@ -30,6 +33,19 @@ export const fetchStoreData = async () => {
 export const fetchDetailData = async (id: number): Promise<Store | null> => {
   const { data } = await supabase.from('store').select('*').eq('id', id).single();
   return data;
+};
+
+// store 전체 조회 (isclosed, false인 것만)
+export const fetchNewStore = async () => {
+  const { data, error } = await supabase
+    .from('store')
+    .select('*')
+    .eq('isclosed', false)
+    .order('period_start', { ascending: false });
+  if (error) {
+    console.log('error', error);
+  }
+  return data as Store[];
 };
 
 // kakao 공통 요청 경로 지정
@@ -42,34 +58,34 @@ export const Kakao = axios.create({
 
 // 검색페이지 인피니티 스크롤(3개씩) store 조회
 // search page에서 받아온 inputvalue, startDate, endDate로 필터하여
-// 무한스크롤링
+// 무한스크롤
 export const getSearchStore = async (
-  pageParam: number = 1,
-  inputValue: string,
-  startDate: string | null,
-  endDate: string | null
-  // chipInputValue: string | null
+  pageParam: number = 1, // 페이지 번호, 기본값은 1
+  inputValue: string, // 검색어
+  startDate: string | null, // 시작일
+  endDate: string | null // 종료일
 ): Promise<FetchsStore> => {
   let data: Store[] | null = [];
   let count: number | null = null;
 
+  // supabase 쿼리 객체 생성
   let query = supabase
     .from('store')
     .select()
-    .gte('period_end', startDate)
-    .lte('period_start', endDate)
-    // .order('created_at', { ascending: false })
-    // .order('period_end', { ascending: false }) // 내림차순
-    .range(pageParam * 3 - 3, pageParam * 3 - 1);
+    .gte('period_end', startDate) // 종료일이 시작일 이후인 경우
+    .lte('period_start', endDate) // 시작일이 종료일 이전인 경우
+    .range(pageParam * 3 - 3, pageParam * 3 - 1); // 페이지당 3개의 결과를 가져옴
 
   if (inputValue && inputValue !== '') {
     query = query.or(`title.ilike.%${inputValue}%,location.ilike.%${inputValue}%`);
   }
 
+  // supabase에서 store 데이터를 가져옴
   const { data: stores } = await query;
 
-  data = stores;
+  data = stores; // 가져온 데이터를 data 변수에 저장
 
+  // 상점 데이터의 총 개수를 가져옴
   const { count: storeCount } = await supabase
     .from('store')
     .select('count', { count: 'exact' })
@@ -77,11 +93,11 @@ export const getSearchStore = async (
     .lte('period_start', endDate)
     .or(`title.ilike.%${inputValue}%,location.ilike.%${inputValue}%`);
 
-  count = storeCount;
+  count = storeCount; // 가져온 데이터를 count 변수에 저장
 
-  const totalPages = count ? Math.floor(count / 3) + (count % 3 === 0 ? 0 : 1) : 1;
+  const totalPages = count ? Math.floor(count / 3) + (count % 3 === 0 ? 0 : 1) : 1; // 총페이지 수를 계산
 
-  return { stores: data as Store[], page: pageParam, totalPages, count };
+  return { stores: data as Store[], page: pageParam, totalPages, count }; // store 데이터와 page 정보를 객체로 반환
 };
 
 // myPage - pageParam
