@@ -15,7 +15,6 @@ const Subscribe = ({ writerId }: SubscribeProps) => {
   const currentUser = useCurrentUser();
 
   // 작성자 && 구독자
-  useEffect(() => {});
   const subscribe: SubscribeType = {
     subscribe_from: currentUser?.id,
     subscribe_to: writerId

@@ -20,10 +20,6 @@ const MPosts = () => {
   const { state, pathname } = useLocation();
   const storeId: number = state?.storeId || 0; // state가 존재하지 않을 때 기본값으로 0 사용
   const [sortName, setSortName] = useState<string>('전체보기');
-  const [ctg, setCtg] = useState<string>('카테고리');
-  const onChangeCtg = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setCtg(e.target.value);
-  };
   const toggleSortButton = (e: React.MouseEvent<HTMLButtonElement>) => {
     const name = (e.target as HTMLButtonElement).name;
     setSortName(name);
@@ -40,8 +36,12 @@ const MPosts = () => {
   // 검색 로직
   const [inputValue, setInputValue] = useState<string>('');
   const [keyword, setKeyword] = useState<string>('');
+  const [ctg, setCtg] = useState<string>('카테고리');
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
+  };
+  const onChangeCtg = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCtg(e.target.value);
   };
 
   const handleSearch = () => {
@@ -51,10 +51,23 @@ const MPosts = () => {
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
+      if (ctg === '카테고리') {
+        alert('카테고리를 선택해주세요!');
+        setInputValue('');
+        return;
+      }
       setKeyword(inputValue);
       handleSearch();
     }
   };
+
+  useEffect(() => {
+    if (ctg === '카테고리' && inputValue) {
+      alert('카테고리를 선택해주세요!');
+      setInputValue('');
+      setSortName('전체보기');
+    }
+  }, [ctg]);
 
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
   const {
@@ -73,7 +86,7 @@ const MPosts = () => {
         // 다음 페이지로 pageParam를 저장
         return lastPage.page + 1;
       }
-      return null; // 마지막 페이지인 경우
+      // return null;
     }
   });
 
@@ -240,7 +253,9 @@ const MPosts = () => {
             );
           })}
         {sortName === '검색' && selectPosts && selectPosts.length === 0 && (
-          <St.NoResult>검색 결과가 없습니다 :(</St.NoResult>
+          <St.NoResultBox>
+            <St.NoResult>검색 결과가 없습니다 :(</St.NoResult>
+          </St.NoResultBox>
         )}
         <St.Trigger ref={ref} />
       </St.PostContainer>

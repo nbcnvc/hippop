@@ -54,10 +54,23 @@ const RPosts = () => {
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
+      if (ctg === '카테고리') {
+        alert('카테고리를 선택해주세요!');
+        setInputValue('');
+        return;
+      }
       setKeyword(inputValue);
       handleSearch();
     }
   };
+
+  useEffect(() => {
+    if (ctg === '카테고리' && inputValue) {
+      alert('카테고리를 선택해주세요!');
+      setInputValue('');
+      setSortName('최신순');
+    }
+  }, [ctg]);
 
   const { pathname } = useLocation();
   const queryKey = pathname === '/review' ? 'reviews' : 'mates';
@@ -77,7 +90,7 @@ const RPosts = () => {
         // 다음 페이지로 pageParam를 저장
         return lastPage.page + 1;
       }
-      // return null; // 마지막 페이지인 경우
+      // return null;
     }
   });
 
@@ -238,7 +251,9 @@ const RPosts = () => {
             );
           })}
         {sortName === '검색' && selectPosts && selectPosts.length === 0 && (
-          <St.NoResult>검색 결과가 없습니다 :(</St.NoResult>
+          <St.NoResultBox>
+            <St.NoResult>검색 결과가 없습니다 :(</St.NoResult>
+          </St.NoResultBox>
         )}
         <St.Trigger ref={ref} />
       </St.PostContainer>
