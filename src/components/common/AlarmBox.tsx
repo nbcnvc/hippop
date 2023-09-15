@@ -10,6 +10,7 @@ import { deleteAlarm } from '../../api/alarm';
 import { useCurrentUser } from '../../store/userStore';
 
 import { St } from './style/St.AlarmBox';
+import { toast } from 'react-toastify';
 
 const AlarmBox = ({ alarms }: AlarmBoxProps) => {
   const navigate = useNavigate();
@@ -57,7 +58,10 @@ const AlarmBox = ({ alarms }: AlarmBoxProps) => {
     // 새 게시글
     if (alarm.ctg_index === 1) {
       if (alarm.post_isdeleted === false) {
-        return alert('삭제된 게시물 입니다!');
+        return toast.info('삭제된 게시물 입니다!', {
+          className: 'custom-toast',
+          theme: 'light'
+        });
       } else return navigate(`rdetail/${alarm.post_id}`);
     }
     // 구독
