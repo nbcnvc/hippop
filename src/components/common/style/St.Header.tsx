@@ -22,7 +22,7 @@ export const St = {
       justify-content: center;
       align-items: center;
       @media (max-width: 390px) {
-        width: 390px;
+        width: 80%;
       }
       ul {
         margin: 0 auto;
