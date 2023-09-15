@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 // 라이브러리
 import 'react-toastify/dist/ReactToastify.css';
-import 'react-toastify/dist/ReactToastify.css';
 // 타입
 import { MessageType } from '../types/types';
 // 컴포넌트
@@ -11,7 +10,7 @@ import ReceiveBox from '../components/message/ReceiveBox';
 import MyReview from '../components/mypage/MyReview';
 import MyBookmark from '../components/mypage/MyBookmark';
 import MySubModal from '../components/mypage/MySubModal';
-// ㅁpi
+// pi
 import { getUser } from '../api/user';
 import { supabase } from '../api/supabase';
 //store
@@ -19,7 +18,7 @@ import { setUserStore, useCurrentUser } from '../store/userStore';
 import { randomFileName } from '../hooks/useHandleImageName';
 // react-icons
 import { BsFillPeopleFill } from 'react-icons/bs';
-// mui
+// library
 import PartyModeIcon from '@mui/icons-material/PartyMode';
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
@@ -117,6 +116,7 @@ const MyPage = () => {
         const newFileName = randomFileName(selectedImage.name);
         const renamedFile = new File([selectedImage], newFileName);
         const { data } = await supabase.storage.from('images').upload(`profile/${renamedFile.name}`, renamedFile);
+
         if (data) {
           const imgUrl = data.path;
           await supabase.from('user').update({ avatar_url: imgUrl }).eq('id', currentUser?.id);
