@@ -98,15 +98,6 @@ const YourPage = () => {
     }
     return null;
   };
-  useEffect(() => {
-    return () => {
-      window.scroll({
-        top: 0,
-        left: 0,
-        behavior: 'smooth'
-      });
-    };
-  }, []);
 
   const {
     data: items,
@@ -162,7 +153,11 @@ const YourPage = () => {
 
   useEffect(() => {
     return () => {
-      window.scrollTo(0, 0);
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
     };
   }, []);
 
