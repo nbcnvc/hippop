@@ -347,6 +347,7 @@ const SearchList = () => {
   const combinedLabel = `${momentStart} ~ ${momentEnd}`;
 
   const latestChips = previousSearchTerms.slice(-5);
+
   useEffect(() => {
     return () => {
       window.scrollTo(0, 0);
@@ -597,14 +598,12 @@ const SearchList = () => {
             검색
           </button>
         </form>
-        {/* <Reset onClick={handleReset} /> */}
       </St.SearchBox>
       <SearchCalendar storeData={storeData} onSearch={handleSearch} resetStartDate={startDate} resetEndDate={endDate} />
       {filteredStoreList ? (
         <St.ChipBoX>
           <Stack direction="row" spacing={1}>
             {latestChips.map((term) => (
-              // <Chip key={term} label={term}  />
               <Chip key={term} label={term} onDelete={() => handleInputDelete(term)} />
             ))}
 

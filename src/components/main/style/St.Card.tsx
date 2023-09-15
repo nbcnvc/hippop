@@ -14,6 +14,9 @@ export const St = {
       width: 100%;
       height: 100%;
     }
+    /* @media (max-width: 390px) {
+      width: '40%';
+    } */
 
     &:hover {
       border: 3px solid var(--primary-color);
@@ -42,7 +45,9 @@ export const St = {
       width: 100%;
       height: 100%;
     }
-
+    /* @media (max-width: 390px) {
+      width: '40%';
+    } */
     &:hover {
       border: 3px solid var(--primary-color);
     }
