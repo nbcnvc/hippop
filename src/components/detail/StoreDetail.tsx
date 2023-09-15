@@ -56,7 +56,11 @@ const StoreDetail = () => {
     window.addEventListener('click', handleCalendarWindowClick);
     return () => {
       window.removeEventListener('click', handleCalendarWindowClick);
-      window.scrollTo(0, 0);
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
     };
   }, [id]);
 
@@ -165,7 +169,7 @@ const StoreDetail = () => {
   }
 
   if (isError) {
-    return <div>데이터를 가져오는 도중 오류가 발생했습니다.</div>;
+    return <div>오류가 발생했습니다.</div>;
   }
 
   return (
