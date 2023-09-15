@@ -56,7 +56,11 @@ const StoreDetail = () => {
     window.addEventListener('click', handleCalendarWindowClick);
     return () => {
       window.removeEventListener('click', handleCalendarWindowClick);
-      window.scrollTo(0, 0);
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
     };
   }, [id]);
 

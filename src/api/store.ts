@@ -22,7 +22,10 @@ export const getStoreData = async (pathname: string) => {
 
 // store 전체 조회 (isclosed, false인 것만)
 export const fetchStoreData = async () => {
-  const { data } = await supabase.from('store').select('*').eq('isclosed', false);
+  const { data, error } = await supabase.from('store').select('*').eq('isclosed', false);
+  if (error) {
+    console.log('error', error);
+  }
   return data as Store[];
 };
 
@@ -30,6 +33,19 @@ export const fetchStoreData = async () => {
 export const fetchDetailData = async (id: number): Promise<Store | null> => {
   const { data } = await supabase.from('store').select('*').eq('id', id).single();
   return data;
+};
+
+// store 전체 조회 (isclosed, false인 것만)
+export const fetchNewStore = async () => {
+  const { data, error } = await supabase
+    .from('store')
+    .select('*')
+    .eq('isclosed', false)
+    .order('period_start', { ascending: false });
+  if (error) {
+    console.log('error', error);
+  }
+  return data as Store[];
 };
 
 // kakao 공통 요청 경로 지정

@@ -7,8 +7,10 @@ import { CalendarProps } from '../../types/props';
 import { St } from './style/St.Calendar';
 
 const Calendar = ({ storeData }: CalendarProps) => {
-  const [period, setPeriod] = useState<[string, string]>([storeData.period_start, storeData.period_end]);
+  const startDate = moment(storeData.period_start, 'YYYY.MM.DD').format('YYYY/MM/DD');
+  const endDate = moment(storeData.period_end, 'YYYY.MM.DD').format('YYYY/MM/DD');
 
+  const [period, setPeriod] = useState([startDate, endDate]);
   // 팝업스토어 기간 지정 onChange
   const onChangeCalendar = (date: any) => {
     setPeriod([date, date]);
