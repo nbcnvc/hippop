@@ -3,11 +3,7 @@ import React from 'react';
 import SearchList from '../components/search/SearchList';
 
 const Search = () => {
-  return (
-    <div style={{ margin: '0 auto' }}>
-      <SearchList />
-    </div>
-  );
+  return <SearchList />;
 };
 
 export default Search;

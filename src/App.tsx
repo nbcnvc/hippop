@@ -26,7 +26,6 @@ function App() {
     supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && !currentUser) {
         const { data } = await supabase.from('user').select(`*`).eq('id', session?.user.id).single();
-        console.log('data', data);
 
         if (data) {
           setCurrentUser(data);
