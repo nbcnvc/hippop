@@ -85,7 +85,15 @@ const StoreDetail = () => {
     autoplaySpeed: 2000,
     pauseOnFocus: true
   };
-
+  useEffect(() => {
+    return () => {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    };
+  }, []);
   if (isLoading) {
     return (
       <div>

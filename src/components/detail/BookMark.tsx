@@ -22,7 +22,7 @@ const BookMark = ({ storeData }: CalendarProps) => {
   // store의 id 가져오기
   const storeId = storeData.id;
 
-  // 로그인한
+  // 로그인한 유저
   const currentUser = useCurrentUser();
 
   // Query
@@ -38,7 +38,6 @@ const BookMark = ({ storeData }: CalendarProps) => {
   // 토글 핸들러
   const onClickToggle = () => {
     if (currentUser) {
-      // Check if currentUser is not null
       const toogleBookMark: Bookmark = {
         user_id: currentUser.id ?? '',
         store_id: storeId

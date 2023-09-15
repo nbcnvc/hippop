@@ -50,7 +50,7 @@ const SearchList = () => {
   // 쿼리
   const queryClient = useQueryClient();
 
-  // 디바운싱
+  // 디바운싱 _debounce 함수를 사용하여 입력 값이 변경될 때 24시간 동안 대기한 다음 값을 없데이트
   const debouncedSearch = _debounce((value: string) => {
     setDebouncedInputValue(value);
   }, 86400000);
@@ -98,19 +98,23 @@ const SearchList = () => {
   };
 
   // 인피니티 스크롤로 필터된 store
+  // useMemo 성능 최적화를 목적으로
+  // 계산 결과를 메모이제이션하여 이전에 계산한 결과를 재사용할 수 있도록 도와줌
+  // 의존성 배열의 변경될 때마다 다시 계산됨
   const selectStores = useMemo(() => {
     return stores?.pages
       .map((data) => {
         return data.stores;
       })
-      .flat();
+      .flat(); // map함수를 사용하여 추출한 store의 목록을 하나의 배열로 만듬 => stores는 페이지별로 분리되어 있기 때문
   }, [stores]);
 
   // 언제 다음 페이지를 가져올 것
   const { ref } = useInView({
-    threshold: 1, // 맨 아래에 교차될 때
+    // 요소의 가시성을 감시하고 해당 요소가 화면에 나타나거나 사라질 때 콜백함수를 실행하도록 도와줌
+    threshold: 1, // 맨 아래에 교차될 때(100%)
     onChange: (inView: any) => {
-      if (!inView || !hasNextPage || isFetchingNextPage) return;
+      if (!inView || !hasNextPage || isFetchingNextPage) return; // !hasNextPage 더이상 가져올 페이지 x /  isFetchingNextPage 이미 데이터를 가져오는 중으로 중복 요청을 방지
       fetchNextPage();
     }
   });
@@ -118,6 +122,7 @@ const SearchList = () => {
   // 북마크 카운트를 가져오는 함수
   const fetchBookmarkCounts = async () => {
     if (storeData) {
+      // 전체데이터
       const storeIds = storeData.map((store) => store.id);
 
       // storeIds 배열에 있는 각 스토어 id를 순회하면서 fetchCount를 실행하고
@@ -159,25 +164,24 @@ const SearchList = () => {
     ? [...storeData].sort((a, b) => {
         const indexC = a.period_start;
         const indexD = b.period_start;
-        return indexD.localeCompare(indexC); // Compare as strings
+        return indexD.localeCompare(indexC); // localeCompare 문자열을 비교
       })
     : [];
 
-  // 인기 팝업스토어 자르기
+  // 인기 팝업스토어 10개 자르기
   const popStores = sortedStores?.slice(0, 10);
 
-  // 최신 팝업스토어 자르기
+  // 최신 팝업스토어 10개 자르기
   const latStores = latestStores?.slice(0, 10);
 
   // onChange 핸들러
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setInputValue(newValue);
+    setInputValue(e.target.value);
   };
 
   // 검색 버튼 핸들러
   const handleSearchFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // Prevent default form submission behavior
+    e.preventDefault(); // 새로고침 방지
 
     if (!inputValue.trim()) {
       toast.info('검색어를 입력해주세요 ! :)', {
@@ -185,7 +189,7 @@ const SearchList = () => {
         theme: 'light'
       });
     } else {
-      // Add the inputValue to the previousSearchTerms array
+      // 검색어가 입력되었을 경우, 이를 이전 검색어 목록에 추가하고 debouncedInputValue 상태를 업데이트하여 검색을 업데이트
       setPreviousSearchTerms((prevTerms) => [...prevTerms, inputValue]);
       setDebouncedInputValue(inputValue);
     }
@@ -194,7 +198,9 @@ const SearchList = () => {
   // 데이터 필터링
   useEffect(() => {
     if (debouncedInputValue || startDate || endDate) {
+      // 검색어가 입력되었거나 시작 날짜 또는 종료 날짜가 존재하는 경우에만 실행
       const filteredStores = selectStores?.filter((store) => {
+        // store를 필터링
         const lowercaseInputValue = debouncedInputValue?.toLowerCase();
         const storeStartDate = moment(store.period_start);
         const storeEndDate = moment(store.period_end);
@@ -209,14 +215,14 @@ const SearchList = () => {
         );
       });
 
-      // 검색 결과를 상태로 설정
-      setFilteredStoreList(filteredStores || null);
-      setSearchResultCount(filteredStores?.length || 0);
+      setFilteredStoreList(filteredStores || null); // 검색 결과를 상태로 설정
+      setSearchResultCount(filteredStores?.length || 0); // 검색 결과의 개수를 설정
     }
   }, [selectStores, debouncedInputValue, startDate, endDate]);
 
   // SearchCalendar 컴포넌트에서 지정 검색한 date를 받아옴 props로 받아옴
   const handleSearch = (start: Date, end: Date) => {
+    // 받아온 시작일과 종료일을 상태로 업데이트
     setStartDate(start);
     setEndDate(end);
 
@@ -225,47 +231,49 @@ const SearchList = () => {
 
     if (storeData) {
       const filteredStores = storeData.filter((store) => {
+        // storeData를 필터링
+        // 각 상점의 시작 날짜와 종료 날짜를 moment 객체로 변환
         const storeStartDate = moment(store.period_start);
         const storeEndDate = moment(store.period_end);
 
+        // 선택한 종료일 이전이거나 같고, 선택한 시작일 이후이거나 같은 상점만 선택
         return storeStartDate.isSameOrBefore(momentEnd) && storeEndDate.isSameOrAfter(momentStart);
       });
 
-      setFilteredStoreList(filteredStores);
+      setFilteredStoreList(filteredStores); // 필터링된 상점 목록을 상태로 업데이트
     }
-    // refreshData();
   };
 
   // 검색어 칩 삭제
   const handleInputDelete = (term: string) => {
-    setInputValue('');
+    setInputValue(''); // 입력 값 초기화
+    // 이전 검색어 목록에서 현재 삭제하려는 검색어를 제외한 새로운 배열을 생성
     const newPreviousSearchTerms = previousSearchTerms.filter((index) => index !== term);
-    setPreviousSearchTerms(newPreviousSearchTerms);
+    setPreviousSearchTerms(newPreviousSearchTerms); // 이전 검색어 목록을 업데이트
 
     if (startDate && endDate && (momentStart !== '0000.01.01' || momentEnd !== '9999.12.31')) {
+      // 이전 검색어 목록에서 마지막 검색어를 가져옴
       setDebouncedInputValue(newPreviousSearchTerms[newPreviousSearchTerms.length - 1]);
 
       if (newPreviousSearchTerms.length === 0) {
-        setDebouncedInputValue('');
+        setDebouncedInputValue(''); // 검색어를 빈 문자열로 설정하여 검색 결과를 초기화
       }
     } else if (momentStart === '0000.01.01' || momentEnd === '9999.12.31') {
+      // 시작일과 종료일이 하나라도 기본 값인 경우
       setDebouncedInputValue(newPreviousSearchTerms[newPreviousSearchTerms.length - 1]);
 
       if (newPreviousSearchTerms.length === 0) {
-        setFilteredStoreList(null);
+        setFilteredStoreList(null); // 필터링된 상점 목록을 초기화
       }
     }
   };
 
   // 날짜 칩 삭제
   const handleDateDelete = () => {
-    setFilteredStoreList(null);
-    setStartDate(null);
-    setEndDate(null);
-    refreshData();
-
-    if (startDate && endDate && momentStart === '0000.01.01' && momentEnd === '9999.12.31') {
-    }
+    setFilteredStoreList(null); // 필터링된 storelist를 초기화
+    setStartDate(null); // 시작 날짜 초기화
+    setEndDate(null); // 종료 날짜 초기화
+    refreshData(); // 데이터를 새로고침
   };
 
   // detail page 이동
@@ -342,9 +350,14 @@ const SearchList = () => {
   const combinedLabel = `${momentStart} ~ ${momentEnd}`;
 
   const latestChips = previousSearchTerms.slice(-5);
+
   useEffect(() => {
     return () => {
-      window.scrollTo(0, 0);
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
     };
   }, []);
 
@@ -592,14 +605,12 @@ const SearchList = () => {
             검색
           </button>
         </form>
-        {/* <Reset onClick={handleReset} /> */}
       </St.SearchBox>
       <SearchCalendar storeData={storeData} onSearch={handleSearch} resetStartDate={startDate} resetEndDate={endDate} />
       {filteredStoreList ? (
         <St.ChipBoX>
           <Stack direction="row" spacing={1}>
             {latestChips.map((term) => (
-              // <Chip key={term} label={term}  />
               <Chip key={term} label={term} onDelete={() => handleInputDelete(term)} />
             ))}
 
