@@ -38,12 +38,7 @@ export const fetchCount = async () => {
   return count;
 };
 
-// 북마크를 store_id별로 count
-export const fetchStoreIdCount = async (store_id: number) => {
-  const { count } = await supabase
-    .from('bookmark')
-    .select('count', { count: 'exact', head: true }) // 선택된 데이터의 'count' 필드를 가져오며, 'exact' 옵션을 사용하여 정확한 개수를 가져옴
-    .eq('store_id', store_id);
-
-  return count;
+export const fetchPopularStore = async () => {
+  const { data } = await supabase.from('popular_stores').select();
+  return data;
 };

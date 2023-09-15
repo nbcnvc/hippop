@@ -8,8 +8,8 @@ import _debounce from 'lodash/debounce';
 // 컴포넌트
 import SearchCalendar from './SearchCalendar';
 // api
-import { fetchStoreIdCount } from '../../api/bookmark';
-import { fetchStoreData, getSearchStore } from '../../api/store';
+import { fetchPopularStore } from '../../api/bookmark';
+import { fetchNewStore, getSearchStore } from '../../api/store';
 // 타입
 import { FetchsStore, SliderButton, Store } from '../../types/types';
 // mui
@@ -37,9 +37,16 @@ const SearchList = () => {
   // filter된 storeList state
   const [filteredStoreList, setFilteredStoreList] = useState<Store[] | null>(null);
 
+  const formatDate = (date: any) => {
+    const yyyy = date.getFullYear().toString();
+    const mm = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+    const dd = date.getDate().toString().padStart(2, '0');
+    return `${yyyy}.${mm}.${dd}`;
+  };
+
   // moment 라이브러리로 원하는 형태로 날짜 포멧
-  const momentStart = startDate ? moment(startDate).format('YYYY.MM.DD') : '0000.01.01';
-  const momentEnd = endDate ? moment(endDate).format('YYYY.MM.DD') : '9999.12.31';
+  const formatStart = startDate ? formatDate(startDate) : '0000.01.01';
+  const formatEnd = endDate ? formatDate(endDate) : '9999.12.31';
 
   // 검색결과 length state
   const [searchResultCount, setSearchResultCount] = useState<number>(0);
@@ -62,16 +69,6 @@ const SearchList = () => {
     };
   }, [inputValue]);
 
-  // store 전체 조회
-  const {
-    data: storeData,
-    isLoading,
-    isError
-  } = useQuery<Store[] | null>({
-    queryKey: ['storeData'],
-    queryFn: () => fetchStoreData()
-  });
-
   // 인피니티 스크롤을 위한 데이터 조회
   const {
     data: stores,
@@ -81,8 +78,8 @@ const SearchList = () => {
     fetchNextPage,
     isFetchingNextPage
   } = useInfiniteQuery<FetchsStore>({
-    queryKey: ['/search', debouncedInputValue, momentStart, momentEnd],
-    queryFn: ({ pageParam }) => getSearchStore(pageParam, debouncedInputValue, momentStart, momentEnd),
+    queryKey: ['/search', debouncedInputValue, formatStart, formatEnd],
+    queryFn: ({ pageParam }) => getSearchStore(pageParam, debouncedInputValue, formatStart, formatEnd),
     // Pass filter values
     getNextPageParam: (lastPage) => {
       // 전체 페이지 개수보다 작을 때
@@ -91,10 +88,10 @@ const SearchList = () => {
         return lastPage.page + 1;
     }
   });
-
+  console.log('stores', stores);
   // 캐싱 처리
   const refreshData = () => {
-    queryClient.invalidateQueries(['/search', debouncedInputValue, momentStart, momentEnd]);
+    queryClient.invalidateQueries(['/search', debouncedInputValue, formatStart, formatEnd]);
   };
 
   // 인피니티 스크롤로 필터된 store
@@ -119,60 +116,24 @@ const SearchList = () => {
     }
   });
 
-  // 북마크 카운트를 가져오는 함수
-  const fetchBookmarkCounts = async () => {
-    if (storeData) {
-      // 전체데이터
-      const storeIds = storeData.map((store) => store.id);
+  // 인기순 팝업스토어 가져오기
+  const { data: popularStores } = useQuery(['popular'], fetchPopularStore);
 
-      // storeIds 배열에 있는 각 스토어 id를 순회하면서 fetchCount를 실행하고
-      // 각 스토어의 북마크 카운트를 가져와서 객체 형태로 배열에 저장
-      const countsPromises = storeIds.map(async (store_id) => {
-        const count = await fetchStoreIdCount(store_id);
-        return { store_id, count };
-      });
-      // Promise.all
-      // 배열에 담긴 모든 비동기 작업이 완료 될떄까지 대기하고, 완료되면 모든 결과를 배열로 반환
-      const bookmarkCounts = await Promise.all(countsPromises);
-      return bookmarkCounts;
-    }
-  };
-
-  // 컴포넌트가 마운트되거나 storeData가 변경될 때 북마크 카운트를 가져옴
-  const { data: bookMarkCounts } = useQuery(['bookMarkCounts', storeData], fetchBookmarkCounts);
-
-  // 북마크 카운트가 많은 순으로 store_id를 정렬
-  const sortedCounts = bookMarkCounts
-    ? (bookMarkCounts as { store_id: number; count: number }[]).sort((a, b) => b.count - a.count)
-    : [];
-
-  // 정렬된 store id의 배열
-  const sortedStoreIds = sortedCounts.map((item) => item.store_id);
-
-  // 인기순(북마크 많은 순) 정렬된 storeData
-  const sortedStores = storeData
-    ? [...storeData].sort((a, b) => {
-        const indexA = sortedStoreIds.indexOf(a.id);
-        const indexB = sortedStoreIds.indexOf(b.id);
-
-        return indexA - indexB;
-      })
-    : [];
-
-  // 최신순 정렬된 storeData
-  const latestStores = storeData
-    ? [...storeData].sort((a, b) => {
-        const indexC = a.period_start;
-        const indexD = b.period_start;
-        return indexD.localeCompare(indexC); // localeCompare 문자열을 비교
-      })
-    : [];
+  // 최신 팝업스토어 조회
+  const {
+    data: latestStore,
+    isLoading,
+    isError
+  } = useQuery<Store[] | null>({
+    queryKey: ['storeData'],
+    queryFn: () => fetchNewStore()
+  });
 
   // 인기 팝업스토어 10개 자르기
-  const popStores = sortedStores?.slice(0, 10);
+  const popStores = popularStores?.slice(0, 10);
 
   // 최신 팝업스토어 10개 자르기
-  const latStores = latestStores?.slice(0, 10);
+  const latStores = latestStore?.slice(0, 10);
 
   // onChange 핸들러
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -193,28 +154,32 @@ const SearchList = () => {
       setPreviousSearchTerms((prevTerms) => [...prevTerms, inputValue]);
       setDebouncedInputValue(inputValue);
     }
+    // refreshData();
   };
 
   // 데이터 필터링
   useEffect(() => {
     if (debouncedInputValue || startDate || endDate) {
       // 검색어가 입력되었거나 시작 날짜 또는 종료 날짜가 존재하는 경우에만 실행
+      console.log('selectStores', selectStores);
       const filteredStores = selectStores?.filter((store) => {
         // store를 필터링
         const lowercaseInputValue = debouncedInputValue?.toLowerCase();
-        const storeStartDate = moment(store.period_start);
-        const storeEndDate = moment(store.period_end);
-
+        const storeStartDate = store.period_start;
+        const storeEndDate = store.period_end;
+        console.log('lowercaseInputValue', lowercaseInputValue);
+        console.log('storeStartDate', storeStartDate);
+        console.log('period_start', store.period_start);
+        console.log('storeEndDate', store.period_end);
         return (
-          (!debouncedInputValue || // 검색어가 없는 경우 모든 데이터 포함
-            store.title.toLowerCase().includes(lowercaseInputValue) ||
+          (store.title.toLowerCase().includes(lowercaseInputValue) ||
             store.body.toLowerCase().includes(lowercaseInputValue) ||
             store.location.toLowerCase().includes(lowercaseInputValue)) &&
-          storeStartDate.isSameOrBefore(momentEnd) &&
-          storeEndDate.isSameOrAfter(momentStart)
+          storeStartDate.localeCompare(storeEndDate) &&
+          storeEndDate.localeCompare(storeStartDate)
         );
       });
-
+      console.log('filteredStores', filteredStores);
       setFilteredStoreList(filteredStores || null); // 검색 결과를 상태로 설정
       setSearchResultCount(filteredStores?.length || 0); // 검색 결과의 개수를 설정
     }
@@ -229,8 +194,8 @@ const SearchList = () => {
     const momentStart = moment(start);
     const momentEnd = moment(end);
 
-    if (storeData) {
-      const filteredStores = storeData.filter((store) => {
+    if (latestStore) {
+      const filteredStores = latestStore.filter((store) => {
         // storeData를 필터링
         // 각 상점의 시작 날짜와 종료 날짜를 moment 객체로 변환
         const storeStartDate = moment(store.period_start);
@@ -242,6 +207,7 @@ const SearchList = () => {
 
       setFilteredStoreList(filteredStores); // 필터링된 상점 목록을 상태로 업데이트
     }
+    // refreshData();
   };
 
   // 검색어 칩 삭제
@@ -251,14 +217,14 @@ const SearchList = () => {
     const newPreviousSearchTerms = previousSearchTerms.filter((index) => index !== term);
     setPreviousSearchTerms(newPreviousSearchTerms); // 이전 검색어 목록을 업데이트
 
-    if (startDate && endDate && (momentStart !== '0000.01.01' || momentEnd !== '9999.12.31')) {
+    if (startDate && endDate && (formatStart !== '0000.01.01' || formatEnd !== '9999.12.31')) {
       // 이전 검색어 목록에서 마지막 검색어를 가져옴
       setDebouncedInputValue(newPreviousSearchTerms[newPreviousSearchTerms.length - 1]);
 
       if (newPreviousSearchTerms.length === 0) {
         setDebouncedInputValue(''); // 검색어를 빈 문자열로 설정하여 검색 결과를 초기화
       }
-    } else if (momentStart === '0000.01.01' || momentEnd === '9999.12.31') {
+    } else if (formatStart === '0000.01.01' || formatEnd === '9999.12.31') {
       // 시작일과 종료일이 하나라도 기본 값인 경우
       setDebouncedInputValue(newPreviousSearchTerms[newPreviousSearchTerms.length - 1]);
 
@@ -347,19 +313,19 @@ const SearchList = () => {
     ]
   };
 
-  const combinedLabel = `${momentStart} ~ ${momentEnd}`;
+  const combinedLabel = `${formatStart} ~ ${formatEnd}`;
 
   const latestChips = previousSearchTerms.slice(-5);
-
-  useEffect(() => {
-    return () => {
-      window.scroll({
-        top: 0,
-        left: 0,
-        behavior: 'smooth'
-      });
-    };
-  }, []);
+  console.log('filteredStoreList', filteredStoreList);
+  // useEffect(() => {
+  //   return () => {
+  //     window.scroll({
+  //       top: 0,
+  //       left: 0,
+  //       behavior: 'smooth'
+  //     });
+  //   };
+  // }, []);
 
   if (isLoading) {
     return (
@@ -606,7 +572,12 @@ const SearchList = () => {
           </button>
         </form>
       </St.SearchBox>
-      <SearchCalendar storeData={storeData} onSearch={handleSearch} resetStartDate={startDate} resetEndDate={endDate} />
+      <SearchCalendar
+        storeData={latestStore}
+        onSearch={handleSearch}
+        resetStartDate={startDate}
+        resetEndDate={endDate}
+      />
       {filteredStoreList ? (
         <St.ChipBoX>
           <Stack direction="row" spacing={1}>
@@ -614,7 +585,7 @@ const SearchList = () => {
               <Chip key={term} label={term} onDelete={() => handleInputDelete(term)} />
             ))}
 
-            {(momentStart !== '0000.01.01' || momentEnd !== '9999.12.31') && (
+            {(formatStart !== '0000.01.01' || formatEnd !== '9999.12.31') && (
               <>
                 <Chip label={combinedLabel} onDelete={handleDateDelete} />
               </>
@@ -640,9 +611,9 @@ const SearchList = () => {
                 <>
                   <St.GridContainer1>
                     {filteredStoreList?.map((store) => (
-                      <>
+                      <React.Fragment key={store.id}>
                         {store.isclosed ? (
-                          <St.ClosedCard key={store.id} onClick={() => navDetail(store.id)}>
+                          <St.ClosedCard onClick={() => navDetail(store.id)}>
                             <St.Img src={`${process.env.REACT_APP_SUPABASE_STORAGE_URL}${store.images[0]}`} />
                             <St.ClosedStoreInfo>
                               <St.CLosed>CLOSED</St.CLosed>
@@ -669,7 +640,7 @@ const SearchList = () => {
                             </St.InfoBox>
                           </St.Card>
                         )}
-                      </>
+                      </React.Fragment>
                     ))}
                   </St.GridContainer1>
                 </>
