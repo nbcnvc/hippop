@@ -10,7 +10,7 @@ import ReceiveBox from '../components/message/ReceiveBox';
 import MyReview from '../components/mypage/MyReview';
 import MyBookmark from '../components/mypage/MyBookmark';
 import MySubModal from '../components/mypage/MySubModal';
-// pi
+//api
 import { getUser } from '../api/user';
 import { supabase } from '../api/supabase';
 //store

@@ -123,13 +123,28 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
           // 핫플레이스 커스텀 인포윈도우
           const hotPlaceCustomOverlay = new kakao.maps.CustomOverlay({
             position: new kakao.maps.LatLng(place.y, place.x),
-            content: `<div class='customoverlay-nearby'>${place.place_name}</div>`,
+            content: `<div class='customoverlay-hotplace'>${place.place_name}
+                      </div>`,
             yAnchor: 2
           });
+
+          // let prevSelected;
 
           // 핫플레이스 마커에 클릭이벤트를 등록
           kakao.maps.event.addListener(marker, 'click', () => {
             setIsSelected(place);
+          });
+
+          // nearbyStore 마커에 마우스오버 이벤트
+          kakao.maps.event.addListener(marker, 'mouseover', () => {
+            // 커스텀 인포윈도우 on
+            hotPlaceCustomOverlay.setMap(map);
+          });
+
+          // nearbyStore 마커에 마우스아웃 이벤트
+          kakao.maps.event.addListener(marker, 'mouseout', () => {
+            // 커스텀 인포윈도우 off
+            hotPlaceCustomOverlay.setMap(null);
           });
         };
 

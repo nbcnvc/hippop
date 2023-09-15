@@ -33,7 +33,19 @@ export const St = {
         padding: 10px 20px;
       }
 
+      .customoverlay-hotplace {
+        display: flex;
+        text-align: center;
+        color: var(--fifth-color);
+        font-weight: 600;
+        background-color: #fff;
+        border: 3px solid var(--fifth-color);
+        border-radius: 18px;
+        padding: 10px 20px;
+      }
+
       .customoverlay-nearby {
+        display: flex;
         text-align: center;
         color: var(--fifth-color);
         font-weight: 600;

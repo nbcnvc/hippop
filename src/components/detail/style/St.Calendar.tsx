@@ -1,10 +1,10 @@
 import { styled } from 'styled-components';
 // 라이브러리
-import Calendar1 from 'react-calendar';
+import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
 export const St = {
-  StyleCalendar: styled(Calendar1)`
+  StyleCalendar: styled(Calendar)`
     border: 3px solid var(--fifth-color);
     border-radius: 22px 18px;
     box-shadow: 0 7px 15px rgba(0, 0, 0, 0.4);

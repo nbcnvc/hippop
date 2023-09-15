@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 // 라이브러리
 import moment from 'moment';
 // 타입
@@ -11,8 +11,10 @@ const Calendar = ({ storeData }: CalendarProps) => {
   const endDate = moment(storeData.period_end, 'YYYY.MM.DD').format('YYYY/MM/DD');
 
   const [period, setPeriod] = useState([startDate, endDate]);
+
   // 팝업스토어 기간 지정 onChange
   const onChangeCalendar = (date: any) => {
+    date = moment(date, 'YYYY.MM.DD').format('YYYY/MM/DD');
     setPeriod([date, date]);
   };
 
