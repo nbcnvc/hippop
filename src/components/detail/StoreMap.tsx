@@ -20,10 +20,7 @@ declare global {
 const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
   const [guName, setGuName] = useState<string>('');
   const [category, setCategory] = useState<string>('');
-  const [searchData, setSearchData] = useState<HotPlaceInfo[]>();
   const [isSelected, setIsSelected] = useState<HotPlaceInfo | undefined>();
-  // const [prevSelected, setPrevSelected] = useState<HotPlaceInfo | undefined>();
-  const [prevCustomOverlay, setPrevCustomOverlay] = useState<any>(null);
   const [nearbyStoreMarker, setNearbyStoreMarker] = useState<Store[] | undefined>();
 
   //  ref는 맵이 렌더링될 DOM 요소를 참조
@@ -35,7 +32,7 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
     // 주소를 좌표로 변환하는 geocoder 객체를 생성
     const geocoder = new kakao.maps.services.Geocoder();
 
-    geocoder.addressSearch(storeLocation, function (result: Geocoder[], status: string) {
+    geocoder.addressSearch(storeLocation, (result: Geocoder[], status: string) => {
       // 정상적으로 검색이 완료됐으면
       if (status === kakao.maps.services.Status.OK) {
         const coords = new kakao.maps.LatLng(Number(result[0].y), Number(result[0].x));
@@ -56,11 +53,11 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
         // 지도 생성
         const map = new window.kakao.maps.Map(mapElement.current, mapOption);
 
-        // 장소 검색 객체를 생성
-        const ps = new kakao.maps.services.Places();
-
         // 지도의 중심을 결과값으로 받은 위치로 이동
         map.setCenter(coords);
+
+        // 장소 검색 객체를 생성
+        const ps = new kakao.maps.services.Places();
 
         // 장소검색이 완료됐을 때 호출되는 콜백함수
         const placesSearchCB = async (data: HotPlaceInfo[], status: string) => {
@@ -77,7 +74,6 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
 
               map.setBounds(bounds);
             }
-            setSearchData(data);
           } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
             toast.info('검색 결과가 존재하지 않습니다. :(', {
               className: 'custom-toast',
@@ -121,7 +117,7 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
             map: map,
             position: new kakao.maps.LatLng(place.y, place.x),
             image: hpMarkerImage,
-            clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정
+            clickable: true // 클릭 가능한 마커
           });
 
           // 핫플레이스 커스텀 인포윈도우
@@ -132,7 +128,7 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
           });
 
           // 핫플레이스 마커에 클릭이벤트를 등록
-          kakao.maps.event.addListener(marker, 'click', function () {
+          kakao.maps.event.addListener(marker, 'click', () => {
             setIsSelected(place);
           });
         };
@@ -154,7 +150,7 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
           map: map,
           position: coords,
           image: mainMarkerImage,
-          clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정
+          clickable: true // 클릭 가능한 마커
           // zIndex: 9
         });
 
@@ -172,7 +168,7 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
         });
 
         // 마커에 마우스아웃 이벤트
-        kakao.maps.event.addListener(marker, 'mouseout', function () {
+        kakao.maps.event.addListener(marker, 'mouseout', () => {
           // 메인 커스텀 인포윈도우 off
           mainCustomOverlay.setMap(null);
         });
@@ -192,7 +188,7 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
           const geocoder = new kakao.maps.services.Geocoder();
 
           nearbyStoreMarker.forEach((data) => {
-            geocoder.addressSearch(data.location, function (result: Geocoder[], status: string) {
+            geocoder.addressSearch(data.location, (result: Geocoder[], status: string) => {
               // 정상적으로 검색이 완료됐으면
               if (status === kakao.maps.services.Status.OK) {
                 const coords = new kakao.maps.LatLng(Number(result[0].y), Number(result[0].x));
@@ -206,7 +202,7 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
                   map: map,
                   position: coords,
                   image: nearbyMarkerImage,
-                  clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정
+                  clickable: true // 클릭 가능한 마커
                 });
                 // };
 
@@ -224,7 +220,7 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
                 });
 
                 // nearbyStore 마커에 마우스아웃 이벤트
-                kakao.maps.event.addListener(marker, 'mouseout', function () {
+                kakao.maps.event.addListener(marker, 'mouseout', () => {
                   // 커스텀 인포윈도우 off
                   nearCustomOverlay.setMap(null);
                 });
@@ -234,11 +230,11 @@ const StoreMap = ({ storeLocation, title }: StoreMapProps) => {
         }
       }
     });
-  }, [category, nearbyStoreMarker]);
+  }, [storeLocation, category, nearbyStoreMarker]);
 
   return (
     <St.MapContainer>
-      {searchData && <HotPlace category={category} setCategory={setCategory} setIsSelected={setIsSelected} />}
+      <HotPlace category={category} setCategory={setCategory} setIsSelected={setIsSelected} />
       <div className="map-iframe">
         {isSelected && category && <iframe src={`https://place.map.kakao.com/m/${isSelected.id}`} />}
         <St.KaKaoMap ref={mapElement} isSelected={isSelected} category={category} />

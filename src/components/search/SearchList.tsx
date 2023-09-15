@@ -297,6 +297,9 @@ const SearchList = () => {
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
     infinite: true,
+    autoplay: true,
+    autoplaySpeed: 2500,
+    pauseOnFocus: true,
     responsive: [
       {
         breakpoint: 1600,
