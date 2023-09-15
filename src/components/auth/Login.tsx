@@ -22,7 +22,7 @@ const Login = ({ closeModal }: { closeModal: () => void }) => {
     }
   };
 
-  const signupKakao = async () => {
+  const signupKakao = async (e: React.FormEvent) => {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'kakao'
@@ -36,7 +36,7 @@ const Login = ({ closeModal }: { closeModal: () => void }) => {
     }
   };
 
-  const signInWithFacebook = async (e: React.FormEvent) => {
+  const signupFacebook = async (e: React.FormEvent) => {
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'facebook'
@@ -67,7 +67,7 @@ const Login = ({ closeModal }: { closeModal: () => void }) => {
               <div className="list" onClick={signupKakao}>
                 <img src="/asset/kakao-horizon.png" alt="kakao" />
               </div>
-              <div className="list" onClick={signInWithFacebook}>
+              <div className="list" onClick={signupFacebook}>
                 <img src="/asset/fblogin-horizon.png" alt="naver" />
               </div>
             </div>
