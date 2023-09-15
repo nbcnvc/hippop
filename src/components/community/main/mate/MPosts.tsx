@@ -14,6 +14,7 @@ import { getSearchPosts } from '../../../../api/post';
 import { St } from './style/St.MPosts';
 import Skeleton from '@mui/material/Skeleton';
 import RoomRoundedIcon from '@mui/icons-material/RoomRounded';
+import { toast } from 'react-toastify';
 
 const MPosts = () => {
   const navigate = useNavigate();
@@ -52,7 +53,10 @@ const MPosts = () => {
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       if (ctg === '카테고리') {
-        alert('카테고리를 선택해주세요!');
+        toast.info('카테고리를 선택해주세요!', {
+          className: 'custom-toast',
+          theme: 'light'
+        });
         setInputValue('');
         return;
       }
@@ -63,7 +67,10 @@ const MPosts = () => {
 
   useEffect(() => {
     if (ctg === '카테고리' && inputValue) {
-      alert('카테고리를 선택해주세요!');
+      toast.info('카테고리를 선택해주세요!', {
+        className: 'custom-toast',
+        theme: 'light'
+      });
       setInputValue('');
       setSortName('전체보기');
     }
