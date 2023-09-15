@@ -193,6 +193,7 @@ const SearchList = () => {
       setPreviousSearchTerms((prevTerms) => [...prevTerms, inputValue]);
       setDebouncedInputValue(inputValue);
     }
+    refreshData();
   };
 
   // 데이터 필터링
@@ -242,6 +243,7 @@ const SearchList = () => {
 
       setFilteredStoreList(filteredStores); // 필터링된 상점 목록을 상태로 업데이트
     }
+    refreshData();
   };
 
   // 검색어 칩 삭제

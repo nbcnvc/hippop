@@ -13,6 +13,9 @@ export const St = {
     border: 1px solid var(--fifth-color);
     border-radius: 6px;
     z-index: 1;
+    @media (max-width: 1390px) {
+      right: -8px;
+    }
   `,
 
   AlarmContents: styled.div`
