@@ -70,6 +70,16 @@ const Main = () => {
     }
   }, [inView]);
 
+  useEffect(() => {
+    return () => {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    };
+  }, []);
+
   if (isLoading) {
     return (
       <St.MainContainer>
