@@ -1,7 +1,7 @@
 import CommentCount from './CommentCount';
 
 import moment from 'moment';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
