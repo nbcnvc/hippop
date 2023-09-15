@@ -104,6 +104,15 @@ const MPosts = () => {
     navigate(`/yourpage/${shortid.generate()}`, { state: { userId: userId } });
   };
 
+  useEffect(() => {
+    return () => {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    };
+  }, []);
   if (isLoading) {
     // 로딩 중일 때 스켈레톤 표시
     return (

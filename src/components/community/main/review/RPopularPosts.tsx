@@ -1,7 +1,7 @@
 import CommentCount from './CommentCount';
 
 import moment from 'moment';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -72,7 +72,15 @@ const RPopularPosts = () => {
   const naviDetail = (post: PostType) => {
     navigate(`/rdetail/${post.id}`);
   };
-
+  useEffect(() => {
+    return () => {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    };
+  }, []);
   if (isLoading) {
     // 로딩 중일 때 스켈레톤을 렌더링합니다.
     return (
