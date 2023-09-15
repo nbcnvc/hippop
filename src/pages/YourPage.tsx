@@ -310,44 +310,50 @@ const YourPage = () => {
               <St.Htag>
                 <St.HtagLine>북마크한 팝업스토어</St.HtagLine>
               </St.Htag>
-              <St.BookMarkList>
-                <div style={{ paddingRight: '1rem' }}>
-                  {bookMarkStore?.map((bookMark) => {
-                    return (
-                      <St.BookMarkWraaper>
-                        <St.BookMarkBox>
-                          <div>
-                            <St.StoreList>
-                              <p>
-                                <RoomRoundedIcon fontSize="large" />
-                              </p>
-                              <St.StoreInfo>
-                                <St.Location>
-                                  {bookMark.store?.location.split(' ').slice(0, 1)}{' '}
-                                  {bookMark.store?.location.split(' ').slice(1, 2)}
-                                </St.Location>
+              {bookMarkStore && bookMarkStore.length > 0 ? (
+                <St.BookMarkList>
+                  <div style={{ paddingRight: '1rem' }}>
+                    {bookMarkStore?.map((bookMark) => {
+                      return (
+                        <St.BookMarkWraaper>
+                          <St.BookMarkBox>
+                            <div>
+                              <St.StoreList>
+                                <p>
+                                  <RoomRoundedIcon fontSize="large" />
+                                </p>
+                                <St.StoreInfo>
+                                  <St.Location>
+                                    {bookMark.store?.location.split(' ').slice(0, 1)}{' '}
+                                    {bookMark.store?.location.split(' ').slice(1, 2)}
+                                  </St.Location>
 
-                                <St.TitleBox>
-                                  <St.StoreTitle>{bookMark.store?.title}</St.StoreTitle>
-                                </St.TitleBox>
+                                  <St.TitleBox>
+                                    <St.StoreTitle>{bookMark.store?.title}</St.StoreTitle>
+                                  </St.TitleBox>
 
-                                <St.StoreDetailArrow
-                                  onClick={() => {
-                                    BookMarkDetail(bookMark.store.id);
-                                  }}
-                                >
-                                  <ArrowForwardIosIcon />
-                                </St.StoreDetailArrow>
-                              </St.StoreInfo>
-                            </St.StoreList>
-                          </div>
-                        </St.BookMarkBox>
-                        <St.Line></St.Line>
-                      </St.BookMarkWraaper>
-                    );
-                  })}
-                </div>
-              </St.BookMarkList>
+                                  <St.StoreDetailArrow
+                                    onClick={() => {
+                                      BookMarkDetail(bookMark.store.id);
+                                    }}
+                                  >
+                                    <ArrowForwardIosIcon />
+                                  </St.StoreDetailArrow>
+                                </St.StoreInfo>
+                              </St.StoreList>
+                            </div>
+                          </St.BookMarkBox>
+                          <St.Line></St.Line>
+                        </St.BookMarkWraaper>
+                      );
+                    })}
+                  </div>
+                </St.BookMarkList>
+              ) : (
+                <St.NoneBookMarkBox>
+                  <St.NoneBookMark>{user?.name}님이 북마크한 팝업스토어가 없어요 :)</St.NoneBookMark>
+                </St.NoneBookMarkBox>
+              )}
             </div>
           </St.StoreListBox>
         </St.UserWrapper>
