@@ -170,6 +170,14 @@ button {
     height: 6px;  
     background-color: transparent; /* 스크롤바 트랙 배경색 설정 */
   }
+
+  @media (max-width: 390px)  {
+    input,
+    textarea,
+    select {
+        font-size: 16px;
+    }
+  }
 `;
 
 export default GlobalStyle;
