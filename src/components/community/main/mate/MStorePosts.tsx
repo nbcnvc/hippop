@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -65,7 +65,15 @@ const MStorePosts = () => {
   const naviProfile = (userId: string) => {
     navigate(`/yourpage/${userId}`);
   };
-
+  useEffect(() => {
+    return () => {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
+    };
+  }, []);
   if (isLoading) {
     // 로딩 중일 때 스켈레톤 표시
     return (

@@ -35,7 +35,7 @@ const SearchCalendar = ({ onSearch, resetStartDate, resetEndDate }: SearchCalend
 
   const handleStartDateChange = (date: Date) => {
     if (endDate && endDate < date) {
-      toast.info('종료일 보다 클 수는 없어요~ :)', {
+      toast.info('종료일 보다 클 수는 없어요:)', {
         className: 'custom-toast',
         theme: 'light'
       });
@@ -47,7 +47,7 @@ const SearchCalendar = ({ onSearch, resetStartDate, resetEndDate }: SearchCalend
   };
   const handleEndDateChange = (date: Date) => {
     if (startDate && startDate > date) {
-      toast.info('시작일 보다 작을 수는 없어요~ :)', {
+      toast.info('시작일 보다 작을 수는 없어요:)', {
         className: 'custom-toast',
         theme: 'light'
       });
@@ -63,7 +63,6 @@ const SearchCalendar = ({ onSearch, resetStartDate, resetEndDate }: SearchCalend
 
       // 객체를 JSON 문자열로 변환하여 로컬 스토리지에 저장
       localStorage.setItem('DateRange', JSON.stringify(dateRange));
-      // setStartDate(localStorage.getItem("DateRange", JSON.stringify(startDate)))
     } else {
       // 시작일 또는 종료일이 선택되지 않은 경우에 대한 처리
       toast.info('시작일과 종료일을 선택해주세요.', {
@@ -163,7 +162,6 @@ const SearchCalendar = ({ onSearch, resetStartDate, resetEndDate }: SearchCalend
               </St.Year>
               <div>
                 <St.DirectBtn type="button" onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
-                  {/* <RightArrow fill="#ffffff" /> */}
                   {'>'}
                 </St.DirectBtn>
               </div>
