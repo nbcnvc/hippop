@@ -7,7 +7,7 @@
 
 ## 💥 Project summary
 
-- 팝업스토어 정보를 공유하며 유저들간의 소통을 도모하는 interactive communication service
+- 팝업스토어 정보를 공유하며 유저들 간의 소통을 도모하는 interactive communication service
 
 <br />
 
