@@ -212,11 +212,11 @@
 
 | Role | Name   | In charge                                 | GitHub                                                                      |
 | ---- | ------ | ---------------------------------------------- | --------------------------------------------------------------------------- |
-| 리더 | 조성록 | Search page / Profile page / 쪽지 / 북마크 / 공유하기 / 달력 | <a href="https://github.com/pigrok">https://github.com/pigrok</a>  |
+| 리더 | 조성록 | 검색 페이지 / 프로필 페이지 / 쪽지 / 북마크 / 공유하기 / 달력 | <a href="https://github.com/pigrok">https://github.com/pigrok</a>  |
 | 부리 | 장혜진 | 담당 기능                    | <a href="https://github.com/huizhenz">https://github.com/huizhenz</a>         |
-| 팀원 | 김우리 | Social Login / My page                 | <a href="https://github.com/wooriki">https://github.com/wooriki</a>           |
+| 팀원 | 김우리 | 소셜 로그인 / 마이 페이지                | <a href="https://github.com/wooriki">https://github.com/wooriki</a>           |
 | 팀원 | 나윤빈 | 담당 기능     | <a href="https://github.com/skdbsqls">https://github.com/skdbsqls</a>           |
-| 팀원 | 조진명 | Main page fid table 작업               | <a href="https://github.com/nbcnvc">https://github.com/nbcnvc</a>     |
+| 팀원 | 조진명 | 메인페이지 fid table 작업               | <a href="https://github.com/nbcnvc">https://github.com/nbcnvc</a>     |
 
 <br />
 
