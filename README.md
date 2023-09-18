@@ -13,13 +13,13 @@
 
 ### 💥 Sevice URL
 
-<a href="https://www.hippop.kr/">FIND YOUR HIPPOP</a>
+- <a href="https://www.hippop.kr/">FIND YOUR HIPPOP</a>
 
 <br />
 
 ### 💥 Project period
 
-2023.08.16 ~ 2023.09.18
+- 2023.08.16 ~ 2023.09.18
 
 <br />
 
