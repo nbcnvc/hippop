@@ -245,8 +245,7 @@
 ![main6](https://github.com/nbcnvc/hippop/assets/109304556/108b0f92-cebe-4444-ad63-70e8bac9feb4)
 
 
-<br /
->
+<br />
 
 ## ⚙️ Technology stack
 
