@@ -213,7 +213,7 @@
 | Role | Name   | In charge                                 | GitHub                                                                      |
 | ---- | ------ | ---------------------------------------------- | --------------------------------------------------------------------------- |
 | 리더 | 조성록 | 검색 페이지 / 프로필 페이지 / 쪽지 / 북마크 / 공유하기 / 달력 | <a href="https://github.com/pigrok">https://github.com/pigrok</a>  |
-| 부리 | 장혜진 | 상세 페이지 / 공유하기 / 팝업스토어 지도 / 핫플레이스 추천 / 동일 지역 팝업스토어 | <a href="https://github.com/huizhenz">https://github.com/huizhenz</a>         |
+| 부리 | 장혜진 | 상세 페이지 / 팝업스토어 지도 / 핫플레이스 추천 / 동일 지역 팝업스토어 | <a href="https://github.com/huizhenz">https://github.com/huizhenz</a>         |
 | 팀원 | 김우리 | 소셜 로그인 / 마이 페이지                | <a href="https://github.com/wooriki">https://github.com/wooriki</a>           |
 | 팀원 | 나윤빈 | 리뷰 & 리뷰 디테일 페이지 / 메이트 & 메이트 디테일 페이지 / 글 작성 모달 / 구독 / 실시간 알림  | <a href="https://github.com/skdbsqls">https://github.com/skdbsqls</a>           |
 | 팀원 | 조진명 | 메인페이지 피드 테이블 작업               | <a href="https://github.com/nbcnvc">https://github.com/nbcnvc</a>     |
