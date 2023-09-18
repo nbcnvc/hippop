@@ -220,6 +220,9 @@
 
 <br />
 
+## ⛓️ Service Architecture
+![HIPPOP 서비스 아키텍쳐](https://github.com/nbcnvc/hippop/assets/133093192/b0ec3dde-1735-4bf9-9eb2-aee2b3e19bdc)
+
 ## 📌 Implementation of key features
 
 ### <a href="https://supabase.com/docs/guides/realtime/postgres-changes">Supabase</a> <a href="https://velog.io/@skdbsqls/230915-Supabase-realtime-이용해서-실시간-알림기능-구현하기">RealTime</a>
