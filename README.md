@@ -23,7 +23,7 @@
 
 <br />
 
-### 💥 Wireframe
+### 💥 Wire frame
 
 <details>
 <summary>Figma | 펼칠 시 스크린샷</summary>
