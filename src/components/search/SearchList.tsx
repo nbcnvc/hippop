@@ -167,10 +167,7 @@ const SearchList = () => {
         const lowercaseInputValue = debouncedInputValue?.toLowerCase();
         const storeStartDate = store.period_start;
         const storeEndDate = store.period_end;
-        console.log('lowercaseInputValue', lowercaseInputValue);
-        console.log('storeStartDate', storeStartDate);
-        console.log('period_start', store.period_start);
-        console.log('storeEndDate', store.period_end);
+
         return (
           (store.title.toLowerCase().includes(lowercaseInputValue) ||
             store.body.toLowerCase().includes(lowercaseInputValue) ||
@@ -316,16 +313,7 @@ const SearchList = () => {
   const combinedLabel = `${formatStart} ~ ${formatEnd}`;
 
   const latestChips = previousSearchTerms.slice(-5);
-  console.log('filteredStoreList', filteredStoreList);
-  // useEffect(() => {
-  //   return () => {
-  //     window.scroll({
-  //       top: 0,
-  //       left: 0,
-  //       behavior: 'smooth'
-  //     });
-  //   };
-  // }, []);
+
 
   if (isLoading) {
     return (
