@@ -29,11 +29,11 @@
 <summary><a href="https://www.figma.com/community/file/1264539931329446342">Figma</a> | 펼칠 시 스크린샷</summary>
 <br />
 	
-![123](https://github.com/kimhwanhoon/20230724_team_project/assets/123552221/45f102ee-ba89-442f-b7ea-4bc9cf0637e8)
-
-![456](https://github.com/kimhwanhoon/20230724_team_project/assets/123552221/938892b3-c550-49cd-b729-cd9fe73e206a)
-
-![789](https://github.com/kimhwanhoon/20230724_team_project/assets/123552221/33b1859d-c723-48fc-848a-ddb21ef87274)
+![123](https://g![1](https://github.com/nbcnvc/hippop/assets/109304556/ad7a25ac-f430-45b2-91fa-a59660b61ad9)
+![2](https://github.com/nbcnvc/hippop/assets/109304556/cfc9eeb4-dedb-4c8c-82ba-2ef5cd6a3839)
+![3](https://github.com/nbcnvc/hippop/assets/109304556/47cf0c5a-8df4-4b9c-a573-7d29cbd01a27)
+![4](https://github.com/nbcnvc/hippop/assets/109304556/0193fff7-9e04-4111-a924-0beeb9a1fde3)
+![5](https://github.com/nbcnvc/hippop/assets/109304556/049e97a4-c801-494b-bab0-2c9840dd64c0)
 
 <br />
 
@@ -207,7 +207,7 @@
 
 ## 🧑‍🤝‍🧑 팀원 소개
 
-- 팀명 : 내 코드 왜2러조
+- 팀명 : 그 여름, 우리는
 - 팀원 및 담당 구현 기능
 
 | 역할 | 이름   | 담당 구현 기능                                 | GitHub                                                                      |
