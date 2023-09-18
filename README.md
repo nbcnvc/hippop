@@ -229,9 +229,12 @@
 - Postgres Changes 데이터베이스 테이블에서 발생하는 변경 사항을 실시간으로 감지하고 클라이언트에게 푸시한다.
 - 이를 이용하여 사용자가 구독한 사람이 새 글을 작성했을 때, 누군가가 사용자를 구독했을 때, 다른 사용자로부터 쪽지를 받았을 때 실시간 알림을 제공한다.
 
-### Example <a href="/">RealTime</a>
+### Kakao <a href="https://apis.map.kakao.com/web/guide/">Map API</a>
 
-- Example
+- Kakao Map API는 Kakao에서 제공하는 지도 API로 지도를 이용한 서비스를 제작할 수 있도록 다양한 기능을 제공한다.
+- MAP API는 addressSearch, keywordSearch 등의 메서드를 포함한다.
+- addressSearch 메서드는 주소를 좌표로 변환하고, keywordSearch 메서드는 키워드를 통한 검색 결과를 반환한다.
+- 이를 이용하여 팝업스토어의 위치, 주변 핫플레이스 추천, 동일 지역 팝업스토어의 위치를 제공한다.
 
   
 <br />
