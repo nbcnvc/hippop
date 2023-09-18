@@ -29,7 +29,7 @@
 <summary>Figma | 펼칠 시 스크린샷</summary>
 <br />
 	
-[1](https://github.com/nbcnvc/hippop/assets/109304556/ad7a25ac-f430-45b2-91fa-a59660b61ad9)
+![1](https://github.com/nbcnvc/hippop/assets/109304556/ad7a25ac-f430-45b2-91fa-a59660b61ad9)
 ![2](https://github.com/nbcnvc/hippop/assets/109304556/cfc9eeb4-dedb-4c8c-82ba-2ef5cd6a3839)
 ![3](https://github.com/nbcnvc/hippop/assets/109304556/47cf0c5a-8df4-4b9c-a573-7d29cbd01a27)
 ![4](https://github.com/nbcnvc/hippop/assets/109304556/0193fff7-9e04-4111-a924-0beeb9a1fde3)
