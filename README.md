@@ -1,25 +1,4 @@
-- router-dom
-- zustand
-- @tanstack/react-query
-- styled-components
-- styled-reset
-- @supabase/supabase-js
-- @types/navermaps
-- @mui/types
-- @mui/styles
-- @mui/icons-material
-- @supabase/auth-ui-react
-- @supabase/auth-ui-shared
-- axios
-- @types/axios
-- react-kakao-maps-sdk
-- react-slick
-- @types/react-slick
-- slick-carousel
-- @tanstack/react-query-devtools
-- react-toastify
-
-<img src="https://capsule-render.vercel.app/api?type=wave&color=auto&height=300&section=header&text=⚾🏸GongGong%20Play⚽🏐&fontSize=60" />
+<img src="https://capsule-render.vercel.app/api?type=wave&color=auto&height=300&section=header&text=💥HIPPOP💥&fontSize=60" />
 
 ### 실행법
 - yarn start
@@ -276,79 +255,46 @@
 
 #### 1. 메인화면
 
-![01 main](https://github.com/kimhwanhoon/20230724_team_project/assets/123552221/5ab477e2-534a-46ff-97c6-e4a09e8ffa23)
-
-    1) Header - 검색창 카테고리 필터 : 사용자가 운동종목과 지역구를 선택하여 데이터 필터링
-    2) Header - 날씨 API : 사용자 현재 위치에 따른 날씨 및 시간 보여주기
-    3) Body - map API :  사용자 현재 위치에서 가까운 데이터 보여주기
-    4) Body - Youtube API : 추천 음악 리스트 가져오기 ( 새로고침 할 때 새로운 리스트로 바뀜 )
-    5) Body - 공공데이터 API : 사용자 현재 위치와 가까운 순으로 데이터 페이지네이션
-
-<br />
-
-#### 2. 검색카테고리 필터링 구현
-
-![02 filtering](https://github.com/kimhwanhoon/20230724_team_project/assets/123552221/bea72f59-3c81-44df-b9ab-a82128948776)
-
-<br />
-
-#### 3. 검색기능 구현
-
-![03 searching](https://github.com/kimhwanhoon/20230724_team_project/assets/123552221/8154c0ca-01f0-4072-b211-298edcfcb9c5)
-
-<br />
-
-#### 4. 게시물 디테일 화면
-
-![04 detail](https://github.com/kimhwanhoon/20230724_team_project/assets/123552221/7241e40f-147e-4690-a595-4281c9adae2a)
-
-<br />	
- 
-#### 5. 게시물 디테일 -  댓글기능
-
-![05 comment](https://github.com/kimhwanhoon/20230724_team_project/assets/123552221/2a0a4e0f-ce44-4032-95fa-72288c4d4933)
-
-    1) 댓글 수정/삭제기능 구현
-
-2. 랜덤으로 프로필 사진 생성
-
-<br />
-
-#### 6. 반응형 구현
-
-![small](https://github.com/kimhwanhoon/20230724_team_project/assets/109304556/d6907671-c743-49dd-8bca-b504238a363f)
+![main](https://github.com/nbcnvc/hippop/assets/109304556/47702ab0-8e95-496c-ba9c-c558ca0f8822)
 
 <br />
 
 ## ⚙️ 기술 스택
 
-- React.js
+- Typescript / React
 <div align=“center”>
+<img src="https://img.shields.io/badge/Typescript-61DAFB?style=for-the-badge&logo=Typescript&logoColor=black">
 <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black">
 
 </div>
 
 ### ⚙️ 사용한 라이브러리
 
+- router-dom
+- zustand
+- @tanstack/react-query
 - styled-components
-- react-router-dom
-- react-redux
-- redux-toolkit
-- redux-devtools-extension
-- react-query
-- react-query-devtools
-- react-js-paginaition
-- react-naver-maps
+- styled-reset
+- @supabase/supabase-js
+- @types/navermaps
+- @mui/types
+- @mui/styles
+- @mui/icons-material
+- @supabase/auth-ui-react
+- @supabase/auth-ui-shared
 - axios
-- cors
-- dotenv
-- express
-- weather-styled-icon
+- @types/axios
+- react-kakao-maps-sdk
+- react-slick
+- @types/react-slick
+- slick-carousel
+- @tanstack/react-query-devtools
+- react-toastify
+
 
 <div align=“center”>
-<img src="https://img.shields.io/badge/styled components-e62744?style=for-the-badge&logo=styledcomponents&logoColor=white"> <img src="https://img.shields.io/badge/React Router DOM-ed7a40?style=for-the-badge&logo=reactrouter&logoColor=white"> <img src="https://img.shields.io/badge/Redux Toolkit-e0a538?style=for-the-badge&logo=redux&logoColor=white">
-	
-<img src="https://img.shields.io/badge/React Query-32b3bf?style=for-the-badge&logo=reactquery&logoColor=white"> <img src="https://img.shields.io/badge/React Naver Maps-03C75A?style=for-the-badge&logo=naver&logoColor=white"> <img src="https://img.shields.io/badge/Axios-3261bf?style=for-the-badge&logo=axios&logoColor=white"> <img src="https://img.shields.io/badge/Express-4a32bf?style=for-the-badge&logo=express&logoColor=white">
+<img src="https://img.shields.io/badge/styled components-e62744?style=for-the-badge&logo=styledcomponents&logoColor=white"> <img src="https://img.shields.io/badge/React Router DOM-ed7a40?style=for-the-badge&logo=reactrouter&logoColor=white">
+<img src="https://img.shields.io/badge/React Query-32b3bf?style=for-the-badge&logo=reactquery&logoColor=white">
 </div>
 
 ### ⚙️ 버전 관리 시스템
