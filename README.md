@@ -11,7 +11,7 @@
 
 <br />
 
-### 💥 Sevice URL
+### 💥 Service URL
 
 - <a href="https://www.hippop.kr/">FIND YOUR HIPPOP</a>
 
@@ -233,7 +233,7 @@
   
 <br />
 
-### 🎬 Sevice capture image
+### 🎬 Service capture image
 
 #### 1. Main
 
