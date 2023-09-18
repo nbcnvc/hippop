@@ -222,7 +222,7 @@
 
 ## 📌 Implementation of key features
 
-### Supabase <a href="https://velog.io/@skdbsqls/230915-Supabase-realtime-이용해서-실시간-알림기능-구현하기">RealTime</a>
+### <a href="https://supabase.com/docs/guides/realtime/postgres-changes">Supabase</a> <a href="https://velog.io/@skdbsqls/230915-Supabase-realtime-이용해서-실시간-알림기능-구현하기">RealTime</a>
 
 - supabase는 데이터베이스 작업을 실시간으로 추적하고 애플리케이션에 업데이트를 자동으로 푸시할 수 있는 realtime을 제공한다.
 - realtime은 Broadcast, Presence, Postgres Changes의 주요 기능을 포함한다.
