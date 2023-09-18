@@ -238,6 +238,8 @@
 #### 1. Main
 
 ![main](https://github.com/nbcnvc/hippop/assets/109304556/47702ab0-8e95-496c-ba9c-c558ca0f8822)
+![main2](https://github.com/nbcnvc/hippop/assets/109304556/58cd61f4-99fb-400d-a730-ba442a3008a3)
+![main3](https://github.com/nbcnvc/hippop/assets/109304556/ddd0d51e-5ed1-4b16-9fea-f4fa3f32fcf4)
 
 <br />
 
