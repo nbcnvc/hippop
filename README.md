@@ -34,17 +34,7 @@
 
 ### 📍 사이트 주소
 
-<a href="https://gong-gong-play.vercel.app/">GONG GONG PLAY</a>
-
-<details>
-<summary>배포 사이트 이용 시 설정 참고</summary>
-<br />
-
-<img src="https://github.com/xoxojw/algorithm/assets/124491335/f634527b-b2a1-4f5b-84c5-6e78fd08f948" width="500px" /> <img src="https://github.com/xoxojw/algorithm/assets/124491335/bebd05d3-e4f3-4b5c-9385-a0f60b40cb71" width="500px" />
-
-<br />
-
-</details>
+<a href="https://www.hippop.kr/">FIND YOUR HIPPOP</a>
 
 <br />
 
