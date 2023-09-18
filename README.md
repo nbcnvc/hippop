@@ -220,7 +220,7 @@
 
 <br />
 
-## 📌 주요 기능
+## 📌 Implementation of key features
 
 ### Supabase <a href="/">RealTime</a>
 
