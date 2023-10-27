@@ -30,7 +30,7 @@ function App() {
           setCurrentUser(data);
         }
 
-        const token: any = localStorage.getItem('sb-jlmwyvwmjcanbthgkpmh-auth-token');
+        const token: any = localStorage.getItem('sb-khzyqvyodxfxhpzqzdih-auth-token');
         const parsedToken = JSON.parse(token);
         const provider = parsedToken.user.app_metadata.provider;
 
