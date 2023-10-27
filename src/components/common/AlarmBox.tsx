@@ -57,7 +57,7 @@ const AlarmBox = ({ alarms }: AlarmBoxProps) => {
   const naviAlarm = (alarm: AlarmType) => {
     // 새 게시글
     if (alarm.ctg_index === 1) {
-      if (alarm.post_isdeleted === false) {
+      if (alarm.post_isdeleted === true) {
         return toast.info('삭제된 게시물 입니다!', {
           className: 'custom-toast',
           theme: 'light'
