@@ -175,9 +175,11 @@ button {
     input,
     textarea,
     select {
-        font-size: 16px;
+        font-size: 20px;
     }
+
   }
+  /* -webkit-text-size-adjust : auto */
 `;
 
 export default GlobalStyle;
